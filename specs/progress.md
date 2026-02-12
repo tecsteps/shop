@@ -73,27 +73,27 @@
 - [x] Developer tools (webhook subscriptions)
 - [x] Tests: 100+ admin tests passing
 
-## Phase 8: Search - IN PROGRESS
+## Phase 8: Search - COMPLETE
 - [x] Search settings and queries tables
-- [ ] FTS5 virtual table migration
-- [ ] SearchService with FTS5
-- [ ] ProductObserver for auto-sync
-- [ ] Search UI improvements
+- [x] FTS5 virtual table migration with triggers
+- [x] SearchService with FTS5 (search, autocomplete, sync, reindex)
+- [x] ProductObserver for auto-sync
+- [x] Search UI with results, sorting, breadcrumbs
 
-## Phase 9: Analytics - IN PROGRESS
+## Phase 9: Analytics - COMPLETE
 - [x] Analytics events and daily tables
-- [ ] AnalyticsService
-- [ ] AggregateAnalytics job
-- [ ] Admin analytics improvements
+- [x] AnalyticsService (track, getDailyMetrics, getTopProducts, getConversionFunnel)
+- [x] AggregateAnalytics job (scheduled daily)
+- [x] Admin analytics dashboard with real data
 
-## Phase 10: Apps and Webhooks - IN PROGRESS
+## Phase 10: Apps and Webhooks - COMPLETE
 - [x] Webhook subscriptions table
-- [ ] WebhookDelivery model and migration
-- [ ] WebhookService (dispatch, sign, verify)
-- [ ] DeliverWebhook job with retry/circuit breaker
-- [ ] Webhook integration in existing services
+- [x] WebhookDelivery model and migration
+- [x] WebhookService (dispatch, sign with HMAC-SHA256, verify)
+- [x] DeliverWebhook job with retry/circuit breaker
+- [x] Webhook integration in OrderService, ProductService, FulfillmentService, RefundService, CheckoutService
 
-## Phase 11: Polish - IN PROGRESS
+## Phase 11: Polish - COMPLETE
 - [x] Custom error pages (404, 503)
 - [x] Consistent MoneyFormatter usage across all views
 - [x] Structured JSON logging channel
@@ -102,11 +102,19 @@
 - [x] Responsive design (mobile nav drawer, breakpoints)
 - [x] Admin sidebar (lg:static, not fixed)
 - [x] Order numbers with single # prefix
-- [ ] Playwright verification
+- [x] ResolveStore as Livewire persistent middleware
+- [x] Shipping method wire:model.live for instant selection
+- [x] Confirmation page payment_method string fix
 
-## Phase 12: Full Test Suite + Playwright E2E
-- [ ] Run full test suite (all tests passing)
-- [ ] Playwright E2E: Storefront purchase flow
-- [ ] Playwright E2E: Customer account flow
-- [ ] Playwright E2E: Admin management flow
-- [ ] All acceptance criteria verified
+## Phase 12: Full Test Suite + Playwright E2E - COMPLETE
+- [x] Run full test suite: 339 tests, 875 assertions, all passing
+- [x] Playwright E2E: Storefront purchase flow (browse -> product -> variant select -> add to cart -> checkout -> payment -> confirmation)
+- [x] Playwright E2E: Customer account flow (register -> dashboard -> orders -> addresses)
+- [x] Playwright E2E: Admin management flow (login -> dashboard -> orders -> order detail -> products)
+- [x] Playwright E2E: Search (FTS5 results for "cotton" - 5 results with sorting)
+- [x] All acceptance criteria verified
+
+## Bugs Found and Fixed During E2E
+1. ResolveStore middleware not persisted on Livewire update requests - added as Livewire persistent middleware
+2. Checkout shipping method radio used wire:model (deferred) - changed to wire:model.live for instant button enable
+3. Confirmation page accessed payment_method->value on string - removed ->value accessor

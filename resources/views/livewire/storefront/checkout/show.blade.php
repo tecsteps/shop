@@ -141,7 +141,7 @@
                                     <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer mb-2 transition-colors
                                                   {{ $selectedShippingRateId === $rate['id'] ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300' }}">
                                         <div class="flex items-center gap-3">
-                                            <input type="radio" wire:model="selectedShippingRateId" value="{{ $rate['id'] }}" class="text-blue-600 focus:ring-blue-500">
+                                            <input type="radio" wire:model.live="selectedShippingRateId" value="{{ $rate['id'] }}" class="text-blue-600 focus:ring-blue-500">
                                             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $rate['name'] }}</span>
                                         </div>
                                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
