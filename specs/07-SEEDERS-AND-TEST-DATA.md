@@ -359,7 +359,7 @@ Each factory below lists the model, default field generation rules, named states
 |-------|----------------|
 | store_id | Creates a new Store via its factory |
 | customer_id | Creates a new Customer via its factory |
-| order_number | "#" + Faker unique integer 1001-9999 |
+| order_number | Faker unique integer 1001-9999 as a string (e.g., "1001"). The prefix is NOT stored in this field - it is stored separately in `store_settings.settings_json` key `order_number_prefix` and prepended only at display time. |
 | payment_method | "credit_card" |
 | status | "paid" |
 | financial_status | "paid" |
@@ -787,12 +787,21 @@ Creates two stores under "Acme Corp".
 
 ### 3.3 StoreDomainSeeder
 
+**CRITICAL: Local Development Domain**
+
+The seeder MUST register the Laravel Herd project domain (`shop.test`) as a storefront domain for Acme Fashion. This is the hostname used during local development. Without it, the `store.resolve:storefront` middleware will return 404 for all storefront routes.
+
+The seeder should dynamically detect the Herd project domain using `config('app.url')` parsed to extract the hostname, or hardcode `shop.test` as the Herd project domain. This domain must be registered IN ADDITION to the custom store domains below.
+
 **Acme Fashion domains:**
 
 | Hostname | Type | is_primary | tls_mode |
 |----------|------|-----------|----------|
-| acme-fashion.test | storefront | 1 | managed |
+| shop.test | storefront | 1 | managed |
+| acme-fashion.test | storefront | 0 | managed |
 | admin.acme-fashion.test | admin | 0 | managed |
+
+**Note:** `shop.test` is the primary storefront domain because it matches the Laravel Herd project directory name. The `acme-fashion.test` domain exists as a secondary storefront domain for multi-domain testing.
 
 **Note:** The admin domain (`admin.acme-fashion.test`) routes HTTP requests to the admin panel. However, the actual store context within the admin panel is determined by the session key `current_store_id`, set after login or via the store-switcher. The admin domain itself does not determine store scope.
 
@@ -806,13 +815,15 @@ Creates two stores under "Acme Corp".
 
 ### 3.4 UserSeeder
 
-| Email | Name | Password (plaintext, stored as bcrypt hash) | Status | last_login_at |
-|-------|------|----------------------------------------------|--------|---------------|
-| admin@acme.test | Admin User | password | active | now |
-| staff@acme.test | Staff User | password | active | 2 days ago |
-| support@acme.test | Support User | password | active | 1 day ago |
-| manager@acme.test | Store Manager | password | active | 1 day ago |
-| admin2@acme.test | Admin Two | password | active | 1 day ago |
+**CRITICAL:** All admin users MUST have `email_verified_at` set to `now()`. The admin routes use the `verified` middleware, which will redirect users without a verified email to a verification notice page. Without `email_verified_at`, admin users cannot access any admin pages.
+
+| Email | Name | Password (plaintext, stored as bcrypt hash) | Status | email_verified_at | last_login_at |
+|-------|------|----------------------------------------------|--------|-------------------|---------------|
+| admin@acme.test | Admin User | password | active | now | now |
+| staff@acme.test | Staff User | password | active | now | 2 days ago |
+| support@acme.test | Support User | password | active | now | 1 day ago |
+| manager@acme.test | Store Manager | password | active | now | 1 day ago |
+| admin2@acme.test | Admin Two | password | active | now | 1 day ago |
 
 ---
 
@@ -825,6 +836,8 @@ Creates two stores under "Acme Corp".
 | support@acme.test | Acme Fashion | support |
 | manager@acme.test | Acme Fashion | admin |
 | admin2@acme.test | Acme Electronics | owner |
+
+**IMPORTANT - Admin Store Session:** The admin panel's `store.resolve:admin` middleware reads `current_store_id` from the session to determine which store the admin is managing. This value is set during the admin login flow. The `Admin\Auth\Login` Livewire component MUST set `session(['current_store_id' => $store->id])` after a successful login, using the first store the user has access to (via `store_users`). Without this, the admin dashboard will abort with 403 "No store selected."
 
 ---
 
@@ -1500,7 +1513,7 @@ Each has one default address with Faker-generated data.
 
 **Acme Fashion - 15 orders:**
 
-All orders use the customer's default shipping address (unless noted). Order numbers follow the "#NNNN" format starting from #1001.
+All orders use the customer's default shipping address (unless noted). Order numbers are stored as plain integers starting from 1001 (e.g., `"1001"`, `"1002"`). The `#` prefix is NOT part of the stored `order_number` value - it comes from the `order_number_prefix` setting and is prepended only when displaying to the user.
 
 ---
 

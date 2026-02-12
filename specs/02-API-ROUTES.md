@@ -145,9 +145,15 @@ All admin pages render Livewire full-page components. Data mutations happen via 
 
 ### 1.3 Storefront Routes
 
-**Middleware:** `web`, `store.resolve`
+**Middleware:** `web`, `store.resolve:storefront`
 
-These routes serve the public-facing storefront using Blade templates rendered through the active theme engine.
+These routes serve the public-facing storefront using Livewire full-page components. All routes in this group are protected by the `store.resolve:storefront` middleware which resolves the store from the request hostname.
+
+**CRITICAL - Acceptance Criteria:**
+1. The `GET /` route MUST render the `Storefront\Home` Livewire full-page component. It must NOT return the default Laravel `welcome` view. Ensure `routes/web.php` does NOT contain a catch-all `Route::get('/', function () { return view('welcome'); })` route that overrides the storefront home route.
+2. ALL routes below MUST be registered in `routes/web.php` inside a `Route::middleware(['store.resolve:storefront'])` group. Missing any route will result in a 404 for customers.
+3. The `store.resolve:storefront` middleware resolves the store from the request hostname via the `store_domains` table. The seeder MUST register the local development domain (`shop.test`) in `store_domains` (see spec 07, Section 3.3).
+4. Each Livewire component listed below MUST exist as a PHP class in `app/Livewire/Storefront/` with a corresponding Blade view.
 
 | Method | Path | Description | Component / View |
 |--------|------|-------------|------------------|
@@ -161,7 +167,7 @@ These routes serve the public-facing storefront using Blade templates rendered t
 
 #### Customer Account Routes
 
-**Additional middleware:** `auth:customer`
+**Middleware:** `store.resolve:storefront`, `auth.customer`
 
 | Method | Path | Description | Component |
 |--------|------|-------------|-----------|
@@ -170,7 +176,7 @@ These routes serve the public-facing storefront using Blade templates rendered t
 | GET | `/account/orders/{orderNumber}` | Order detail | `Storefront\Account\Orders\Show` |
 | GET | `/account/addresses` | Address book management | `Storefront\Account\Addresses\Index` |
 
-#### Customer Auth Routes (no auth required)
+#### Customer Auth Routes (store.resolve:storefront, no auth required)
 
 | Method | Path | Description | Component |
 |--------|------|-------------|-----------|
@@ -181,11 +187,15 @@ These routes serve the public-facing storefront using Blade templates rendered t
 | GET | `/reset-password/{token}` | Reset password form | `Storefront\Account\Auth\ResetPassword` |
 | POST | `/reset-password` | Reset password | Handled by Livewire action |
 
+**Note:** Customer auth routes also need `store.resolve:storefront` middleware because customer authentication is store-scoped. Without store resolution, the login/register forms cannot determine which store the customer belongs to.
+
 ---
 
 ### 1.4 Checkout Routes
 
-**Middleware:** `web`, `store.resolve`
+**Middleware:** `web`, `store.resolve:storefront`
+
+**CRITICAL:** Both the Checkout and Confirmation Livewire components MUST be created. The checkout page provides the browser-facing multi-step checkout UI that calls the checkout API endpoints internally.
 
 | Method | Path | Description | Component |
 |--------|------|-------------|-----------|

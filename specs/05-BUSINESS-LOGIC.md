@@ -31,8 +31,11 @@
 2. Look up `store_domains` table where `hostname` matches.
 3. Cache the hostname-to-store_id mapping using file cache with a 5-minute TTL. Cache key pattern: `store_domain:{hostname}`.
 4. Retrieve the full Store model and bind it as a singleton in the application container under the key `current_store`.
-5. If hostname is not found in `store_domains`: return HTTP 404.
-6. If the resolved store has `status = 'suspended'`: return HTTP 503 maintenance page.
+5. Share the store as a view variable via `View::share('currentStore', $store)` so Blade templates can access it.
+6. If hostname is not found in `store_domains`: return HTTP 404.
+7. If the resolved store has `status = 'suspended'`: return HTTP 503 maintenance page.
+
+**IMPORTANT:** The `store_domains` table MUST contain the local development hostname (e.g., `shop.test` for Laravel Herd projects) mapped to the primary store. Without this entry, ALL storefront routes will return 404 during local development. See spec 07, Section 3.3 (StoreDomainSeeder) for the required seed data.
 
 #### Admin Route Resolution (from session)
 
@@ -1079,8 +1082,10 @@ See Section 6.2 "Transition: payment_selected -> completed" for the full procedu
 ### 11.2 Order Numbering
 
 - Sequential per store, starting at 1001.
-- Format: configurable prefix (default: `#`) stored in `store_settings.settings_json` key `order_number_prefix`.
-- Generation: within the order creation transaction, find the maximum existing order number for the store and increment by 1.
+- The `order_number` column stores ONLY the numeric portion as a string (e.g., `"1001"`, `"1002"`). It does NOT include the prefix.
+- Display prefix: configurable (default: `#`) stored in `store_settings.settings_json` key `order_number_prefix`. The prefix is prepended ONLY at display time (in admin UI, storefront, emails, exports).
+- **CRITICAL:** The UI must format order numbers as `{prefix}{order_number}` (e.g., `#1001`). Since the prefix is NOT stored in the `order_number` field, the UI should prepend it exactly once. Do NOT store the prefix in the `order_number` column, and do NOT prepend it if the stored value already contains it.
+- Generation: within the order creation transaction, find the maximum existing order number for the store (cast to integer for comparison) and increment by 1.
 - Since this runs inside a SQLite transaction, there is no risk of duplicate numbers.
 
 ### 11.3 Order Statuses

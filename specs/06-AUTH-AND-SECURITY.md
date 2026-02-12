@@ -102,6 +102,33 @@ sequenceDiagram
 - Throttle: one reset email per 60 seconds per email address.
 - The "forgot password" response must be generic (do not reveal whether email exists).
 
+#### Admin Redirect Configuration
+
+**CRITICAL:** The application MUST configure middleware redirect targets in `bootstrap/app.php`:
+
+```php
+$middleware->redirectTo(
+    guests: '/admin/login',   // Unauthenticated users are sent here
+    users: '/admin',          // Authenticated users hitting guest-only routes are sent here
+);
+```
+
+This ensures:
+- Unauthenticated users accessing `/admin/*` routes are redirected to `/admin/login` (not `/login`).
+- Authenticated users accessing guest-only routes like `/admin/login` are redirected to `/admin` (not `/`).
+- Without this configuration, Laravel defaults to redirecting to `/` which shows the storefront (or a broken welcome page), not the admin dashboard.
+
+#### Admin Login - Store Session Setup
+
+After a successful admin login, the `Admin\Auth\Login` component MUST:
+1. Call `Auth::guard('web')->attempt($credentials)` to authenticate.
+2. Regenerate the session to prevent fixation.
+3. Look up the user's first available store via `store_users` relationship.
+4. Set `session(['current_store_id' => $store->id])` so the `store.resolve:admin` middleware can resolve the store.
+5. Redirect to `/admin`.
+
+Without step 4, the admin dashboard will abort with 403 "No store selected" because the `ResolveStore` middleware for admin reads `current_store_id` from the session.
+
 #### Admin Logout
 
 - Route: `POST /admin/logout` (via Livewire action or standard route).

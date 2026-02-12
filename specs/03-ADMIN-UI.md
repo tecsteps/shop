@@ -110,8 +110,14 @@ Each nav item displays an icon (via Flux icon component) and a text label. The a
 
 #### Responsive Behavior
 
-- **Desktop (lg and above):** Sidebar is always visible, fixed left, 256px wide. Main content has a left margin of 256px.
-- **Mobile (below lg):** Sidebar is hidden off-screen. A hamburger button (icon: bars-3) appears in the top bar. When user clicks it, the sidebar slides in as an overlay with a semi-transparent backdrop. Clicking the backdrop or a nav item closes it.
+- **Desktop (lg and above):** Sidebar uses `static` positioning (NOT `fixed`) and is always visible. It occupies 256px width within a flex layout (`flex min-h-screen`), so the main content naturally flows beside it without needing a left margin or offset. The sidebar must NOT use `x-show` or `x-cloak` for desktop visibility - use CSS `lg:block` / `hidden` classes instead. Alpine.js `x-show` should ONLY control mobile sidebar visibility (below `lg` breakpoint). Mixing `x-show` with responsive CSS classes like `lg:static` causes layout conflicts where the sidebar overlaps content.
+- **Mobile (below lg):** Sidebar is hidden off-screen by default (`hidden` + `-translate-x-full` + `fixed`). A hamburger button (icon: bars-3) appears in the top bar. When user clicks it, Alpine.js sets `sidebarOpen = true`, which adds `!block` and `translate-x-0` classes to slide the sidebar in as a fixed overlay with a semi-transparent backdrop. Clicking the backdrop or a nav item closes it.
+
+**CRITICAL implementation detail:** The sidebar `<aside>` element must use:
+- Base classes: `hidden w-64 -translate-x-full fixed inset-y-0 left-0 z-50 overflow-y-auto ...`
+- Desktop override classes: `lg:static lg:z-auto lg:block lg:translate-x-0` (makes it static and visible on desktop)
+- Alpine binding: `:class="{ 'translate-x-0 !block': sidebarOpen }"` (only for mobile toggle)
+- Do NOT use `x-show` on the sidebar. It conflicts with `lg:block` and causes the sidebar to be hidden on desktop until Alpine initializes, leading to layout shifts and overlap.
 
 ### 1.3 Top Bar
 
@@ -196,6 +202,38 @@ Components dispatch toasts after successful actions (e.g., "Product saved succes
 The admin supports dark mode via Tailwind's `dark:` variant. The mode follows the user's system preference by default. A toggle can be added in the profile dropdown later. All components and custom markup must include dark mode variants.
 
 Dark mode preference is persisted in `localStorage` under the key `theme` with values `light` or `dark`. On page load, the stored preference is applied before first paint to avoid flash of incorrect theme. If no preference is stored, the system preference (`prefers-color-scheme`) is used as default.
+
+### 1.7 Currency Formatting (Admin Panel)
+
+All monetary amounts are stored as integers in minor units (cents) throughout the database. The admin panel MUST format these for display using the same rules as the storefront:
+
+| Setting | Value |
+|---------|-------|
+| Conversion | Divide stored cents by 100 to get the display value |
+| Decimal separator | `.` (period) |
+| Thousands separator | `,` (comma) |
+| Currency code | After amount with space (e.g., `24.99 EUR`) |
+| Decimal places | Always 2 |
+| Free/zero amounts | Display as `0.00 EUR` |
+| Negative amounts (refunds) | Prefix with `-` (e.g., `-12.50 EUR`) |
+
+**CRITICAL:** Admin form inputs for prices (e.g., variant price, compare-at price, discount fixed amount, shipping rate amount) must accept values in standard currency format (e.g., `24.99`) and convert to/from cents internally. Do NOT display raw cent values (e.g., `2499`) to the admin user. Labels should say "Price" not "Price (cents)".
+
+**Helper:** Create a shared helper or Blade component (e.g., `formatMoney($cents, $currency)`) that both admin and storefront views use. This prevents inconsistent formatting.
+
+**Examples of correct admin display:**
+- Variant price 2499 cents -> input shows `24.99`, display shows `24.99 EUR`
+- Shipping rate config_json `{"amount": 499}` -> display shows `4.99 EUR`
+- Order total 5497 cents -> display shows `54.97 EUR`
+- Discount fixed value 500 cents -> display shows `5.00 EUR`
+
+### 1.8 HTML Content Fields
+
+Fields stored as HTML (e.g., `description_html` on products, `body_html` on pages, `description_html` on collections) must be handled as follows in admin forms:
+
+- **Edit form:** Use a plain `<textarea>` (Flux textarea component) that accepts raw HTML. The textarea displays the HTML source. Do NOT render the HTML as rich text in the textarea - it should show the markup tags.
+- **Display/preview contexts:** Render the HTML using `{!! $html !!}` (unescaped) within a `prose` styled container so headings, paragraphs, and lists render correctly.
+- **Future enhancement:** Replace the textarea with a WYSIWYG editor (e.g., Trix, TipTap). This is not required for the initial implementation.
 
 ---
 
@@ -913,7 +951,7 @@ A horizontal row of tab-style buttons (plain Tailwind, not Flux component). Opti
 
 | Column | Content |
 |--------|---------|
-| Order number | Link to order detail (e.g., "#1001"), uses Livewire navigate |
+| Order number | Link to order detail. Displayed as the store's `order_number_prefix` setting + the stored `order_number` value (e.g., prefix `#` + `1001` = `#1001`). The `order_number` column does NOT include the prefix, so the UI must prepend it exactly once. Uses Livewire navigate. |
 | Date | `placed_at` formatted as "M j, Y g:i A" |
 | Customer | Customer name or "Guest" |
 | Financial status | Flux badge: pending=zinc, paid=green, refunded=yellow, cancelled=red |
@@ -1377,6 +1415,18 @@ Sticky save bar at the bottom (same pattern as product form).
 
 ## 11. Settings Pages
 
+All settings pages (General, Shipping, Taxes) share a common tab navigation bar at the top. Each tab is a link to its corresponding route. The currently active tab MUST be visually highlighted (bold text, bottom border, or contrasting background) based on the current route. For example, when viewing `/admin/settings/shipping`, the "Shipping" tab must be highlighted and "General" must not be.
+
+**Tab navigation links:**
+
+| Tab Label | Route | Route Name |
+|-----------|-------|------------|
+| General | `/admin/settings` | `admin.settings.index` |
+| Shipping | `/admin/settings/shipping` | `admin.settings.shipping` |
+| Taxes | `/admin/settings/taxes` | `admin.settings.taxes` |
+
+Use `request()->routeIs('admin.settings.shipping')` (etc.) to determine the active tab and apply the highlighted styling.
+
 ### 11.1 General Settings
 
 **Route:** `GET /admin/settings`
@@ -1537,7 +1587,7 @@ Domains is a tab within the Settings page (`/admin/settings`), not a separate ro
 Each zone is displayed as a card with:
 - Zone name heading and Edit/Delete buttons in the header
 - Countries list as muted text
-- Rates table inside the zone card with columns: Name, Type (as badge), Config summary, Active (toggle switch), Actions (Edit/Delete buttons)
+- Rates table inside the zone card with columns: Name, Type (as badge), Config summary (for flat rates: read `config_json.amount` and format as currency, e.g., `{"amount": 499}` displays as `4.99 EUR`), Active (toggle switch), Actions (Edit/Delete buttons)
 - "Add rate" button at the bottom of each zone card
 
 "Add zone" button at the top of the page.
