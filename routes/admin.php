@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\AppsController;
+use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CollectionController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -16,6 +17,14 @@ use App\Http\Controllers\Admin\SearchSettingsController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ThemeController;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get('login', [AdminLoginController::class, 'show'])->name('login');
+        Route::post('login', [AdminLoginController::class, 'login'])->name('login.submit');
+        Route::post('logout', [AdminLoginController::class, 'logout'])->middleware('auth')->name('logout');
+    });
 
 Route::middleware(['auth', 'resolve.store:admin'])
     ->prefix('admin')

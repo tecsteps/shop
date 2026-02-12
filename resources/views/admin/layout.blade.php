@@ -17,7 +17,7 @@
 
                 <div class="flex items-center gap-3 text-sm text-zinc-600">
                     <span>{{ auth()->user()->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('admin.logout') }}">
                         @csrf
                         <button type="submit" class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100">
                             Log out

@@ -27,7 +27,7 @@ class RegisterController extends StorefrontController
             'name' => ['required', 'string', 'max:120'],
             'email' => [
                 'required',
-                'email:rfc,dns',
+                'email',
                 Rule::unique('customers', 'email')->where(fn ($query) => $query->where('store_id', $store->id)),
             ],
             'password' => ['required', 'confirmed', 'min:8'],

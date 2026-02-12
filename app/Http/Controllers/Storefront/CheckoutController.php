@@ -110,6 +110,21 @@ class CheckoutController extends StorefrontController
             : $shippingAddress;
 
         $requiresShipping = $this->requiresShipping($checkout->cart);
+
+        if ($requiresShipping && ($shippingAddress['country_code'] ?? '') === '') {
+            $fallbackCountryCode = \App\Models\ShippingZone::query()
+                ->orderBy('id')
+                ->get()
+                ->flatMap(static fn ($zone): array => (array) $zone->countries_json)
+                ->map(static fn ($code): string => strtoupper((string) $code))
+                ->first();
+
+            if (is_string($fallbackCountryCode) && $fallbackCountryCode !== '') {
+                $shippingAddress['country_code'] = $fallbackCountryCode;
+                $shippingAddress['country'] = $shippingAddress['country'] ?? $fallbackCountryCode;
+            }
+        }
+
         $availableRates = $requiresShipping
             ? $this->availableShippingRates($shippingAddress)
             : collect();
@@ -147,7 +162,7 @@ class CheckoutController extends StorefrontController
         $requiresShipping = $this->requiresShipping($cart);
 
         $rules = [
-            'email' => ['required', 'email:rfc,dns'],
+            'email' => ['required', 'email'],
             'payment_method' => ['required', Rule::in([
                 PaymentMethod::CreditCard->value,
                 PaymentMethod::Paypal->value,

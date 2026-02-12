@@ -5,6 +5,8 @@
     $available = $variant?->inventoryItem
         ? ($variant->inventoryItem->quantity_on_hand - $variant->inventoryItem->quantity_reserved)
         : null;
+    $isBackorderable = $variant?->inventoryItem?->policy?->value === 'continue';
+    $isSoldOut = $available !== null && $available <= 0 && ! $isBackorderable;
 @endphp
 
 <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" aria-label="Product card: {{ $product->title }}">
@@ -28,8 +30,8 @@
 
         <div class="mt-auto space-y-2">
             @if ($available !== null)
-                <p class="text-xs {{ $available > 0 ? 'text-emerald-700' : 'text-rose-700' }}" aria-live="polite">
-                    {{ $available > 0 ? 'In stock' : 'Sold out' }}
+                <p class="text-xs {{ $available > 0 ? 'text-emerald-700' : ($isBackorderable ? 'text-blue-700' : 'text-rose-700') }}" aria-live="polite">
+                    {{ $available > 0 ? 'In stock' : ($isBackorderable ? 'Available on backorder' : 'Sold out') }}
                 </p>
             @endif
 
@@ -39,8 +41,8 @@
                     <input type="hidden" name="variant_id" value="{{ $variant->id }}">
                     <label class="block text-xs font-medium text-zinc-700" for="quantity-{{ $variant->id }}">Quantity</label>
                     <input id="quantity-{{ $variant->id }}" type="number" name="quantity" min="1" value="1" class="w-full rounded-md border-zinc-300 text-sm focus:border-zinc-500 focus:ring-zinc-500">
-                    <button type="submit" class="w-full rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-700" @disabled($available !== null && $available <= 0)>
-                        {{ $available !== null && $available <= 0 ? 'Sold out' : 'Add to cart' }}
+                    <button type="submit" class="w-full rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-700" @disabled($isSoldOut)>
+                        {{ $isSoldOut ? 'Sold out' : 'Add to cart' }}
                     </button>
                 </form>
             @else
