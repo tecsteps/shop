@@ -37,6 +37,13 @@
                             ['label' => 'Orders', 'route' => 'admin.orders.index', 'match' => 'admin.orders.*'],
                             ['label' => 'Customers', 'route' => 'admin.customers.index', 'match' => 'admin.customers.*'],
                             ['label' => 'Discounts', 'route' => 'admin.discounts.index', 'match' => 'admin.discounts.*'],
+                            ['label' => 'Pages', 'route' => 'admin.pages.index', 'match' => 'admin.pages.*'],
+                            ['label' => 'Navigation', 'route' => 'admin.navigation.index', 'match' => 'admin.navigation.*'],
+                            ['label' => 'Themes', 'route' => 'admin.themes.index', 'match' => 'admin.themes.*'],
+                            ['label' => 'Search', 'route' => 'admin.search.settings.edit', 'match' => 'admin.search.*'],
+                            ['label' => 'Analytics', 'route' => 'admin.analytics.index', 'match' => 'admin.analytics.*'],
+                            ['label' => 'Apps', 'route' => 'admin.apps.index', 'match' => 'admin.apps.*'],
+                            ['label' => 'Developers', 'route' => 'admin.developers.index', 'match' => 'admin.developers.*'],
                             ['label' => 'Settings', 'route' => 'admin.settings.general', 'match' => 'admin.settings.*'],
                         ];
                     @endphp
