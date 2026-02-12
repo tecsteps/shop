@@ -7,6 +7,8 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Events\OrderCancelled;
 use App\Models\Order;
+use App\Models\Store;
+use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -44,5 +46,12 @@ class OrderService
         ]);
 
         OrderCancelled::dispatch($order);
+
+        try {
+            $store = Store::find($order->store_id);
+            app(WebhookService::class)->dispatch($store, 'orders/cancel', $order->toArray());
+        } catch (\Throwable $e) {
+            Log::warning('Webhook dispatch failed for orders/cancel', ['error' => $e->getMessage()]);
+        }
     }
 }

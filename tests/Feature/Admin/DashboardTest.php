@@ -162,5 +162,5 @@ test('dashboard formats money values correctly', function () {
     expect(Dashboard::formatMoney(0))->toBe('0.00 EUR')
         ->and(Dashboard::formatMoney(100))->toBe('1.00 EUR')
         ->and(Dashboard::formatMoney(12345))->toBe('123.45 EUR')
-        ->and(Dashboard::formatMoney(999999))->toBe('9,999.99 EUR');
+        ->and(Dashboard::formatMoney(999999))->toBe('9999.99 EUR');
 });

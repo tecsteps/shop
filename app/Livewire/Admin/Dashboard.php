@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Support\MoneyFormatter;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
@@ -60,6 +61,6 @@ class Dashboard extends Component
 
     public static function formatMoney(int $cents): string
     {
-        return number_format($cents / 100, 2, '.', ',').' EUR';
+        return MoneyFormatter::format($cents);
     }
 }

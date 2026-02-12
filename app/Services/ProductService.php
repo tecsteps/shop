@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Support\HandleGenerator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
 class ProductService
@@ -33,6 +34,12 @@ class ProductService
                 ]);
             }
 
+            try {
+                app(WebhookService::class)->dispatch($store, 'products/create', $product->toArray());
+            } catch (\Throwable $e) {
+                Log::warning('Webhook dispatch failed for products/create', ['error' => $e->getMessage()]);
+            }
+
             return $product;
         });
     }
@@ -54,7 +61,16 @@ class ProductService
 
             $product->update($data);
 
-            return $product->fresh();
+            $freshProduct = $product->fresh();
+
+            try {
+                $store = Store::find($freshProduct->store_id);
+                app(WebhookService::class)->dispatch($store, 'products/update', $freshProduct->toArray());
+            } catch (\Throwable $e) {
+                Log::warning('Webhook dispatch failed for products/update', ['error' => $e->getMessage()]);
+            }
+
+            return $freshProduct;
         });
     }
 
@@ -83,7 +99,17 @@ class ProductService
             throw new InvalidArgumentException('Cannot delete: product has order references.');
         }
 
+        $productData = $product->toArray();
+        $storeId = $product->store_id;
+
         $product->delete();
+
+        try {
+            $store = Store::find($storeId);
+            app(WebhookService::class)->dispatch($store, 'products/delete', $productData);
+        } catch (\Throwable $e) {
+            Log::warning('Webhook dispatch failed for products/delete', ['error' => $e->getMessage()]);
+        }
     }
 
     private function validateTransition(Product $product, ProductStatus $from, ProductStatus $to): void

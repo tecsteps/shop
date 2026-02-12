@@ -20,6 +20,7 @@ class Customer extends Authenticatable
         'last_name',
         'phone',
         'accepts_marketing',
+        'last_login_at',
     ];
 
     /** @var list<string> */

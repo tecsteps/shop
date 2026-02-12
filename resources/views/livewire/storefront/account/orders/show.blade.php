@@ -50,10 +50,10 @@
                             </div>
                             <div class="text-right text-sm">
                                 <p class="text-gray-500 dark:text-gray-400">
-                                    {{ number_format($line->unit_price_amount / 100, 2) }} x {{ $line->quantity }}
+                                    {{ \App\Support\MoneyFormatter::format($line->unit_price_amount, $order->currency ?? 'EUR') }} x {{ $line->quantity }}
                                 </p>
                                 <p class="font-medium text-gray-900 dark:text-white">
-                                    {{ number_format($line->total_amount / 100, 2) }} {{ $order->currency }}
+                                    {{ \App\Support\MoneyFormatter::format($line->total_amount, $order->currency ?? 'EUR') }}
                                 </p>
                             </div>
                         </div>
@@ -70,29 +70,29 @@
                 <dl class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <dt class="text-gray-500 dark:text-gray-400">Subtotal</dt>
-                        <dd class="text-gray-900 dark:text-white">{{ number_format($order->subtotal_amount / 100, 2) }} {{ $order->currency }}</dd>
+                        <dd class="text-gray-900 dark:text-white">{{ \App\Support\MoneyFormatter::format($order->subtotal_amount, $order->currency ?? 'EUR') }}</dd>
                     </div>
                     @if($order->shipping_amount > 0)
                         <div class="flex justify-between">
                             <dt class="text-gray-500 dark:text-gray-400">Shipping</dt>
-                            <dd class="text-gray-900 dark:text-white">{{ number_format($order->shipping_amount / 100, 2) }} {{ $order->currency }}</dd>
+                            <dd class="text-gray-900 dark:text-white">{{ \App\Support\MoneyFormatter::format($order->shipping_amount, $order->currency ?? 'EUR') }}</dd>
                         </div>
                     @endif
                     @if($order->tax_amount > 0)
                         <div class="flex justify-between">
                             <dt class="text-gray-500 dark:text-gray-400">Tax</dt>
-                            <dd class="text-gray-900 dark:text-white">{{ number_format($order->tax_amount / 100, 2) }} {{ $order->currency }}</dd>
+                            <dd class="text-gray-900 dark:text-white">{{ \App\Support\MoneyFormatter::format($order->tax_amount, $order->currency ?? 'EUR') }}</dd>
                         </div>
                     @endif
                     @if($order->discount_amount > 0)
                         <div class="flex justify-between">
                             <dt class="text-gray-500 dark:text-gray-400">Discount</dt>
-                            <dd class="text-green-600 dark:text-green-400">-{{ number_format($order->discount_amount / 100, 2) }} {{ $order->currency }}</dd>
+                            <dd class="text-green-600 dark:text-green-400">-{{ \App\Support\MoneyFormatter::format($order->discount_amount, $order->currency ?? 'EUR') }}</dd>
                         </div>
                     @endif
                     <div class="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-800 font-medium">
                         <dt class="text-gray-900 dark:text-white">Total</dt>
-                        <dd class="text-gray-900 dark:text-white">{{ number_format($order->total_amount / 100, 2) }} {{ $order->currency }}</dd>
+                        <dd class="text-gray-900 dark:text-white">{{ \App\Support\MoneyFormatter::format($order->total_amount, $order->currency ?? 'EUR') }}</dd>
                     </div>
                 </dl>
             </div>

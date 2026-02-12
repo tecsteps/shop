@@ -9,7 +9,9 @@ use App\Enums\RefundStatus;
 use App\Events\OrderRefunded;
 use App\Models\Order;
 use App\Models\Refund;
+use App\Models\Store;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
 class RefundService
@@ -113,6 +115,13 @@ class RefundService
                 }
 
                 OrderRefunded::dispatch($order->fresh());
+            }
+
+            try {
+                $store = Store::find($order->store_id);
+                app(WebhookService::class)->dispatch($store, 'refunds/create', $refund->toArray());
+            } catch (\Throwable $e) {
+                Log::warning('Webhook dispatch failed for refunds/create', ['error' => $e->getMessage()]);
             }
 
             return $refund;

@@ -10,6 +10,8 @@ use App\Events\OrderFulfilled;
 use App\Exceptions\FulfillmentGuardException;
 use App\Models\Fulfillment;
 use App\Models\Order;
+use App\Models\Store;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
 class FulfillmentService
@@ -59,6 +61,13 @@ class FulfillmentService
         }
 
         $this->updateOrderFulfillmentStatus($order);
+
+        try {
+            $store = Store::find($order->store_id);
+            app(WebhookService::class)->dispatch($store, 'fulfillments/create', $fulfillment->toArray());
+        } catch (\Throwable $e) {
+            Log::warning('Webhook dispatch failed for fulfillments/create', ['error' => $e->getMessage()]);
+        }
 
         return $fulfillment;
     }

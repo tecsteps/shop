@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Analytics;
 
-use App\Models\AnalyticsDaily;
+use App\Services\AnalyticsService;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -22,49 +22,55 @@ class Index extends Component
     public function render(): View
     {
         $store = app('current_store');
+        $service = app(AnalyticsService::class);
+
+        $endDate = now()->toDateString();
 
         $startDate = match ($this->period) {
-            'last_7_days' => now()->subDays(7)->startOfDay(),
-            'last_30_days' => now()->subDays(30)->startOfDay(),
-            'last_90_days' => now()->subDays(90)->startOfDay(),
-            default => now()->subDays(30)->startOfDay(),
+            'last_7_days' => now()->subDays(7)->toDateString(),
+            'last_30_days' => now()->subDays(30)->toDateString(),
+            'last_90_days' => now()->subDays(90)->toDateString(),
+            default => now()->subDays(30)->toDateString(),
         };
 
-        $pageViews = AnalyticsDaily::query()
-            ->where('store_id', $store->id)
-            ->where('metric', 'page_views')
-            ->where('date', '>=', $startDate)
-            ->sum('value');
+        $dailyMetrics = $service->getDailyMetrics($store, $startDate, $endDate);
 
-        $revenueData = AnalyticsDaily::query()
-            ->where('store_id', $store->id)
-            ->where('metric', 'revenue')
-            ->where('date', '>=', $startDate)
-            ->orderBy('date')
-            ->get()
-            ->map(fn ($row) => [
-                'date' => $row->date->format('M d'),
-                'value' => $row->value,
-            ])
-            ->toArray();
+        $revenueData = [];
+        $totalRevenue = 0;
+        $totalPageViews = 0;
+        $totalOrders = 0;
+        $totalVisits = 0;
 
-        $totalRevenue = array_sum(array_column($revenueData, 'value'));
+        foreach ($dailyMetrics as $date => $metrics) {
+            foreach ($metrics as $metric) {
+                match ($metric->metric) {
+                    'revenue_amount' => $totalRevenue += $metric->value,
+                    'page_views' => $totalPageViews += $metric->value,
+                    'orders_count' => $totalOrders += $metric->value,
+                    'visits_count' => $totalVisits += $metric->value,
+                    default => null,
+                };
 
-        $topProducts = AnalyticsDaily::query()
-            ->where('store_id', $store->id)
-            ->where('metric', 'product_views')
-            ->where('date', '>=', $startDate)
-            ->selectRaw('dimension, SUM(value) as total')
-            ->groupBy('dimension')
-            ->orderByDesc('total')
-            ->limit(10)
-            ->get()
-            ->toArray();
+                if ($metric->metric === 'revenue_amount') {
+                    $revenueData[] = [
+                        'date' => $metric->date->format('M d'),
+                        'value' => $metric->value,
+                    ];
+                }
+            }
+        }
+
+        $funnel = $service->getConversionFunnel($store, $startDate, $endDate);
+        $topProducts = $service->getTopProducts($store, $startDate, $endDate);
 
         return view('livewire.admin.analytics.index', [
-            'pageViews' => (int) $pageViews,
-            'totalRevenue' => (int) $totalRevenue,
+            'pageViews' => $totalPageViews,
+            'totalRevenue' => $totalRevenue,
+            'totalOrders' => $totalOrders,
+            'totalVisits' => $totalVisits,
             'revenueData' => $revenueData,
+            'revenueChartJson' => json_encode($revenueData),
+            'funnel' => $funnel,
             'topProducts' => $topProducts,
         ]);
     }
