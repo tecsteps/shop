@@ -30,6 +30,47 @@ These decisions adapt the original PDF spec for a self-contained, benchmarkable 
 
 ---
 
+## Playwright MCP Verification Protocol
+
+CRITICAL: After completing each phase that produces user-facing UI, you MUST verify it works
+by performing real browser interactions using Playwright MCP tools. This is NOT optional.
+
+### Rules
+
+1. **Render tests are not enough.** Visiting a page and confirming text appears does NOT count
+   as verification. You must perform every user action (click buttons, fill forms, select options)
+   and verify the resulting state change.
+
+2. **Click every interactive element.** Every button, link, dropdown, and form input on a page
+   must be tested. If a button exists in the UI, click it and verify it does something. If a
+   link exists, click it and verify it navigates (not broken by anchors, encoding, or missing
+   routes). If a form exists, fill and submit it.
+
+3. **Check page completeness against the spec.** After a page renders, compare what you see
+   against spec 03 (Admin UI) or spec 04 (Storefront UI). If the spec says "sort dropdown",
+   verify a sort dropdown exists and works. If the spec says "breadcrumbs", verify breadcrumbs
+   render. Missing elements = failing verification.
+
+4. **Check for JavaScript errors.** After each page interaction, check the browser console for
+   JS errors (ReferenceError, TypeError, etc.). A page that renders but has JS errors is broken.
+   Use `browser_console_messages` to check.
+
+5. **Verify link navigation.** When a page contains links to other pages (e.g., order links,
+   product links), click at least one link and confirm it navigates to the correct destination.
+   Watch for URLs broken by special characters (e.g., `#` in order numbers becoming anchor
+   fragments).
+
+6. **Verify after each phase, not at the end.** Each phase below includes a "Playwright MCP
+   Verification" checklist. You must execute every item using the Playwright MCP tools (navigate,
+   click, fill, snapshot) and confirm the expected result before moving to the next phase.
+
+7. **If a verification fails, fix it before proceeding.** A failing interaction means the feature
+   is broken. Do not move to the next phase until all verification items pass.
+
+8. **Log results.** After each verification, briefly note what passed/failed in specs/progress.md.
+
+---
+
 ## 2. Implementation Phases (Build Order)
 
 Each phase builds on the previous. A coding agent should execute these in strict sequential order. Tests are written alongside each phase (see Section 3 for the full test specification).
@@ -240,6 +281,12 @@ Each policy checks user role via `store_users` pivot for the current store. Help
 | View customers | Y | Y | Y | Y |
 | Update customers | Y | Y | Y | N |
 
+#### Playwright MCP Verification
+
+- [ ] Navigate to `http://shop.test/admin/login` -> confirm login form renders (assertSee "Sign in")
+- [ ] Fill email `admin@acme.test`, fill password `password`, click "Sign in" -> confirm redirect to `/admin` (assertSee "Dashboard")
+- [ ] Navigate to `http://shop.test/admin` while unauthenticated -> confirm redirect to `/admin/login`
+
 ---
 
 ### Phase 2: Catalog (Products, Variants, Inventory, Collections, Media)
@@ -437,6 +484,45 @@ Base layout (`app.blade.php`): header with nav, announcement bar, main content, 
 
 Caches per store with 5-minute TTL.
 
+#### Playwright MCP Verification
+
+**Home page (`/`):**
+- [ ] Navigate to `http://shop.test/` -> confirm storefront renders (NOT the Laravel welcome page)
+- [ ] Confirm hero banner with heading, subheading, and "Shop Now" CTA button
+- [ ] Click "Shop Now" -> confirm navigation to `/collections`
+- [ ] Confirm featured collections section shows collection cards with product counts
+- [ ] Confirm featured products section shows product cards with titles and prices in EUR
+- [ ] Check browser console for JS errors -> confirm none
+
+**Navigation and layout:**
+- [ ] Confirm header has logo, search icon, cart icon, account link
+- [ ] Confirm main navigation menu has items (links to collections, pages) - NOT empty
+- [ ] Click a navigation menu link -> confirm it navigates to the correct page
+- [ ] Click cart icon in header -> confirm cart drawer opens (not broken by Alpine/Livewire event mismatch)
+- [ ] Confirm footer has link columns, store info (not just copyright)
+- [ ] Confirm page `<title>` is page-specific (e.g., "Acme Fashion" on home, "T-Shirts - Acme Fashion" on collection)
+
+**Collections:**
+- [ ] Navigate to `http://shop.test/collections` -> confirm collections listing with product counts
+- [ ] Click a collection -> confirm collection page renders with product grid
+- [ ] Confirm collection page has: breadcrumbs, sort dropdown, product cards with images/prices
+- [ ] Use the sort dropdown -> confirm products reorder
+- [ ] Confirm product cards show: title, price, product image (not just placeholder icon)
+
+**Product page:**
+- [ ] Navigate to `http://shop.test/products/classic-cotton-t-shirt` -> confirm product title, price, description, variant selectors, Add to Cart button
+- [ ] Confirm breadcrumbs render (Home > Collection > Product)
+- [ ] Change variant selection (e.g., select different size) -> confirm price updates if variants have different prices
+- [ ] Confirm stock messaging shows (e.g., "In stock")
+- [ ] Confirm quantity selector is present ([-] [qty] [+] stepper)
+- [ ] Navigate to a product with `inventory_policy: deny` and 0 stock -> confirm "Sold out" message and Add to Cart is disabled
+
+**Other pages:**
+- [ ] Navigate to `http://shop.test/pages/about` -> confirm page content renders with proper prose styling
+- [ ] Navigate to `http://shop.test/account/login` -> confirm login form renders (NOT 404)
+- [ ] Navigate to `http://shop.test/account/register` -> confirm registration form renders (NOT 404)
+- [ ] Navigate to a non-existent URL -> confirm custom 404 page renders within storefront layout (not default Laravel 404)
+
 ---
 
 ### Phase 4: Cart, Checkout, Discounts, Shipping, Taxes
@@ -594,6 +680,33 @@ Result stored in `checkouts.totals_json` as snapshot.
 | `Storefront\Checkout\Show` | Multi-step: Contact/Address -> Shipping method -> Payment. Stepper UI. |
 | `Storefront\Checkout\Confirmation` | Order confirmation: order number, items, totals, next steps |
 
+#### Playwright MCP Verification
+
+**Add to cart (the most critical interaction):**
+- [ ] Navigate to `/products/classic-cotton-t-shirt`
+- [ ] Confirm variant selectors have `wire:model` bindings (changing selection must do something)
+- [ ] Select size "M", select color "Black"
+- [ ] Click "Add to cart" -> confirm cart drawer opens showing "Classic Cotton T-Shirt" and "24.99"
+- [ ] Close cart drawer, click cart icon in header -> confirm cart drawer reopens showing the item (not empty/static)
+- [ ] Check browser console for JS errors -> confirm none
+
+**Cart page:**
+- [ ] Navigate to `/cart` -> confirm item appears with correct title, variant (M / Black), and price (24.99 EUR)
+- [ ] Click "+" to increment quantity -> confirm quantity shows 2, line total shows 49.98
+- [ ] Click "-" to decrement quantity -> confirm quantity shows 1, line total shows 24.99
+- [ ] Enter discount code "WELCOME10", click "Apply" -> confirm 10% discount applied and totals update
+- [ ] Click "Remove" -> confirm "Your cart is empty" message
+- [ ] Confirm empty cart state does NOT show "Proceed to Checkout" button
+
+**Checkout flow:**
+- [ ] Add product again, navigate to `/checkout` -> confirm checkout form renders with address/contact step
+- [ ] Fill email, name, address fields, click "Continue" -> confirm shipping method step renders
+- [ ] Confirm shipping rates display with correct amounts (e.g., "Standard Shipping - 4.99 EUR", not "0.00 EUR")
+- [ ] Select shipping method, click "Continue" -> confirm payment step renders
+- [ ] Fill payment details (card 4242424242424242, any expiry/CVV), click "Pay" -> confirm order confirmation page
+- [ ] Confirm order confirmation shows: order number, "Thank you" message, line items, totals
+- [ ] Click "View Order" link on confirmation page -> confirm it navigates correctly (not broken by `#` in URL)
+
 ---
 
 ### Phase 5: Payments, Orders, Fulfillment
@@ -741,6 +854,12 @@ Updates `order.fulfillment_status` based on whether all lines are fulfilled (`fu
 | Event | `OrderCancelled` | Dispatched when order is cancelled |
 | Event | `OrderRefunded` | Dispatched when refund is processed |
 
+#### Playwright MCP Verification
+
+- [ ] Complete a full purchase flow: navigate to product, add to cart, go to checkout, fill address, select shipping, pay with card 4242424242424242 -> confirm order confirmation page with order number
+- [ ] Navigate to `/admin/login`, log in as admin, navigate to Orders -> confirm the new order appears in the list
+- [ ] Click the order -> confirm line items, payment status "Paid", fulfillment status "Unfulfilled"
+
 ---
 
 ### Phase 6: Customer Accounts
@@ -767,6 +886,30 @@ Updates `order.fulfillment_status` based on whether all lines are fulfilled (`fu
 | `Storefront\Account\Addresses\Index` | `GET /account/addresses` | Address book CRUD |
 
 Logout: `POST /account/logout` handled by Livewire action. Invalidates session, regenerates CSRF token, redirects to `/account/login`.
+
+#### Playwright MCP Verification
+
+**Registration:**
+- [ ] Navigate to `/account/register`
+- [ ] Fill name, email, password, confirm password, click "Create account" -> confirm redirect to customer dashboard
+- [ ] Confirm dashboard shows welcome message with customer name
+- [ ] Confirm dashboard has quick link cards (Orders, Addresses, Log out)
+
+**Login/Logout:**
+- [ ] Click "Log out" -> confirm redirect to `/account/login`
+- [ ] Navigate to `/account/login`, fill credentials, click "Sign in" -> confirm dashboard access
+
+**Order history:**
+- [ ] Navigate to `/account/orders` -> confirm order history table renders with orders
+- [ ] Confirm order status badges render with visible text and color (not empty `<span>` tags)
+- [ ] Click "View" link on an order -> confirm it navigates to the order detail page (NOT broken by `#` in URL)
+- [ ] Confirm order detail page shows: order number, date, line items with SKUs, shipping/billing addresses, payment method, totals breakdown
+
+**Addresses:**
+- [ ] Navigate to `/account/addresses` -> confirm address list renders
+- [ ] Click "+ Add new address" -> confirm modal opens without JS errors
+- [ ] Fill address form, submit -> confirm address appears in list
+- [ ] Click "Edit" on an address -> confirm edit modal opens and pre-fills data
 
 ---
 
@@ -851,6 +994,14 @@ Refund modal: enter amount (partial or full), reason, restock checkbox, submit.
 | `Admin\Apps\Show` | Installed app detail |
 | `Admin\Developers\Index` | API token management, webhook subscriptions |
 
+#### Playwright MCP Verification
+
+- [ ] Log in as admin, navigate to Products, click "Add product"
+- [ ] Fill product form, click "Save" -> confirm success message, product appears in list
+- [ ] Navigate to Orders, click an order -> confirm line items, totals, fulfillment actions
+- [ ] Click "Create fulfillment", fill tracking info, click "Fulfill items" -> confirm fulfillment created
+- [ ] Navigate to Settings > Shipping -> confirm rates show correct amounts (not 0.00)
+
 ---
 
 ### Phase 8: Search
@@ -884,6 +1035,14 @@ Refund modal: enter amount (partial or full), reason, restock checkbox, submit.
 |-----------|-------------|
 | `Storefront\Search\Modal` | Search-as-you-type modal with autocomplete results |
 | `Storefront\Search\Index` | Full search results page with filters (vendor, price range, collection), sort (relevance, price, newest), pagination |
+
+#### Playwright MCP Verification
+
+- [ ] Click search icon in header -> confirm search modal opens (no Alpine/Livewire event mismatch)
+- [ ] Type "t-shirt" in search modal -> confirm autocomplete results appear (not "No results found")
+- [ ] Click a search result -> confirm navigation to the product page
+- [ ] Navigate to `/search?q=t-shirt` -> confirm search results page shows matching products with result count
+- [ ] Check browser console for JS errors -> confirm none
 
 ---
 
@@ -960,6 +1119,62 @@ Requirements:
 4. Error pages: styled 404 and 503 pages matching the storefront theme
 5. Structured logging: JSON channel in `config/logging.php`
 6. Seed data: comprehensive seeders for demo stores
+7. Verify admin sidebar does NOT overlap main content on desktop (sidebar must use `lg:static` positioning, not `fixed`)
+8. Verify all monetary amounts display as formatted currency (e.g., `24.99 EUR`), NOT raw cents (e.g., `2499`)
+9. Verify order numbers display with exactly one prefix (e.g., `#1001`), not double-prefixed (e.g., `##1001`)
+10. Verify shipping rates display correct formatted amounts from `config_json.amount` (e.g., `4.99 EUR`), not `0.00 EUR`
+
+#### Playwright MCP Verification
+
+This is the final comprehensive verification. Go page by page and verify completeness.
+
+**Storefront - Home:**
+- [ ] Navigate to `/` -> confirm hero, featured collections, featured products render
+- [ ] Confirm product cards show images (not placeholder icons), titles, formatted prices
+- [ ] Confirm sale products show compare-at price with strikethrough styling and sale badge
+- [ ] If newsletter form exists, fill email and click "Subscribe" -> confirm it does something (not a dead button)
+
+**Storefront - Navigation and Layout:**
+- [ ] Confirm main navigation has menu items linking to collections and pages (not empty)
+- [ ] Confirm footer has link columns, social links, payment icons, store info
+- [ ] Confirm page-specific `<title>` tags (not generic "Acme Fashion" on every page)
+- [ ] Confirm announcement bar renders if configured
+- [ ] Navigate to a non-existent URL -> confirm custom 404 page within storefront layout
+
+**Storefront - Full purchase flow (end to end):**
+- [ ] Browse product, select variant, confirm price updates on variant change
+- [ ] Confirm quantity selector works on product page
+- [ ] Click "Add to cart" -> cart drawer opens with item, correct price, quantity controls
+- [ ] Click cart icon in header -> cart drawer opens (Alpine/Livewire events work)
+- [ ] Navigate to `/cart` -> item with correct details, discount code input works
+- [ ] Proceed to checkout -> complete all steps -> order confirmation with order number
+- [ ] Click "View Order" on confirmation -> navigates correctly (no broken `#` URL)
+
+**Storefront - Customer Account:**
+- [ ] Register new customer -> dashboard with welcome message
+- [ ] Login/logout flow works
+- [ ] Order history shows orders with visible status badges (not empty spans)
+- [ ] Click order "View" link -> navigates to order detail (not broken by `#` in URL)
+- [ ] Order detail shows line items, addresses, payment method, totals
+- [ ] Address management: add, edit, delete addresses via modals (no JS errors)
+
+**Storefront - Search:**
+- [ ] Search icon opens search modal (no event mismatch)
+- [ ] Search modal shows autocomplete results (not always "No results")
+- [ ] Search results page shows products with count, filters, sort
+
+**Admin:**
+- [ ] Log in as admin at `/admin/login` -> confirm dashboard with KPI tiles
+- [ ] Navigate to admin Products -> confirm 20+ products with formatted prices (e.g., "24.99 EUR")
+- [ ] Navigate to admin Orders -> confirm order numbers with single `#` prefix (not `##`)
+- [ ] Navigate to admin Settings > Shipping -> confirm rates show 4.99 EUR and 9.99 EUR (not 0.00)
+- [ ] Verify admin sidebar does not overlap main content on desktop viewport
+
+**Responsive:**
+- [ ] Resize browser to mobile viewport (375px width)
+- [ ] Confirm hamburger menu appears and works
+- [ ] Confirm storefront pages are usable at mobile width
+- [ ] Check browser console for JS errors at each viewport -> confirm none
 
 ---
 
@@ -975,6 +1190,51 @@ Requirements:
 4. Run a fresh migration with seeding and confirm all migrations and seeders succeed without errors
 5. Manual smoke: visit storefront, navigate products, add to cart, checkout
 6. Manual smoke: visit admin login, authenticate, manage products and orders
+
+---
+
+### Post-Implementation Smoke Test Checklist
+
+**CRITICAL:** After all phases are complete and seeders have been run, verify the following acceptance criteria manually or via automated tests. These checks catch the most common implementation errors.
+
+#### Storefront Smoke Tests
+
+| # | Test | Expected Result |
+|---|------|-----------------|
+| S1 | Visit `http://shop.test/` | Storefront home page renders with hero banner, featured collections, and featured products. Must NOT show the default Laravel "welcome" page. |
+| S2 | Visit `http://shop.test/collections` | Collections index page renders with 4 collections (New Arrivals, T-Shirts, Pants & Jeans, Sale). |
+| S3 | Visit `http://shop.test/collections/t-shirts` | T-Shirts collection page renders with product grid showing products. |
+| S4 | Visit `http://shop.test/products/classic-cotton-t-shirt` | Product detail page renders with title, description, variant selector, and add-to-cart button. |
+| S5 | Visit `http://shop.test/cart` | Cart page renders (empty cart state with "Continue shopping" link). |
+| S6 | Visit `http://shop.test/search` | Search page renders with search input and empty results. |
+| S7 | Visit `http://shop.test/pages/about` | About Us page renders with body HTML content. |
+| S8 | Visit `http://shop.test/account/login` | Customer login page renders with email/password form. Must NOT return 404. |
+| S9 | Visit `http://shop.test/account/register` | Customer registration page renders with form fields. Must NOT return 404. |
+| S10 | Add a product to cart, proceed to checkout | Checkout page renders with multi-step form (Contact, Shipping, Payment). |
+
+#### Admin Smoke Tests
+
+| # | Test | Expected Result |
+|---|------|-----------------|
+| A1 | Visit `http://shop.test/admin` (unauthenticated) | Redirects to `http://shop.test/admin/login`. Must NOT redirect to `/`. |
+| A2 | Visit `http://shop.test/admin/login` | Admin login form renders with email/password fields. |
+| A3 | Log in as `admin@acme.test` / `password` | Redirects to `/admin` (dashboard). Dashboard shows KPI tiles with data. |
+| A4 | Visit `http://shop.test/admin/login` (while authenticated) | Redirects to `/admin`. Must NOT redirect to `/`. |
+| A5 | Check admin sidebar on desktop viewport | Sidebar is visible, positioned statically (not overlapping main content). Navigation items are clickable. |
+| A6 | Visit `http://shop.test/admin/products` | Products list renders with 20 products, each showing formatted prices (e.g., `24.99 EUR`). |
+| A7 | Visit `http://shop.test/admin/products/1/edit` | Product edit form shows title, description as HTML in textarea, variants with formatted prices (e.g., `24.99`). |
+| A8 | Visit `http://shop.test/admin/orders` | Orders list shows 15 orders. Order numbers display as `#1001`, `#1002`, etc. (single `#` prefix, not `##`). |
+| A9 | Visit `http://shop.test/admin/settings/shipping` | Shipping zones and rates display. Standard Shipping shows `4.99 EUR`, Express shows `9.99 EUR`. Must NOT show `0.00 EUR`. |
+| A10 | Visit `http://shop.test/admin/settings/shipping` and check tab highlighting | The "Shipping" tab in the settings navigation is visually highlighted/active. |
+
+#### Database Verification
+
+| # | Check | Expected |
+|---|-------|----------|
+| D1 | `SELECT * FROM store_domains WHERE hostname = 'shop.test'` | Returns 1 row with `type = 'storefront'` and `store_id` pointing to Acme Fashion. |
+| D2 | `SELECT email_verified_at FROM users WHERE email = 'admin@acme.test'` | NOT NULL (has a timestamp value). |
+| D3 | `SELECT order_number FROM orders LIMIT 5` | Values are plain numbers like `1001`, `1002` - NOT `#1001`. |
+| D4 | `SELECT config_json FROM shipping_rates WHERE name = 'Standard Shipping'` | Contains `{"amount": 499}` with the amount field populated. |
 
 ---
 

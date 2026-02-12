@@ -937,7 +937,11 @@ Same as drawer empty state but centered in the page content area with more verti
 
 ## 8. Checkout Page (GET /checkout/{checkoutId})
 
-**Livewire Component:** CheckoutPage
+**CRITICAL:** This Livewire component MUST be implemented. It provides the browser-facing checkout UI. Without it, customers cannot complete purchases through the storefront.
+
+**Route:** `GET /checkout/{checkoutId}` (registered in `routes/web.php` under `store.resolve:storefront` middleware)
+
+**Livewire Component:** `Storefront\Checkout\Show` (file: `app/Livewire/Storefront/Checkout/Show.php`)
 
 ### 8.1 Layout
 

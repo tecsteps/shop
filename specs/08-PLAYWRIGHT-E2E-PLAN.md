@@ -141,6 +141,90 @@ graph TD
 
 ---
 
+## Required User Journey Simulations (Playwright MCP)
+
+These journeys MUST be executed using the Playwright MCP tools after implementation.
+Each journey is a sequence of browser actions with expected results at each step.
+These are NOT Pest tests - they are live browser verifications performed by the coding agent
+using Playwright MCP tools (navigate, click, fill, snapshot).
+
+**IMPORTANT:** At each step, check `browser_console_messages` for JS errors. A page that renders
+but throws ReferenceError or TypeError is broken. Fix JS errors before moving on.
+
+### Journey 1: Guest browses and purchases a product
+
+1. Navigate to `/` -> see hero banner with "Shop Now" CTA, featured collections with counts, featured products with images and prices
+2. Click "Shop Now" -> navigate to `/collections`
+3. Click a collection (e.g., "T-Shirts") -> see product grid with sort dropdown, product cards with images and prices
+4. Click a product card -> see product detail with title, price, description, breadcrumbs (Home > Collection > Product)
+5. Confirm variant selectors work: change size dropdown -> verify selection registers (not unbound dropdowns)
+6. Confirm quantity selector is present: click "+" to set quantity to 2, click "-" back to 1
+7. Confirm stock messaging shows (e.g., "In stock")
+8. Click "Add to cart" -> cart drawer opens with item name, variant, price, quantity controls
+9. In cart drawer, click "View Cart" -> cart page shows item with correct variant details and price
+10. Click "Proceed to Checkout" -> checkout page loads with contact/address form
+11. Fill email, name, address fields, click "Continue" -> shipping method step with rates (e.g., "Standard Shipping - 4.99 EUR")
+12. Select shipping method, click "Continue" -> payment step
+13. Fill payment details (card 4242424242424242, any expiry, any CVV), click "Pay" -> order confirmation
+14. Confirm order number and "Thank you" message visible
+15. Click "View Order" link -> confirm it navigates to order detail page (URL is not broken by `#`)
+
+### Journey 2: Customer registers, logs in, views orders
+
+1. Navigate to `/account/register`
+2. Fill name, email, password, confirm password, click "Create account" -> redirected to customer dashboard
+3. Confirm dashboard shows welcome message with customer name, quick link cards (Orders, Addresses, Log out)
+4. Click "Log out" -> redirected to `/account/login`
+5. Fill credentials, click "Sign in" -> dashboard renders
+6. Click "Orders" -> order history page with table showing order numbers, dates, totals
+7. Confirm order status badges render with visible text and color (not empty `<span>` tags)
+8. Click "View" link on an order -> navigate to order detail page (link must not break from `#` in order number)
+9. Confirm order detail shows: line items with SKUs, shipping/billing addresses, payment method, totals breakdown
+
+### Journey 3: Admin manages store
+
+1. Navigate to `/admin/login`, log in as `admin@acme.test` / `password` -> dashboard with KPI tiles
+2. Click "Products" in sidebar -> product list with 20 products, formatted prices (e.g., "24.99 EUR", not "2499")
+3. Click "Add product", fill title/description/price/status, save -> success message, product appears in list
+4. Click "Orders" -> order list with order numbers (single `#` prefix, not `##`)
+5. Click an order -> order detail with line items, totals, payment and fulfillment status
+6. Click "Create fulfillment", fill tracking info, submit -> fulfillment created, status updates
+7. Navigate to Settings > Shipping -> shipping zones and rates display with correct amounts (4.99 EUR, 9.99 EUR - not 0.00 EUR)
+8. Verify admin sidebar is visible, positioned statically (not overlapping main content on desktop)
+
+### Journey 4: Cart interactions (add, update, remove, discount)
+
+1. Navigate to `/products/classic-cotton-t-shirt`, select size "M", color "Black", click "Add to cart"
+2. Close cart drawer. Click cart icon in header -> cart drawer reopens showing the item (not static/empty)
+3. Navigate to `/cart` -> item visible with variant "M / Black" and price 24.99 EUR
+4. Click "+" -> quantity 2, line total 49.98 EUR
+5. Click "-" -> quantity 1, line total 24.99 EUR
+6. Enter discount code "WELCOME10", click "Apply" -> 10% discount applied, totals update
+7. Click "Remove" on item -> "Your cart is empty" message, no "Proceed to Checkout" button
+8. Check browser console for JS errors throughout -> confirm none
+
+### Journey 5: Search
+
+1. Click search icon in header -> search modal opens (Alpine/Livewire events must communicate)
+2. Type "t-shirt" in search modal -> autocomplete results appear with product names (not "No results found")
+3. Click a result -> navigate to the product detail page
+4. Navigate to `/search?q=jeans` -> search results page shows matching products with result count
+5. Check browser console for JS errors -> confirm none
+
+### Journey 6: Page completeness audit
+
+Verify that every page has all elements specified in the storefront UI spec (spec 04):
+
+1. **Home page**: hero banner, featured collections with images, featured products with images (not placeholder icons), sale badges on sale items
+2. **Navigation**: header with logo/search/cart/account, main menu with nav items (NOT empty), footer with link columns and store info
+3. **Collection page**: breadcrumbs, sort dropdown that works, product cards with images/prices/sale badges, pagination if >12 products
+4. **Product page**: breadcrumbs (Home > Collection > Product), image gallery with thumbnails, variant selectors with `wire:model`, quantity selector ([-] [qty] [+]), stock messaging, compare-at price with strikethrough for sale items
+5. **Customer account pages**: status badges render with text (not empty), order links navigate correctly, address modals open without JS errors
+6. **Error pages**: navigate to `/this-page-does-not-exist` -> custom 404 page within storefront layout (not default Laravel 404)
+7. **Page titles**: each page has a specific `<title>` tag (e.g., "Classic Cotton T-Shirt - Acme Fashion", not just "Acme Fashion" everywhere)
+
+---
+
 ## Test Directory Structure
 
 ```
