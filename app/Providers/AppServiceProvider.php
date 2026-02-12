@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\CurrentStore;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(CurrentStore::class, fn (): CurrentStore => new CurrentStore);
+
+        $this->app->bind('current_store', fn () => $this->app->make(CurrentStore::class)->get());
+        $this->app->bind('current_store_id', fn () => $this->app->make(CurrentStore::class)->id());
     }
 
     /**
