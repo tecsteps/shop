@@ -20,7 +20,7 @@ class LoginController extends StorefrontController
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email:rfc,dns'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'string'],
             'remember' => ['nullable', 'boolean'],
         ]);

@@ -82,3 +82,41 @@ it('renders storefront browse pages for home, collections, product, search, and 
         ->assertOk()
         ->assertViewHas('page', fn (Page $resolved): bool => $resolved->id === $page->id);
 });
+
+it('shows continue-selling variants as backorder-available on storefront product cards', function () {
+    $store = Store::factory()->create();
+
+    $product = Product::factory()
+        ->for($store)
+        ->create([
+            'title' => 'Backorder Denim Jacket',
+            'handle' => 'backorder-denim-jacket',
+        ]);
+
+    $variant = ProductVariant::factory()
+        ->for($product)
+        ->default()
+        ->state([
+            'status' => VariantStatus::Active,
+            'price_amount' => 9999,
+            'requires_shipping' => true,
+        ])
+        ->create();
+
+    InventoryItem::factory()
+        ->for($store)
+        ->for($variant, 'variant')
+        ->state([
+            'quantity_on_hand' => 0,
+            'quantity_reserved' => 0,
+            'policy' => InventoryPolicy::ContinueSelling,
+        ])
+        ->create();
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('Backorder Denim Jacket')
+        ->assertSee('Available on backorder')
+        ->assertSee('Add to cart')
+        ->assertDontSee('Sold out');
+});
