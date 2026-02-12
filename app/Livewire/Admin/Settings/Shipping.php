@@ -42,7 +42,7 @@ class Shipping extends Component
             $zone = ShippingZone::findOrFail($zoneId);
             $this->editingZoneId = $zone->id;
             $this->zoneName = $zone->name;
-            $this->zoneCountries = $zone->countries ?? [];
+            $this->zoneCountries = $zone->countries_json ?? [];
         } else {
             $this->editingZoneId = null;
             $this->zoneName = '';
@@ -62,13 +62,13 @@ class Shipping extends Component
         if ($this->editingZoneId) {
             ShippingZone::findOrFail($this->editingZoneId)->update([
                 'name' => $this->zoneName,
-                'countries' => $this->zoneCountries,
+                'countries_json' => $this->zoneCountries,
             ]);
         } else {
             ShippingZone::create([
                 'store_id' => $store->id,
                 'name' => $this->zoneName,
-                'countries' => $this->zoneCountries,
+                'countries_json' => $this->zoneCountries,
             ]);
         }
 
@@ -129,7 +129,7 @@ class Shipping extends Component
             ShippingRate::findOrFail($this->editingRateId)->update($data);
         } else {
             ShippingRate::create(array_merge($data, [
-                'shipping_zone_id' => $this->rateZoneId,
+                'zone_id' => $this->rateZoneId,
             ]));
         }
 
