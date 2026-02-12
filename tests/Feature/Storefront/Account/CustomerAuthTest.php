@@ -130,3 +130,92 @@ test('customer register validates password confirmation', function () {
         ->call('register')
         ->assertHasErrors('password');
 });
+
+test('same email can register on different stores', function () {
+    Customer::factory()->create([
+        'store_id' => $this->store->id,
+        'email' => 'shared@example.com',
+    ]);
+
+    $otherStore = Store::factory()->create();
+    StoreDomain::factory()->create([
+        'store_id' => $otherStore->id,
+        'hostname' => 'other.test',
+    ]);
+    app()->instance('current_store', $otherStore);
+
+    Livewire::test(Register::class)
+        ->set('first_name', 'Alice')
+        ->set('last_name', 'Smith')
+        ->set('email', 'shared@example.com')
+        ->set('password', 'password')
+        ->set('password_confirmation', 'password')
+        ->call('register')
+        ->assertRedirect(route('storefront.account.dashboard'));
+
+    $otherStoreCustomer = Customer::where('email', 'shared@example.com')
+        ->where('store_id', $otherStore->id)
+        ->first();
+
+    expect($otherStoreCustomer)->not->toBeNull()
+        ->and(Customer::withoutGlobalScopes()->where('email', 'shared@example.com')->count())->toBe(2);
+});
+
+test('customer logout invalidates session', function () {
+    $customer = Customer::factory()->create([
+        'store_id' => $this->store->id,
+    ]);
+
+    $this->actingAs($customer, 'customer');
+    expect(auth('customer')->check())->toBeTrue();
+
+    $response = $this->post(route('storefront.account.logout'));
+
+    $response->assertRedirect(route('storefront.account.login'));
+    expect(auth('customer')->check())->toBeFalse();
+});
+
+test('guest cannot access dashboard', function () {
+    $response = $this->get('http://shop.test/account');
+
+    $response->assertRedirect(route('storefront.account.login'));
+});
+
+test('guest cannot access orders page', function () {
+    $response = $this->get('http://shop.test/account/orders');
+
+    $response->assertRedirect(route('storefront.account.login'));
+});
+
+test('guest cannot access addresses page', function () {
+    $response = $this->get('http://shop.test/account/addresses');
+
+    $response->assertRedirect(route('storefront.account.login'));
+});
+
+test('authenticated customer can access dashboard', function () {
+    $customer = Customer::factory()->create([
+        'store_id' => $this->store->id,
+    ]);
+
+    $response = $this->actingAs($customer, 'customer')
+        ->get('http://shop.test/account');
+
+    $response->assertOk();
+});
+
+test('login updates last_login_at timestamp', function () {
+    $customer = Customer::factory()->create([
+        'store_id' => $this->store->id,
+        'email' => 'customer@example.com',
+        'password' => bcrypt('password'),
+        'last_login_at' => null,
+    ]);
+
+    Livewire::test(Login::class)
+        ->set('email', 'customer@example.com')
+        ->set('password', 'password')
+        ->call('login');
+
+    expect($customer->fresh()->last_login_at)->not->toBeNull();
+});

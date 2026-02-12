@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WebhookSubscription extends Model
 {
@@ -29,5 +30,10 @@ class WebhookSubscription extends Model
             'last_triggered_at' => 'datetime',
             'failure_count' => 'integer',
         ];
+    }
+
+    public function deliveries(): HasMany
+    {
+        return $this->hasMany(WebhookDelivery::class);
     }
 }

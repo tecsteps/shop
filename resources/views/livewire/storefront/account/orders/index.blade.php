@@ -48,7 +48,7 @@
                                 @include('livewire.storefront.account.orders._status-badge', ['status' => $order->status])
                             </td>
                             <td class="px-4 py-3 text-right font-medium text-gray-900 dark:text-white">
-                                {{ number_format($order->total_amount / 100, 2) }} {{ $order->currency }}
+                                {{ \App\Support\MoneyFormatter::format($order->total_amount, $order->currency ?? 'EUR') }}
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <a href="{{ route('storefront.account.orders.show', $order->order_number) }}" wire:navigate
