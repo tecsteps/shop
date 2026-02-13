@@ -56,6 +56,14 @@ class Login extends Component
         RateLimiter::clear($throttleKey);
         session()->regenerate();
 
+        /** @var \App\Models\User $user */
+        $user = Auth::guard('web')->user();
+        $firstStore = $user->stores()->first();
+
+        if ($firstStore) {
+            session()->put('current_store_id', $firstStore->id);
+        }
+
         $this->redirect(route('admin.dashboard'));
     }
 
