@@ -13,6 +13,7 @@ class SearchService
 {
     /**
      * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Product>
      */
     public function search(Store $store, string $query, array $filters = [], int $perPage = 12): LengthAwarePaginator
     {
@@ -74,15 +75,20 @@ class SearchService
         return $results;
     }
 
+    /**
+     * @return Collection<int, string>
+     */
     public function autocomplete(Store $store, string $prefix, int $limit = 5): Collection
     {
         if (mb_strlen(trim($prefix)) < 2) {
+            /** @var Collection<int, string> */
             return collect();
         }
 
         $sanitized = $this->sanitizeForPrefix($prefix);
 
         if ($sanitized === '') {
+            /** @var Collection<int, string> */
             return collect();
         }
 
@@ -93,6 +99,7 @@ class SearchService
             ->limit($limit)
             ->get();
 
+        /** @var Collection<int, string> */
         return $results->pluck('title')->unique()->values();
     }
 

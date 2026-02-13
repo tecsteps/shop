@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property CheckoutStatus $status
+ * @property array<string, mixed>|null $shipping_address_json
+ * @property array<string, mixed>|null $billing_address_json
+ * @property array<string, mixed>|null $totals_json
+ * @property array<string, mixed>|null $tax_provider_snapshot_json
+ */
 class Checkout extends Model
 {
     /** @use HasFactory<\Database\Factories\CheckoutFactory> */
@@ -32,9 +39,6 @@ class Checkout extends Model
         'expires_at',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

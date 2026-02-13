@@ -41,7 +41,8 @@ class AggregateAnalytics implements ShouldQueue
             ->groupBy('event_type')
             ->pluck('count', 'event_type');
 
-        $ordersCount = (int) ($eventCounts['checkout_completed'] ?? 0);
+        /** @var int $ordersCount */
+        $ordersCount = $eventCounts->get('checkout_completed', 0);
 
         $revenue = Order::withoutGlobalScopes()
             ->where('store_id', $store->id)
@@ -50,16 +51,19 @@ class AggregateAnalytics implements ShouldQueue
 
         $aov = $ordersCount > 0 ? (int) round($revenue / $ordersCount) : 0;
 
-        $visits = (int) AnalyticsEvent::withoutGlobalScopes()
+        /** @var int $visits */
+        $visits = AnalyticsEvent::withoutGlobalScopes()
             ->where('store_id', $store->id)
             ->where('event_type', 'page_view')
             ->whereBetween('created_at', [$startOfDay, $endOfDay])
             ->whereNotNull('session_id')
             ->selectRaw('count(distinct session_id) as cnt')
-            ->value('cnt');
+            ->value('cnt') ?? 0;
 
-        $addToCartCount = (int) ($eventCounts['add_to_cart'] ?? 0);
-        $checkoutStartedCount = (int) ($eventCounts['checkout_started'] ?? 0);
+        /** @var int $addToCartCount */
+        $addToCartCount = $eventCounts->get('add_to_cart', 0);
+        /** @var int $checkoutStartedCount */
+        $checkoutStartedCount = $eventCounts->get('checkout_started', 0);
 
         AnalyticsDaily::withoutGlobalScopes()->updateOrCreate(
             [

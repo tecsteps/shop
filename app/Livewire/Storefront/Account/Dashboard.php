@@ -16,6 +16,7 @@ class Dashboard extends Component
 
     public function mount(): void
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         $this->name = $customer->name ?? '';
         $this->marketingOptIn = (bool) $customer->marketing_opt_in;
@@ -27,6 +28,7 @@ class Dashboard extends Component
             'name' => ['required', 'string', 'max:255'],
         ]);
 
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         $customer->update([
             'name' => $this->name,
@@ -38,6 +40,7 @@ class Dashboard extends Component
 
     public function render(): View
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         $recentOrders = $customer->orders()->latest()->limit(5)->get();
 

@@ -23,12 +23,21 @@ class ExpireAbandonedCheckouts implements ShouldQueue
             ->get();
 
         foreach ($checkouts as $checkout) {
-            if ($checkout->status === CheckoutStatus::PaymentSelected) {
+            /** @var CheckoutStatus|string $checkoutStatus */
+            $checkoutStatus = $checkout->status;
+            $isPaymentSelected = $checkoutStatus instanceof CheckoutStatus
+                ? $checkoutStatus === CheckoutStatus::PaymentSelected
+                : $checkoutStatus === CheckoutStatus::PaymentSelected->value;
+
+            if ($isPaymentSelected) {
                 $checkout->load('cart.lines.variant.inventoryItem');
 
-                foreach ($checkout->cart->lines as $line) {
-                    if ($line->variant->inventoryItem) {
-                        $inventoryService->release($line->variant->inventoryItem, $line->quantity);
+                $cart = $checkout->cart;
+                if ($cart) {
+                    foreach ($cart->lines as $line) {
+                        if ($line->variant && $line->variant->inventoryItem) {
+                            $inventoryService->release($line->variant->inventoryItem, $line->quantity);
+                        }
                     }
                 }
             }

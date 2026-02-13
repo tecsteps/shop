@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Store;
 use App\Models\StoreDomain;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -24,7 +25,13 @@ class ResolveStore
             abort(404, 'Store not found.');
         }
 
-        if ($store->status->value === 'suspended') {
+        /** @var \App\Enums\StoreStatus|string $status */
+        $status = $store->status;
+        $isSuspended = $status instanceof \App\Enums\StoreStatus
+            ? $status === \App\Enums\StoreStatus::Suspended
+            : $status === 'suspended';
+
+        if ($isSuspended) {
             abort(503, 'Store is currently unavailable.');
         }
 
@@ -55,6 +62,7 @@ class ResolveStore
             return null;
         }
 
+        /** @var Store|null */
         return Store::query()->find($storeId);
     }
 
@@ -66,12 +74,14 @@ class ResolveStore
             return null;
         }
 
+        /** @var Store|null $store */
         $store = Store::query()->find($storeId);
 
         if (! $store) {
             return null;
         }
 
+        /** @var User|null $user */
         $user = $request->user();
 
         if (! $user) {

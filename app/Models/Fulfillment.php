@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property FulfillmentShipmentStatus $status
+ * @property \Illuminate\Support\Carbon|null $shipped_at
+ */
 class Fulfillment extends Model
 {
     /** @use HasFactory<\Database\Factories\FulfillmentFactory> */

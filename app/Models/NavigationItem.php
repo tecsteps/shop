@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property NavigationItemType $type
+ */
 class NavigationItem extends Model
 {
     /** @use HasFactory<\Database\Factories\NavigationItemFactory> */
@@ -26,9 +29,6 @@ class NavigationItem extends Model
         'position',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

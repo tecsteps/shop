@@ -21,6 +21,7 @@ class ShippingCalculator
         $provinceCode = $address['province_code'] ?? null;
 
         if (! $countryCode) {
+            /** @var Collection<int, ShippingRate> */
             return collect();
         }
 
@@ -45,6 +46,7 @@ class ShippingCalculator
         }
 
         if (empty($matchedZones)) {
+            /** @var Collection<int, ShippingRate> */
             return collect();
         }
 
@@ -54,6 +56,7 @@ class ShippingCalculator
 
         usort($bestZones, fn (array $a, array $b): int => $a['zone']->id <=> $b['zone']->id);
 
+        /** @var Collection<int, ShippingRate> $rates */
         $rates = collect();
         foreach ($bestZones as $match) {
             $zoneRates = $match['zone']->rates()->where('is_active', true)->get();
@@ -65,13 +68,17 @@ class ShippingCalculator
 
     public function calculate(ShippingRate $rate, Cart $cart): int
     {
+        /** @var array<string, mixed> $config */
         $config = $rate->config_json ?? [];
+
+        /** @var int $carrierAmount */
+        $carrierAmount = $config['amount'] ?? 0;
 
         return match ($rate->type) {
             ShippingRateType::Flat => $this->calculateFlat($config),
             ShippingRateType::Weight => $this->calculateWeight($config, $cart),
             ShippingRateType::Price => $this->calculatePrice($config, $cart),
-            ShippingRateType::Carrier => $config['amount'] ?? 0,
+            ShippingRateType::Carrier => $carrierAmount,
         };
     }
 
@@ -80,7 +87,10 @@ class ShippingCalculator
      */
     private function calculateFlat(array $config): int
     {
-        return (int) ($config['amount'] ?? 0);
+        /** @var int $amount */
+        $amount = $config['amount'] ?? 0;
+
+        return $amount;
     }
 
     /**
@@ -95,6 +105,7 @@ class ShippingCalculator
             $totalWeight += ($line->variant->weight_g ?? 0) * $line->quantity;
         }
 
+        /** @var array<int, array{min_g?: int, max_g?: int, amount?: int}> $ranges */
         $ranges = $config['ranges'] ?? [];
 
         foreach ($ranges as $range) {
@@ -102,11 +113,14 @@ class ShippingCalculator
             $max = $range['max_g'] ?? PHP_INT_MAX;
 
             if ($totalWeight >= $min && $totalWeight <= $max) {
-                return (int) ($range['amount'] ?? 0);
+                return $range['amount'] ?? 0;
             }
         }
 
-        return (int) ($config['default_amount'] ?? 0);
+        /** @var int $defaultAmount */
+        $defaultAmount = $config['default_amount'] ?? 0;
+
+        return $defaultAmount;
     }
 
     /**
@@ -116,6 +130,7 @@ class ShippingCalculator
     {
         $subtotal = $cart->lines->sum('line_subtotal_amount');
 
+        /** @var array<int, array{min_amount?: int, max_amount?: int, amount?: int}> $ranges */
         $ranges = $config['ranges'] ?? [];
 
         foreach ($ranges as $range) {
@@ -123,10 +138,13 @@ class ShippingCalculator
             $max = $range['max_amount'] ?? PHP_INT_MAX;
 
             if ($subtotal >= $min && $subtotal <= $max) {
-                return (int) ($range['amount'] ?? 0);
+                return $range['amount'] ?? 0;
             }
         }
 
-        return (int) ($config['default_amount'] ?? 0);
+        /** @var int $defaultAmount */
+        $defaultAmount = $config['default_amount'] ?? 0;
+
+        return $defaultAmount;
     }
 }

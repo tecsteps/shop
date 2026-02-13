@@ -19,14 +19,20 @@ class Taxes extends Component
     public function mount(): void
     {
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
             $taxSettings = TaxSettings::query()
-                ->where('store_id', app('current_store')->id)
+                ->where('store_id', $store->id)
                 ->first();
 
             if ($taxSettings) {
-                $this->mode = $taxSettings->mode->value;
+                /** @var \App\Enums\TaxMode $taxMode */
+                $taxMode = $taxSettings->mode;
+                $this->mode = $taxMode->value;
                 $this->pricesIncludeTax = (bool) $taxSettings->prices_include_tax;
-                $this->defaultRate = $taxSettings->config_json['default_rate'] ?? 0;
+                /** @var array<string, int> $configJson */
+                $configJson = $taxSettings->config_json ?? [];
+                $this->defaultRate = $configJson['default_rate'] ?? 0;
             }
         }
     }
@@ -39,8 +45,10 @@ class Taxes extends Component
         ]);
 
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
             TaxSettings::query()->updateOrCreate(
-                ['store_id' => app('current_store')->id],
+                ['store_id' => $store->id],
                 [
                     'mode' => $this->mode,
                     'prices_include_tax' => $this->pricesIncludeTax,

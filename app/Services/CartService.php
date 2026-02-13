@@ -37,7 +37,7 @@ class CartService
                 throw new \InvalidArgumentException('Variant is not active.');
             }
 
-            if ($variant->product->status !== ProductStatus::Active) {
+            if ($variant->product?->status !== ProductStatus::Active) {
                 throw new \InvalidArgumentException('Product is not active.');
             }
 
@@ -71,6 +71,7 @@ class CartService
 
                 $cart->update(['cart_version' => $cart->cart_version + 1]);
 
+                /** @var CartLine */
                 return $existingLine->fresh();
             }
 
@@ -113,6 +114,7 @@ class CartService
 
             $cart->update(['cart_version' => $cart->cart_version + 1]);
 
+            /** @var CartLine */
             return $line->fresh();
         });
     }
@@ -182,6 +184,7 @@ class CartService
             $guestCart->update(['status' => CartStatus::Abandoned]);
             $customerCart->update(['cart_version' => $customerCart->cart_version + 1]);
 
+            /** @var Cart */
             return $customerCart->fresh();
         });
     }

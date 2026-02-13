@@ -49,9 +49,14 @@ class Show extends Component
 
     public function addToCart(): void
     {
+        /** @var \App\Models\Store $store */
         $store = app('current_store');
         $cartService = app(CartService::class);
         $cart = $cartService->getOrCreateForSession($store);
+
+        if ($this->selectedVariantId === null) {
+            return;
+        }
 
         try {
             $cartService->addLine($cart, $this->selectedVariantId, $this->quantity);
@@ -68,12 +73,14 @@ class Show extends Component
             return null;
         }
 
+        /** @var ProductVariant|null */
         return $this->product->variants->find($this->selectedVariantId);
     }
 
     public function getStockStatusProperty(): string
     {
-        $variant = $this->selectedVariant;
+        /** @var ProductVariant|null $variant */
+        $variant = $this->getSelectedVariantProperty();
 
         if (! $variant) {
             return 'In stock';
@@ -87,11 +94,14 @@ class Show extends Component
 
         $available = $inventoryItem->available();
 
-        if ($inventoryItem->policy === InventoryPolicy::Continue && $available <= 0) {
+        /** @var InventoryPolicy $policy */
+        $policy = $inventoryItem->policy;
+
+        if ($policy === InventoryPolicy::Continue && $available <= 0) {
             return 'Available on backorder';
         }
 
-        if ($inventoryItem->policy === InventoryPolicy::Deny) {
+        if ($policy === InventoryPolicy::Deny) {
             if ($available <= 0) {
                 return 'Sold out';
             }
@@ -110,7 +120,8 @@ class Show extends Component
             return false;
         }
 
-        $variant = $this->selectedVariant;
+        /** @var ProductVariant|null $variant */
+        $variant = $this->getSelectedVariantProperty();
 
         if (! $variant) {
             return false;
@@ -118,8 +129,12 @@ class Show extends Component
 
         $inventoryItem = $variant->inventoryItem;
 
-        if ($inventoryItem && $inventoryItem->policy === InventoryPolicy::Deny && $inventoryItem->available() <= 0) {
-            return false;
+        if ($inventoryItem) {
+            /** @var InventoryPolicy $policy */
+            $policy = $inventoryItem->policy;
+            if ($policy === InventoryPolicy::Deny && $inventoryItem->available() <= 0) {
+                return false;
+            }
         }
 
         return true;

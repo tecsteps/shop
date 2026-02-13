@@ -15,6 +15,7 @@ class Index extends Component
 
     public function render(): View
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         $orders = $customer->orders()->latest()->paginate(10);
 

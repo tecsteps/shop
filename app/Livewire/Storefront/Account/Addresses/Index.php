@@ -59,13 +59,15 @@ class Index extends Component
             if ($address) {
                 $this->editingAddressId = $address->id;
                 $this->label = $address->label ?? '';
-                $this->firstName = $address->address_json['first_name'] ?? '';
-                $this->lastName = $address->address_json['last_name'] ?? '';
-                $this->address1 = $address->address_json['address1'] ?? '';
-                $this->city = $address->address_json['city'] ?? '';
-                $this->provinceCode = $address->address_json['province_code'] ?? '';
-                $this->countryCode = $address->address_json['country_code'] ?? 'US';
-                $this->postalCode = $address->address_json['postal_code'] ?? '';
+                /** @var array<string, string> $addressJson */
+                $addressJson = $address->address_json ?? [];
+                $this->firstName = $addressJson['first_name'] ?? '';
+                $this->lastName = $addressJson['last_name'] ?? '';
+                $this->address1 = $addressJson['address1'] ?? '';
+                $this->city = $addressJson['city'] ?? '';
+                $this->provinceCode = $addressJson['province_code'] ?? '';
+                $this->countryCode = $addressJson['country_code'] ?? 'US';
+                $this->postalCode = $addressJson['postal_code'] ?? '';
                 $this->isDefault = (bool) $address->is_default;
             }
         }
@@ -77,6 +79,7 @@ class Index extends Component
     {
         $this->validate();
 
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
         $addressData = [
@@ -125,6 +128,7 @@ class Index extends Component
 
     public function setDefault(int $addressId): void
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         $address = $this->getCustomerAddress($addressId);
 
@@ -136,6 +140,7 @@ class Index extends Component
 
     public function render(): View
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         $addresses = $customer->addresses()->get();
 
@@ -161,6 +166,7 @@ class Index extends Component
 
     private function getCustomerAddress(int $addressId): ?CustomerAddress
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
         return CustomerAddress::query()

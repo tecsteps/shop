@@ -44,8 +44,12 @@ class Form extends Component
             $this->collection = $collection;
             $this->title = $collection->title;
             $this->descriptionHtml = $collection->description_html ?? '';
-            $this->status = $collection->status->value;
-            $this->selectedProducts = $collection->products()->pluck('products.id')->toArray();
+            /** @var \App\Enums\CollectionStatus $collectionStatus */
+            $collectionStatus = $collection->status;
+            $this->status = $collectionStatus->value;
+            /** @var list<int> $productIds */
+            $productIds = $collection->products()->pluck('products.id')->toArray();
+            $this->selectedProducts = $productIds;
         }
     }
 

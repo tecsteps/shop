@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property TaxMode $mode
+ * @property bool $prices_include_tax
+ * @property array<string, mixed>|null $config_json
+ */
 class TaxSettings extends Model
 {
     /** @use HasFactory<\Database\Factories\TaxSettingsFactory> */
@@ -31,9 +36,6 @@ class TaxSettings extends Model
         'config_json',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

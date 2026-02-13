@@ -82,9 +82,11 @@ class Show extends Component
         $discountService = app(DiscountService::class);
 
         try {
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
             $discount = $discountService->validate(
                 $this->discountCode,
-                app('current_store'),
+                $store,
                 $this->cart->load('lines'),
             );
 
@@ -105,20 +107,26 @@ class Show extends Component
 
     public function getSubtotalProperty(): int
     {
-        if (! $this->cart || ! $this->cart->lines) {
+        if (! $this->cart) {
             return 0;
         }
 
-        return $this->cart->lines->sum('line_subtotal_amount');
+        /** @var int $subtotal */
+        $subtotal = $this->cart->lines->sum('line_subtotal_amount');
+
+        return $subtotal;
     }
 
     public function getCartItemCountProperty(): int
     {
-        if (! $this->cart || ! $this->cart->lines) {
+        if (! $this->cart) {
             return 0;
         }
 
-        return $this->cart->lines->sum('quantity');
+        /** @var int $count */
+        $count = $this->cart->lines->sum('quantity');
+
+        return $count;
     }
 
     public function render(): View
@@ -128,12 +136,15 @@ class Show extends Component
 
     private function loadCart(): void
     {
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
         $cartService = app(CartService::class);
-        $this->cart = $cartService->getOrCreateForSession(app('current_store'));
+        $this->cart = $cartService->getOrCreateForSession($store);
         $this->cart->load('lines.variant.product.media', 'lines.variant.inventoryItem');
 
+        /** @var string|null $savedCode */
         $savedCode = session('discount_code');
-        if ($savedCode && $this->discountCode === '') {
+        if ($savedCode !== null && $savedCode !== '' && $this->discountCode === '') {
             $this->discountCode = $savedCode;
         }
     }

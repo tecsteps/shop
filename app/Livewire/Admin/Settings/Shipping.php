@@ -38,7 +38,9 @@ class Shipping extends Component
             if ($zone) {
                 $this->editingZoneId = $zone->id;
                 $this->zoneName = $zone->name;
-                $this->countries = is_array($zone->countries_json) ? implode(', ', $zone->countries_json) : '';
+                /** @var array<int, string> $countriesJson */
+                $countriesJson = $zone->countries_json ?? [];
+                $this->countries = implode(', ', $countriesJson);
             }
         }
 

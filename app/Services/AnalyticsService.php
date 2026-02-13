@@ -23,6 +23,9 @@ class AnalyticsService
         ]);
     }
 
+    /**
+     * @return Collection<int, AnalyticsDaily>
+     */
     public function getDailyMetrics(Store $store, string $startDate, string $endDate): Collection
     {
         return AnalyticsDaily::withoutGlobalScopes()

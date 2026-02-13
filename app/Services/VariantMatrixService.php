@@ -23,6 +23,7 @@ class VariantMatrixService
                 return;
             }
 
+            /** @var array<int, array<int, int>> $valueSets */
             $valueSets = $options->map(fn ($option) => $option->values->pluck('id')->toArray())->toArray();
 
             $combinations = $this->cartesian($valueSets);

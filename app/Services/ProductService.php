@@ -22,8 +22,10 @@ class ProductService
     public function create(Store $store, array $data): Product
     {
         return DB::transaction(function () use ($store, $data): Product {
+            /** @var string $title */
+            $title = $data['title'];
             $handle = $this->handleGenerator->generate(
-                $data['title'],
+                $title,
                 'products',
                 $store->id,
             );
@@ -41,11 +43,15 @@ class ProductService
             ]);
 
             if (isset($data['options'])) {
-                $this->createOptions($product, $data['options']);
+                /** @var array<int, array<string, mixed>> $optionsData */
+                $optionsData = $data['options'];
+                $this->createOptions($product, $optionsData);
             }
 
             if (isset($data['variants'])) {
-                $this->createVariants($product, $store, $data['variants']);
+                /** @var array<int, array<string, mixed>> $variantsData */
+                $variantsData = $data['variants'];
+                $this->createVariants($product, $store, $variantsData);
             } else {
                 $this->createDefaultVariant($product, $store, $data);
             }
@@ -66,8 +72,10 @@ class ProductService
                 $updates['title'] = $data['title'];
 
                 if (! isset($data['handle'])) {
+                    /** @var string $updateTitle */
+                    $updateTitle = $data['title'];
                     $updates['handle'] = $this->handleGenerator->generate(
-                        $data['title'],
+                        $updateTitle,
                         'products',
                         $product->store_id,
                         $product->id,
@@ -87,6 +95,7 @@ class ProductService
 
             $product->update($updates);
 
+            /** @var Product */
             return $product->fresh(['variants', 'options.values']);
         });
     }
@@ -99,7 +108,7 @@ class ProductService
             ProductStatus::Archived->value => [ProductStatus::Active],
         ];
 
-        $allowed = $allowedTransitions[$product->status->value] ?? [];
+        $allowed = $allowedTransitions[$product->status->value];
 
         if (! in_array($newStatus, $allowed)) {
             throw new InvalidProductTransitionException($product->status, $newStatus);
@@ -151,7 +160,9 @@ class ProductService
             ]);
 
             if (isset($optionData['values'])) {
-                foreach ($optionData['values'] as $valuePosition => $value) {
+                /** @var array<int, string> $optionValues */
+                $optionValues = $optionData['values'];
+                foreach ($optionValues as $valuePosition => $value) {
                     $option->values()->create([
                         'value' => $value,
                         'position' => $valuePosition,

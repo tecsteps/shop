@@ -21,7 +21,8 @@ class InventoryService
     public function reserve(InventoryItem $item, int $quantity): void
     {
         DB::transaction(function () use ($item, $quantity): void {
-            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->find($item->id);
+            /** @var InventoryItem $item */
+            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->findOrFail($item->id);
 
             if ($item->policy === InventoryPolicy::Deny && $item->available() < $quantity) {
                 throw new InsufficientInventoryException(
@@ -39,7 +40,8 @@ class InventoryService
     public function release(InventoryItem $item, int $quantity): void
     {
         DB::transaction(function () use ($item, $quantity): void {
-            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->find($item->id);
+            /** @var InventoryItem $item */
+            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->findOrFail($item->id);
 
             $item->update([
                 'quantity_reserved' => max(0, $item->quantity_reserved - $quantity),
@@ -50,7 +52,8 @@ class InventoryService
     public function commit(InventoryItem $item, int $quantity): void
     {
         DB::transaction(function () use ($item, $quantity): void {
-            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->find($item->id);
+            /** @var InventoryItem $item */
+            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->findOrFail($item->id);
 
             $item->update([
                 'quantity_on_hand' => $item->quantity_on_hand - $quantity,
@@ -62,7 +65,8 @@ class InventoryService
     public function restock(InventoryItem $item, int $quantity): void
     {
         DB::transaction(function () use ($item, $quantity): void {
-            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->find($item->id);
+            /** @var InventoryItem $item */
+            $item = InventoryItem::withoutGlobalScopes()->lockForUpdate()->findOrFail($item->id);
 
             $item->update([
                 'quantity_on_hand' => $item->quantity_on_hand + $quantity,

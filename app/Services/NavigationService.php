@@ -20,15 +20,18 @@ class NavigationService
         $storeId = $menu->store_id;
         $cacheKey = "navigation:{$storeId}:menu:{$menu->id}";
 
+        /** @var array<int, array{id: int, label: string, url: string, type: string}> */
         return Cache::remember($cacheKey, 300, function () use ($menu): array {
             $items = $menu->items()->orderBy('position')->get();
 
-            return $items->map(fn (NavigationItem $item): array => [
-                'id' => $item->id,
-                'label' => $item->label,
-                'url' => $this->resolveUrl($item),
-                'type' => $item->type->value,
-            ])->all();
+            return $items->map(function (NavigationItem $item): array {
+                return [
+                    'id' => $item->id,
+                    'label' => $item->label,
+                    'url' => $this->resolveUrl($item),
+                    'type' => $item->type->value,
+                ];
+            })->all();
         });
     }
 

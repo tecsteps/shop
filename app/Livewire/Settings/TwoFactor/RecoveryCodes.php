@@ -9,6 +9,7 @@ use Livewire\Component;
 
 class RecoveryCodes extends Component
 {
+    /** @var list<string> */
     #[Locked]
     public array $recoveryCodes = [];
 
@@ -25,7 +26,9 @@ class RecoveryCodes extends Component
      */
     public function regenerateRecoveryCodes(GenerateNewRecoveryCodes $generateNewRecoveryCodes): void
     {
-        $generateNewRecoveryCodes(auth()->user());
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $generateNewRecoveryCodes($user);
 
         $this->loadRecoveryCodes();
     }
@@ -35,11 +38,18 @@ class RecoveryCodes extends Component
      */
     private function loadRecoveryCodes(): void
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         if ($user->hasEnabledTwoFactorAuthentication() && $user->two_factor_recovery_codes) {
             try {
-                $this->recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+                /** @var string $recoveryCodes */
+                $recoveryCodes = $user->two_factor_recovery_codes;
+                /** @var string $decryptedCodes */
+                $decryptedCodes = decrypt($recoveryCodes);
+                /** @var list<string> $decoded */
+                $decoded = json_decode($decryptedCodes, true);
+                $this->recoveryCodes = $decoded;
             } catch (Exception) {
                 $this->addError('recoveryCodes', 'Failed to load recovery codes');
 

@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $quantity
+ * @property int $unit_price_amount
+ * @property int $total_amount
+ * @property array<string, mixed>|null $tax_lines_json
+ * @property array<string, mixed>|null $discount_allocations_json
+ */
 class OrderLine extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderLineFactory> */

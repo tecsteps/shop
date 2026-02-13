@@ -12,8 +12,9 @@ class TaxCalculator
      */
     public function calculate(int $amount, TaxSettings $settings, array $address): TaxLine
     {
+        /** @var array{default_rate?: int} $config */
         $config = $settings->config_json ?? [];
-        $rate = (int) ($config['default_rate'] ?? 0);
+        $rate = $config['default_rate'] ?? 0;
 
         if ($rate === 0 || $amount === 0) {
             return new TaxLine(

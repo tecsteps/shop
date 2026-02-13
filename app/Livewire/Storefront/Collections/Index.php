@@ -17,7 +17,7 @@ class Index extends Component
 
     public function render(): View
     {
-        /** @var LengthAwarePaginator<Collection> $collections */
+        /** @var LengthAwarePaginator<int, Collection> $collections */
         $collections = Collection::query()
             ->where('status', CollectionStatus::Active)
             ->orderBy('title')

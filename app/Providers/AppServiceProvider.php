@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Observers\ProductObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
 
+            /** @var Store|null */
             return Store::query()->find($storeId);
         });
     }
@@ -65,27 +67,27 @@ class AppServiceProvider extends ServiceProvider
 
     protected function configureRateLimiters(): void
     {
-        RateLimiter::for('login', function ($request) {
+        RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(5)->by($request->ip());
         });
 
-        RateLimiter::for('api.admin', function ($request) {
+        RateLimiter::for('api.admin', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        RateLimiter::for('api.storefront', function ($request) {
+        RateLimiter::for('api.storefront', function (Request $request) {
             return Limit::perMinute(120)->by($request->ip());
         });
 
-        RateLimiter::for('checkout', function ($request) {
+        RateLimiter::for('checkout', function (Request $request) {
             return Limit::perMinute(10)->by($request->session()->getId());
         });
 
-        RateLimiter::for('search', function ($request) {
+        RateLimiter::for('search', function (Request $request) {
             return Limit::perMinute(30)->by($request->ip());
         });
 
-        RateLimiter::for('analytics', function ($request) {
+        RateLimiter::for('analytics', function (Request $request) {
             return Limit::perMinute(60)->by($request->ip());
         });
     }

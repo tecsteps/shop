@@ -12,6 +12,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property OrderStatus $status
+ * @property FinancialStatus $financial_status
+ * @property FulfillmentStatus $fulfillment_status
+ * @property PaymentMethod $payment_method
+ * @property array<string, mixed>|null $billing_address_json
+ * @property array<string, mixed>|null $shipping_address_json
+ * @property \Illuminate\Support\Carbon|null $placed_at
+ * @property int $subtotal_amount
+ * @property int $discount_amount
+ * @property int $shipping_amount
+ * @property int $tax_amount
+ * @property int $total_amount
+ */
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
@@ -40,9 +54,6 @@ class Order extends Model
         'placed_at',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

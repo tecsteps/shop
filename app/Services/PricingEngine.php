@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\ShippingRate;
+use App\Models\Store;
 use App\Models\TaxSettings;
 use App\ValueObjects\PricingResult;
 use App\ValueObjects\TaxLine;
@@ -20,7 +22,9 @@ class PricingEngine
     public function calculate(Checkout $checkout): PricingResult
     {
         $checkout->load('cart.lines.variant');
+        /** @var Cart $cart */
         $cart = $checkout->cart;
+        /** @var Store|null $store */
         $store = $cart->store()->withoutGlobalScopes()->first();
 
         $subtotal = 0;
@@ -66,8 +70,9 @@ class PricingEngine
         if ($taxSettings) {
             $address = $checkout->shipping_address_json ?? [];
 
+            /** @var array{default_rate?: int} $config */
             $config = $taxSettings->config_json ?? [];
-            $rate = (int) ($config['default_rate'] ?? 0);
+            $rate = $config['default_rate'] ?? 0;
 
             if ($rate > 0) {
                 if ($taxSettings->prices_include_tax) {

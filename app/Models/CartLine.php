@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $quantity
+ * @property int $unit_price_amount
+ * @property int $line_subtotal_amount
+ * @property int $line_discount_amount
+ * @property int $line_total_amount
+ */
 class CartLine extends Model
 {
     /** @use HasFactory<\Database\Factories\CartLineFactory> */

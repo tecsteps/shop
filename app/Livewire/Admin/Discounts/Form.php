@@ -38,7 +38,9 @@ class Form extends Component
      */
     public function rules(): array
     {
-        $storeId = app()->bound('current_store') ? app('current_store')->id : null;
+        /** @var \App\Models\Store|null $store */
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        $storeId = $store?->id;
 
         return [
             'code' => [
@@ -63,15 +65,27 @@ class Form extends Component
         if ($discount && $discount->exists) {
             $this->mode = 'edit';
             $this->discount = $discount;
-            $this->code = $discount->code;
-            $this->type = $discount->type->value;
-            $this->valueType = $discount->value_type->value;
+            $this->code = $discount->code ?? '';
+            /** @var \App\Enums\DiscountType $discountType */
+            $discountType = $discount->type;
+            $this->type = $discountType->value;
+            /** @var \App\Enums\DiscountValueType $discountValueType */
+            $discountValueType = $discount->value_type;
+            $this->valueType = $discountValueType->value;
             $this->valueAmount = $discount->value_amount;
-            $this->startsAt = $discount->starts_at?->format('Y-m-d') ?? '';
-            $this->endsAt = $discount->ends_at?->format('Y-m-d') ?? '';
+            /** @var \Carbon\Carbon|null $startsAt */
+            $startsAt = $discount->starts_at;
+            $this->startsAt = $startsAt?->format('Y-m-d') ?? '';
+            /** @var \Carbon\Carbon|null $endsAt */
+            $endsAt = $discount->ends_at;
+            $this->endsAt = $endsAt?->format('Y-m-d') ?? '';
             $this->usageLimit = $discount->usage_limit;
-            $this->minPurchaseAmount = $discount->rules_json['min_purchase_amount'] ?? 0;
-            $this->status = $discount->status->value;
+            /** @var array<string, int> $rulesJson */
+            $rulesJson = $discount->rules_json ?? [];
+            $this->minPurchaseAmount = $rulesJson['min_purchase_amount'] ?? 0;
+            /** @var \App\Enums\DiscountStatus $discountStatus */
+            $discountStatus = $discount->status;
+            $this->status = $discountStatus->value;
         }
     }
 

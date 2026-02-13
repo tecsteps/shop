@@ -55,7 +55,7 @@ class Store extends Model
     }
 
     /**
-     * @return BelongsToMany<User, $this>
+     * @return BelongsToMany<User, $this, StoreUser, 'pivot'>
      */
     public function users(): BelongsToMany
     {

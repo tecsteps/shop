@@ -60,7 +60,10 @@ class Show extends Component
     {
         $query = $this->collection->products()
             ->where('products.status', ProductStatus::Active)
-            ->with(['variants' => fn ($q) => $q->where('is_default', true)]);
+            ->with(['variants' => function (mixed $q): void {
+                /** @var \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\ProductVariant, \App\Models\Product> $q */
+                $q->where('is_default', true);
+            }]);
 
         if ($this->minPrice !== null) {
             $query->whereHas('variants', fn ($q) => $q->where('is_default', true)->where('price_amount', '>=', $this->minPrice * 100));

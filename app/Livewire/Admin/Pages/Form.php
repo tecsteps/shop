@@ -44,7 +44,9 @@ class Form extends Component
             $this->title = $page->title;
             $this->handle = $page->handle;
             $this->bodyHtml = $page->body_html ?? '';
-            $this->status = $page->status->value;
+            /** @var \App\Enums\PageStatus $pageStatus */
+            $pageStatus = $page->status;
+            $this->status = $pageStatus->value;
         }
     }
 

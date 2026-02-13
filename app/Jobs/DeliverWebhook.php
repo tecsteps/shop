@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\WebhookDelivery;
+use App\Models\WebhookSubscription;
 use App\Services\WebhookService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -27,10 +28,12 @@ class DeliverWebhook implements ShouldQueue
 
     public function handle(WebhookService $webhookService): void
     {
+        /** @var WebhookDelivery $delivery */
         $delivery = $this->delivery->fresh();
+        /** @var WebhookSubscription $subscription */
         $subscription = $delivery->subscription;
 
-        $payloadJson = json_encode($delivery->payload_json);
+        $payloadJson = (string) json_encode($delivery->payload_json);
         $signature = $webhookService->sign($payloadJson, $subscription->secret);
 
         try {
@@ -69,7 +72,7 @@ class DeliverWebhook implements ShouldQueue
 
     private function handleFailure(
         WebhookDelivery $delivery,
-        mixed $subscription,
+        WebhookSubscription $subscription,
         ?int $responseStatus,
         ?string $responseBody,
     ): void {

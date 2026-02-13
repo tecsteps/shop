@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property CartStatus $status
+ * @property int $cart_version
+ */
 class Cart extends Model
 {
     /** @use HasFactory<\Database\Factories\CartFactory> */
@@ -25,9 +29,6 @@ class Cart extends Model
         'status',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

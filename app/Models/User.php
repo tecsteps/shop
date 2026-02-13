@@ -54,14 +54,14 @@ class User extends Authenticatable
 
     public function getAuthPassword(): string
     {
-        return $this->password_hash;
+        return (string) $this->password_hash;
     }
 
     /**
      * Map writes to `password` to the `password_hash` column.
      * This ensures compatibility with Fortify and Laravel's PasswordBroker.
      *
-     * @param  mixed  $key
+     * @param  string  $key
      * @param  mixed  $value
      * @return $this
      */
@@ -71,11 +71,13 @@ class User extends Authenticatable
             $key = 'password_hash';
         }
 
-        return parent::setAttribute($key, $value);
+        parent::setAttribute((string) $key, $value);
+
+        return $this;
     }
 
     /**
-     * @return BelongsToMany<Store, $this>
+     * @return BelongsToMany<Store, $this, StoreUser, 'pivot'>
      */
     public function stores(): BelongsToMany
     {
@@ -86,22 +88,23 @@ class User extends Authenticatable
 
     public function roleForStore(Store $store): ?StoreUserRole
     {
-        $pivot = $this->stores()
+        /** @var (Store&object{pivot: StoreUser})|null $storeWithPivot */
+        $storeWithPivot = $this->stores()
             ->where('stores.id', $store->id)
-            ->first()
-            ?->pivot;
+            ->first();
 
-        if (! $pivot) {
+        if (! $storeWithPivot) {
             return null;
         }
 
-        $role = $pivot->role;
+        /** @var StoreUserRole|string $role */
+        $role = $storeWithPivot->pivot->role;
 
         if ($role instanceof StoreUserRole) {
             return $role;
         }
 
-        return StoreUserRole::tryFrom((string) $role);
+        return StoreUserRole::tryFrom($role);
     }
 
     public function initials(): string

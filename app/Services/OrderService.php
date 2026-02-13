@@ -11,9 +11,11 @@ use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
+use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use App\Models\Store;
 use App\ValueObjects\PaymentResult;
 use Illuminate\Support\Facades\DB;
@@ -30,10 +32,12 @@ class OrderService
             $checkout->load('cart.lines.variant.product', 'cart.lines.variant.inventoryItem');
 
             $store = Store::withoutGlobalScopes()->findOrFail($checkout->store_id);
+            /** @var Cart $cart */
             $cart = $checkout->cart;
+            /** @var array{subtotal?: int, discount?: int, shipping?: int, tax_total?: int, total?: int} $totals */
             $totals = $checkout->totals_json ?? [];
 
-            $paymentMethod = PaymentMethod::from($checkout->payment_method);
+            $paymentMethod = PaymentMethod::from((string) $checkout->payment_method);
             $orderNumber = $this->generateOrderNumber($store);
 
             $financialStatus = match ($paymentResult->status) {
@@ -68,13 +72,14 @@ class OrderService
             ]);
 
             foreach ($cart->lines as $line) {
-                $product = $line->variant->product;
+                $product = $line->variant?->product;
+                /** @var ProductVariant $variant */
                 $variant = $line->variant;
 
                 $order->lines()->create([
                     'product_id' => $product?->id,
                     'variant_id' => $variant->id,
-                    'title_snapshot' => $product?->title ?? 'Unknown Product',
+                    'title_snapshot' => $product->title ?? 'Unknown Product',
                     'sku_snapshot' => $variant->sku,
                     'quantity' => $line->quantity,
                     'unit_price_amount' => $line->unit_price_amount,

@@ -64,15 +64,21 @@ class Form extends Component
             $this->product = $product;
             $this->title = $product->title;
             $this->descriptionHtml = $product->description_html ?? '';
-            $this->status = $product->status->value;
+            /** @var \App\Enums\ProductStatus $productStatus */
+            $productStatus = $product->status;
+            $this->status = $productStatus->value;
             $this->vendor = $product->vendor ?? '';
             $this->productType = $product->product_type ?? '';
-            $this->tags = is_array($product->tags) ? implode(', ', $product->tags) : '';
+            /** @var array<int, string>|null $tags */
+            $tags = $product->tags;
+            $this->tags = is_array($tags) ? implode(', ', $tags) : '';
 
-            $this->options = $product->options->map(fn (ProductOption $option): array => [
+            /** @var array<int, array{name: string, values: string}> $options */
+            $options = $product->options->map(fn (ProductOption $option): array => [
                 'name' => $option->name,
                 'values' => $option->values->pluck('value')->implode(', '),
             ])->toArray();
+            $this->options = $options;
         }
     }
 
@@ -184,6 +190,7 @@ class Form extends Component
             $product->variants()->delete();
         }
 
+        /** @var array<int, array<int, array{id: int, product_option_id: int, value: string, position: int}>> $valueSets */
         $valueSets = $optionSets->map(fn ($option) => $option->values->toArray())->toArray();
         $combinations = $this->cartesianProduct($valueSets);
 
@@ -198,6 +205,7 @@ class Form extends Component
             ]);
 
             foreach ($combination as $optionValue) {
+                /** @var array{id: int} $optionValue */
                 $variant->optionValues()->attach($optionValue['id']);
             }
         }
@@ -235,10 +243,10 @@ class Form extends Component
             ProductMedia::create([
                 'product_id' => $product->id,
                 'type' => 'image',
-                'storage_key' => $path,
+                'storage_key' => (string) $path,
                 'alt_text' => $this->title,
-                'mime_type' => $file->getMimeType(),
-                'byte_size' => $file->getSize(),
+                'mime_type' => (string) $file->getMimeType(),
+                'byte_size' => (int) $file->getSize(),
                 'position' => $product->media()->count(),
                 'status' => MediaStatus::Ready,
             ]);

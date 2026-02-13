@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property ShippingRateType $type
+ * @property array<string, mixed>|null $config_json
+ * @property bool $is_active
+ */
 class ShippingRate extends Model
 {
     /** @use HasFactory<\Database\Factories\ShippingRateFactory> */
@@ -25,9 +30,6 @@ class ShippingRate extends Model
         'is_active',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

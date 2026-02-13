@@ -15,6 +15,7 @@ class Show extends Component
 
     public function mount(string $orderNumber): void
     {
+        /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
         $order = Order::query()

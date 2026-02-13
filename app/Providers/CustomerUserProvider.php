@@ -23,7 +23,9 @@ class CustomerUserProvider extends EloquentUserProvider
             return null;
         }
 
-        $storeId = app('current_store')->id;
+        /** @var \App\Models\Store $currentStore */
+        $currentStore = app('current_store');
+        $storeId = $currentStore->id;
 
         $query = Customer::query()->where('store_id', $storeId);
 

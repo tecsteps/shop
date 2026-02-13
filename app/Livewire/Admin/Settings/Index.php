@@ -23,6 +23,7 @@ class Index extends Component
     public function mount(): void
     {
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
             $store = app('current_store');
             $this->storeName = $store->name;
             $this->defaultCurrency = $store->default_currency ?? 'USD';
@@ -39,6 +40,7 @@ class Index extends Component
         ]);
 
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
             $store = app('current_store');
             $store->update([
                 'name' => $this->storeName,
@@ -57,8 +59,10 @@ class Index extends Component
         ]);
 
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
             StoreDomain::create([
-                'store_id' => app('current_store')->id,
+                'store_id' => $store->id,
                 'hostname' => $this->newDomainHostname,
                 'is_primary' => false,
             ]);
@@ -70,9 +74,11 @@ class Index extends Component
     public function deleteDomain(int $domainId): void
     {
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
             StoreDomain::query()
                 ->where('id', $domainId)
-                ->where('store_id', app('current_store')->id)
+                ->where('store_id', $store->id)
                 ->where('is_primary', false)
                 ->delete();
         }
@@ -82,8 +88,10 @@ class Index extends Component
     {
         $domains = [];
         if (app()->bound('current_store')) {
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
             $domains = StoreDomain::query()
-                ->where('store_id', app('current_store')->id)
+                ->where('store_id', $store->id)
                 ->get();
         }
 

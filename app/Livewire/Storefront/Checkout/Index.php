@@ -58,6 +58,7 @@ class Index extends Component
 
     public function mount(CartService $cartService, CheckoutService $checkoutService): void
     {
+        /** @var \App\Models\Store $store */
         $store = app('current_store');
         $cart = $cartService->getOrCreateForSession($store);
 
@@ -120,14 +121,24 @@ class Index extends Component
 
         $checkout = $checkoutService->setAddress($checkout, $addressData);
 
+        /** @var \App\Models\Store $store */
         $store = app('current_store');
-        $rates = $shippingCalculator->getAvailableRates($store, $checkout->shipping_address_json);
+        /** @var array{country_code?: string, province_code?: string} $shippingAddress */
+        $shippingAddress = $checkout->shipping_address_json ?? [];
+        $rates = $shippingCalculator->getAvailableRates($store, $shippingAddress);
 
-        $this->availableShippingRates = $rates->map(fn ($rate) => [
-            'id' => $rate->id,
-            'name' => $rate->name,
-            'amount' => $rate->config_json['amount'] ?? 0,
-        ])->toArray();
+        /** @var array<int, array<string, mixed>> $mappedRates */
+        $mappedRates = $rates->map(function (\App\Models\ShippingRate $rate): array {
+            /** @var array<string, mixed> $configJson */
+            $configJson = $rate->config_json ?? [];
+
+            return [
+                'id' => $rate->id,
+                'name' => $rate->name,
+                'amount' => $configJson['amount'] ?? 0,
+            ];
+        })->toArray();
+        $this->availableShippingRates = $mappedRates;
 
         $this->step = 3;
     }
@@ -139,9 +150,14 @@ class Index extends Component
         ]);
 
         $checkout = $this->getCheckout();
-        $checkout = $checkoutService->setShippingMethod($checkout, $this->selectedShippingRateId);
 
-        $this->totals = $checkout->totals_json ?? [];
+        /** @var int $rateId */
+        $rateId = $this->selectedShippingRateId;
+        $checkout = $checkoutService->setShippingMethod($checkout, $rateId);
+
+        /** @var array<string, mixed> $totalsJson */
+        $totalsJson = $checkout->totals_json ?? [];
+        $this->totals = $totalsJson;
         $this->step = 4;
     }
 
@@ -163,6 +179,7 @@ class Index extends Component
         $checkout = $this->getCheckout();
 
         $checkoutService->selectPaymentMethod($checkout, $this->paymentMethod);
+        /** @var Checkout $checkout */
         $checkout = $checkout->fresh();
 
         $paymentDetails = [];

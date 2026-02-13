@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property VariantStatus $status
+ * @property bool $requires_shipping
+ * @property bool $is_default
+ * @property int $price_amount
+ * @property int|null $compare_at_amount
+ * @property int|null $weight_g
+ */
 class ProductVariant extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductVariantFactory> */
@@ -31,9 +39,6 @@ class ProductVariant extends Model
         'status',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

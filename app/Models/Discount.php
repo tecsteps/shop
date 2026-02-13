@@ -10,6 +10,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property DiscountStatus $status
+ * @property DiscountType $type
+ * @property DiscountValueType $value_type
+ * @property int $value_amount
+ * @property int $usage_count
+ * @property \Illuminate\Support\Carbon|null $starts_at
+ * @property \Illuminate\Support\Carbon|null $ends_at
+ * @property int|null $usage_limit
+ * @property array<string, mixed> $rules_json
+ */
 class Discount extends Model
 {
     /** @use HasFactory<\Database\Factories\DiscountFactory> */
@@ -32,9 +43,6 @@ class Discount extends Model
         'status',
     ];
 
-    /**
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

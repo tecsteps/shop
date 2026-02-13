@@ -11,6 +11,7 @@ use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Order;
 use App\Models\ShippingRate;
+use App\Models\Store;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutService
@@ -38,7 +39,8 @@ class CheckoutService
             throw new \InvalidArgumentException('A completed checkout already exists for this cart.');
         }
 
-        $store = $cart->store()->withoutGlobalScopes()->first();
+        /** @var Store $store */
+        $store = $cart->store()->withoutGlobalScopes()->firstOrFail();
 
         $checkout = Checkout::withoutGlobalScopes()->create([
             'store_id' => $store->id,
@@ -79,8 +81,11 @@ class CheckoutService
             'status' => CheckoutStatus::Addressed,
         ]);
 
-        $this->pricingEngine->calculate($checkout->fresh());
+        /** @var Checkout $freshCheckout */
+        $freshCheckout = $checkout->fresh();
+        $this->pricingEngine->calculate($freshCheckout);
 
+        /** @var Checkout */
         return $checkout->fresh();
     }
 
@@ -90,7 +95,9 @@ class CheckoutService
 
         $rate = ShippingRate::withoutGlobalScopes()->findOrFail($rateId);
 
-        $store = $checkout->store()->withoutGlobalScopes()->first();
+        /** @var Store $store */
+        $store = $checkout->store()->withoutGlobalScopes()->firstOrFail();
+        /** @var array{country_code?: string, province_code?: string} $address */
         $address = $checkout->shipping_address_json ?? [];
         $availableRates = $this->shippingCalculator->getAvailableRates($store, $address);
 
@@ -103,8 +110,11 @@ class CheckoutService
             'status' => CheckoutStatus::ShippingSelected,
         ]);
 
-        $this->pricingEngine->calculate($checkout->fresh());
+        /** @var Checkout $freshCheckout */
+        $freshCheckout = $checkout->fresh();
+        $this->pricingEngine->calculate($freshCheckout);
 
+        /** @var Checkout */
         return $checkout->fresh();
     }
 
@@ -120,8 +130,10 @@ class CheckoutService
         return DB::transaction(function () use ($checkout, $method): Checkout {
             $checkout->load('cart.lines.variant.inventoryItem');
 
-            foreach ($checkout->cart->lines as $line) {
-                if ($line->variant->inventoryItem) {
+            /** @var Cart $cart */
+            $cart = $checkout->cart;
+            foreach ($cart->lines as $line) {
+                if ($line->variant?->inventoryItem) {
                     $this->inventoryService->reserve($line->variant->inventoryItem, $line->quantity);
                 }
             }
@@ -132,6 +144,7 @@ class CheckoutService
                 'status' => CheckoutStatus::PaymentSelected,
             ]);
 
+            /** @var Checkout */
             return $checkout->fresh();
         });
     }
@@ -159,15 +172,17 @@ class CheckoutService
 
         $this->assertTransition($checkout, CheckoutStatus::Completed);
 
-        $paymentMethod = PaymentMethod::from($checkout->payment_method);
+        $paymentMethod = PaymentMethod::from((string) $checkout->payment_method);
 
         $paymentResult = $this->paymentProvider->charge($checkout, $paymentMethod, $paymentDetails);
 
         if (! $paymentResult->success) {
             $checkout->load('cart.lines.variant.inventoryItem');
 
-            foreach ($checkout->cart->lines as $line) {
-                if ($line->variant->inventoryItem) {
+            /** @var Cart $failedCart */
+            $failedCart = $checkout->cart;
+            foreach ($failedCart->lines as $line) {
+                if ($line->variant?->inventoryItem) {
                     $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
                 }
             }
@@ -186,8 +201,10 @@ class CheckoutService
         if ($checkout->status === CheckoutStatus::PaymentSelected) {
             $checkout->load('cart.lines.variant.inventoryItem');
 
-            foreach ($checkout->cart->lines as $line) {
-                if ($line->variant->inventoryItem) {
+            /** @var Cart $expireCart */
+            $expireCart = $checkout->cart;
+            foreach ($expireCart->lines as $line) {
+                if ($line->variant?->inventoryItem) {
                     $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
                 }
             }

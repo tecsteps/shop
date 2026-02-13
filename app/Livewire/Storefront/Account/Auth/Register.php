@@ -39,7 +39,9 @@ class Register extends Component
     {
         $this->validate();
 
-        $storeId = app()->bound('current_store') ? app('current_store')->id : null;
+        /** @var \App\Models\Store|null $store */
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        $storeId = $store?->id;
 
         $customer = Customer::withoutGlobalScopes()->create([
             'store_id' => $storeId,

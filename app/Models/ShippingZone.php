@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property array<string>|null $countries_json
+ * @property array<string>|null $regions_json
+ */
 class ShippingZone extends Model
 {
     /** @use HasFactory<\Database\Factories\ShippingZoneFactory> */
