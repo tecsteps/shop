@@ -24,6 +24,15 @@ class AppServiceProvider extends ServiceProvider
             \App\Contracts\PaymentProvider::class,
             \App\Services\Payments\MockPaymentProvider::class,
         );
+
+        $this->app->singletonIf('current_store', function (): ?Store {
+            $storeId = session('storefront_store_id');
+            if (! $storeId) {
+                return null;
+            }
+
+            return Store::query()->find($storeId);
+        });
     }
 
     public function boot(): void

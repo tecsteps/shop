@@ -27,6 +27,8 @@ use App\Livewire\Storefront\Account\Dashboard as CustomerDashboard;
 use App\Livewire\Storefront\Account\Orders\Index as CustomerOrdersIndex;
 use App\Livewire\Storefront\Account\Orders\Show as CustomerOrdersShow;
 use App\Livewire\Storefront\Cart\Show as CartShow;
+use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
+use App\Livewire\Storefront\Checkout\Index as CheckoutIndex;
 use App\Livewire\Storefront\Collections\Index as CollectionsIndex;
 use App\Livewire\Storefront\Collections\Show as CollectionsShow;
 use App\Livewire\Storefront\Home;
@@ -116,6 +118,12 @@ Route::middleware(['store.resolve'])->name('storefront.')->group(function () {
     Route::get('/cart', CartShow::class)->name('cart');
     Route::get('/search', SearchIndex::class)->name('search');
     Route::get('/pages/{handle}', PagesShow::class)->name('pages.show');
+});
+
+// Checkout routes (accessible without authentication for guest checkout)
+Route::middleware(['store.resolve'])->group(function () {
+    Route::get('/checkout', CheckoutIndex::class)->name('checkout');
+    Route::get('/checkout/confirmation/{orderNumber}', CheckoutConfirmation::class)->name('checkout.confirmation');
 });
 
 require __DIR__.'/settings.php';

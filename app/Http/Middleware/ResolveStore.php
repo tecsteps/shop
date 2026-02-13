@@ -30,6 +30,10 @@ class ResolveStore
 
         app()->singleton('current_store', fn (): Store => $store);
 
+        if ($context === 'storefront') {
+            $request->session()->put('storefront_store_id', $store->id);
+        }
+
         return $next($request);
     }
 

@@ -25,7 +25,7 @@ class TaxSettingsSeeder extends Seeder
                         'mode' => 'manual',
                         'provider' => 'none',
                         'prices_include_tax' => true,
-                        'config_json' => ['default_rate_bps' => 1900],
+                        'config_json' => ['default_rate' => 1900],
                     ],
                 );
             }
