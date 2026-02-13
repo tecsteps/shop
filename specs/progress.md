@@ -1,28 +1,28 @@
 # Implementation Progress
 
-## Phase 1: Foundation (Migrations, Models, Middleware, Auth)
-- [ ] Step 1.1: Environment and Config
-- [ ] Step 1.2: Core Migrations
-- [ ] Step 1.3: Core Models
-- [ ] Step 1.4: Enums
-- [ ] Step 1.5: Tenant Resolution Middleware
-- [ ] Step 1.6: BelongsToStore Trait and Global Scope
-- [ ] Step 1.7: Authentication
-- [ ] Step 1.8: Authorization
+## Phase 1: Foundation (Migrations, Models, Middleware, Auth) - DONE
+- [x] Step 1.1: Environment and Config
+- [x] Step 1.2: Core Migrations
+- [x] Step 1.3: Core Models
+- [x] Step 1.4: Enums
+- [x] Step 1.5: Tenant Resolution Middleware
+- [x] Step 1.6: BelongsToStore Trait and Global Scope
+- [x] Step 1.7: Authentication
+- [x] Step 1.8: Authorization
 
-## Phase 2: Catalog (Products, Variants, Inventory, Collections, Media)
-- [ ] Step 2.1: Migrations
-- [ ] Step 2.2: Models with Relationships
-- [ ] Step 2.3: Product Service
-- [ ] Step 2.4: Inventory Service
-- [ ] Step 2.5: Media Upload
+## Phase 2: Catalog (Products, Variants, Inventory, Collections, Media) - DONE
+- [x] Step 2.1: Migrations
+- [x] Step 2.2: Models with Relationships
+- [x] Step 2.3: Product Service
+- [x] Step 2.4: Inventory Service
+- [x] Step 2.5: Media Upload
 
-## Phase 3: Themes, Pages, Navigation, Storefront Layout
-- [ ] Step 3.1: Migrations
-- [ ] Step 3.2: Models
-- [ ] Step 3.3: Storefront Blade Layout
-- [ ] Step 3.4: Storefront Livewire Components
-- [ ] Step 3.5: Navigation Service
+## Phase 3: Themes, Pages, Navigation, Storefront Layout - DONE
+- [x] Step 3.1: Migrations
+- [x] Step 3.2: Models
+- [x] Step 3.3: Storefront Blade Layout
+- [x] Step 3.4: Storefront Livewire Components
+- [x] Step 3.5: Navigation Service
 
 ## Phase 4: Cart, Checkout, Discounts, Shipping, Taxes
 - [ ] Step 4.1: Migrations
