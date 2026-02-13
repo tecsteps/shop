@@ -22,7 +22,7 @@ test('password can be updated', function () {
 
     $response->assertHasNoErrors();
 
-    expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
+    expect(Hash::check('new-password', $user->refresh()->password_hash))->toBeTrue();
 });
 
 test('correct password must be provided to update password', function () {

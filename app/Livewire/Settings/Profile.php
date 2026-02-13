@@ -22,8 +22,10 @@ class Profile extends Component
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $this->name = $user->name;
+        $this->email = $user->email;
     }
 
     /**
@@ -31,8 +33,10 @@ class Profile extends Component
      */
     public function updateProfileInformation(): void
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        /** @var array<string, mixed> $validated */
         $validated = $this->validate($this->profileRules($user->id));
 
         $user->fill($validated);
@@ -51,6 +55,7 @@ class Profile extends Component
      */
     public function resendVerificationNotification(): void
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
@@ -67,13 +72,19 @@ class Profile extends Component
     #[Computed]
     public function hasUnverifiedEmail(): bool
     {
-        return Auth::user() instanceof MustVerifyEmail && ! Auth::user()->hasVerifiedEmail();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        return $user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail();
     }
 
     #[Computed]
     public function showDeleteUser(): bool
     {
-        return ! Auth::user() instanceof MustVerifyEmail
-            || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        return ! $user instanceof MustVerifyEmail
+            || $user->hasVerifiedEmail();
     }
 }
