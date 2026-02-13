@@ -89,7 +89,7 @@
                 <div class="flex lg:hidden">
                     <button @click="mobileMenuOpen = !mobileMenuOpen"
                             type="button"
-                            class="inline-flex items-center justify-center rounded-md p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                            class="inline-flex items-center justify-center rounded-md p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                             aria-label="Open mobile navigation"
                             :aria-expanded="mobileMenuOpen">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -100,7 +100,7 @@
 
                 {{-- Logo --}}
                 <div class="flex flex-1 items-center justify-center lg:justify-start">
-                    <a href="{{ route('storefront.home') }}" class="flex items-center">
+                    <a href="{{ route('storefront.home') }}" class="flex items-center rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950">
                         @if($logoUrl)
                             <img src="{{ $logoUrl }}" alt="{{ $storeName }}" class="h-8 w-auto lg:h-10">
                         @else
@@ -113,7 +113,7 @@
                 <div class="hidden lg:flex lg:items-center lg:space-x-8">
                     @foreach($mainNavItems as $item)
                         <a href="{{ $item['url'] }}"
-                           class="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors">
+                           class="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950">
                             {{ $item['label'] }}
                         </a>
                     @endforeach
@@ -123,7 +123,7 @@
                 <div class="flex items-center space-x-4">
                     {{-- Search --}}
                     <button type="button"
-                            class="hidden lg:inline-flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                            class="hidden lg:inline-flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
                             aria-label="Search"
                             @click="$dispatch('open-search-modal')">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -133,7 +133,7 @@
 
                     {{-- Cart --}}
                     <button type="button"
-                            class="relative inline-flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                            class="relative inline-flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
                             aria-label="Open cart"
                             @click="$dispatch('open-cart-drawer')">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -143,7 +143,7 @@
 
                     {{-- Account --}}
                     <a href="{{ auth('customer')->check() ? route('customer.dashboard') : route('customer.login') }}"
-                       class="hidden lg:inline-flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                       class="hidden lg:inline-flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
                        aria-label="{{ auth('customer')->check() ? 'Account' : 'Log in' }}">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -185,7 +185,7 @@
                     {{-- Close button --}}
                     <div class="flex items-center justify-end p-4">
                         <button @click="mobileMenuOpen = false"
-                                class="rounded-md p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                class="rounded-md p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                 aria-label="Close mobile navigation">
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -194,10 +194,10 @@
                     </div>
 
                     {{-- Nav Items --}}
-                    <nav class="flex-1 space-y-1 px-4 pb-4">
+                    <nav class="flex-1 space-y-1 px-4 pb-4" aria-label="Mobile navigation">
                         @foreach($mainNavItems as $item)
                             <a href="{{ $item['url'] }}"
-                               class="block rounded-md px-3 py-3 text-base font-medium text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white">
+                               class="block rounded-md px-3 py-3 text-base font-medium text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                                 {{ $item['label'] }}
                             </a>
                         @endforeach
@@ -206,7 +206,7 @@
                     {{-- Account link at bottom --}}
                     <div class="border-t border-zinc-200 dark:border-zinc-700 p-4">
                         <a href="{{ auth('customer')->check() ? route('customer.dashboard') : route('customer.login') }}"
-                           class="flex items-center space-x-3 rounded-md px-3 py-3 text-base font-medium text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                           class="flex items-center space-x-3 rounded-md px-3 py-3 text-base font-medium text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>
@@ -230,19 +230,19 @@
             <div class="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
                 {{-- Navigation links --}}
                 @if(count($footerNavItems) > 0)
-                    <div>
+                    <nav aria-label="Footer navigation">
                         <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Navigation</h3>
                         <ul class="mt-4 space-y-3">
                             @foreach($footerNavItems as $item)
                                 <li>
                                     <a href="{{ $item['url'] }}"
-                                       class="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors">
+                                       class="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900">
                                         {{ $item['label'] }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
-                    </div>
+                    </nav>
                 @endif
 
                 {{-- Store Info --}}
@@ -271,7 +271,7 @@
                             <a href="{{ $socialLinks[$platform] }}"
                                target="_blank"
                                rel="noopener noreferrer"
-                               class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+                               class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
                                aria-label="{{ ucfirst($platform) }}">
                                 <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                     <rect width="24" height="24" rx="4" fill="currentColor" opacity="0.15"/>
