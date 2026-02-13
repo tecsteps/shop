@@ -41,6 +41,22 @@ class ProductVariantFactory extends Factory
         ]);
     }
 
+    public function onSale(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'compare_at_amount' => fake()->numberBetween(20000, 39999),
+            'price_amount' => fake()->numberBetween(9999, 19999),
+        ]);
+    }
+
+    public function digital(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'requires_shipping' => false,
+            'weight_g' => 0,
+        ]);
+    }
+
     public function archived(): static
     {
         return $this->state(fn (array $attributes): array => [

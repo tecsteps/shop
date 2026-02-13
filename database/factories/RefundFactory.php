@@ -30,4 +30,19 @@ class RefundFactory extends Factory
             'provider_refund_id' => 'mock_ref_'.Str::random(16),
         ];
     }
+
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => RefundStatus::Pending,
+            'provider_refund_id' => null,
+        ]);
+    }
+
+    public function failed(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => RefundStatus::Failed,
+        ]);
+    }
 }

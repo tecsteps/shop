@@ -2,8 +2,10 @@
 
 use App\Models\Product;
 use App\Services\SearchService;
+use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
+    DB::table('products_fts')->delete();
     $this->context = createStoreContext();
     $this->store = $this->context['store'];
     $this->searchService = app(SearchService::class);

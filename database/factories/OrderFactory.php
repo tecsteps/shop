@@ -84,6 +84,52 @@ class OrderFactory extends Factory
         ]);
     }
 
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => OrderStatus::Pending,
+            'financial_status' => FinancialStatus::Pending,
+        ]);
+    }
+
+    public function pendingBankTransfer(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => OrderStatus::Pending,
+            'financial_status' => FinancialStatus::Pending,
+            'payment_method' => PaymentMethod::BankTransfer,
+        ]);
+    }
+
+    public function refunded(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => OrderStatus::Refunded,
+            'financial_status' => FinancialStatus::Refunded,
+        ]);
+    }
+
+    public function partiallyFulfilled(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'fulfillment_status' => FulfillmentStatus::Partial,
+        ]);
+    }
+
+    public function creditCard(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'payment_method' => PaymentMethod::CreditCard,
+        ]);
+    }
+
+    public function paypal(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'payment_method' => PaymentMethod::Paypal,
+        ]);
+    }
+
     public function bankTransfer(): static
     {
         return $this->state(fn (array $attributes): array => [

@@ -61,10 +61,34 @@ class DiscountFactory extends Factory
         ]);
     }
 
+    public function maxedOut(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'usage_limit' => 5,
+            'usage_count' => 5,
+        ]);
+    }
+
+    public function automatic(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => DiscountType::Automatic,
+            'code' => null,
+        ]);
+    }
+
+    public function draft(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => DiscountStatus::Draft,
+        ]);
+    }
+
     public function disabled(): static
     {
         return $this->state(fn (array $attributes): array => [
             'status' => DiscountStatus::Disabled,
+            'starts_at' => now()->subDays(30),
         ]);
     }
 }

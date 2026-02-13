@@ -51,6 +51,18 @@ class AnalyticsEventFactory extends Factory
         ]);
     }
 
+    public function productView(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'event_type' => 'product_view',
+            'properties_json' => [
+                'product_id' => fake()->randomNumber(),
+                'product_title' => fake()->words(3, true),
+                'url' => '/products/'.fake()->slug(3),
+            ],
+        ]);
+    }
+
     public function checkoutStarted(): static
     {
         return $this->state(fn (array $attributes): array => [

@@ -40,6 +40,13 @@ class CollectionFactory extends Factory
         ]);
     }
 
+    public function archived(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => CollectionStatus::Archived,
+        ]);
+    }
+
     public function automated(): static
     {
         return $this->state(fn (array $attributes): array => [

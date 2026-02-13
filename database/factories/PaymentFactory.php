@@ -47,6 +47,27 @@ class PaymentFactory extends Factory
         ]);
     }
 
+    public function refunded(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => PaymentStatus::Refunded,
+        ]);
+    }
+
+    public function creditCard(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'method' => PaymentMethod::CreditCard,
+        ]);
+    }
+
+    public function paypal(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'method' => PaymentMethod::Paypal,
+        ]);
+    }
+
     public function bankTransfer(): static
     {
         return $this->state(fn (array $attributes): array => [

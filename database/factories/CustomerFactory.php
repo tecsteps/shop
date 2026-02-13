@@ -35,6 +35,13 @@ class CustomerFactory extends Factory
         ]);
     }
 
+    public function guest(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'password_hash' => null,
+        ]);
+    }
+
     public function optedInToMarketing(): static
     {
         return $this->state(fn (array $attributes): array => [

@@ -29,10 +29,24 @@ class InventoryItemFactory extends Factory
         ];
     }
 
+    public function outOfStock(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'quantity_on_hand' => 0,
+        ]);
+    }
+
     public function continuePolicy(): static
     {
         return $this->state(fn (array $attributes): array => [
             'policy' => InventoryPolicy::Continue,
+        ]);
+    }
+
+    public function lowStock(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'quantity_on_hand' => fake()->numberBetween(1, 3),
         ]);
     }
 }
