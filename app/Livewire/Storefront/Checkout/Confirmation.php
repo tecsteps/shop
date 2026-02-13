@@ -10,10 +10,9 @@ class Confirmation extends Component
 {
     public Checkout $checkout;
 
-    public function mount(int $checkout): void
+    public function mount(Checkout $checkout): void
     {
-        $this->checkout = Checkout::withoutGlobalScopes()
-            ->findOrFail($checkout);
+        $this->checkout = $checkout;
     }
 
     public function render(): View
