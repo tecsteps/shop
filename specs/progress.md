@@ -124,3 +124,26 @@
 - [x] Code style check passing (vendor/bin/pint)
 - [x] Fresh migration + seeding verified (migrate:fresh --seed)
 - [x] Seeder idempotency verified (db:seed runs twice without errors)
+
+### Post-Implementation: Storefront UI
+- [x] Cart/Checkout UI with full 4-step flow (contact, address, delivery, payment)
+- [x] Product detail page with variant selection, quantity controls, add-to-cart
+- [x] Cart page with quantity controls, discount code input, subtotal
+- [x] Order confirmation page with full order summary
+- [x] Tax display bug fixed (seeder key mismatch + template key mismatch)
+- [x] 18 new Livewire component tests (335 tests, 730 assertions)
+- [x] E2E verified via Playwright: full checkout flow with correct tax calculation
+
+### Post-Implementation: Quality Assurance
+- [x] PHPStan max level compliance (0 errors)
+  - Installed Larastan v3.9.2
+  - Added @property PHPDoc to 16+ models
+  - Fixed 364 type errors across 60+ files
+- [x] Deptrac architectural compliance (0 violations)
+  - 16 layers defined (Enums, ValueObjects, Contracts, Exceptions, Support, Events, Concerns, Traits, Models, Services, Policies, Observers, Jobs, Controllers, Middleware, Livewire, Actions, Providers)
+  - 805 allowed inter-layer dependencies
+- [x] Admin login fix (set current_store_id in session after authentication)
+- [x] Full review meeting via Playwright
+  - Storefront: homepage, collections, product detail, cart, 4-step checkout, confirmation
+  - Admin: login, dashboard (KPI tiles, recent orders), products, orders, order detail, settings
+- [ ] Fresh agent review (in progress)
