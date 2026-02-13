@@ -292,6 +292,9 @@
         </div>
     </footer>
 
+    {{-- Search Modal --}}
+    @livewire('storefront.search.modal')
+
     {{-- Cart Drawer --}}
     @livewire('storefront.cart-drawer')
 

@@ -35,14 +35,14 @@
 - [x] Step 4.8: Checkout State Machine
 - [x] Step 4.9: Storefront Cart/Checkout UI
 
-## Phase 5: Payments, Orders, Fulfillment
-- [ ] Step 5.1: Migrations
-- [ ] Step 5.2: Models
-- [ ] Step 5.3: Payment Service (Mock PSP)
-- [ ] Step 5.3b: Admin Payment Confirmation
-- [ ] Step 5.4: Order Service
-- [ ] Step 5.5: Refund Service
-- [ ] Step 5.6: Fulfillment Service
+## Phase 5: Payments, Orders, Fulfillment - DONE
+- [x] Step 5.1: Migrations
+- [x] Step 5.2: Models
+- [x] Step 5.3: Payment Service (Mock PSP)
+- [x] Step 5.3b: Admin Payment Confirmation
+- [x] Step 5.4: Order Service
+- [x] Step 5.5: Refund Service
+- [x] Step 5.6: Fulfillment Service
 
 ## Phase 6: Customer Accounts
 - [ ] Step 6.1: Customer Auth
@@ -55,10 +55,10 @@
 - [ ] Step 7.4: Order Management
 - [ ] Step 7.5: Other Admin Sections
 
-## Phase 8: Search
-- [ ] Step 8.1: Migrations
-- [ ] Step 8.2: Search Service
-- [ ] Step 8.3: Search UI
+## Phase 8: Search - DONE
+- [x] Step 8.1: Migrations
+- [x] Step 8.2: Search Service
+- [x] Step 8.3: Search UI
 
 ## Phase 9: Analytics
 - [ ] Step 9.1: Migrations
