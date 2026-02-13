@@ -146,4 +146,10 @@
 - [x] Full review meeting via Playwright
   - Storefront: homepage, collections, product detail, cart, 4-step checkout, confirmation
   - Admin: login, dashboard (KPI tiles, recent orders), products, orders, order detail, settings
-- [ ] Fresh agent review (in progress)
+- [x] Fresh agent review (6 critical/high issues fixed, 11 medium/low reported)
+  - CRITICAL: Order confirmation IDOR (any user could view any order)
+  - CRITICAL: Checkout IDOR via checkoutId manipulation
+  - CRITICAL: Discount minimum purchase validation broken (key mismatch)
+  - CRITICAL: Admin fulfillment bypassed FulfillmentService (no guards)
+  - CRITICAL: Admin refund bypassed RefundService (no validation)
+  - HIGH: Customer registration missing email uniqueness per store
