@@ -44,7 +44,7 @@ it('shows order detail page', function () {
 it('creates a fulfillment from order detail', function () {
     $ctx = createStoreContext();
 
-    $order = Order::factory()->create([
+    $order = Order::factory()->paid()->create([
         'store_id' => $ctx['store']->id,
         'fulfillment_status' => FulfillmentStatus::Unfulfilled,
     ]);

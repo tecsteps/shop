@@ -2,13 +2,9 @@
 
 namespace App\Livewire\Admin\Orders;
 
-use App\Enums\FulfillmentShipmentStatus;
-use App\Enums\FulfillmentStatus;
-use App\Enums\RefundStatus;
-use App\Models\Fulfillment;
-use App\Models\FulfillmentLine;
 use App\Models\Order;
-use App\Models\Refund;
+use App\Services\FulfillmentService;
+use App\Services\RefundService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -30,6 +26,8 @@ class Show extends Component
 
     public string $refundReason = '';
 
+    public string $error = '';
+
     public function mount(Order $order): void
     {
         $this->order = $order;
@@ -39,29 +37,44 @@ class Show extends Component
     {
         $this->trackingCompany = '';
         $this->trackingNumber = '';
+        $this->error = '';
         $this->showFulfillmentModal = true;
     }
 
-    public function createFulfillment(): void
+    public function createFulfillment(FulfillmentService $fulfillmentService): void
     {
-        $fulfillment = Fulfillment::create([
-            'order_id' => $this->order->id,
-            'status' => FulfillmentShipmentStatus::Pending,
-            'tracking_company' => $this->trackingCompany ?: null,
-            'tracking_number' => $this->trackingNumber ?: null,
-        ]);
+        $this->error = '';
+        $this->order->load('lines');
 
-        foreach ($this->order->lines as $line) {
-            FulfillmentLine::create([
-                'fulfillment_id' => $fulfillment->id,
-                'order_line_id' => $line->id,
-                'quantity' => $line->quantity,
-            ]);
+        /** @var array<int, array{order_line_id: int, quantity: int}> $lines */
+        $lines = $this->order->lines->map(fn ($line): array => [
+            'order_line_id' => $line->id,
+            'quantity' => $line->quantity,
+        ])->toArray();
+
+        /** @var array{tracking_company?: string, tracking_number?: string}|null $tracking */
+        $tracking = null;
+        if ($this->trackingCompany !== '' || $this->trackingNumber !== '') {
+            $tracking = [];
+            if ($this->trackingCompany !== '') {
+                $tracking['tracking_company'] = $this->trackingCompany;
+            }
+            if ($this->trackingNumber !== '') {
+                $tracking['tracking_number'] = $this->trackingNumber;
+            }
         }
 
-        $this->order->update([
-            'fulfillment_status' => FulfillmentStatus::Fulfilled,
-        ]);
+        try {
+            $fulfillmentService->create($this->order, $lines, $tracking);
+        } catch (\App\Exceptions\FulfillmentGuardException $e) {
+            $this->error = $e->getMessage();
+
+            return;
+        } catch (\InvalidArgumentException $e) {
+            $this->error = $e->getMessage();
+
+            return;
+        }
 
         $this->showFulfillmentModal = false;
         $this->order->refresh();
@@ -71,11 +84,14 @@ class Show extends Component
     {
         $this->refundAmount = $this->order->total_amount;
         $this->refundReason = '';
+        $this->error = '';
         $this->showRefundModal = true;
     }
 
-    public function processRefund(): void
+    public function processRefund(RefundService $refundService): void
     {
+        $this->error = '';
+
         $this->validate([
             'refundAmount' => ['required', 'integer', 'min:1'],
             'refundReason' => ['nullable', 'string', 'max:500'],
@@ -83,14 +99,24 @@ class Show extends Component
 
         $payment = $this->order->payments()->first();
 
-        Refund::create([
-            'order_id' => $this->order->id,
-            'payment_id' => $payment?->id,
-            'amount' => $this->refundAmount,
-            'reason' => $this->refundReason ?: null,
-            'status' => RefundStatus::Processed,
-            'provider_refund_id' => 'mock_ref_'.now()->timestamp,
-        ]);
+        if (! $payment) {
+            $this->error = 'No payment found for this order.';
+
+            return;
+        }
+
+        try {
+            $refundService->create(
+                $this->order,
+                $payment,
+                $this->refundAmount,
+                $this->refundReason ?: null,
+            );
+        } catch (\InvalidArgumentException $e) {
+            $this->error = $e->getMessage();
+
+            return;
+        }
 
         $this->showRefundModal = false;
         $this->order->refresh();

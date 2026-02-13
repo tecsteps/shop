@@ -229,6 +229,12 @@ class Index extends Component
 
     private function getCheckout(): Checkout
     {
-        return Checkout::withoutGlobalScopes()->findOrFail($this->checkoutId);
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
+
+        /** @var Checkout */
+        return Checkout::withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->findOrFail($this->checkoutId);
     }
 }

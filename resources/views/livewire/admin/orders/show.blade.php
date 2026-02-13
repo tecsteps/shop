@@ -119,6 +119,9 @@
     <flux:modal wire:model="showFulfillmentModal" name="fulfillment-modal">
         <div class="space-y-4">
             <flux:heading size="lg">Create Fulfillment</flux:heading>
+            @if ($error && $showFulfillmentModal)
+                <flux:callout variant="danger">{{ $error }}</flux:callout>
+            @endif
             <flux:input wire:model="trackingCompany" label="Tracking Company" />
             <flux:input wire:model="trackingNumber" label="Tracking Number" />
             <div class="flex items-center gap-3">
@@ -132,6 +135,9 @@
     <flux:modal wire:model="showRefundModal" name="refund-modal">
         <div class="space-y-4">
             <flux:heading size="lg">Issue Refund</flux:heading>
+            @if ($error && $showRefundModal)
+                <flux:callout variant="danger">{{ $error }}</flux:callout>
+            @endif
             <flux:input wire:model="refundAmount" label="Amount (cents)" type="number" />
             <flux:textarea wire:model="refundReason" label="Reason" rows="2" />
             <div class="flex items-center gap-3">

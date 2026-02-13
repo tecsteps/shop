@@ -40,9 +40,10 @@ class DiscountService
         }
 
         $rules = $discount->rules_json ?? [];
-        if (isset($rules['minimum_purchase'])) {
+        $minimumPurchase = $rules['minimum_purchase'] ?? $rules['min_purchase_amount'] ?? null;
+        if ($minimumPurchase !== null) {
             $cartSubtotal = $cart->lines->sum('line_subtotal_amount');
-            if ($cartSubtotal < $rules['minimum_purchase']) {
+            if ($cartSubtotal < $minimumPurchase) {
                 throw new InvalidDiscountException('minimum_not_met', 'Minimum purchase amount not met.');
             }
         }

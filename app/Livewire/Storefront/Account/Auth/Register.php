@@ -6,6 +6,7 @@ use App\Models\Customer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -23,14 +24,23 @@ class Register extends Component
     public string $password_confirmation = '';
 
     /**
-     * @return array<string, array<int, string>>
+     * @return array<string, array<int, mixed>>
      */
     public function rules(): array
     {
+        /** @var \App\Models\Store|null $store */
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        $storeId = $store?->id;
+
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('customers', 'email')->where('store_id', $storeId),
+            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }

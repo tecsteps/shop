@@ -14,8 +14,12 @@ class Confirmation extends Component
 
     public function mount(string $orderNumber): void
     {
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
+
         $order = Order::withoutGlobalScopes()
             ->with(['lines', 'payments'])
+            ->where('store_id', $store->id)
             ->where(function ($query) use ($orderNumber): void {
                 $query->where('order_number', $orderNumber)
                     ->orWhere('order_number', '#'.$orderNumber);
