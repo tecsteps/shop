@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'store.resolve' => \App\Http\Middleware\ResolveStore::class,
             'role.check' => \App\Http\Middleware\CheckStoreRole::class,
+            'customer.auth' => \App\Http\Middleware\CustomerAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

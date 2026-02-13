@@ -13,7 +13,7 @@ it('resolves store by hostname for storefront requests', function () {
         'hostname' => 'my-shop.example.com',
     ]);
 
-    $response = $this->get('/', ['Host' => 'my-shop.example.com']);
+    $response = $this->get('http://my-shop.example.com/');
 
     $response->assertOk();
 });
@@ -21,9 +21,7 @@ it('resolves store by hostname for storefront requests', function () {
 it('returns 404 when store hostname is not found', function () {
     $response = $this->get('/', ['Host' => 'nonexistent.example.com']);
 
-    // The home route does not use store.resolve middleware, so it will still work
-    // This test verifies the middleware behavior when applied
-    $response->assertOk();
+    $response->assertNotFound();
 });
 
 it('resolves store from session for admin routes', function () {

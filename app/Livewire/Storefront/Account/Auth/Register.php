@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Storefront\Account\Auth;
 
+use App\Models\Customer;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -36,10 +39,20 @@ class Register extends Component
     {
         $this->validate();
 
-        // Customer model will be created in a later phase.
-        // For now, this is a placeholder for the registration flow.
+        $storeId = app()->bound('current_store') ? app('current_store')->id : null;
 
-        $this->redirect('/account/login');
+        $customer = Customer::withoutGlobalScopes()->create([
+            'store_id' => $storeId,
+            'name' => trim($this->first_name.' '.$this->last_name),
+            'email' => $this->email,
+            'password_hash' => Hash::make($this->password),
+        ]);
+
+        Auth::guard('customer')->login($customer);
+
+        session()->regenerate();
+
+        $this->redirect('/account');
     }
 
     public function render(): View
