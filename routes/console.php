@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 Schedule::job(new \App\Jobs\ExpireAbandonedCheckouts)->everyFifteenMinutes();
 Schedule::job(new \App\Jobs\CleanupAbandonedCarts)->daily();
 Schedule::job(new \App\Jobs\CancelUnpaidBankTransferOrders)->daily();
+Schedule::job(new \App\Jobs\AggregateAnalytics)->daily();

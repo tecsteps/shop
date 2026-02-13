@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Enums\StoreUserRole;
+use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
+use App\Observers\ProductObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Date;
@@ -29,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureRateLimiters();
         $this->configureGates();
+
+        Product::observe(ProductObserver::class);
     }
 
     protected function configureDefaults(): void
