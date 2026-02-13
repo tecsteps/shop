@@ -24,16 +24,16 @@
 - [x] Step 3.4: Storefront Livewire Components
 - [x] Step 3.5: Navigation Service
 
-## Phase 4: Cart, Checkout, Discounts, Shipping, Taxes
-- [ ] Step 4.1: Migrations
-- [ ] Step 4.2: Models
-- [ ] Step 4.3: Cart Service
-- [ ] Step 4.4: Discount Service
-- [ ] Step 4.5: Shipping Calculator
-- [ ] Step 4.6: Tax Calculator
-- [ ] Step 4.7: Pricing Engine
-- [ ] Step 4.8: Checkout State Machine
-- [ ] Step 4.9: Storefront Cart/Checkout UI
+## Phase 4: Cart, Checkout, Discounts, Shipping, Taxes - DONE
+- [x] Step 4.1: Migrations
+- [x] Step 4.2: Models
+- [x] Step 4.3: Cart Service
+- [x] Step 4.4: Discount Service
+- [x] Step 4.5: Shipping Calculator
+- [x] Step 4.6: Tax Calculator
+- [x] Step 4.7: Pricing Engine
+- [x] Step 4.8: Checkout State Machine
+- [x] Step 4.9: Storefront Cart/Checkout UI
 
 ## Phase 5: Payments, Orders, Fulfillment
 - [ ] Step 5.1: Migrations

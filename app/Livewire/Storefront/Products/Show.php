@@ -4,6 +4,7 @@ namespace App\Livewire\Storefront\Products;
 
 use App\Enums\ProductStatus;
 use App\Models\Product;
+use App\Services\CartService;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -42,8 +43,26 @@ class Show extends Component
 
     public function addToCart(): void
     {
-        // Stub - cart functionality will be implemented in Phase 4
-        $this->dispatch('cart-updated');
+        if (! $this->selectedVariantId) {
+            return;
+        }
+
+        $store = app()->bound('current_store') ? app('current_store') : null;
+
+        if (! $store) {
+            return;
+        }
+
+        $cartService = app(CartService::class);
+        $customer = auth('customer')->user();
+        $cart = $cartService->getOrCreateForSession($store, $customer);
+
+        try {
+            $cartService->addLine($cart, $this->selectedVariantId, $this->quantity);
+            $this->dispatch('cart-updated');
+        } catch (\Exception $e) {
+            $this->addError('cart', $e->getMessage());
+        }
     }
 
     public function incrementQuantity(): void
