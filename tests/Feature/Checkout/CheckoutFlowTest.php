@@ -6,6 +6,7 @@ use App\Enums\VariantStatus;
 use App\Models\Cart;
 use App\Models\CartLine;
 use App\Models\InventoryItem;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShippingRate;
@@ -102,8 +103,9 @@ it('completes full checkout happy path', function () {
     $checkout = $service->selectPaymentMethod($checkout, 'credit_card');
     expect($checkout->status)->toBe(CheckoutStatus::PaymentSelected);
 
-    $result = $service->completeCheckout($checkout);
-    expect($result->status)->toBe(CheckoutStatus::Completed);
+    $order = $service->completeCheckout($checkout);
+    expect($order)->toBeInstanceOf(Order::class)
+        ->and($order->email)->toBe('test@example.com');
 });
 
 it('rejects checkout for empty cart', function () {

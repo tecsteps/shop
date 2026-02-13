@@ -6,7 +6,9 @@ use App\Enums\VariantStatus;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Models\Cart;
 use App\Models\CartLine;
+use App\Models\Checkout;
 use App\Models\InventoryItem;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShippingRate;
@@ -216,9 +218,12 @@ it('transitions from payment_selected to completed', function () {
     $checkout = $service->setAddress($checkout, validAddressData());
     $checkout = $service->setShippingMethod($checkout, $rate->id);
     $checkout = $service->selectPaymentMethod($checkout, 'credit_card');
-    $result = $service->completeCheckout($checkout);
+    $order = $service->completeCheckout($checkout);
 
-    expect($result->status)->toBe(CheckoutStatus::Completed);
+    expect($order)->toBeInstanceOf(Order::class);
+
+    $checkout = Checkout::withoutGlobalScopes()->find($checkout->id);
+    expect($checkout->status)->toBe(CheckoutStatus::Completed);
 });
 
 it('rejects invalid state transitions', function () {

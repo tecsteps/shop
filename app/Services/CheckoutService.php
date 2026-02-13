@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
-use App\Enums\CartStatus;
+use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
+use App\Enums\PaymentMethod;
 use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +19,8 @@ class CheckoutService
         public PricingEngine $pricingEngine,
         public InventoryService $inventoryService,
         public ShippingCalculator $shippingCalculator,
+        public PaymentProvider $paymentProvider,
+        public OrderService $orderService,
     ) {}
 
     public function createCheckout(Cart $cart): Checkout
@@ -134,24 +139,46 @@ class CheckoutService
     /**
      * @param  array<string, mixed>  $paymentDetails
      */
-    public function completeCheckout(Checkout $checkout, array $paymentDetails = []): mixed
+    public function completeCheckout(Checkout $checkout, array $paymentDetails = []): Order
     {
-        // Idempotent: if already completed, return checkout
+        // Idempotency: if already completed, return existing order
         if ($checkout->status === CheckoutStatus::Completed) {
-            return $checkout;
+            $existingOrder = Order::withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->where('email', $checkout->email)
+                ->whereHas('payments', function ($q): void {
+                    $q->where('order_id', '>', 0);
+                })
+                ->latest()
+                ->first();
+
+            if ($existingOrder) {
+                return $existingOrder;
+            }
         }
 
         $this->assertTransition($checkout, CheckoutStatus::Completed);
 
-        $checkout->update([
-            'status' => CheckoutStatus::Completed,
-        ]);
+        $paymentMethod = PaymentMethod::from($checkout->payment_method);
 
-        $checkout->cart()->withoutGlobalScopes()->update([
-            'status' => CartStatus::Converted,
-        ]);
+        $paymentResult = $this->paymentProvider->charge($checkout, $paymentMethod, $paymentDetails);
 
-        return $checkout->fresh();
+        if (! $paymentResult->success) {
+            $checkout->load('cart.lines.variant.inventoryItem');
+
+            foreach ($checkout->cart->lines as $line) {
+                if ($line->variant->inventoryItem) {
+                    $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
+                }
+            }
+
+            throw new PaymentFailedException(
+                errorCode: $paymentResult->errorCode ?? 'unknown',
+                message: "Payment failed with error: {$paymentResult->errorCode}",
+            );
+        }
+
+        return $this->orderService->createFromCheckout($checkout, $paymentResult);
     }
 
     public function expireCheckout(Checkout $checkout): void

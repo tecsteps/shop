@@ -12,8 +12,8 @@
 | 1 | Foundation (Migrations, Models, Middleware, Auth) | Complete | 100% |
 | 2 | Catalog (Products, Variants, Inventory, Collections, Media) | Complete | 100% |
 | 3 | Themes, Pages, Navigation, Storefront Layout | Complete | 100% |
-| 4 | Cart, Checkout, Discounts, Shipping, Taxes | In Progress | 0% |
-| 5 | Payments, Orders, Fulfillment | Pending | 0% |
+| 4 | Cart, Checkout, Discounts, Shipping, Taxes | Complete | 100% |
+| 5 | Payments, Orders, Fulfillment | In Progress | 0% |
 | 6 | Customer Accounts | Pending | 0% |
 | 7 | Admin Panel | Pending | 0% |
 | 8 | Search | Pending | 0% |
@@ -52,15 +52,15 @@
 - [x] Tests written and passing (7 tests)
 
 ### Phase 4: Cart, Checkout, Discounts, Shipping, Taxes
-- [ ] Step 4.1-4.2: Migrations and Models
-- [ ] Step 4.3: Cart Service
-- [ ] Step 4.4: Discount Service
-- [ ] Step 4.5: Shipping Calculator
-- [ ] Step 4.6: Tax Calculator
-- [ ] Step 4.7: Pricing Engine
-- [ ] Step 4.8: Checkout State Machine
-- [ ] Step 4.9: Storefront Cart/Checkout UI
-- [ ] Tests written and passing
+- [x] Step 4.1-4.2: Migrations and Models
+- [x] Step 4.3: Cart Service
+- [x] Step 4.4: Discount Service
+- [x] Step 4.5: Shipping Calculator
+- [x] Step 4.6: Tax Calculator
+- [x] Step 4.7: Pricing Engine
+- [x] Step 4.8: Checkout State Machine
+- [ ] Step 4.9: Storefront Cart/Checkout UI (deferred to Phase 11)
+- [x] Tests written and passing (106 new tests, 206 total)
 
 ### Phase 5: Payments, Orders, Fulfillment
 - [ ] Step 5.1-5.2: Migrations and Models

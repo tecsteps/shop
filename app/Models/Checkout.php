@@ -55,6 +55,14 @@ class Checkout extends Model
     }
 
     /**
+     * @return BelongsTo<Customer, $this>
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
      * @return BelongsTo<ShippingRate, $this>
      */
     public function shippingRate(): BelongsTo

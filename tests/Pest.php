@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\StoreUserRole;
+use App\Models\Customer;
 use App\Models\Organization;
 use App\Models\Store;
 use App\Models\StoreDomain;
@@ -45,6 +46,22 @@ function actingAsAdmin(User $user, ?Store $store = null): Tests\TestCase
     $store ??= app()->bound('current_store') ? app('current_store') : null;
 
     $testCase = test()->actingAs($user);
+
+    if ($store) {
+        session(['current_store_id' => $store->id]);
+    }
+
+    return $testCase;
+}
+
+/**
+ * Authenticate the given customer for storefront actions.
+ */
+function actingAsCustomer(Customer $customer, ?Store $store = null): Tests\TestCase
+{
+    $store ??= app()->bound('current_store') ? app('current_store') : null;
+
+    $testCase = test()->actingAs($customer, 'customer');
 
     if ($store) {
         session(['current_store_id' => $store->id]);
