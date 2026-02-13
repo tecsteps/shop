@@ -44,29 +44,29 @@
 - [x] Step 5.5: Refund Service
 - [x] Step 5.6: Fulfillment Service
 
-## Phase 6: Customer Accounts
-- [ ] Step 6.1: Customer Auth
-- [ ] Step 6.2: Customer Account Pages
+## Phase 6: Customer Accounts - DONE
+- [x] Step 6.1: Customer Auth
+- [x] Step 6.2: Customer Account Pages
 
-## Phase 7: Admin Panel
-- [ ] Step 7.1: Admin Layout
-- [ ] Step 7.2: Dashboard
-- [ ] Step 7.3: Product Management
-- [ ] Step 7.4: Order Management
-- [ ] Step 7.5: Other Admin Sections
+## Phase 7: Admin Panel - DONE
+- [x] Step 7.1: Admin Layout
+- [x] Step 7.2: Dashboard
+- [x] Step 7.3: Product Management
+- [x] Step 7.4: Order Management
+- [x] Step 7.5: Other Admin Sections
 
 ## Phase 8: Search - DONE
 - [x] Step 8.1: Migrations
 - [x] Step 8.2: Search Service
 - [x] Step 8.3: Search UI
 
-## Phase 9: Analytics
-- [ ] Step 9.1: Migrations
-- [ ] Step 9.2: Analytics Service
+## Phase 9: Analytics - DONE
+- [x] Step 9.1: Migrations
+- [x] Step 9.2: Analytics Service
 
-## Phase 10: Apps and Webhooks
-- [ ] Step 10.1: Migrations
-- [ ] Step 10.2: Webhook Service
+## Phase 10: Apps and Webhooks - DONE
+- [x] Step 10.1: Migrations
+- [x] Step 10.2: Webhook Service
 
 ## Phase 11: Polish
 - [ ] Accessibility, responsive, dark mode, error pages, logging, seeds

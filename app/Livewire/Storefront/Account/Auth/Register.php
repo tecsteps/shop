@@ -4,12 +4,13 @@ namespace App\Livewire\Storefront\Account\Auth;
 
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules\Password;
-use Livewire\Attributes\Layout;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use Livewire\Component;
 
-#[Layout('layouts.auth')]
 class Register extends Component
 {
     public string $name = '';
@@ -20,11 +21,15 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
+    public bool $marketing_opt_in = false;
+
     /**
      * Register a new customer.
      */
     public function register(): void
     {
+        $this->ensureIsNotRateLimited();
+
         $store = app('current_store');
 
         $validated = $this->validate([
@@ -46,6 +51,7 @@ class Register extends Component
                 },
             ],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'marketing_opt_in' => ['boolean'],
         ]);
 
         $customer = Customer::create([
@@ -53,7 +59,10 @@ class Register extends Component
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
+            'marketing_opt_in' => $validated['marketing_opt_in'],
         ]);
+
+        RateLimiter::clear($this->throttleKey());
 
         Auth::guard('customer')->login($customer);
 
@@ -62,8 +71,37 @@ class Register extends Component
         $this->redirect(route('customer.dashboard'), navigate: true);
     }
 
-    public function render(): \Illuminate\View\View
+    /**
+     * Ensure the registration request is not rate limited.
+     */
+    protected function ensureIsNotRateLimited(): void
     {
-        return view('livewire.storefront.account.auth.register');
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+            RateLimiter::hit($this->throttleKey(), 60);
+
+            return;
+        }
+
+        $seconds = RateLimiter::availableIn($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => __('auth.throttle', ['seconds' => $seconds]),
+        ]);
+    }
+
+    /**
+     * Get the throttle key for the request.
+     */
+    protected function throttleKey(): string
+    {
+        return 'customer-register:'.request()->ip();
+    }
+
+    public function render(): View
+    {
+        return view('livewire.storefront.account.auth.register')
+            ->layout('storefront.layouts.app', [
+                'title' => 'Create Account',
+            ]);
     }
 }

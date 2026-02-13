@@ -6,10 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\Layout;
+use Illuminate\View\View;
 use Livewire\Component;
 
-#[Layout('layouts.auth')]
 class Login extends Component
 {
     public string $email = '';
@@ -72,8 +71,11 @@ class Login extends Component
         return 'customer-login:'.request()->ip();
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
-        return view('livewire.storefront.account.auth.login');
+        return view('livewire.storefront.account.auth.login')
+            ->layout('storefront.layouts.app', [
+                'title' => 'Login',
+            ]);
     }
 }

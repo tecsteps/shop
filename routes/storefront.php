@@ -1,8 +1,11 @@
 <?php
 
+use App\Livewire\Storefront\Account\Addresses\Index as AddressesIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
 use App\Livewire\Storefront\Account\Dashboard as AccountDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as OrdersIndex;
+use App\Livewire\Storefront\Account\Orders\Show as OrdersShow;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
@@ -12,7 +15,9 @@ use App\Livewire\Storefront\Home;
 use App\Livewire\Storefront\Pages\Show as PageShow;
 use App\Livewire\Storefront\Products\Show as ProductShow;
 use App\Livewire\Storefront\Search\Index as SearchIndex;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +44,16 @@ Route::middleware(['store.resolve'])->group(function () {
     // Customer protected routes
     Route::middleware(['auth:customer'])->prefix('account')->group(function () {
         Route::get('/', AccountDashboard::class)->name('customer.dashboard');
+        Route::get('/orders', OrdersIndex::class)->name('customer.orders');
+        Route::get('/orders/{orderNumber}', OrdersShow::class)->name('customer.orders.show');
+        Route::get('/addresses', AddressesIndex::class)->name('customer.addresses');
+
+        Route::post('/logout', function () {
+            Auth::guard('customer')->logout();
+            Session::invalidate();
+            Session::regenerateToken();
+
+            return redirect()->route('customer.login');
+        })->name('customer.logout');
     });
 });
