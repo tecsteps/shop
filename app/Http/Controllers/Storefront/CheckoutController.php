@@ -20,6 +20,7 @@ use App\ValueObjects\ShippingRateQuote;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -332,7 +333,7 @@ class CheckoutController extends StorefrontController
         $order = null;
 
         if ($status === CheckoutStatus::Completed->value) {
-            $order = $this->findOrderForCheckout($checkout, (int) $totals['total_amount']);
+            $order = $this->findOrderForCheckout($checkout);
         }
 
         return view('storefront.checkout.confirmation', [
@@ -386,13 +387,40 @@ class CheckoutController extends StorefrontController
                 throw new InvalidArgumentException('Cart not found for checkout.');
             }
 
-            $pricingResult = $this->checkoutService->computeTotals($checkoutRecord);
+            $finalizedDiscount = $this->lockDiscountForFinalization($checkoutRecord);
+
+            if ($finalizedDiscount === null && $this->hasDiscountCode($checkoutRecord)) {
+                $checkoutRecord->discount_code = null;
+                $checkoutRecord->save();
+            }
+
+            try {
+                $pricingResult = $this->checkoutService->computeTotals($checkoutRecord);
+            } catch (InvalidDiscountException) {
+                $finalizedDiscount = null;
+                $checkoutRecord->discount_code = null;
+                $checkoutRecord->save();
+
+                $pricingResult = $this->checkoutService->computeTotals($checkoutRecord);
+            }
+
             $totals = $this->pricingTotals($pricingResult);
+
+            $cart->load(['lines.variant.product']);
+
+            /** @var Collection<int, CartLine> $cartLines */
+            $cartLines = $cart->lines
+                ->sortBy('id')
+                ->values();
+
+            $lineDiscountAmounts = $this->lineDiscountAmountsFromCartLines($cartLines);
+
             $isBankTransfer = $paymentMethod === PaymentMethod::BankTransfer->value;
 
             $order = Order::query()->create([
                 'store_id' => (int) $checkoutRecord->store_id,
                 'customer_id' => $checkoutRecord->customer_id,
+                'checkout_id' => (int) $checkoutRecord->id,
                 'order_number' => $this->nextOrderNumber((int) $checkoutRecord->store_id),
                 'payment_method' => $paymentMethod,
                 'status' => $isBankTransfer ? 'pending' : 'paid',
@@ -411,9 +439,11 @@ class CheckoutController extends StorefrontController
             ]);
 
             /** @var CartLine $line */
-            foreach ($cart->lines as $line) {
+            foreach ($cartLines as $line) {
                 $variant = $line->variant;
                 $product = $variant?->product;
+                $lineId = (int) $line->id;
+                $lineDiscountAmount = (int) ($lineDiscountAmounts[$lineId] ?? 0);
 
                 $order->lines()->create([
                     'product_id' => $product?->id,
@@ -424,8 +454,17 @@ class CheckoutController extends StorefrontController
                     'unit_price_amount' => (int) $line->unit_price_amount,
                     'total_amount' => (int) $line->line_total_amount,
                     'tax_lines_json' => [],
-                    'discount_allocations_json' => [],
+                    'discount_allocations_json' => $this->orderLineDiscountAllocations(
+                        discount: $finalizedDiscount,
+                        lineDiscountAmount: $lineDiscountAmount,
+                    ),
                 ]);
+            }
+
+            $this->checkoutService->commitReservedInventoryForCheckout($checkoutRecord);
+
+            if ($finalizedDiscount instanceof Discount) {
+                $finalizedDiscount->increment('usage_count');
             }
 
             $order->payments()->create([
@@ -447,6 +486,92 @@ class CheckoutController extends StorefrontController
             $checkoutRecord->totals_json = $totals;
             $checkoutRecord->save();
         });
+    }
+
+    private function hasDiscountCode(Checkout $checkout): bool
+    {
+        return is_string($checkout->discount_code) && trim($checkout->discount_code) !== '';
+    }
+
+    private function lockDiscountForFinalization(Checkout $checkout): ?Discount
+    {
+        if (! $this->hasDiscountCode($checkout)) {
+            return null;
+        }
+
+        $discountCode = trim((string) $checkout->discount_code);
+
+        /** @var Discount|null $discount */
+        $discount = Discount::query()
+            ->where('store_id', (int) $checkout->store_id)
+            ->whereRaw('lower(code) = ?', [Str::lower($discountCode)])
+            ->where('status', 'active')
+            ->where('starts_at', '<=', now())
+            ->where(function ($query): void {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>=', now());
+            })
+            ->lockForUpdate()
+            ->first();
+
+        if (! $discount instanceof Discount) {
+            return null;
+        }
+
+        if ($discount->usage_limit !== null && (int) $discount->usage_count >= (int) $discount->usage_limit) {
+            return null;
+        }
+
+        return $discount;
+    }
+
+    /**
+     * @param  Collection<int, CartLine>  $lines
+     * @return array<int, int>
+     */
+    private function lineDiscountAmountsFromCartLines(Collection $lines): array
+    {
+        if ($lines->isEmpty()) {
+            return [];
+        }
+
+        /** @var array<int, int> $allocations */
+        $allocations = [];
+
+        /** @var CartLine $line */
+        foreach ($lines as $line) {
+            $lineId = (int) $line->id;
+            if ($lineId <= 0) {
+                continue;
+            }
+
+            $lineSubtotal = max(0, (int) $line->line_subtotal_amount);
+            $lineDiscount = max(0, min($lineSubtotal, (int) $line->line_discount_amount));
+
+            if ($lineDiscount <= 0) {
+                continue;
+            }
+
+            $allocations[$lineId] = $lineDiscount;
+        }
+
+        return $allocations;
+    }
+
+    /**
+     * @return list<array{discount_id: int, code: string, amount: int}>
+     */
+    private function orderLineDiscountAllocations(?Discount $discount, int $lineDiscountAmount): array
+    {
+        if (! $discount instanceof Discount || $lineDiscountAmount <= 0) {
+            return [];
+        }
+
+        return [[
+            'discount_id' => (int) $discount->id,
+            'code' => (string) ($discount->code ?? ''),
+            'amount' => $lineDiscountAmount,
+        ]];
     }
 
     /**
@@ -548,6 +673,10 @@ class CheckoutController extends StorefrontController
         if ($expired && $status !== CheckoutStatus::Expired->value) {
             $checkout->status = CheckoutStatus::Expired;
             $checkout->save();
+
+            if ($status === CheckoutStatus::PaymentSelected->value) {
+                $this->checkoutService->releaseReservedInventoryForCheckout($checkout);
+            }
         }
 
         return $expired;
@@ -626,13 +755,24 @@ class CheckoutController extends StorefrontController
         return $value;
     }
 
-    private function findOrderForCheckout(Checkout $checkout, int $totalAmount): ?Order
+    private function findOrderForCheckout(Checkout $checkout): ?Order
     {
+        $order = Order::query()
+            ->where('store_id', (int) $checkout->store_id)
+            ->where('checkout_id', (int) $checkout->id)
+            ->orderByDesc('placed_at')
+            ->orderByDesc('id')
+            ->first();
+
+        if ($order instanceof Order) {
+            return $order;
+        }
+
+        $totals = $this->normalizeTotals($checkout);
         $orderQuery = Order::query()
             ->where('store_id', (int) $checkout->store_id)
-            ->where('total_amount', $totalAmount)
-            ->orderByDesc('placed_at')
-            ->orderByDesc('id');
+            ->where('total_amount', (int) $totals['total_amount'])
+            ->whereNull('checkout_id');
 
         if (is_numeric($checkout->customer_id)) {
             $orderQuery->where('customer_id', (int) $checkout->customer_id);
@@ -641,7 +781,10 @@ class CheckoutController extends StorefrontController
         }
 
         /** @var Order|null $order */
-        $order = $orderQuery->first();
+        $order = $orderQuery
+            ->orderByDesc('placed_at')
+            ->orderByDesc('id')
+            ->first();
 
         return $order;
     }

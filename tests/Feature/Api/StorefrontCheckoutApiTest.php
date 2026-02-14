@@ -8,6 +8,7 @@ use App\Models\CartLine;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\InventoryItem;
+use App\Models\Order;
 use App\Models\Organization;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -188,6 +189,54 @@ function storefrontCheckoutApiAddressPayload(): array
     ];
 }
 
+function storefrontCheckoutApiPayPayload(): array
+{
+    return [
+        'payment_method' => 'credit_card',
+        'card_number' => '4242424242424242',
+        'card_expiry' => '12/28',
+        'card_cvc' => '123',
+        'card_holder' => 'Jane Doe',
+    ];
+}
+
+function storefrontCheckoutApiAssertOrderDiscountAllocations(Order $order, Discount $discount): void
+{
+    $order->loadMissing('lines');
+    expect($order->lines->count())->toBeGreaterThan(0);
+
+    $allocatedDiscountAmount = 0;
+    $linesWithAllocations = 0;
+
+    foreach ($order->lines as $line) {
+        $allocations = $line->discount_allocations_json;
+
+        expect($allocations)->toBeArray();
+
+        if ($allocations === []) {
+            continue;
+        }
+
+        $linesWithAllocations++;
+
+        foreach ($allocations as $allocation) {
+            expect(is_array($allocation))->toBeTrue();
+            expect(array_key_exists('discount_id', $allocation))->toBeTrue();
+            expect(array_key_exists('code', $allocation))->toBeTrue();
+            expect(array_key_exists('amount', $allocation))->toBeTrue();
+            expect($allocation['discount_id'])->toBe((int) $discount->id);
+            expect($allocation['code'])->toBe((string) $discount->code);
+            expect(is_int($allocation['amount']))->toBeTrue();
+            expect($allocation['amount'])->toBeGreaterThan(0);
+
+            $allocatedDiscountAmount += $allocation['amount'];
+        }
+    }
+
+    expect($linesWithAllocations)->toBeGreaterThan(0);
+    expect($allocatedDiscountAmount)->toBe((int) $order->discount_amount);
+}
+
 test('supports checkout transition flow from started to completed', function (): void {
     $hostname = 'checkout-flow.test';
     $store = storefrontCheckoutApiCreateStore($hostname);
@@ -237,6 +286,243 @@ test('supports checkout transition flow from started to completed', function ():
         ],
     )->assertOk()
         ->assertJsonPath('status', 'completed');
+
+    $this->assertDatabaseHas('orders', [
+        'store_id' => $store->id,
+        'checkout_id' => $checkoutId,
+    ]);
+
+    $inventoryItem = InventoryItem::query()
+        ->where('variant_id', $variant->id)
+        ->firstOrFail();
+
+    expect((int) $inventoryItem->quantity_on_hand)->toBe(48);
+    expect((int) $inventoryItem->quantity_reserved)->toBe(0);
+});
+
+test('completing checkout with a valid discount increments usage count and stores line allocations', function (): void {
+    $hostname = 'checkout-discount-completion.test';
+    $store = storefrontCheckoutApiCreateStore($hostname);
+    $primaryVariant = storefrontCheckoutApiCreateVariant($store, 'discount-completion-a', 2500);
+    $secondaryVariant = storefrontCheckoutApiCreateVariant($store, 'discount-completion-b', 1500);
+    $cart = storefrontCheckoutApiCreateCart($store, $primaryVariant, 1);
+    $shippingRate = storefrontCheckoutApiCreateShippingRate($store);
+    $discount = storefrontCheckoutApiCreateDiscount($store, 'WELCOME10');
+    $discount->rules_json = [
+        'applicable_product_ids' => [$primaryVariant->product_id],
+    ];
+    $discount->save();
+
+    CartLine::query()->create([
+        'cart_id' => $cart->id,
+        'variant_id' => $secondaryVariant->id,
+        'quantity' => 2,
+        'unit_price_amount' => $secondaryVariant->price_amount,
+        'line_subtotal_amount' => $secondaryVariant->price_amount * 2,
+        'line_discount_amount' => 0,
+        'line_total_amount' => $secondaryVariant->price_amount * 2,
+    ]);
+
+    $checkoutId = (int) $this->postJson(
+        storefrontCheckoutApiUrl($hostname, '/api/storefront/v1/checkouts'),
+        [
+            'cart_id' => $cart->id,
+            'email' => 'buyer@example.test',
+        ],
+    )->assertCreated()->json('id');
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/address"),
+        storefrontCheckoutApiAddressPayload(),
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/shipping-method"),
+        ['shipping_method_id' => $shippingRate->id],
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/payment-method"),
+        ['payment_method' => 'credit_card'],
+    )->assertOk();
+
+    $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/apply-discount"),
+        ['code' => 'WELCOME10'],
+    )->assertOk()
+        ->assertJsonPath('discount_code', 'WELCOME10');
+
+    $paymentResponse = $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/pay"),
+        storefrontCheckoutApiPayPayload(),
+    )->assertOk()
+        ->assertJsonPath('status', 'completed');
+
+    $orderId = (int) $paymentResponse->json('order.id');
+
+    $discount->refresh();
+    expect((int) $discount->usage_count)->toBe(1);
+
+    $order = Order::query()
+        ->where('id', $orderId)
+        ->where('checkout_id', $checkoutId)
+        ->firstOrFail();
+
+    expect((int) $order->discount_amount)->toBeGreaterThan(0);
+
+    storefrontCheckoutApiAssertOrderDiscountAllocations($order, $discount);
+
+    $order->loadMissing('lines');
+    $primaryLine = $order->lines->firstWhere('variant_id', $primaryVariant->id);
+    $secondaryLine = $order->lines->firstWhere('variant_id', $secondaryVariant->id);
+
+    expect($primaryLine)->not->toBeNull();
+    expect($secondaryLine)->not->toBeNull();
+    expect(is_array($primaryLine?->discount_allocations_json))->toBeTrue();
+    expect($primaryLine?->discount_allocations_json)->not->toBeEmpty();
+    expect($secondaryLine?->discount_allocations_json)->toBe([]);
+});
+
+test('pay succeeds when an applied discount becomes invalid before payment', function (): void {
+    $hostname = 'checkout-discount-invalidated-on-pay.test';
+    $store = storefrontCheckoutApiCreateStore($hostname);
+    $variant = storefrontCheckoutApiCreateVariant($store, 'discount-invalidated', 2500);
+    $cart = storefrontCheckoutApiCreateCart($store, $variant, 1);
+    $shippingRate = storefrontCheckoutApiCreateShippingRate($store);
+    $discount = storefrontCheckoutApiCreateDiscount($store, 'WELCOME10');
+
+    $checkoutId = (int) $this->postJson(
+        storefrontCheckoutApiUrl($hostname, '/api/storefront/v1/checkouts'),
+        [
+            'cart_id' => $cart->id,
+            'email' => 'buyer@example.test',
+        ],
+    )->assertCreated()->json('id');
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/address"),
+        storefrontCheckoutApiAddressPayload(),
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/shipping-method"),
+        ['shipping_method_id' => $shippingRate->id],
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/payment-method"),
+        ['payment_method' => 'credit_card'],
+    )->assertOk();
+
+    $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/apply-discount"),
+        ['code' => 'WELCOME10'],
+    )->assertOk()
+        ->assertJsonPath('discount_code', 'WELCOME10');
+
+    $discount->rules_json = [
+        'applicable_product_ids' => [999999],
+    ];
+    $discount->save();
+
+    $paymentResponse = $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/pay"),
+        storefrontCheckoutApiPayPayload(),
+    )->assertOk()
+        ->assertJsonPath('status', 'completed');
+
+    $orderId = (int) $paymentResponse->json('order.id');
+
+    $discount->refresh();
+    expect((int) $discount->usage_count)->toBe(0);
+
+    $checkout = Checkout::query()->findOrFail($checkoutId);
+    expect($checkout->discount_code)->toBeNull();
+
+    $order = Order::query()
+        ->whereKey($orderId)
+        ->where('checkout_id', $checkoutId)
+        ->firstOrFail();
+
+    expect((int) $order->discount_amount)->toBe(0);
+
+    $order->loadMissing('lines');
+
+    foreach ($order->lines as $line) {
+        expect($line->discount_allocations_json)->toBe([]);
+    }
+});
+
+test('pay endpoint is idempotent for repeated requests on the same checkout', function (): void {
+    $hostname = 'checkout-idempotent-pay.test';
+    $store = storefrontCheckoutApiCreateStore($hostname);
+    $variant = storefrontCheckoutApiCreateVariant($store, 'idempotent');
+    $cart = storefrontCheckoutApiCreateCart($store, $variant);
+    $shippingRate = storefrontCheckoutApiCreateShippingRate($store);
+    $discount = storefrontCheckoutApiCreateDiscount($store, 'WELCOME10');
+
+    $checkoutId = (int) $this->postJson(
+        storefrontCheckoutApiUrl($hostname, '/api/storefront/v1/checkouts'),
+        [
+            'cart_id' => $cart->id,
+            'email' => 'buyer@example.test',
+        ],
+    )->assertCreated()->json('id');
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/address"),
+        storefrontCheckoutApiAddressPayload(),
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/shipping-method"),
+        ['shipping_method_id' => $shippingRate->id],
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/payment-method"),
+        ['payment_method' => 'credit_card'],
+    )->assertOk();
+
+    $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/apply-discount"),
+        ['code' => 'WELCOME10'],
+    )->assertOk()
+        ->assertJsonPath('discount_code', 'WELCOME10');
+
+    $firstPayment = $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/pay"),
+        storefrontCheckoutApiPayPayload(),
+    )->assertOk();
+
+    $firstOrderId = (int) $firstPayment->json('order.id');
+
+    $discount->refresh();
+    expect((int) $discount->usage_count)->toBe(1);
+
+    $this->postJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/pay"),
+        storefrontCheckoutApiPayPayload(),
+    )->assertOk()
+        ->assertJsonPath('status', 'completed')
+        ->assertJsonPath('order.id', $firstOrderId);
+
+    $discount->refresh();
+    expect((int) $discount->usage_count)->toBe(1);
+
+    $order = Order::query()
+        ->where('id', $firstOrderId)
+        ->where('checkout_id', $checkoutId)
+        ->firstOrFail();
+
+    expect((int) $order->discount_amount)->toBeGreaterThan(0);
+
+    storefrontCheckoutApiAssertOrderDiscountAllocations($order, $discount);
+
+    expect(Order::query()
+        ->where('store_id', $store->id)
+        ->where('checkout_id', $checkoutId)
+        ->count())->toBe(1);
 });
 
 test('returns 409 for invalid checkout state transition', function (): void {
@@ -267,11 +553,66 @@ test('returns 409 for invalid checkout state transition', function (): void {
     )->assertStatus(409);
 });
 
+test('expiring a payment selected checkout releases reserved inventory', function (): void {
+    $hostname = 'checkout-expiry-releases-inventory.test';
+    $store = storefrontCheckoutApiCreateStore($hostname);
+    $variant = storefrontCheckoutApiCreateVariant($store, 'expiry-release', 2500);
+    $cart = storefrontCheckoutApiCreateCart($store, $variant, 1);
+    $shippingRate = storefrontCheckoutApiCreateShippingRate($store);
+
+    $checkoutId = (int) $this->postJson(
+        storefrontCheckoutApiUrl($hostname, '/api/storefront/v1/checkouts'),
+        [
+            'cart_id' => $cart->id,
+            'email' => 'buyer@example.test',
+        ],
+    )->assertCreated()->json('id');
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/address"),
+        storefrontCheckoutApiAddressPayload(),
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/shipping-method"),
+        ['shipping_method_id' => $shippingRate->id],
+    )->assertOk();
+
+    $this->putJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}/payment-method"),
+        ['payment_method' => 'credit_card'],
+    )->assertOk()
+        ->assertJsonPath('status', 'payment_selected');
+
+    $inventoryItem = InventoryItem::query()
+        ->where('variant_id', $variant->id)
+        ->firstOrFail();
+
+    expect((int) $inventoryItem->quantity_reserved)->toBe(1);
+
+    Checkout::query()->whereKey($checkoutId)->update([
+        'expires_at' => now()->subMinute(),
+    ]);
+
+    $this->getJson(
+        storefrontCheckoutApiUrl($hostname, "/api/storefront/v1/checkouts/{$checkoutId}"),
+    )->assertStatus(422)
+        ->assertJsonPath('error_code', 'checkout_expired');
+
+    $inventoryItem->refresh();
+
+    expect((int) $inventoryItem->quantity_reserved)->toBe(0);
+
+    $checkout = Checkout::query()->findOrFail($checkoutId);
+    expect((string) $checkout->status->value)->toBe('expired');
+});
+
 test('applies a valid discount code to checkout', function (): void {
     $hostname = 'checkout-discount-valid.test';
     $store = storefrontCheckoutApiCreateStore($hostname);
     $variant = storefrontCheckoutApiCreateVariant($store, 'discount-valid');
     $cart = storefrontCheckoutApiCreateCart($store, $variant);
+    $shippingRate = storefrontCheckoutApiCreateShippingRate($store);
     storefrontCheckoutApiCreateDiscount($store, 'WELCOME10');
 
     $checkout = Checkout::query()->create([
@@ -283,7 +624,7 @@ test('applies a valid discount code to checkout', function (): void {
         'email' => 'buyer@example.test',
         'shipping_address_json' => storefrontCheckoutApiAddressPayload()['shipping_address'],
         'billing_address_json' => storefrontCheckoutApiAddressPayload()['shipping_address'],
-        'shipping_method_id' => 1,
+        'shipping_method_id' => $shippingRate->id,
         'discount_code' => null,
         'tax_provider_snapshot_json' => null,
         'totals_json' => null,

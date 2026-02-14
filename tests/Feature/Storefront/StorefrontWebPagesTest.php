@@ -16,6 +16,7 @@ use App\Models\Collection;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\Discount;
+use App\Models\InventoryItem;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Models\Page;
@@ -218,6 +219,43 @@ function storefrontEnumValue(mixed $value): string
     }
 
     return (string) $value;
+}
+
+function storefrontAssertOrderDiscountAllocations(Order $order, Discount $discount): void
+{
+    $order->loadMissing('lines');
+    expect($order->lines->count())->toBeGreaterThan(0);
+
+    $allocatedDiscountAmount = 0;
+    $linesWithAllocations = 0;
+
+    foreach ($order->lines as $line) {
+        $allocations = $line->discount_allocations_json;
+
+        expect($allocations)->toBeArray();
+
+        if ($allocations === []) {
+            continue;
+        }
+
+        $linesWithAllocations++;
+
+        foreach ($allocations as $allocation) {
+            expect(is_array($allocation))->toBeTrue();
+            expect(array_key_exists('discount_id', $allocation))->toBeTrue();
+            expect(array_key_exists('code', $allocation))->toBeTrue();
+            expect(array_key_exists('amount', $allocation))->toBeTrue();
+            expect($allocation['discount_id'])->toBe((int) $discount->id);
+            expect($allocation['code'])->toBe((string) $discount->code);
+            expect(is_int($allocation['amount']))->toBeTrue();
+            expect($allocation['amount'])->toBeGreaterThan(0);
+
+            $allocatedDiscountAmount += $allocation['amount'];
+        }
+    }
+
+    expect($linesWithAllocations)->toBeGreaterThan(0);
+    expect($allocatedDiscountAmount)->toBe((int) $order->discount_amount);
 }
 
 test('storefront core pages render with tenant host', function (): void {
@@ -522,6 +560,7 @@ test('checkout step forms can set address shipping payment discount and complete
 
     $checkout->refresh();
     $fixture['cart']->refresh();
+    $createdOrder = Order::query()->where('checkout_id', $checkout->id)->first();
 
     expect(storefrontEnumValue($checkout->status))->toBe('completed')
         ->and(storefrontEnumValue($fixture['cart']->status))->toBe('converted');
@@ -529,7 +568,237 @@ test('checkout step forms can set address shipping payment discount and complete
     $this->assertDatabaseHas('orders', [
         'store_id' => $fixture['store']->id,
         'email' => 'buyer@example.test',
+        'checkout_id' => $checkout->id,
     ]);
+
+    expect($createdOrder)->toBeInstanceOf(Order::class);
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->get('/checkout/'.$checkout->id.'/confirmation')
+        ->assertOk()
+        ->assertSee((string) $createdOrder?->order_number);
+});
+
+test('checkout completion with a valid discount increments usage count and persists line allocations', function (): void {
+    $fixture = createStorefrontFixture();
+    $shippingRate = createStorefrontShippingRate($fixture['store']);
+    $discount = createStorefrontDiscount($fixture['store'], 'WELCOME10');
+    $discount->rules_json = [
+        'applicable_product_ids' => [$fixture['product']->id],
+    ];
+    $discount->save();
+
+    $secondProduct = Product::factory()->create([
+        'store_id' => $fixture['store']->id,
+        'title' => 'Structured Allocation Product',
+        'handle' => 'structured-allocation-product',
+        'status' => ProductStatus::Active,
+        'published_at' => now(),
+    ]);
+
+    $secondVariant = ProductVariant::factory()->create([
+        'product_id' => $secondProduct->id,
+        'is_default' => true,
+        'status' => ProductVariantStatus::Active,
+        'price_amount' => 1501,
+        'currency' => 'EUR',
+        'sku' => 'STRUCT-ALLOC-001',
+    ]);
+
+    CartLine::query()->create([
+        'cart_id' => $fixture['cart']->id,
+        'variant_id' => $secondVariant->id,
+        'quantity' => 1,
+        'unit_price_amount' => 1501,
+        'line_subtotal_amount' => 1501,
+        'line_discount_amount' => 0,
+        'line_total_amount' => 1501,
+    ]);
+
+    $checkout = Checkout::query()->create([
+        'store_id' => $fixture['store']->id,
+        'cart_id' => $fixture['cart']->id,
+        'customer_id' => $fixture['customer']->id,
+        'status' => 'started',
+        'payment_method' => null,
+        'email' => null,
+        'shipping_address_json' => null,
+        'billing_address_json' => null,
+        'shipping_method_id' => null,
+        'discount_code' => null,
+        'tax_provider_snapshot_json' => null,
+        'totals_json' => null,
+        'expires_at' => now()->addDay(),
+    ]);
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->put('/checkout/'.$checkout->id.'/address', [
+            'email' => 'buyer@example.test',
+            'shipping_address' => [
+                'first_name' => 'Jane',
+                'last_name' => 'Doe',
+                'address1' => 'Main Street 1',
+                'city' => 'Berlin',
+                'country' => 'Germany',
+                'country_code' => 'DE',
+                'postal_code' => '10115',
+            ],
+            'use_shipping_as_billing' => '1',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->put('/checkout/'.$checkout->id.'/shipping-method', [
+            'shipping_method_id' => $shippingRate->id,
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->put('/checkout/'.$checkout->id.'/payment-method', [
+            'payment_method' => 'credit_card',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->post('/checkout/'.$checkout->id.'/discount', [
+            'code' => 'WELCOME10',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->post('/checkout/'.$checkout->id.'/pay', [
+            'payment_method' => 'credit_card',
+            'card_number' => '4242424242424242',
+            'card_expiry' => '12/28',
+            'card_cvc' => '123',
+            'card_holder' => 'Jane Doe',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id.'/confirmation')
+        ->assertSessionHas('status');
+
+    $checkout->refresh();
+    $discount->refresh();
+
+    expect(storefrontEnumValue($checkout->status))->toBe('completed');
+    expect((int) $discount->usage_count)->toBe(1);
+
+    $order = Order::query()
+        ->where('checkout_id', $checkout->id)
+        ->firstOrFail();
+
+    expect((int) $order->discount_amount)->toBeGreaterThan(0);
+    expect((int) $order->lines()->count())->toBe(2);
+
+    storefrontAssertOrderDiscountAllocations($order, $discount);
+
+    $order->loadMissing('lines');
+    $primaryLine = $order->lines->firstWhere('variant_id', $fixture['variant']->id);
+    $secondaryLine = $order->lines->firstWhere('variant_id', $secondVariant->id);
+
+    expect($primaryLine)->not->toBeNull();
+    expect($secondaryLine)->not->toBeNull();
+    expect(is_array($primaryLine?->discount_allocations_json))->toBeTrue();
+    expect($primaryLine?->discount_allocations_json)->not->toBeEmpty();
+    expect($secondaryLine?->discount_allocations_json)->toBe([]);
+});
+
+test('checkout pay succeeds when applied discount becomes invalid before payment', function (): void {
+    $fixture = createStorefrontFixture();
+    $shippingRate = createStorefrontShippingRate($fixture['store']);
+    $discount = createStorefrontDiscount($fixture['store'], 'WELCOME10');
+
+    $checkout = Checkout::query()->create([
+        'store_id' => $fixture['store']->id,
+        'cart_id' => $fixture['cart']->id,
+        'customer_id' => $fixture['customer']->id,
+        'status' => 'started',
+        'payment_method' => null,
+        'email' => null,
+        'shipping_address_json' => null,
+        'billing_address_json' => null,
+        'shipping_method_id' => null,
+        'discount_code' => null,
+        'tax_provider_snapshot_json' => null,
+        'totals_json' => null,
+        'expires_at' => now()->addDay(),
+    ]);
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->put('/checkout/'.$checkout->id.'/address', [
+            'email' => 'buyer@example.test',
+            'shipping_address' => [
+                'first_name' => 'Jane',
+                'last_name' => 'Doe',
+                'address1' => 'Main Street 1',
+                'city' => 'Berlin',
+                'country' => 'Germany',
+                'country_code' => 'DE',
+                'postal_code' => '10115',
+            ],
+            'use_shipping_as_billing' => '1',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->put('/checkout/'.$checkout->id.'/shipping-method', [
+            'shipping_method_id' => $shippingRate->id,
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->put('/checkout/'.$checkout->id.'/payment-method', [
+            'payment_method' => 'credit_card',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->post('/checkout/'.$checkout->id.'/discount', [
+            'code' => 'WELCOME10',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id)
+        ->assertSessionHas('status');
+
+    $discount->rules_json = [
+        'applicable_product_ids' => [999999],
+    ];
+    $discount->save();
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->post('/checkout/'.$checkout->id.'/pay', [
+            'payment_method' => 'credit_card',
+            'card_number' => '4242424242424242',
+            'card_expiry' => '12/28',
+            'card_cvc' => '123',
+            'card_holder' => 'Jane Doe',
+        ])
+        ->assertRedirect('/checkout/'.$checkout->id.'/confirmation')
+        ->assertSessionHas('status');
+
+    $checkout->refresh();
+    $discount->refresh();
+
+    expect(storefrontEnumValue($checkout->status))->toBe('completed');
+    expect($checkout->discount_code)->toBeNull();
+    expect((int) $discount->usage_count)->toBe(0);
+
+    $order = Order::query()
+        ->where('checkout_id', $checkout->id)
+        ->firstOrFail();
+
+    expect((int) $order->discount_amount)->toBe(0);
+
+    $order->loadMissing('lines');
+
+    foreach ($order->lines as $line) {
+        expect($line->discount_allocations_json)->toBe([]);
+    }
 });
 
 test('checkout forms return errors for invalid discount and invalid payment state', function (): void {
@@ -564,6 +833,61 @@ test('checkout forms return errors for invalid discount and invalid payment stat
         ])
         ->assertRedirect('/checkout/'.$checkout->id)
         ->assertSessionHasErrors('checkout');
+});
+
+test('visiting an expired payment selected checkout releases reserved inventory', function (): void {
+    $fixture = createStorefrontFixture();
+
+    $inventoryItem = InventoryItem::query()->create([
+        'store_id' => $fixture['store']->id,
+        'variant_id' => $fixture['variant']->id,
+        'quantity_on_hand' => 10,
+        'quantity_reserved' => 1,
+        'policy' => 'deny',
+    ]);
+
+    $checkout = Checkout::query()->create([
+        'store_id' => $fixture['store']->id,
+        'cart_id' => $fixture['cart']->id,
+        'customer_id' => $fixture['customer']->id,
+        'status' => 'payment_selected',
+        'payment_method' => 'credit_card',
+        'email' => 'buyer@example.test',
+        'shipping_address_json' => [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'address1' => 'Main Street 1',
+            'city' => 'Berlin',
+            'country' => 'Germany',
+            'country_code' => 'DE',
+            'postal_code' => '10115',
+        ],
+        'billing_address_json' => [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'address1' => 'Main Street 1',
+            'city' => 'Berlin',
+            'country' => 'Germany',
+            'country_code' => 'DE',
+            'postal_code' => '10115',
+        ],
+        'shipping_method_id' => null,
+        'discount_code' => null,
+        'tax_provider_snapshot_json' => null,
+        'totals_json' => null,
+        'expires_at' => now()->subMinute(),
+    ]);
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->get('/checkout/'.$checkout->id)
+        ->assertOk()
+        ->assertSee('Checkout #'.$checkout->id);
+
+    $inventoryItem->refresh();
+    $checkout->refresh();
+
+    expect((int) $inventoryItem->quantity_reserved)->toBe(0);
+    expect(storefrontEnumValue($checkout->status))->toBe('expired');
 });
 
 test('customer can create update and delete addresses from account', function (): void {

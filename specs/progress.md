@@ -70,3 +70,26 @@ Last updated: 2026-02-14
 ## Next Iteration
 
 - Iteration 4: independent senior review cycle and Playwright-based acceptance walkthrough (storefront + admin) with bug-fix loop.
+
+## Iteration 4 - Senior Review Hardening and Reliability Fixes (Completed)
+
+| Checkpoint | Status | Notes |
+|---|---|---|
+| Order-to-checkout linkage for deterministic confirmation/idempotency | Completed | Added `orders.checkout_id` relation + unique constraint and updated completion flows to persist/query by checkout id first. |
+| API payment idempotency hardening | Completed | Added row locks + existing-order return path in API pay flow to prevent duplicate orders on repeated requests. |
+| Discount finalization correctness | Completed | Checkout completion now increments `discounts.usage_count` once per created order and writes `order_lines.discount_allocations_json` with `{discount_id, code, amount}` entries. |
+| Scoped discount allocation correctness | Completed | Replaced naive all-line allocation with line allocations derived from validated pricing/discount engine outputs (`cart_lines.line_discount_amount`), including scoped product rules. |
+| Invalidated discount recovery at payment time | Completed | Pay flows now gracefully recover when a previously-applied discount becomes invalid before capture by clearing code and finalizing without discount instead of failing. |
+| Inventory lifecycle completion | Completed | Added commit-on-order-completion and release-on-expiry for reserved stock; added scheduled expiration job for abandoned checkouts (`ExpireAbandonedCheckouts`) every 15 minutes. |
+| Review-loop regression tests | Completed | Added API/storefront regressions for usage_count, allocation structure/sums, scoped eligibility, invalidated-discount payment recovery, idempotency, inventory commit, and expiry release; added job/schedule tests. |
+| Fresh independent reviewer loop | Completed | Multiple fresh-agent review passes executed; all critical/high findings fixed; final pass reports no critical/high blockers. |
+
+## Iteration 4 Verification
+
+- [x] `composer test`
+- [x] `./vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=1G`
+- [x] `./vendor/bin/deptrac analyse --config-file=deptrac.yaml`
+
+## Next Iteration
+
+- Iteration 5: Playwright end-to-end acceptance walkthrough (customer + admin) against `http://shop.test/`, with fix-and-retest loop for any discovered defects.

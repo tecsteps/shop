@@ -242,6 +242,22 @@ final class CheckoutService
         return $this->pricingEngine->calculate($checkout);
     }
 
+    public function commitReservedInventoryForCheckout(Checkout $checkout): void
+    {
+        DB::transaction(function () use ($checkout): void {
+            $lockedCheckout = $this->lockCheckout($checkout);
+            $this->adjustReservedInventory($lockedCheckout, commit: true);
+        });
+    }
+
+    public function releaseReservedInventoryForCheckout(Checkout $checkout): void
+    {
+        DB::transaction(function () use ($checkout): void {
+            $lockedCheckout = $this->lockCheckout($checkout);
+            $this->adjustReservedInventory($lockedCheckout, commit: false);
+        });
+    }
+
     /**
      * @return Collection<int, \App\ValueObjects\ShippingRateQuote>
      */
@@ -346,6 +362,32 @@ final class CheckoutService
         }
 
         return $resolved;
+    }
+
+    private function adjustReservedInventory(Checkout $checkout, bool $commit): void
+    {
+        /** @var CartLine $line */
+        foreach ($checkout->cart->lines as $line) {
+            $inventoryItem = $line->variant?->inventoryItem;
+
+            if ($inventoryItem === null) {
+                continue;
+            }
+
+            $reserved = max(0, (int) $inventoryItem->quantity_reserved);
+            $quantity = max(0, (int) $line->quantity);
+            $adjustment = min($reserved, $quantity);
+
+            if ($adjustment <= 0) {
+                continue;
+            }
+
+            if ($commit) {
+                $this->inventoryService->commit($inventoryItem, $adjustment);
+            } else {
+                $this->inventoryService->release($inventoryItem, $adjustment);
+            }
+        }
     }
 
     private function lockCart(Cart $cart): Cart
