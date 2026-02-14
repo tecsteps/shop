@@ -11,7 +11,7 @@
         <tbody>
             @forelse ($orders as $order)
                 <tr class="border-t border-slate-100">
-                    <td class="px-4 py-2"><a href="{{ route('account.orders.show', $order->order_number) }}" class="font-medium text-slate-800 hover:text-slate-900">{{ $order->order_number }}</a></td>
+                    <td class="px-4 py-2"><a href="{{ route('account.orders.show', ['orderNumber' => $order->storefrontRouteOrderNumber()]) }}" class="font-medium text-slate-800 hover:text-slate-900">{{ $order->order_number }}</a></td>
                     <td class="px-4 py-2">{{ optional($order->placed_at)->toDateString() ?? '—' }}</td>
                     <td class="px-4 py-2">{{ is_object($order->status) ? $order->status->value : $order->status }}</td>
                     <td class="px-4 py-2 text-right">{{ number_format(((int) $order->total_amount) / 100, 2, '.', ',') }} {{ strtoupper($order->currency) }}</td>

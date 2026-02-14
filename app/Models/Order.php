@@ -86,4 +86,27 @@ class Order extends Model
     {
         return $this->hasMany(Fulfillment::class);
     }
+
+    public function storefrontRouteOrderNumber(): string
+    {
+        return ltrim((string) $this->order_number, '#');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function resolveOrderNumberCandidates(string $orderNumber): array
+    {
+        $trimmed = trim($orderNumber);
+
+        if ($trimmed === '') {
+            return [''];
+        }
+
+        if (str_starts_with($trimmed, '#')) {
+            return [$trimmed, ltrim($trimmed, '#')];
+        }
+
+        return [$trimmed, '#'.$trimmed];
+    }
 }

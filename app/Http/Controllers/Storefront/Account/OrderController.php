@@ -29,11 +29,12 @@ class OrderController extends AccountController
     public function show(Request $request, string $orderNumber): View
     {
         $customer = $this->currentCustomer($request);
+        $orderNumberCandidates = Order::resolveOrderNumberCandidates($orderNumber);
 
         $order = Order::query()
             ->where('store_id', $this->currentStoreId($request))
             ->where('customer_id', $customer->id)
-            ->where('order_number', $orderNumber)
+            ->whereIn('order_number', $orderNumberCandidates)
             ->with([
                 'lines.variant.product',
                 'fulfillments',

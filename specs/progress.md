@@ -94,12 +94,22 @@ Last updated: 2026-02-14
 
 - Iteration 5: Playwright end-to-end acceptance walkthrough (customer + admin) against `http://shop.test/`, with fix-and-retest loop for any discovered defects.
 
-## Iteration 5 - Playwright Acceptance and Runtime Defect Fixes (In Progress)
+## Iteration 5 - Playwright Acceptance and Runtime Defect Fixes (Completed)
 
 | Checkpoint | Status | Notes |
 |---|---|---|
 | Customer account registration redirect-loop fix | Completed | Enforced middleware priority so `ResolveStore` runs before auth checks (`bootstrap/app.php`), preventing `/account` ↔ `/account/login` redirect loops on tenant hosts. |
 | Admin document title rendering fix | Completed | Corrected Blade title rendering to evaluate store suffix instead of outputting literal concatenation text (`resources/views/admin/layout.blade.php`). |
-| Regression test hardening for discovered defects | Completed | Added storefront redirect-loop regression and admin title-rendering regression in feature tests. |
-| Full Playwright acceptance walkthrough (storefront + admin) | In Progress | Re-running full browser review after bug fixes; includes customer checkout/account and admin catalog/discount/page/order flows. |
-| Full quality gate rerun (`composer test`, PHPStan, Deptrac) | Pending | Will run after final code fixes from the Playwright review loop. |
+| Storefront order detail route fix for `#` prefixed order numbers | Completed | Fixed account order links to use path-safe order numbers and centralized normalization in `Order` model for route input matching. |
+| Regression test hardening for discovered defects | Completed | Added storefront tests for redirect-loop, order-link normalization (including `%23` encoded route), order empty state, and cross-customer order access denial; added admin title-rendering regression test. |
+| Full Playwright acceptance walkthrough (storefront + admin) | Completed | Restarted and completed browser review after fixes: customer checkout/payment/account/orders/addresses/logout and admin login/dashboard/orders/products/discounts/pages/logout all verified on `http://shop.test/`. |
+| Fresh independent reviewer loop | Completed | Ran fresh-agent review passes; addressed maintainability and missing-edge test feedback; final reviewed state has no critical/high findings. |
+| Full quality gate rerun (`composer test`, PHPStan, Deptrac, Pint`) | Completed | Re-ran full suite and static/architecture/style checks on final code. |
+
+## Iteration 5 Verification
+
+- [x] `composer test`
+- [x] `./vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=1G`
+- [x] `./vendor/bin/deptrac analyse --config-file=deptrac.yaml`
+- [x] `./vendor/bin/pint --dirty --test`
+- [x] Playwright MCP acceptance walkthrough on `http://shop.test/` (customer + admin, post-fix restart completed)

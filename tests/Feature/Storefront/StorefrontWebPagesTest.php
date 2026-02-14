@@ -338,6 +338,64 @@ test('customer can register and access account pages', function (): void {
         ->assertSee('Address Book');
 });
 
+test('customer can open order detail page from orders listing when order numbers contain hash prefix', function (): void {
+    $fixture = createStorefrontFixture();
+
+    $ordersResponse = $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->actingAs($fixture['customer'], 'customer')
+        ->get('/account/orders');
+
+    $ordersResponse
+        ->assertOk()
+        ->assertSee('href="http://shop.test/account/orders/1001"', false)
+        ->assertDontSee('/account/orders/#1001');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->actingAs($fixture['customer'], 'customer')
+        ->get('/account/orders/1001')
+        ->assertOk()
+        ->assertSee('Order #1001');
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->actingAs($fixture['customer'], 'customer')
+        ->get('/account/orders/'.urlencode((string) $fixture['order']->order_number))
+        ->assertOk()
+        ->assertSee('Order #1001');
+});
+
+test('orders page shows empty state for customers without orders', function (): void {
+    $fixture = createStorefrontFixture();
+
+    $customerWithoutOrders = Customer::factory()->create([
+        'store_id' => $fixture['store']->id,
+        'name' => 'No Orders Customer',
+        'email' => 'no-orders-customer@acme.test',
+        'password_hash' => Hash::make('password'),
+    ]);
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->actingAs($customerWithoutOrders, 'customer')
+        ->get('/account/orders')
+        ->assertOk()
+        ->assertSee('No orders yet.');
+});
+
+test('customer cannot view another customer order detail', function (): void {
+    $fixture = createStorefrontFixture();
+
+    $otherCustomer = Customer::factory()->create([
+        'store_id' => $fixture['store']->id,
+        'name' => 'Other Customer',
+        'email' => 'other-customer@acme.test',
+        'password_hash' => Hash::make('password'),
+    ]);
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->actingAs($otherCustomer, 'customer')
+        ->get('/account/orders/1001')
+        ->assertNotFound();
+});
+
 test('registration redirect resolves to account dashboard without redirect loops', function (): void {
     createStorefrontFixture();
 
