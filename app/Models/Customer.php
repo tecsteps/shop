@@ -31,6 +31,7 @@ class Customer extends Authenticatable
     protected $hidden = [
         'password_hash',
         'password',
+        'remember_token',
     ];
 
     protected function casts(): array

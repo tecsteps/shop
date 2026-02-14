@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Auth\Passwords\StorefrontPasswordBrokerManager;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
@@ -21,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->registerPasswordBrokerManager();
     }
 
     /**
@@ -32,6 +33,20 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->registerAuthProviders();
         $this->configureRateLimiting();
+    }
+
+    /**
+     * Register a custom password broker manager.
+     */
+    protected function registerPasswordBrokerManager(): void
+    {
+        $this->app->singleton('auth.password', function (Application $app) {
+            return new StorefrontPasswordBrokerManager($app);
+        });
+
+        $this->app->bind('auth.password.broker', function (Application $app) {
+            return $app->make('auth.password')->broker();
+        });
     }
 
     /**

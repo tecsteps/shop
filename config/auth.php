@@ -113,6 +113,7 @@ return [
             'table' => env('AUTH_CUSTOMER_PASSWORD_RESET_TOKEN_TABLE', 'customer_password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
+            'store_scoped' => true,
         ],
     ],
 

@@ -48,3 +48,25 @@ Last updated: 2026-02-14
 ## Next Iteration
 
 - Iteration 3: replace placeholder web routes with implemented storefront/admin pages (server-rendered), wire customer account pages, and expand functional coverage.
+
+## Iteration 3 - Web Flows, Admin CRUD, and Account Enhancements (Completed)
+
+| Checkpoint | Status | Notes |
+|---|---|---|
+| Storefront web route wiring + controller-backed pages | Completed | Replaced placeholder route layer with controller-driven storefront and account routes. |
+| Storefront cart + checkout interactive actions | Completed | Implemented add/update/remove cart lines, start checkout, address/shipping/payment selection, discount apply/remove, and checkout payment completion with order creation. |
+| Admin web CRUD forms (products, collections, discounts, pages) | Completed | Replaced placeholder form scaffolds with production form submissions, tenant-scoped validation, and create/update/delete/archival handlers. |
+| Account address CRUD | Completed | Added customer address create/update/delete flows and default-address behavior enforcement. |
+| Customer auth hardening for remember/reset flows | Completed | Added customer `remember_token` migration and store-scoped customer password reset token repository/manager integration. |
+| Web feature coverage expansion | Completed | Added/expanded feature tests for storefront interaction flows and admin CRUD success/failure paths. |
+| Tooling gates for this iteration | Completed | Pint, Pest, PHPStan max-level, and Deptrac all green after implementation. |
+
+## Iteration 3 Verification
+
+- [x] `composer test`
+- [x] `./vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=1G`
+- [x] `./vendor/bin/deptrac analyse --config-file=deptrac.yaml`
+
+## Next Iteration
+
+- Iteration 4: independent senior review cycle and Playwright-based acceptance walkthrough (storefront + admin) with bug-fix loop.

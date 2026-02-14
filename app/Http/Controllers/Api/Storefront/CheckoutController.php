@@ -780,7 +780,7 @@ class CheckoutController extends Controller
     {
         $max = (int) Order::query()
             ->where('store_id', $storeId)
-            ->selectRaw('MAX(CAST(SUBSTR(order_number, 2) AS INTEGER)) AS max_order')
+            ->selectRaw("MAX(CAST(CASE WHEN order_number LIKE '#%' THEN SUBSTR(order_number, 2) ELSE order_number END AS INTEGER)) AS max_order")
             ->value('max_order');
 
         $next = $max > 0 ? $max + 1 : 1001;

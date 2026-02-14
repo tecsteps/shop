@@ -115,6 +115,7 @@ class CustomerUserProvider extends DatabaseUserProvider
 
         $attributes = (array) $user;
         $attributes['password'] = $attributes['password_hash'] ?? null;
+        $attributes['remember_token'] = $attributes['remember_token'] ?? null;
 
         return new GenericUser($attributes);
     }
