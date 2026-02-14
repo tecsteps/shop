@@ -137,7 +137,15 @@ class User extends Authenticatable
             ->where('store_id', $store->id)
             ->value('role');
 
-        return $value !== null ? StoreUserRole::from($value) : null;
+        if ($value instanceof StoreUserRole) {
+            return $value;
+        }
+
+        if (is_string($value) || is_int($value)) {
+            return StoreUserRole::from($value);
+        }
+
+        return null;
     }
 
     /**

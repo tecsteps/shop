@@ -26,3 +26,25 @@ Last updated: 2026-02-14
 ## Next Iteration
 
 - Iteration 2: catalog services + storefront/admin APIs + cart/checkout core workflows + corresponding unit/feature tests.
+
+## Iteration 2 - Catalog, API, and Checkout Workflow (Completed)
+
+| Checkpoint | Status | Notes |
+|---|---|---|
+| Service layer (`CartService`, `CheckoutService`, `PricingEngine`, `DiscountService`, `ShippingCalculator`, `TaxCalculator`, `InventoryService`) | Completed | Deterministic cart/checkout totals, discount application, shipping quotes, and stock reservation/commit primitives implemented. |
+| Domain exceptions + value objects | Completed | Added typed domain exceptions and immutable value objects for pricing/tax/shipping outcomes. |
+| Storefront API (`/api/storefront/v1`) | Completed | Cart, checkout, order lookup, search, and analytics ingestion endpoints are implemented and covered by feature tests. |
+| Admin API (`/api/admin/v1/stores/{store}/...`) | Completed | Product, collection, and discount CRUD endpoints implemented with tenant-scoped route context. |
+| Request validation + JSON resources | Completed | Added dedicated FormRequest classes and admin API resources for consistent payload shape and validation behavior. |
+| API and service unit/feature tests | Completed | Added service unit tests and storefront/admin API feature tests for success and failure flows. |
+| Static analysis + architecture gates | Completed | Deptrac layer violations resolved; PHPStan config updated and Larastan integrated for Laravel-aware analysis baseline. |
+
+## Iteration 2 Verification
+
+- [x] `composer test`
+- [x] `./vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=1G`
+- [x] `./vendor/bin/deptrac analyse --config-file=deptrac.yaml`
+
+## Next Iteration
+
+- Iteration 3: replace placeholder web routes with implemented storefront/admin pages (server-rendered), wire customer account pages, and expand functional coverage.

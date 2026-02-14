@@ -30,6 +30,8 @@ deptrac:
           value: ^App\\Jobs\\.*
         - type: classLike
           value: ^App\\Listeners\\.*
+        - type: classLike
+          value: ^App\\Exceptions\\.*
     - name: Infrastructure
       collectors:
         - type: classLike
@@ -38,8 +40,6 @@ deptrac:
           value: ^App\\Http\\Middleware\\.*
         - type: classLike
           value: ^App\\Console\\.*
-        - type: classLike
-          value: ^App\\Exceptions\\.*
     - name: Presentation
       collectors:
         - type: classLike
