@@ -1,0 +1,60 @@
+deptrac:
+  paths:
+    - ./app
+  exclude_files:
+    - '#.*tests?.*#'
+    - '#.*vendor.*#'
+    - '#.*storage.*#'
+  layers:
+    - name: Domain
+      collectors:
+        - type: classLike
+          value: ^App\\Models\\.*
+        - type: classLike
+          value: ^App\\Enums\\.*
+        - type: classLike
+          value: ^App\\ValueObjects\\.*
+        - type: classLike
+          value: ^App\\Support\\Tenant\\.*
+        - type: classLike
+          value: ^App\\Concerns\\.*
+    - name: Application
+      collectors:
+        - type: classLike
+          value: ^App\\Services\\.*
+        - type: classLike
+          value: ^App\\Actions\\.*
+        - type: classLike
+          value: ^App\\Policies\\.*
+        - type: classLike
+          value: ^App\\Jobs\\.*
+        - type: classLike
+          value: ^App\\Listeners\\.*
+    - name: Infrastructure
+      collectors:
+        - type: classLike
+          value: ^App\\Providers\\.*
+        - type: classLike
+          value: ^App\\Http\\Middleware\\.*
+        - type: classLike
+          value: ^App\\Console\\.*
+        - type: classLike
+          value: ^App\\Exceptions\\.*
+    - name: Presentation
+      collectors:
+        - type: classLike
+          value: ^App\\Http\\Controllers\\.*
+        - type: classLike
+          value: ^App\\Livewire\\.*
+        - type: classLike
+          value: ^App\\View\\Components\\.*
+  ruleset:
+    Domain: ~
+    Application:
+      - Domain
+    Infrastructure:
+      - Application
+      - Domain
+    Presentation:
+      - Application
+      - Domain

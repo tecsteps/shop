@@ -1,0 +1,18 @@
+parameters:
+    level: max
+    paths:
+        - app/Auth
+        - app/Enums
+        - app/Http/Middleware
+        - app/Support
+    tmpDir: var/phpstan
+
+    reportUnmatchedIgnoredErrors: true
+    checkExplicitMixed: true
+    checkImplicitMixed: true
+    treatPhpDocTypesAsCertain: false
+    checkMissingCallableSignature: true
+    checkUninitializedProperties: true
+
+    parallel:
+        maximumNumberOfProcesses: 8
