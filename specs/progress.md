@@ -93,3 +93,13 @@ Last updated: 2026-02-14
 ## Next Iteration
 
 - Iteration 5: Playwright end-to-end acceptance walkthrough (customer + admin) against `http://shop.test/`, with fix-and-retest loop for any discovered defects.
+
+## Iteration 5 - Playwright Acceptance and Runtime Defect Fixes (In Progress)
+
+| Checkpoint | Status | Notes |
+|---|---|---|
+| Customer account registration redirect-loop fix | Completed | Enforced middleware priority so `ResolveStore` runs before auth checks (`bootstrap/app.php`), preventing `/account` ↔ `/account/login` redirect loops on tenant hosts. |
+| Admin document title rendering fix | Completed | Corrected Blade title rendering to evaluate store suffix instead of outputting literal concatenation text (`resources/views/admin/layout.blade.php`). |
+| Regression test hardening for discovered defects | Completed | Added storefront redirect-loop regression and admin title-rendering regression in feature tests. |
+| Full Playwright acceptance walkthrough (storefront + admin) | In Progress | Re-running full browser review after bug fixes; includes customer checkout/account and admin catalog/discount/page/order flows. |
+| Full quality gate rerun (`composer test`, PHPStan, Deptrac) | Pending | Will run after final code fixes from the Playwright review loop. |

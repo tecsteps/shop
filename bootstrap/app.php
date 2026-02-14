@@ -3,6 +3,7 @@
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\ResolveStore;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'store.resolve' => ResolveStore::class,
             'role.check' => CheckStoreRole::class,
         ]);
+
+        // Customer auth provider is store-scoped, so tenant resolution must run before auth middleware.
+        $middleware->prependToPriorityList(AuthenticatesRequests::class, ResolveStore::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

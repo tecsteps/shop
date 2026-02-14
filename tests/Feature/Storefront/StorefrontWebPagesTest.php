@@ -338,6 +338,22 @@ test('customer can register and access account pages', function (): void {
         ->assertSee('Address Book');
 });
 
+test('registration redirect resolves to account dashboard without redirect loops', function (): void {
+    createStorefrontFixture();
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->followingRedirects()
+        ->post('/account/register', [
+            'name' => 'Loop Check Customer',
+            'email' => 'loop-check-customer@acme.test',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'marketing_opt_in' => '0',
+        ])
+        ->assertOk()
+        ->assertSee('Welcome, Loop Check Customer');
+});
+
 test('customer login and logout flow works', function (): void {
     $fixture = createStorefrontFixture();
 

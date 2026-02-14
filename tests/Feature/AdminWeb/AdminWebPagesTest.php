@@ -154,6 +154,16 @@ test('admin login page renders and authenticated admin can login', function (): 
         ->assertSee('Dashboard');
 });
 
+test('admin dashboard renders evaluated title tag', function (): void {
+    $fixture = createAdminFixture();
+
+    $this->withServerVariables(['HTTP_HOST' => 'shop.test'])
+        ->actingAs($fixture['user'])
+        ->get('/admin')
+        ->assertOk()
+        ->assertSee('<title>Dashboard | Acme Fashion</title>', false);
+});
+
 test('authenticated admin can open core admin pages', function (): void {
     $fixture = createAdminFixture();
 
