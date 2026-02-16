@@ -17,7 +17,7 @@
     @endif
 
     <div class="mt-8 grid gap-8 lg:grid-cols-3">
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2" wire:key="checkout-step-{{ $step }}">
             {{-- Step 1: Contact & Address --}}
             @if ($step === 1)
                 <form wire:submit="submitAddress" class="space-y-4">

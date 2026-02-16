@@ -36,6 +36,7 @@ class Taxes extends Component
     public function save(): void
     {
         $store = app('current_store');
+        $this->authorize('update', $store);
 
         TaxSettings::query()->updateOrCreate(
             ['store_id' => $store->id],

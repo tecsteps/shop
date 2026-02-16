@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(Store $store): JsonResponse
+    public function index(Request $request, Store $store): JsonResponse
     {
+        $this->authorize('view', $store);
+        $this->authorize('viewAny', Product::class);
+
         $products = Product::where('store_id', $store->id)
             ->with('variants')
             ->paginate(20);
@@ -21,6 +24,9 @@ class ProductController extends Controller
 
     public function store(Request $request, Store $store): JsonResponse
     {
+        $this->authorize('view', $store);
+        $this->authorize('create', Product::class);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'handle' => 'required|string|max:255|unique:products,handle',
@@ -42,6 +48,10 @@ class ProductController extends Controller
 
     public function update(Request $request, Store $store, Product $product): JsonResponse
     {
+        $this->authorize('view', $store);
+        abort_unless($product->store_id === $store->id, 404);
+        $this->authorize('update', $product);
+
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'handle' => 'sometimes|string|max:255',
@@ -57,8 +67,12 @@ class ProductController extends Controller
         return response()->json($product->fresh());
     }
 
-    public function destroy(Store $store, Product $product): JsonResponse
+    public function destroy(Request $request, Store $store, Product $product): JsonResponse
     {
+        $this->authorize('view', $store);
+        abort_unless($product->store_id === $store->id, 404);
+        $this->authorize('delete', $product);
+
         $product->delete();
 
         return response()->json(null, 204);

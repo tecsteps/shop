@@ -14,7 +14,12 @@ class Index extends Component
 
     public function adjustQuantity(int $itemId, int $adjustment): void
     {
-        $item = InventoryItem::query()->findOrFail($itemId);
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
+        $item = InventoryItem::query()
+            ->where('store_id', $store->id)
+            ->findOrFail($itemId);
         $item->update(['quantity_on_hand' => $item->quantity_on_hand + $adjustment]);
     }
 

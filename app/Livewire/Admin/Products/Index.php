@@ -46,7 +46,13 @@ class Index extends Component
 
     public function bulkArchive(): void
     {
-        Product::query()->whereIn('id', $this->selected)->update(['status' => ProductStatus::Archived]);
+        $this->authorize('viewAny', Product::class);
+
+        $store = app('current_store');
+        Product::query()
+            ->where('store_id', $store->id)
+            ->whereIn('id', $this->selected)
+            ->update(['status' => ProductStatus::Archived]);
         $this->selected = [];
         $this->selectAll = false;
         session()->flash('success', 'Products archived.');
@@ -54,7 +60,13 @@ class Index extends Component
 
     public function bulkDelete(): void
     {
-        Product::query()->whereIn('id', $this->selected)->delete();
+        $this->authorize('viewAny', Product::class);
+
+        $store = app('current_store');
+        Product::query()
+            ->where('store_id', $store->id)
+            ->whereIn('id', $this->selected)
+            ->delete();
         $this->selected = [];
         $this->selectAll = false;
         session()->flash('success', 'Products deleted.');

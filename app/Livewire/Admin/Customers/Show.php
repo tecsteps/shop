@@ -13,6 +13,8 @@ class Show extends Component
 
     public function mount(Customer $customer): void
     {
+        $this->authorize('view', $customer);
+
         $this->customer = $customer->load(['addresses', 'orders' => fn ($q) => $q->latest()->limit(10)]);
     }
 

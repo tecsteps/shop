@@ -17,9 +17,13 @@ trait ChecksStoreRole
             return null;
         }
 
-        /** @var string $role */
         $role = $store->pivot->getAttribute('role');
 
+        if ($role instanceof StoreUserRole) {
+            return $role;
+        }
+
+        /** @var int|string $role */
         return StoreUserRole::from($role);
     }
 

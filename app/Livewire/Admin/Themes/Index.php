@@ -12,6 +12,7 @@ class Index extends Component
     public function activate(int $themeId): void
     {
         $store = app('current_store');
+        $this->authorize('update', $store);
         Theme::query()->where('store_id', $store->id)->update(['is_active' => false]);
         Theme::query()->where('id', $themeId)->update(['is_active' => true, 'status' => 'published']);
         session()->flash('success', 'Theme activated.');

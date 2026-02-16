@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('throttle:120,1')
+Route::middleware(['store.resolve', 'throttle:120,1'])
     ->prefix('storefront/v1')
     ->group(function (): void {
         Route::post('/carts', [CartController::class, 'store']);

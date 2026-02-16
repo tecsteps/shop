@@ -27,6 +27,7 @@ class Form extends Component
     public function mount(?Collection $collection = null): void
     {
         if ($collection && $collection->exists) {
+            $this->authorize('update', $collection);
             $this->collection = $collection;
             $this->title = $collection->title;
             $this->description_html = $collection->description_html ?? '';
@@ -50,6 +51,12 @@ class Form extends Component
 
     public function save(): void
     {
+        if ($this->collection) {
+            $this->authorize('update', $this->collection);
+        } else {
+            $this->authorize('create', Collection::class);
+        }
+
         $this->validate([
             'title' => ['required', 'string', 'max:255'],
             'status' => ['required', 'in:draft,active,archived'],
@@ -61,7 +68,9 @@ class Form extends Component
             'store_id' => $store->id,
             'title' => $this->title,
             'handle' => Str::slug($this->title),
-            'description_html' => $this->description_html ?: null,
+            'description_html' => $this->description_html
+                ? strip_tags($this->description_html, '<p><br><strong><em><ul><ol><li><h2><h3><h4><a><img>')
+                : null,
             'status' => $this->status,
             'type' => 'manual',
         ];

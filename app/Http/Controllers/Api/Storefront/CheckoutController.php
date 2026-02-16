@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Discount;
+use App\Models\Store;
 use App\Services\CheckoutService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,12 @@ class CheckoutController extends Controller
             'email' => 'required|email',
         ]);
 
-        $cart = Cart::findOrFail($validated['cart_id']);
+        /** @var Store $store */
+        $store = app('current_store');
+        /** @var Cart $cart */
+        $cart = Cart::query()->findOrFail($validated['cart_id']);
+        abort_unless($cart->store_id === $store->id, 404);
+
         $checkout = $this->checkoutService->createFromCart($cart);
         $checkout->update(['email' => $validated['email']]);
 
@@ -32,11 +38,15 @@ class CheckoutController extends Controller
 
     public function show(Checkout $checkout): JsonResponse
     {
+        $this->verifyStoreOwnership($checkout);
+
         return response()->json($checkout->load('cart.lines'));
     }
 
     public function setAddress(Request $request, Checkout $checkout): JsonResponse
     {
+        $this->verifyStoreOwnership($checkout);
+
         $validated = $request->validate([
             'email' => 'sometimes|email',
             'shipping_address' => 'required|array',
@@ -50,6 +60,8 @@ class CheckoutController extends Controller
 
     public function setShippingMethod(Request $request, Checkout $checkout): JsonResponse
     {
+        $this->verifyStoreOwnership($checkout);
+
         $validated = $request->validate([
             'shipping_rate_id' => 'required|integer|exists:shipping_rates,id',
         ]);
@@ -61,6 +73,8 @@ class CheckoutController extends Controller
 
     public function applyDiscount(Request $request, Checkout $checkout): JsonResponse
     {
+        $this->verifyStoreOwnership($checkout);
+
         $validated = $request->validate([
             'code' => 'required|string',
         ]);
@@ -80,6 +94,8 @@ class CheckoutController extends Controller
 
     public function setPaymentMethod(Request $request, Checkout $checkout): JsonResponse
     {
+        $this->verifyStoreOwnership($checkout);
+
         $validated = $request->validate([
             'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
         ]);
@@ -91,6 +107,8 @@ class CheckoutController extends Controller
 
     public function pay(Request $request, Checkout $checkout): JsonResponse
     {
+        $this->verifyStoreOwnership($checkout);
+
         $validated = $request->validate([
             'payment_method' => 'sometimes|string|in:credit_card,paypal,bank_transfer',
         ]);
@@ -98,5 +116,12 @@ class CheckoutController extends Controller
         $checkout = $this->checkoutService->completeCheckout($checkout, $validated);
 
         return response()->json($checkout);
+    }
+
+    private function verifyStoreOwnership(Checkout $checkout): void
+    {
+        /** @var Store $store */
+        $store = app('current_store');
+        abort_unless($checkout->store_id === $store->id, 404);
     }
 }

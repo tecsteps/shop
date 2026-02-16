@@ -121,12 +121,6 @@ parameters:
 			path: app/Http/Controllers/Api/Storefront/CartController.php
 
 		-
-			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:create\(\) expects App\\Models\\Store, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Api/Storefront/CartController.php
-
-		-
 			message: '#^Parameter \#2 \$variantId of method App\\Services\\CartService\:\:addLine\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -171,12 +165,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''shipping_rate_id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
-
-		-
-			message: '#^Parameter \#1 \$cart of method App\\Services\\CheckoutService\:\:createFromCart\(\) expects App\\Models\\Cart, App\\Models\\Cart\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Cart\> given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
 
@@ -381,7 +369,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Inventory/Index.php
 
 		-
@@ -393,7 +381,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 2
+			count: 3
 			path: app/Livewire/Admin/Navigation/Index.php
 
 		-
@@ -477,7 +465,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 1
+			count: 3
 			path: app/Livewire/Admin/Products/Index.php
 
 		-
@@ -585,7 +573,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 2
+			count: 3
 			path: app/Livewire/Admin/Settings/Shipping.php
 
 		-

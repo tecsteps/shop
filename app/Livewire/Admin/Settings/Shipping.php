@@ -45,8 +45,10 @@ class Shipping extends Component
 
     public function saveZone(): void
     {
-        $this->validate(['zoneName' => ['required', 'string']]);
         $store = app('current_store');
+        $this->authorize('update', $store);
+
+        $this->validate(['zoneName' => ['required', 'string']]);
         $countries = array_map('trim', explode(',', $this->zoneCountries));
 
         if ($this->editingZoneId) {
@@ -69,7 +71,10 @@ class Shipping extends Component
 
     public function deleteZone(int $zoneId): void
     {
-        ShippingZone::query()->where('id', $zoneId)->delete();
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
+        ShippingZone::query()->where('id', $zoneId)->where('store_id', $store->id)->delete();
         session()->flash('success', 'Zone deleted.');
     }
 
@@ -84,6 +89,9 @@ class Shipping extends Component
 
     public function saveRate(): void
     {
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
         $this->validate([
             'rateName' => ['required', 'string'],
             'rateAmount' => ['required', 'numeric', 'min:0'],
@@ -103,6 +111,9 @@ class Shipping extends Component
 
     public function deleteRate(int $rateId): void
     {
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
         ShippingRate::query()->where('id', $rateId)->delete();
         session()->flash('success', 'Rate deleted.');
     }

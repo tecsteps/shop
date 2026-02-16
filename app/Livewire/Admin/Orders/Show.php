@@ -6,8 +6,8 @@ use App\Enums\FinancialStatus;
 use App\Enums\FulfillmentShipmentStatus;
 use App\Enums\FulfillmentStatus;
 use App\Enums\PaymentStatus;
-use App\Enums\RefundStatus;
 use App\Models\Order;
+use App\Services\RefundService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -35,6 +35,8 @@ class Show extends Component
 
     public function mount(Order $order): void
     {
+        $this->authorize('view', $order);
+
         $this->order = $order->load([
             'lines.product',
             'lines.variant',
@@ -55,6 +57,8 @@ class Show extends Component
 
     public function createFulfillment(): void
     {
+        $this->authorize('update', $this->order);
+
         $fulfillment = $this->order->fulfillments()->create([
             'tracking_company' => $this->trackingCompany ?: null,
             'tracking_number' => $this->trackingNumber ?: null,
@@ -80,6 +84,8 @@ class Show extends Component
 
     public function markAsShipped(int $fulfillmentId): void
     {
+        $this->authorize('update', $this->order);
+
         $this->order->fulfillments()->where('id', $fulfillmentId)->update([
             'status' => FulfillmentShipmentStatus::Shipped,
             'shipped_at' => now(),
@@ -90,6 +96,8 @@ class Show extends Component
 
     public function markAsDelivered(int $fulfillmentId): void
     {
+        $this->authorize('update', $this->order);
+
         $this->order->fulfillments()->where('id', $fulfillmentId)->update([
             'status' => FulfillmentShipmentStatus::Delivered,
             'delivered_at' => now(),
@@ -106,27 +114,22 @@ class Show extends Component
 
     public function createRefund(): void
     {
+        $this->authorize('update', $this->order);
+
         $this->validate([
             'refundAmount' => ['required', 'numeric', 'min:0.01'],
         ]);
 
-        $payment = $this->order->payments()->where('status', PaymentStatus::Captured)->first();
+        $payment = $this->order->payments()->where('status', PaymentStatus::Captured)->firstOrFail();
 
-        $this->order->refunds()->create([
-            'payment_id' => $payment?->id,
-            'amount' => (int) (((float) $this->refundAmount) * 100),
-            'reason' => $this->refundReason ?: null,
-            'status' => RefundStatus::Processed,
-            'restock' => $this->refundRestock,
-            'processed_at' => now(),
-        ]);
-
-        $totalRefunded = $this->order->refunds()->sum('amount');
-        if ($totalRefunded >= $this->order->total) {
-            $this->order->update(['financial_status' => FinancialStatus::Refunded]);
-        } else {
-            $this->order->update(['financial_status' => FinancialStatus::PartiallyRefunded]);
-        }
+        $refundService = app(RefundService::class);
+        $refundService->create(
+            $this->order,
+            $payment,
+            (int) (((float) $this->refundAmount) * 100),
+            $this->refundReason ?: null,
+            $this->refundRestock,
+        );
 
         $this->showRefundModal = false;
         $this->order->refresh();
@@ -135,6 +138,8 @@ class Show extends Component
 
     public function confirmPayment(): void
     {
+        $this->authorize('update', $this->order);
+
         $this->order->payments()->where('status', PaymentStatus::Pending)->update([
             'status' => PaymentStatus::Captured,
             'captured_at' => now(),

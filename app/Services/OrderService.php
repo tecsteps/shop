@@ -119,6 +119,7 @@ class OrderService
         $lastOrder = Order::withoutGlobalScopes()
             ->where('store_id', $store->id)
             ->orderByDesc('id')
+            ->lockForUpdate()
             ->first();
 
         if (! $lastOrder) {

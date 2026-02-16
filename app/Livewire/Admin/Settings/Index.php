@@ -37,12 +37,13 @@ class Index extends Component
 
     public function save(): void
     {
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
         $this->validate([
             'store_name' => ['required', 'string', 'max:255'],
             'store_email' => ['nullable', 'email'],
         ]);
-
-        $store = app('current_store');
 
         StoreSettings::query()->updateOrCreate(
             ['store_id' => $store->id],

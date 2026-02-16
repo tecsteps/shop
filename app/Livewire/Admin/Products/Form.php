@@ -40,6 +40,7 @@ class Form extends Component
     public function mount(?Product $product = null): void
     {
         if ($product && $product->exists) {
+            $this->authorize('update', $product);
             $this->product = $product;
             $this->title = $product->title;
             $this->description_html = $product->description_html ?? '';
@@ -133,13 +134,21 @@ class Form extends Component
             'variants.*.price' => ['required', 'numeric', 'min:0'],
         ]);
 
+        if ($this->product) {
+            $this->authorize('update', $this->product);
+        } else {
+            $this->authorize('create', Product::class);
+        }
+
         $store = app('current_store');
 
         $productData = [
             'store_id' => $store->id,
             'title' => $this->title,
             'handle' => Str::slug($this->title),
-            'description_html' => $this->description_html ?: null,
+            'description_html' => $this->description_html
+                ? strip_tags($this->description_html, '<p><br><strong><em><ul><ol><li><h2><h3><h4><a><img>')
+                : null,
             'status' => $this->status,
             'vendor' => $this->vendor ?: null,
             'product_type' => $this->product_type ?: null,

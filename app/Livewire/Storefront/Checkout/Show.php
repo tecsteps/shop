@@ -38,7 +38,7 @@ class Show extends Component
 
     public string $paymentMethod = 'credit_card';
 
-    public string $cardNumber = '4242424242424242';
+    public string $cardNumber = '';
 
     public ?int $checkoutId = null;
 
@@ -57,7 +57,16 @@ class Show extends Component
         }
 
         $checkoutService = app(CheckoutService::class);
-        $checkout = $checkoutService->createFromCart($cart);
+        $existingCheckout = \App\Models\Checkout::query()
+            ->where('cart_id', $cart->id)
+            ->whereNotIn('status', [
+                \App\Enums\CheckoutStatus::Completed->value,
+                \App\Enums\CheckoutStatus::Expired->value,
+            ])
+            ->latest()
+            ->first();
+
+        $checkout = $existingCheckout ?? $checkoutService->createFromCart($cart);
         $this->checkoutId = $checkout->id;
     }
 
@@ -74,7 +83,7 @@ class Show extends Component
         ]);
 
         $checkoutService = app(CheckoutService::class);
-        $checkout = \App\Models\Checkout::withoutGlobalScopes()->findOrFail($this->checkoutId);
+        $checkout = \App\Models\Checkout::query()->findOrFail($this->checkoutId);
 
         $checkoutService->setAddress($checkout, [
             'email' => $this->email,
@@ -101,7 +110,7 @@ class Show extends Component
         ]);
 
         $checkoutService = app(CheckoutService::class);
-        $checkout = \App\Models\Checkout::withoutGlobalScopes()->findOrFail($this->checkoutId);
+        $checkout = \App\Models\Checkout::query()->findOrFail($this->checkoutId);
 
         $checkoutService->setShippingMethod($checkout, $this->selectedShippingRateId);
 
@@ -112,7 +121,7 @@ class Show extends Component
     {
         $checkoutService = app(CheckoutService::class);
         $orderService = app(OrderService::class);
-        $checkout = \App\Models\Checkout::withoutGlobalScopes()->findOrFail($this->checkoutId);
+        $checkout = \App\Models\Checkout::query()->findOrFail($this->checkoutId);
 
         $checkoutService->selectPaymentMethod($checkout, $this->paymentMethod);
         $checkout->refresh();
@@ -130,7 +139,7 @@ class Show extends Component
     {
         $store = app('current_store');
         $checkout = $this->checkoutId
-            ? \App\Models\Checkout::withoutGlobalScopes()->with('cart.lines.variant.product')->find($this->checkoutId)
+            ? \App\Models\Checkout::query()->with('cart.lines.variant.product')->find($this->checkoutId)
             : null;
 
         $shippingRates = collect();

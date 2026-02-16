@@ -43,8 +43,10 @@ class Index extends Component
 
     public function saveMenu(): void
     {
-        $this->validate(['menuName' => ['required', 'string']]);
         $store = app('current_store');
+        $this->authorize('update', $store);
+
+        $this->validate(['menuName' => ['required', 'string']]);
 
         if ($this->editingMenuId) {
             NavigationMenu::query()->where('id', $this->editingMenuId)->update([
@@ -65,7 +67,10 @@ class Index extends Component
 
     public function deleteMenu(int $menuId): void
     {
-        NavigationMenu::query()->where('id', $menuId)->delete();
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
+        NavigationMenu::query()->where('id', $menuId)->where('store_id', $store->id)->delete();
         session()->flash('success', 'Menu deleted.');
     }
 
@@ -79,6 +84,9 @@ class Index extends Component
 
     public function saveItem(): void
     {
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
         $this->validate([
             'itemTitle' => ['required', 'string'],
             'itemUrl' => ['required', 'string'],
@@ -98,6 +106,9 @@ class Index extends Component
 
     public function deleteItem(int $itemId): void
     {
+        $store = app('current_store');
+        $this->authorize('update', $store);
+
         NavigationItem::query()->where('id', $itemId)->delete();
     }
 

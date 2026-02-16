@@ -13,8 +13,11 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index(Store $store): JsonResponse
+    public function index(Request $request, Store $store): JsonResponse
     {
+        $this->authorize('view', $store);
+        $this->authorize('viewAny', Order::class);
+
         $orders = Order::where('store_id', $store->id)
             ->with(['lines', 'customer'])
             ->orderByDesc('placed_at')
@@ -23,8 +26,12 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function show(Store $store, Order $order): JsonResponse
+    public function show(Request $request, Store $store, Order $order): JsonResponse
     {
+        $this->authorize('view', $store);
+        abort_unless($order->store_id === $store->id, 404);
+        $this->authorize('view', $order);
+
         $order->load(['lines', 'payments', 'fulfillments.lines', 'refunds', 'customer']);
 
         return response()->json($order);
@@ -32,6 +39,10 @@ class OrderController extends Controller
 
     public function createFulfillment(Request $request, Store $store, Order $order): JsonResponse
     {
+        $this->authorize('view', $store);
+        abort_unless($order->store_id === $store->id, 404);
+        $this->authorize('update', $order);
+
         $validated = $request->validate([
             'tracking_company' => 'nullable|string|max:255',
             'tracking_number' => 'nullable|string|max:255',
@@ -63,6 +74,10 @@ class OrderController extends Controller
 
     public function createRefund(Request $request, Store $store, Order $order): JsonResponse
     {
+        $this->authorize('view', $store);
+        abort_unless($order->store_id === $store->id, 404);
+        $this->authorize('update', $order);
+
         $validated = $request->validate([
             'amount' => 'required|integer|min:1',
             'reason' => 'nullable|string|max:500',

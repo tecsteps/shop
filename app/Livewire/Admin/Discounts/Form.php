@@ -34,6 +34,7 @@ class Form extends Component
     public function mount(?Discount $discount = null): void
     {
         if ($discount && $discount->exists) {
+            $this->authorize('update', $discount);
             $this->discount = $discount;
             $this->code = $discount->code ?? '';
             $this->title = $discount->title ?? '';
@@ -50,6 +51,12 @@ class Form extends Component
 
     public function save(): void
     {
+        if ($this->discount) {
+            $this->authorize('update', $this->discount);
+        } else {
+            $this->authorize('create', Discount::class);
+        }
+
         $this->validate([
             'code' => ['required', 'string', 'max:50'],
             'value_type' => ['required', 'in:percent,fixed,free_shipping'],
