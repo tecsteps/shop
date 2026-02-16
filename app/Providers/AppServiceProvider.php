@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -34,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureRateLimiting();
         $this->configureAuth();
+
+        Product::observe(ProductObserver::class);
     }
 
     protected function configureAuth(): void
