@@ -19,6 +19,7 @@
     "require-dev": {
         "deptrac/deptrac": "^4.6",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.9",
         "laravel/boost": "^2.1",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",

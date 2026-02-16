@@ -1,0 +1,127 @@
+deptrac:
+  paths:
+    - ./app
+
+  layers:
+    - name: Models
+      collectors:
+        - type: directory
+          value: app/Models/.*
+
+    - name: Enums
+      collectors:
+        - type: directory
+          value: app/Enums/.*
+
+    - name: Services
+      collectors:
+        - type: directory
+          value: app/Services/.*
+
+    - name: ValueObjects
+      collectors:
+        - type: directory
+          value: app/ValueObjects/.*
+
+    - name: Contracts
+      collectors:
+        - type: directory
+          value: app/Contracts/.*
+
+    - name: Events
+      collectors:
+        - type: directory
+          value: app/Events/.*
+
+    - name: Exceptions
+      collectors:
+        - type: directory
+          value: app/Exceptions/.*
+
+    - name: Jobs
+      collectors:
+        - type: directory
+          value: app/Jobs/.*
+
+    - name: Policies
+      collectors:
+        - type: directory
+          value: app/Policies/.*
+
+    - name: Livewire
+      collectors:
+        - type: directory
+          value: app/Livewire/.*
+
+    - name: Controllers
+      collectors:
+        - type: directory
+          value: app/Http/Controllers/.*
+
+    - name: Middleware
+      collectors:
+        - type: directory
+          value: app/Http/Middleware/.*
+
+  ruleset:
+    Models:
+      - Enums
+      - ValueObjects
+      - Contracts
+
+    Services:
+      - Models
+      - Enums
+      - ValueObjects
+      - Contracts
+      - Events
+      - Exceptions
+      - Jobs
+
+    Livewire:
+      - Models
+      - Enums
+      - Services
+      - ValueObjects
+      - Contracts
+      - Events
+      - Exceptions
+
+    Controllers:
+      - Models
+      - Enums
+      - Services
+      - ValueObjects
+      - Contracts
+
+    Policies:
+      - Models
+      - Enums
+
+    Jobs:
+      - Models
+      - Enums
+      - Services
+      - ValueObjects
+      - Contracts
+      - Events
+
+    Middleware:
+      - Models
+      - Enums
+
+    Events:
+      - Models
+      - Enums
+
+    Exceptions: []
+
+    ValueObjects:
+      - Enums
+
+    Contracts:
+      - Models
+      - Enums
+      - ValueObjects
+
+    Enums: []
