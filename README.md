@@ -209,13 +209,13 @@ Commit progress after every meaningful iteration.
 ```bash
    gh pr create --title "Shop system implementation" --body "Full shop implementation"
 ```
-2. Wait 60 seconds for SonarCloud analysis.
+2. Wait some moments for SonarCloud analysis.
 3. Check results using Playwright MCP:
    `https://sonarcloud.io/summary/new_code?id=tecsteps_shop&pullRequest=<PR_NUMBER>`
 4. If there are issues:
     - Fix them.
     - Push again.
-    - Wait 60 seconds, recheck.
+    - Wait, recheck.
     - Max 3 iterations.
 5. Target: 0 issues, A rating across all dimensions.
 
