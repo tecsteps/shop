@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Cart;
 
+use App\Exceptions\InsufficientInventoryException;
 use App\Exceptions\InvalidDiscountException;
 use App\Services\CartService;
 use App\Services\DiscountService;
@@ -25,7 +26,12 @@ class Show extends Component
         $store = app('current_store');
         $cartService = app(CartService::class);
         $cart = $cartService->getOrCreateForSession($store);
-        $cartService->updateLineQuantity($cart, $lineId, $quantity);
+
+        try {
+            $cartService->updateLineQuantity($cart, $lineId, $quantity);
+        } catch (InsufficientInventoryException) {
+            session()->flash('error', 'Not enough stock available.');
+        }
     }
 
     public function removeLine(int $lineId): void

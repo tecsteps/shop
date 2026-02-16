@@ -22,7 +22,7 @@ class DiscountFactory extends Factory
             'title' => fake()->sentence(3),
             'type' => DiscountType::Code,
             'value_type' => DiscountValueType::Percent,
-            'value_amount' => 1000,
+            'value_amount' => 10,
             'starts_at' => now()->subDay(),
             'ends_at' => now()->addMonth(),
             'usage_limit' => null,

@@ -21,7 +21,7 @@ it('shows the discount code input on the cart page', function () {
 it('can apply a valid discount code', function () {
     Discount::factory()->for($this->ctx['store'])->create([
         'code' => 'SAVE10',
-        'value_amount' => 1000,
+        'value_amount' => 10,
     ]);
 
     Livewire::withHeaders(['Host' => 'shop.test'])
@@ -56,7 +56,7 @@ it('shows an error for an expired discount code', function () {
 it('can remove an applied discount', function () {
     Discount::factory()->for($this->ctx['store'])->create([
         'code' => 'SAVE10',
-        'value_amount' => 1000,
+        'value_amount' => 10,
     ]);
 
     Livewire::withHeaders(['Host' => 'shop.test'])
@@ -94,7 +94,7 @@ it('shows an error when discount code is empty', function () {
 it('displays the discount amount in the totals', function () {
     Discount::factory()->for($this->ctx['store'])->create([
         'code' => 'SAVE10',
-        'value_amount' => 1000, // 10%
+        'value_amount' => 10, // 10%
     ]);
 
     Livewire::withHeaders(['Host' => 'shop.test'])

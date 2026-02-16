@@ -4,6 +4,7 @@ namespace App\Livewire\Storefront\Checkout;
 
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\DiscountService;
 use App\Services\OrderService;
 use App\Services\ShippingCalculator;
 use Livewire\Attributes\Layout;
@@ -113,6 +114,26 @@ class Show extends Component
         $checkout = \App\Models\Checkout::query()->findOrFail($this->checkoutId);
 
         $checkoutService->setShippingMethod($checkout, $this->selectedShippingRateId);
+
+        // Apply session discount to checkout
+        $discountCode = session('discount_code');
+        if ($discountCode) {
+            $discountService = app(DiscountService::class);
+            $store = app('current_store');
+            $cart = $checkout->cart()->with('lines')->first();
+
+            try {
+                $discount = $discountService->validate($discountCode, $store, $cart);
+                $subtotal = $cart->lines->sum('total');
+                $result = $discountService->calculate($discount, $subtotal, $cart->lines->all());
+                $checkout->update([
+                    'discount_code' => $discountCode,
+                    'discount_amount' => $result->amount,
+                ]);
+            } catch (\Exception) {
+                // Discount no longer valid, ignore
+            }
+        }
 
         $this->step = 3;
     }

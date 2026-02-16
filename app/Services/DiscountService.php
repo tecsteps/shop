@@ -66,8 +66,8 @@ class DiscountService
             return new DiscountResult(amount: $amount, freeShipping: false, allocations: []);
         }
 
-        // Percent
-        $amount = (int) floor($subtotal * $discount->value_amount / 10000);
+        // Percent (value_amount is stored as whole number, e.g. 10 = 10%)
+        $amount = (int) floor($subtotal * $discount->value_amount / 100);
 
         return new DiscountResult(amount: $amount, freeShipping: false, allocations: []);
     }

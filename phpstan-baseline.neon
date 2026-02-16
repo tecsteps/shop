@@ -961,6 +961,18 @@ parameters:
 			path: app/Livewire/Storefront/Checkout/Confirmation.php
 
 		-
+			message: '#^Cannot access property \$lines on App\\Models\\Cart\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#1 \$code of method App\\Services\\DiscountService\:\:validate\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
 			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:getOrCreateForSession\(\) expects App\\Models\\Store, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -980,6 +992,24 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$rateId of method App\\Services\\CheckoutService\:\:setShippingMethod\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#2 \$store of method App\\Services\\DiscountService\:\:validate\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#2 \$subtotal of method App\\Services\\DiscountService\:\:calculate\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#3 \$cart of method App\\Services\\DiscountService\:\:validate\(\) expects App\\Models\\Cart, App\\Models\\Cart\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Livewire/Storefront/Checkout/Show.php

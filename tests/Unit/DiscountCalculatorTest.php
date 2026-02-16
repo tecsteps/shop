@@ -126,7 +126,7 @@ it('passes minimum purchase when cart meets threshold', function () {
 it('calculates percent discount amount', function () {
     $discount = Discount::factory()->for($this->ctx['store'])->create([
         'value_type' => DiscountValueType::Percent,
-        'value_amount' => 1500,
+        'value_amount' => 15,
     ]);
 
     $result = $this->service->calculate($discount, 10000, []);

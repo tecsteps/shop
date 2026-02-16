@@ -16,9 +16,11 @@ class Show extends Component
     {
         $customer = Auth::guard('customer')->user();
 
+        $fullOrderNumber = str_starts_with($orderNumber, '#') ? $orderNumber : '#'.$orderNumber;
+
         $this->order = Order::query()
             ->where('customer_id', $customer->id)
-            ->where('order_number', $orderNumber)
+            ->where('order_number', $fullOrderNumber)
             ->with(['lines', 'fulfillments', 'payments'])
             ->firstOrFail();
     }

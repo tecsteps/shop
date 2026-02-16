@@ -66,7 +66,7 @@ class CheckoutService
 
     public function selectPaymentMethod(Checkout $checkout, string $method): Checkout
     {
-        if ($checkout->status !== CheckoutStatus::ShippingSelected) {
+        if (! in_array($checkout->status, [CheckoutStatus::ShippingSelected, CheckoutStatus::PaymentPending])) {
             throw new InvalidCheckoutTransitionException;
         }
 

@@ -16,7 +16,7 @@ it('applies a valid percent discount code at checkout', function () {
     $discount = Discount::factory()->for($this->ctx['store'])->create([
         'code' => 'SAVE10',
         'value_type' => DiscountValueType::Percent,
-        'value_amount' => 1000,
+        'value_amount' => 10,
         'status' => DiscountStatus::Active,
     ]);
 
