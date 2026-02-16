@@ -38,9 +38,17 @@
                 @endif
             </div>
 
-            <div class="mt-4 flex items-center gap-2 text-sm text-green-600">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4.5 12.75 6 6 9-13.5"/></svg>
-                In stock
+            <div class="mt-4 flex items-center gap-2 text-sm {{ $stockStatus === 'in_stock' ? 'text-green-600' : ($stockStatus === 'backorder' ? 'text-amber-600' : 'text-red-600') }}">
+                @if ($stockStatus === 'in_stock')
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                    In stock
+                @elseif ($stockStatus === 'backorder')
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    Available on backorder
+                @else
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+                    Sold out
+                @endif
             </div>
 
             {{-- Variant Options --}}
@@ -66,9 +74,10 @@
             {{-- Add to Cart --}}
             <button
                 wire:click="addToCart"
-                class="mt-6 w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                @if ($stockStatus === 'sold_out') disabled @endif
+                class="mt-6 w-full rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm transition focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 {{ $stockStatus === 'sold_out' ? 'cursor-not-allowed bg-gray-400' : 'bg-blue-600 hover:bg-blue-700' }}"
             >
-                Add to cart
+                {{ $stockStatus === 'sold_out' ? 'Sold out' : 'Add to cart' }}
             </button>
 
             {{-- Description --}}

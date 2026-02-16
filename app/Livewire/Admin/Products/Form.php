@@ -143,7 +143,7 @@ class Form extends Component
             'status' => $this->status,
             'vendor' => $this->vendor ?: null,
             'product_type' => $this->product_type ?: null,
-            'tags' => $this->tags ? array_map('trim', explode(',', $this->tags)) : null,
+            'tags' => $this->tags ? array_map('trim', explode(',', $this->tags)) : [],
             'published_at' => $this->status === 'active' ? now() : null,
         ];
 

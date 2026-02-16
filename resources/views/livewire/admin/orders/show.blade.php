@@ -118,6 +118,50 @@
                     @endforeach
                 </div>
             @endif
+
+            {{-- Timeline --}}
+            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Timeline</h3>
+                <div class="relative space-y-4">
+                    <div class="absolute bottom-0 left-3 top-0 w-px bg-gray-200 dark:bg-zinc-700"></div>
+                    @php
+                        $events = collect();
+                        $events->push(['date' => $order->created_at, 'label' => 'Order placed', 'detail' => '#' . $order->order_number]);
+                        foreach ($order->payments as $payment) {
+                            if ($payment->captured_at) {
+                                $events->push(['date' => $payment->captured_at, 'label' => 'Payment captured', 'detail' => '$' . number_format($payment->amount / 100, 2)]);
+                            } elseif ($payment->created_at) {
+                                $events->push(['date' => $payment->created_at, 'label' => 'Payment ' . $payment->status->value, 'detail' => '$' . number_format($payment->amount / 100, 2)]);
+                            }
+                        }
+                        foreach ($order->fulfillments as $fulfillment) {
+                            $events->push(['date' => $fulfillment->created_at, 'label' => 'Fulfillment created', 'detail' => ucfirst($fulfillment->status->value)]);
+                            if ($fulfillment->shipped_at) {
+                                $events->push(['date' => $fulfillment->shipped_at, 'label' => 'Shipped', 'detail' => $fulfillment->tracking_number ?? '']);
+                            }
+                            if ($fulfillment->delivered_at) {
+                                $events->push(['date' => $fulfillment->delivered_at, 'label' => 'Delivered', 'detail' => '']);
+                            }
+                        }
+                        foreach ($order->refunds as $refund) {
+                            $events->push(['date' => $refund->processed_at ?? $refund->created_at, 'label' => 'Refund issued', 'detail' => '$' . number_format($refund->amount / 100, 2)]);
+                        }
+                        $events = $events->sortByDesc('date');
+                    @endphp
+                    @foreach($events as $event)
+                        <div class="relative flex items-start gap-3 pl-8">
+                            <div class="absolute left-1.5 top-1.5 h-3 w-3 rounded-full border-2 border-white bg-gray-400 dark:border-zinc-800 dark:bg-zinc-500"></div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $event['label'] }}</p>
+                                @if($event['detail'])
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $event['detail'] }}</p>
+                                @endif
+                                <p class="text-xs text-gray-400 dark:text-gray-500">{{ $event['date']->format('M j, Y g:i A') }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
 
         {{-- Sidebar --}}

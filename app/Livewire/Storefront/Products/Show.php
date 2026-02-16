@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Products;
 
+use App\Enums\InventoryPolicy;
 use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Services\CartService;
@@ -114,7 +115,7 @@ class Show extends Component
         $product = Product::query()
             ->where('handle', $this->handle)
             ->where('status', ProductStatus::Active)
-            ->with(['variants.optionValues.option', 'options.values', 'media'])
+            ->with(['variants.optionValues.option', 'variants.inventoryItem', 'options.values', 'media'])
             ->first();
 
         if (! $product) {
@@ -125,9 +126,22 @@ class Show extends Component
             ? $product->variants->firstWhere('id', $this->selectedVariantId)
             : ($product->variants->firstWhere('is_default', true) ?? $product->variants->first());
 
+        $inventoryItem = $selectedVariant?->inventoryItem;
+        $quantityAvailable = $inventoryItem !== null ? $inventoryItem->quantity_available : 0;
+        $inventoryPolicy = $inventoryItem !== null ? $inventoryItem->policy : InventoryPolicy::Deny;
+
+        if ($quantityAvailable > 0) {
+            $stockStatus = 'in_stock';
+        } elseif ($inventoryPolicy === InventoryPolicy::Continue) {
+            $stockStatus = 'backorder';
+        } else {
+            $stockStatus = 'sold_out';
+        }
+
         return view('livewire.storefront.products.show', [
             'product' => $product,
             'selectedVariant' => $selectedVariant,
+            'stockStatus' => $stockStatus,
         ]);
     }
 }
