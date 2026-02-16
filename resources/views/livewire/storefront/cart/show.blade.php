@@ -28,10 +28,65 @@
             @endforeach
         </div>
 
+        {{-- Discount Code --}}
         <div class="mt-8 border-t border-gray-200 pt-6 dark:border-gray-800">
-            <div class="flex justify-between text-lg font-semibold text-gray-900 dark:text-white">
+            @if ($appliedDiscount)
+                <div class="flex items-center justify-between rounded-lg bg-green-50 px-4 py-3 dark:bg-green-900/20">
+                    <div>
+                        <p class="text-sm font-medium text-green-800 dark:text-green-300">
+                            Discount applied: <span class="font-semibold">{{ $appliedCode }}</span>
+                        </p>
+                        @if ($discountResult && $discountResult->amount > 0)
+                            <p class="text-sm text-green-700 dark:text-green-400">-${{ number_format($discountResult->amount / 100, 2) }}</p>
+                        @elseif ($discountResult && $discountResult->freeShipping)
+                            <p class="text-sm text-green-700 dark:text-green-400">Free shipping</p>
+                        @endif
+                    </div>
+                    <button wire:click="removeDiscount" class="text-sm text-green-700 underline hover:text-green-900 dark:text-green-400 dark:hover:text-green-200">
+                        Remove
+                    </button>
+                </div>
+            @else
+                <div>
+                    <label for="discount-code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Discount code</label>
+                    <div class="mt-1 flex gap-2">
+                        <input
+                            wire:model="discountCode"
+                            wire:keydown.enter="applyDiscount"
+                            type="text"
+                            id="discount-code"
+                            placeholder="Enter discount code"
+                            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                        />
+                        <button
+                            wire:click="applyDiscount"
+                            class="shrink-0 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                        >
+                            Apply
+                        </button>
+                    </div>
+                    @if ($this->discountError)
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $this->discountError }}</p>
+                    @endif
+                </div>
+            @endif
+        </div>
+
+        {{-- Totals --}}
+        <div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-800">
+            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                 <span>Subtotal</span>
                 <span>${{ number_format($cart->lines->sum('total') / 100, 2) }}</span>
+            </div>
+            @if ($discountResult && $discountResult->amount > 0)
+                <div class="mt-1 flex justify-between text-sm text-green-600 dark:text-green-400">
+                    <span>Discount</span>
+                    <span>-${{ number_format($discountResult->amount / 100, 2) }}</span>
+                </div>
+            @endif
+            <div class="mt-2 flex justify-between text-lg font-semibold text-gray-900 dark:text-white">
+                <span>Total</span>
+                <span>${{ number_format(($cart->lines->sum('total') - ($discountResult?->amount ?? 0)) / 100, 2) }}</span>
             </div>
             <a href="{{ route('storefront.checkout') }}" class="mt-6 block w-full rounded-lg bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
                 Proceed to checkout

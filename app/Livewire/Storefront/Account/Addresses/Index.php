@@ -28,7 +28,7 @@ class Index extends Component
 
     public string $province = '';
 
-    public string $country = '';
+    public string $country = 'DE';
 
     public string $zip = '';
 
@@ -131,7 +131,7 @@ class Index extends Component
         $this->address2 = '';
         $this->city = '';
         $this->province = '';
-        $this->country = '';
+        $this->country = 'DE';
         $this->zip = '';
         $this->phone = '';
         $this->is_default = false;

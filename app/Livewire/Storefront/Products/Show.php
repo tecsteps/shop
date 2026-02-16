@@ -92,7 +92,14 @@ class Show extends Component
         $store = app('current_store');
         $cartService = app(CartService::class);
         $cart = $cartService->getOrCreateForSession($store);
-        $cartService->addLine($cart, $variantId, $this->quantity);
+
+        try {
+            $cartService->addLine($cart, $variantId, $this->quantity);
+        } catch (\App\Exceptions\InsufficientInventoryException $e) {
+            session()->flash('error', 'Not enough stock available. Only '.$e->available.' items left.');
+
+            return;
+        }
 
         session()->flash('success', 'Added to cart!');
         $this->dispatch('cart-updated');

@@ -71,13 +71,21 @@ class CartService
 
     public function updateLineQuantity(Cart $cart, int $lineId, int $qty): CartLine
     {
-        $line = $cart->lines()->findOrFail($lineId);
+        $line = $cart->lines()->with('variant.inventoryItem')->findOrFail($lineId);
 
         if ($qty <= 0) {
             $line->delete();
             $cart->increment('cart_version');
 
             return $line;
+        }
+
+        $inventory = $line->variant?->inventoryItem;
+        if ($inventory && $inventory->policy === InventoryPolicy::Deny && $inventory->quantity_available < $qty) {
+            throw new InsufficientInventoryException(
+                requested: $qty,
+                available: $inventory->quantity_available,
+            );
         }
 
         $line->quantity = $qty;

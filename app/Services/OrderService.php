@@ -23,9 +23,12 @@ class OrderService
         private InventoryService $inventoryService,
     ) {}
 
-    public function createFromCheckout(Checkout $checkout): Order
+    /**
+     * @param  array<string, mixed>  $paymentDetails
+     */
+    public function createFromCheckout(Checkout $checkout, array $paymentDetails = []): Order
     {
-        return DB::transaction(function () use ($checkout) {
+        return DB::transaction(function () use ($checkout, $paymentDetails) {
             $cart = $checkout->cart()->with('lines.variant.product', 'lines.variant.inventoryItem')->first();
             $totals = $checkout->totals_json;
             $paymentMethod = PaymentMethod::from($checkout->payment_method);
@@ -79,7 +82,7 @@ class OrderService
             }
 
             // Process payment
-            $paymentResult = $this->paymentProvider->charge($checkout, $paymentMethod, []);
+            $paymentResult = $this->paymentProvider->charge($checkout, $paymentMethod, $paymentDetails);
 
             $payment = $order->payments()->create([
                 'method' => $paymentMethod,
@@ -95,7 +98,13 @@ class OrderService
                 'captured_at' => $paymentResult->success && $paymentResult->status === 'captured' ? now() : null,
             ]);
 
-            if ($paymentResult->success && $paymentResult->status === 'captured') {
+            if (! $paymentResult->success) {
+                throw new \App\Exceptions\PaymentFailedException(
+                    $paymentResult->errorMessage ?? 'Payment failed.',
+                );
+            }
+
+            if ($paymentResult->status === 'captured') {
                 $order->update([
                     'status' => OrderStatus::Paid,
                     'financial_status' => FinancialStatus::Paid,

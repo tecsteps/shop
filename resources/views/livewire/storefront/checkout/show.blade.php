@@ -35,6 +35,15 @@
                         <flux:input label="State / Province" wire:model="province" />
                         <flux:input label="ZIP code" wire:model="zip" required />
                     </div>
+                    <flux:select label="Country" wire:model="country" required>
+                        <flux:select.option value="DE">Germany</flux:select.option>
+                        <flux:select.option value="AT">Austria</flux:select.option>
+                        <flux:select.option value="CH">Switzerland</flux:select.option>
+                        <flux:select.option value="NL">Netherlands</flux:select.option>
+                        <flux:select.option value="FR">France</flux:select.option>
+                        <flux:select.option value="GB">United Kingdom</flux:select.option>
+                        <flux:select.option value="US">United States</flux:select.option>
+                    </flux:select>
                     <flux:input label="Phone" wire:model="phone" />
                     <flux:button type="submit" variant="primary" class="w-full">Continue to shipping</flux:button>
                 </form>

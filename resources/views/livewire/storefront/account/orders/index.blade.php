@@ -17,7 +17,7 @@
             <tbody class="divide-y divide-gray-200 dark:divide-zinc-700">
                 @forelse($orders as $order)
                     <tr>
-                        <td class="px-6 py-4 text-sm"><a href="{{ url('/account/orders/' . $order->order_number) }}" class="font-medium text-gray-900 hover:underline dark:text-white">#{{ $order->order_number }}</a></td>
+                        <td class="px-6 py-4 text-sm"><a href="{{ route('storefront.account.orders.show', $order->order_number) }}" class="font-medium text-gray-900 hover:underline dark:text-white">{{ $order->order_number }}</a></td>
                         <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $order->placed_at?->format('M d, Y') }}</td>
                         <td class="px-6 py-4"><flux:badge size="sm">{{ ucfirst($order->financial_status?->value ?? 'unknown') }}</flux:badge></td>
                         <td class="px-6 py-4 text-right text-sm text-gray-900 dark:text-white">${{ number_format($order->total / 100, 2) }}</td>

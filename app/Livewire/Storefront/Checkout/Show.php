@@ -28,7 +28,7 @@ class Show extends Component
 
     public string $province = '';
 
-    public string $country = 'US';
+    public string $country = 'DE';
 
     public string $zip = '';
 
@@ -127,7 +127,9 @@ class Show extends Component
         $checkout->refresh();
 
         try {
-            $order = $orderService->createFromCheckout($checkout);
+            $order = $orderService->createFromCheckout($checkout, [
+                'card_number' => str_replace(' ', '', $this->cardNumber),
+            ]);
             session()->flash('order_id', $order->id);
             $this->redirect(route('storefront.checkout.confirmation'));
         } catch (\Exception $e) {

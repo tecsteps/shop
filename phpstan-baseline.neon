@@ -253,14 +253,44 @@ parameters:
 			path: app/Livewire/Admin/Auth/Login.php
 
 		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:products\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Collections/Form.php
 
 		-
 			message: '#^Cannot access property \$value on string\.$#'
 			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Cannot call method sync\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Cannot call method update\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Collections\\Form\:\:authorizeAndValidate\(\) should return App\\Models\\Store but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Collections\\Form\:\:persistModel\(\) should return Illuminate\\Database\\Eloquent\\Model but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: app/Livewire/Admin/Collections/Form.php
 
@@ -281,6 +311,12 @@ parameters:
 			identifier: property.nonObject
 			count: 1
 			path: app/Livewire/Admin/Collections/Index.php
+
+		-
+			message: '#^Trait App\\Livewire\\Admin\\Concerns\\HasAdminSearch is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: app/Livewire/Admin/Concerns/HasAdminSearch.php
 
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
@@ -313,12 +349,6 @@ parameters:
 			path: app/Livewire/Admin/Dashboard.php
 
 		-
-			message: '#^Cannot access property \$id on mixed\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Livewire/Admin/Discounts/Form.php
-
-		-
 			message: '#^Cannot access property \$value on string\.$#'
 			identifier: property.nonObject
 			count: 3
@@ -328,6 +358,24 @@ parameters:
 			message: '#^Cannot call method format\(\) on string\.$#'
 			identifier: method.nonObject
 			count: 2
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Cannot call method update\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Discounts\\Form\:\:authorizeAndValidate\(\) should return App\\Models\\Store but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Discounts\\Form\:\:persistModel\(\) should return Illuminate\\Database\\Eloquent\\Model but returns mixed\.$#'
+			identifier: return.type
+			count: 1
 			path: app/Livewire/Admin/Discounts/Form.php
 
 		-
@@ -403,14 +451,26 @@ parameters:
 			path: app/Livewire/Admin/Orders/Index.php
 
 		-
-			message: '#^Cannot access property \$id on mixed\.$#'
+			message: '#^Cannot access property \$value on string\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: app/Livewire/Admin/Pages/Form.php
 
 		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
+			message: '#^Cannot call method update\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Pages/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Pages\\Form\:\:authorizeAndValidate\(\) should return App\\Models\\Store but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Livewire/Admin/Pages/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Pages\\Form\:\:persistModel\(\) should return Illuminate\\Database\\Eloquent\\Model but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: app/Livewire/Admin/Pages/Form.php
 
@@ -427,20 +487,26 @@ parameters:
 			path: app/Livewire/Admin/Pages/Index.php
 
 		-
-			message: '#^Cannot access property \$currency on mixed\.$#'
+			message: '#^Cannot access property \$value on string\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: app/Livewire/Admin/Products/Form.php
 
 		-
-			message: '#^Cannot access property \$id on mixed\.$#'
-			identifier: property.nonObject
-			count: 3
+			message: '#^Cannot call method update\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: app/Livewire/Admin/Products/Form.php
 
 		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
+			message: '#^Method App\\Livewire\\Admin\\Products\\Form\:\:authorizeAndValidate\(\) should return App\\Models\\Store but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Products\\Form\:\:persistModel\(\) should return Illuminate\\Database\\Eloquent\\Model but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: app/Livewire/Admin/Products/Form.php
 
@@ -859,9 +925,27 @@ parameters:
 			path: app/Livewire/Storefront/Account/Orders/Show.php
 
 		-
+			message: '#^Parameter \#1 \$code of method App\\Services\\DiscountService\:\:validate\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Cart/Show.php
+
+		-
 			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:getOrCreateForSession\(\) expects App\\Models\\Store, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 4
+			path: app/Livewire/Storefront/Cart/Show.php
+
+		-
+			message: '#^Parameter \#2 \$store of method App\\Services\\DiscountService\:\:validate\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Livewire/Storefront/Cart/Show.php
+
+		-
+			message: '#^Parameter \#2 \$subtotal of method App\\Services\\DiscountService\:\:calculate\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: app/Livewire/Storefront/Cart/Show.php
 
 		-

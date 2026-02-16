@@ -31,7 +31,12 @@ class CartDrawer extends Component
         $store = app('current_store');
         $cartService = app(CartService::class);
         $cart = $cartService->getOrCreateForSession($store);
-        $cartService->updateLineQuantity($cart, $lineId, $quantity);
+
+        try {
+            $cartService->updateLineQuantity($cart, $lineId, $quantity);
+        } catch (\App\Exceptions\InsufficientInventoryException $e) {
+            session()->flash('error', 'Not enough stock available. Only '.$e->available.' items left.');
+        }
     }
 
     public function removeLine(int $lineId): void
