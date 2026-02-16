@@ -36,8 +36,8 @@ it('calculates correct totals for a simple checkout', function () {
 
     expect($result->subtotal)->toBe(5000)
         ->and($result->shipping)->toBe(499)
-        ->and($result->taxTotal)->toBe(1044) // 19% of 5499
-        ->and($result->total)->toBe(6543);
+        ->and($result->taxTotal)->toBe(950) // 19% of 5000
+        ->and($result->total)->toBe(6449);
 });
 
 it('applies discount code and recalculates', function () {

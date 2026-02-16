@@ -9,7 +9,7 @@ beforeEach(function () {
 it('resolves store from hostname for storefront requests', function () {
     $ctx = createStoreContext();
 
-    $response = $this->withHeader('Host', 'test-store.test')
+    $response = $this->withHeader('Host', 'shop.test')
         ->get('/');
 
     $response->assertStatus(200);

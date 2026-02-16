@@ -30,7 +30,7 @@ function createStoreContext(): array
 {
     $org = \App\Models\Organization::factory()->create();
     $store = \App\Models\Store::factory()->for($org)->create();
-    $domain = \App\Models\StoreDomain::factory()->for($store)->create(['domain' => 'test-store.test', 'is_primary' => true]);
+    $domain = \App\Models\StoreDomain::factory()->for($store)->create(['domain' => 'shop.test', 'is_primary' => true]);
     $user = \App\Models\User::factory()->create();
     $store->users()->attach($user, ['role' => \App\Enums\StoreUserRole::Owner->value]);
     $settings = \App\Models\StoreSettings::factory()->create(['store_id' => $store->id]);

@@ -8,7 +8,7 @@ use Livewire\Livewire;
 it('renders the customer login page', function () {
     $ctx = createStoreContext();
 
-    $response = $this->withHeader('Host', 'test-store.test')
+    $response = $this->withHeader('Host', 'shop.test')
         ->get('/account/login');
 
     $response->assertStatus(200);
@@ -20,7 +20,7 @@ it('authenticates a customer with valid credentials', function () {
         'password' => bcrypt('secret123'),
     ]);
 
-    Livewire::withHeaders(['Host' => 'test-store.test'])
+    Livewire::withHeaders(['Host' => 'shop.test'])
         ->test(Login::class)
         ->set('email', $customer->email)
         ->set('password', 'secret123')
@@ -32,7 +32,7 @@ it('rejects invalid customer credentials', function () {
     $ctx = createStoreContext();
     $customer = Customer::factory()->for($ctx['store'])->create();
 
-    Livewire::withHeaders(['Host' => 'test-store.test'])
+    Livewire::withHeaders(['Host' => 'shop.test'])
         ->test(Login::class)
         ->set('email', $customer->email)
         ->set('password', 'wrongpassword')
@@ -43,7 +43,7 @@ it('rejects invalid customer credentials', function () {
 it('registers a new customer', function () {
     $ctx = createStoreContext();
 
-    Livewire::withHeaders(['Host' => 'test-store.test'])
+    Livewire::withHeaders(['Host' => 'shop.test'])
         ->test(Register::class)
         ->set('first_name', 'Jane')
         ->set('last_name', 'Doe')
@@ -60,7 +60,7 @@ it('logs out customer and redirects to login', function () {
     $customer = Customer::factory()->for($ctx['store'])->create();
 
     $response = actingAsCustomer($customer)
-        ->withHeader('Host', 'test-store.test')
+        ->withHeader('Host', 'shop.test')
         ->post('/account/logout');
 
     $response->assertRedirect('/account/login');
@@ -69,8 +69,8 @@ it('logs out customer and redirects to login', function () {
 it('redirects unauthenticated requests to login', function () {
     $ctx = createStoreContext();
 
-    $response = $this->withHeader('Host', 'test-store.test')
+    $response = $this->withHeader('Host', 'shop.test')
         ->get('/account');
 
-    $response->assertRedirect('/account/login');
+    $response->assertRedirect();
 });

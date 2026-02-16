@@ -12,7 +12,7 @@ it('lists saved addresses', function () {
     CustomerAddress::factory()->count(2)->for($customer)->create();
 
     $response = actingAsCustomer($customer)
-        ->withHeader('Host', 'test-store.test')
+        ->withHeader('Host', 'shop.test')
         ->get('/account/addresses');
 
     $response->assertStatus(200);
