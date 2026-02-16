@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Storefront\Products;
 
+use App\Enums\ProductStatus;
+use App\Models\Product;
+use App\Services\CartService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -12,14 +15,86 @@ class Show extends Component
 
     public int $quantity = 1;
 
+    /** @var array<string, int> */
+    public array $selectedOptions = [];
+
+    public ?int $selectedVariantId = null;
+
     public function mount(string $handle): void
     {
         $this->handle = $handle;
+
+        $product = Product::query()
+            ->where('handle', $handle)
+            ->where('status', ProductStatus::Active)
+            ->with(['variants.optionValues.option', 'options.values'])
+            ->first();
+
+        if (! $product) {
+            abort(404);
+        }
+
+        $defaultVariant = $product->variants->firstWhere('is_default', true) ?? $product->variants->first();
+        if ($defaultVariant) {
+            $this->selectedVariantId = $defaultVariant->id;
+            foreach ($defaultVariant->optionValues as $optionValue) {
+                $this->selectedOptions[$optionValue->product_option_id] = $optionValue->id;
+            }
+        }
+    }
+
+    public function updatedSelectedOptions(): void
+    {
+        $product = Product::query()
+            ->where('handle', $this->handle)
+            ->where('status', ProductStatus::Active)
+            ->with('variants.optionValues')
+            ->first();
+
+        if (! $product) {
+            return;
+        }
+
+        $selectedValueIds = collect($this->selectedOptions)->values()->filter()->sort()->values();
+
+        foreach ($product->variants as $variant) {
+            $variantValueIds = $variant->optionValues->pluck('id')->sort()->values();
+            if ($variantValueIds->toArray() === $selectedValueIds->toArray()) {
+                $this->selectedVariantId = $variant->id;
+
+                return;
+            }
+        }
     }
 
     public function addToCart(): void
     {
-        // Will be implemented in Phase 4
+        $product = Product::query()
+            ->where('handle', $this->handle)
+            ->where('status', ProductStatus::Active)
+            ->first();
+
+        if (! $product) {
+            return;
+        }
+
+        $variantId = $this->selectedVariantId;
+        if (! $variantId) {
+            $variant = $product->variants()->where('is_default', true)->first() ?? $product->variants()->first();
+            $variantId = $variant?->id;
+        }
+
+        if (! $variantId) {
+            return;
+        }
+
+        $store = app('current_store');
+        $cartService = app(CartService::class);
+        $cart = $cartService->getOrCreateForSession($store);
+        $cartService->addLine($cart, $variantId, $this->quantity);
+
+        session()->flash('success', 'Added to cart!');
+        $this->dispatch('cart-updated');
     }
 
     public function incrementQuantity(): void
@@ -36,8 +111,23 @@ class Show extends Component
 
     public function render(): mixed
     {
+        $product = Product::query()
+            ->where('handle', $this->handle)
+            ->where('status', ProductStatus::Active)
+            ->with(['variants.optionValues.option', 'options.values', 'media'])
+            ->first();
+
+        if (! $product) {
+            abort(404);
+        }
+
+        $selectedVariant = $this->selectedVariantId
+            ? $product->variants->firstWhere('id', $this->selectedVariantId)
+            : ($product->variants->firstWhere('is_default', true) ?? $product->variants->first());
+
         return view('livewire.storefront.products.show', [
-            'handle' => $this->handle,
+            'product' => $product,
+            'selectedVariant' => $selectedVariant,
         ]);
     }
 }

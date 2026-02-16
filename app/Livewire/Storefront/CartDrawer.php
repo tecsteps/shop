@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront;
 
+use App\Services\CartService;
 use Livewire\Component;
 
 class CartDrawer extends Component
@@ -25,8 +26,34 @@ class CartDrawer extends Component
         $this->open = false;
     }
 
+    public function updateQuantity(int $lineId, int $quantity): void
+    {
+        $store = app('current_store');
+        $cartService = app(CartService::class);
+        $cart = $cartService->getOrCreateForSession($store);
+        $cartService->updateLineQuantity($cart, $lineId, $quantity);
+    }
+
+    public function removeLine(int $lineId): void
+    {
+        $store = app('current_store');
+        $cartService = app(CartService::class);
+        $cart = $cartService->getOrCreateForSession($store);
+        $cartService->removeLine($cart, $lineId);
+    }
+
     public function render(): mixed
     {
-        return view('livewire.storefront.cart-drawer');
+        $cart = null;
+        if (app()->bound('current_store')) {
+            $store = app('current_store');
+            $cartService = app(CartService::class);
+            $cart = $cartService->getOrCreateForSession($store);
+            $cart->load('lines.variant.product');
+        }
+
+        return view('livewire.storefront.cart-drawer', [
+            'cart' => $cart,
+        ]);
     }
 }

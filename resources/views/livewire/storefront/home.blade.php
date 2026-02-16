@@ -10,40 +10,35 @@
         </div>
     </section>
 
+    {{-- Featured Products --}}
+    @if ($featuredProducts->isNotEmpty())
+        <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white lg:text-3xl">Featured Products</h2>
+            <div class="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
+                @foreach ($featuredProducts as $product)
+                    <x-storefront.product-card :product="$product" />
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     {{-- Featured Collections --}}
-    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white lg:text-3xl">Shop by Collection</h2>
-        <div class="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            <div class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute bottom-4 left-4">
-                    <p class="text-lg font-semibold text-white">New Arrivals</p>
-                    <p class="mt-1 text-sm text-white/80 underline">Shop now</p>
-                </div>
+    @if ($collections->isNotEmpty())
+        <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white lg:text-3xl">Shop by Collection</h2>
+            <div class="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
+                @foreach ($collections as $collection)
+                    <a href="{{ route('storefront.collections.show', $collection->handle) }}" class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <p class="text-lg font-semibold text-white">{{ $collection->title }}</p>
+                            <p class="mt-1 text-sm text-white/80 underline">Shop now</p>
+                        </div>
+                    </a>
+                @endforeach
             </div>
-            <div class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute bottom-4 left-4">
-                    <p class="text-lg font-semibold text-white">Best Sellers</p>
-                    <p class="mt-1 text-sm text-white/80 underline">Shop now</p>
-                </div>
-            </div>
-            <div class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute bottom-4 left-4">
-                    <p class="text-lg font-semibold text-white">Sale</p>
-                    <p class="mt-1 text-sm text-white/80 underline">Shop now</p>
-                </div>
-            </div>
-            <div class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute bottom-4 left-4">
-                    <p class="text-lg font-semibold text-white">Accessories</p>
-                    <p class="mt-1 text-sm text-white/80 underline">Shop now</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     {{-- Newsletter --}}
     <section class="bg-gray-100 px-4 py-16 dark:bg-gray-900">

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Storefront\Collections;
 
+use App\Enums\CollectionStatus;
+use App\Models\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -10,6 +12,14 @@ class Index extends Component
 {
     public function render(): mixed
     {
-        return view('livewire.storefront.collections.index');
+        $collections = Collection::query()
+            ->where('status', CollectionStatus::Active)
+            ->withCount('products')
+            ->orderBy('title')
+            ->get();
+
+        return view('livewire.storefront.collections.index', [
+            'collections' => $collections,
+        ]);
     }
 }
