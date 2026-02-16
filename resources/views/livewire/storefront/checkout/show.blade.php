@@ -114,12 +114,23 @@
                         <span>Subtotal</span>
                         <span>${{ number_format($checkout->cart->lines->sum('total') / 100, 2) }}</span>
                     </div>
+                    @if ($checkout->discount_amount > 0)
+                        <div class="mt-1 flex justify-between text-sm text-green-600 dark:text-green-400">
+                            <span>Discount ({{ $checkout->discount_code }})</span>
+                            <span>-${{ number_format($checkout->discount_amount / 100, 2) }}</span>
+                        </div>
+                    @endif
                     @if ($checkout->shipping_amount > 0)
                         <div class="mt-1 flex justify-between text-sm text-gray-600 dark:text-gray-400">
                             <span>Shipping</span>
                             <span>${{ number_format($checkout->shipping_amount / 100, 2) }}</span>
                         </div>
                     @endif
+                    @php $checkoutTotal = $checkout->cart->lines->sum('total') - ($checkout->discount_amount ?? 0) + ($checkout->shipping_amount ?? 0); @endphp
+                    <div class="mt-2 flex justify-between text-sm font-bold text-gray-900 dark:text-white">
+                        <span>Total</span>
+                        <span>${{ number_format(max(0, $checkoutTotal) / 100, 2) }}</span>
+                    </div>
                 </div>
             @endif
         </div>
