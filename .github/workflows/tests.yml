@@ -50,6 +50,12 @@ jobs:
       - name: Copy Environment File
         run: cp .env.example .env
 
+      - name: Configure Test Environment
+        run: |
+          sed -i 's/CACHE_STORE=database/CACHE_STORE=array/' .env
+          sed -i 's/SESSION_DRIVER=database/SESSION_DRIVER=array/' .env
+          sed -i 's/QUEUE_CONNECTION=database/QUEUE_CONNECTION=sync/' .env
+
       - name: Generate Application Key
         run: php artisan key:generate
 
