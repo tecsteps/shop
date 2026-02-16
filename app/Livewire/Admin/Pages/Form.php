@@ -48,9 +48,7 @@ class Form extends Component
             'store_id' => $store->id,
             'title' => $this->title,
             'handle' => Str::slug($this->title),
-            'content' => $this->content
-                ? strip_tags($this->content, '<p><br><strong><em><ul><ol><li><h2><h3><h4><a><img>')
-                : null,
+            'content' => sanitize_html($this->content),
             'status' => $this->status,
             'published_at' => $this->status === 'published' ? now() : null,
         ];

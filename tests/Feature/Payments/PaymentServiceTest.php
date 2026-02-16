@@ -3,12 +3,7 @@
 use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
 use App\Enums\FinancialStatus;
-use App\Models\Cart;
-use App\Models\CartLine;
 use App\Models\Checkout;
-use App\Models\InventoryItem;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Services\OrderService;
 use App\Services\Payments\MockPaymentProvider;
 
@@ -17,11 +12,7 @@ beforeEach(function () {
 });
 
 it('processes credit card payment and creates order as paid', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 1, 100);
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,
@@ -38,11 +29,7 @@ it('processes credit card payment and creates order as paid', function () {
 });
 
 it('processes bank transfer and creates order as pending', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 1, 100);
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,
@@ -63,11 +50,7 @@ it('resolves MockPaymentProvider from container', function () {
 });
 
 it('creates a payment record with correct method', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 1, 100);
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,

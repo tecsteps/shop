@@ -3,13 +3,8 @@
 use App\Enums\CartStatus;
 use App\Enums\CheckoutStatus;
 use App\Events\OrderCreated;
-use App\Models\Cart;
-use App\Models\CartLine;
 use App\Models\Checkout;
-use App\Models\InventoryItem;
 use App\Models\Order;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Event;
 
@@ -18,11 +13,7 @@ beforeEach(function () {
 });
 
 it('creates an order from a completed checkout', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 2, 'unit_price' => 2500, 'subtotal' => 5000, 'total' => 5000]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 2, 100);
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,
@@ -56,11 +47,14 @@ it('generates sequential order numbers per store', function () {
 });
 
 it('creates order lines with snapshots', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create(['title' => 'My Product']);
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500, 'sku' => 'SKU-001']);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct(
+        $this->ctx['store'],
+        2500,
+        1,
+        100,
+        ['title' => 'My Product'],
+        ['sku' => 'SKU-001'],
+    );
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,
@@ -78,11 +72,7 @@ it('creates order lines with snapshots', function () {
 });
 
 it('marks cart as converted', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 1, 100);
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,
@@ -98,11 +88,7 @@ it('marks cart as converted', function () {
 });
 
 it('sets email from checkout on the order', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    InventoryItem::factory()->create(['store_id' => $this->ctx['store']->id, 'variant_id' => $variant->id, 'quantity_on_hand' => 100]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 1, 100);
 
     $checkout = Checkout::factory()->create([
         'store_id' => $this->ctx['store']->id,

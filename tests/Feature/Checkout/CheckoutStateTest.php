@@ -2,10 +2,6 @@
 
 use App\Enums\CheckoutStatus;
 use App\Exceptions\InvalidCheckoutTransitionException;
-use App\Models\Cart;
-use App\Models\CartLine;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Services\CheckoutService;
@@ -16,10 +12,7 @@ beforeEach(function () {
 });
 
 it('transitions from started to addressed with valid address', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store']);
 
     $checkout = $this->checkoutService->createFromCart($cart);
     $checkout = $this->checkoutService->setAddress($checkout, [
@@ -38,10 +31,7 @@ it('transitions from started to addressed with valid address', function () {
 });
 
 it('transitions from addressed to shipping_selected', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store']);
 
     $checkout = $this->checkoutService->createFromCart($cart);
     $checkout = $this->checkoutService->setAddress($checkout, [
@@ -58,10 +48,7 @@ it('transitions from addressed to shipping_selected', function () {
 });
 
 it('rejects invalid state transitions', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store']);
 
     $checkout = $this->checkoutService->createFromCart($cart);
 

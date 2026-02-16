@@ -4,7 +4,6 @@ use App\Enums\CheckoutStatus;
 use App\Enums\FinancialStatus;
 use App\Enums\PaymentStatus;
 use App\Models\Cart;
-use App\Models\CartLine;
 use App\Models\Checkout;
 use App\Models\Collection;
 use App\Models\Order;
@@ -80,16 +79,7 @@ it('generates order numbers atomically using lock', function () {
 it('reuses existing active checkout for the same cart', function () {
     app()->instance('current_store', $this->ctx['store']);
 
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 1000]);
-    CartLine::factory()->for($cart)->create([
-        'variant_id' => $variant->id,
-        'quantity' => 1,
-        'unit_price' => 1000,
-        'subtotal' => 1000,
-        'total' => 1000,
-    ]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 1000);
 
     $checkoutService = app(CheckoutService::class);
     $checkout = $checkoutService->createFromCart($cart);

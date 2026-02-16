@@ -1,10 +1,6 @@
 <?php
 
 use App\Enums\CheckoutStatus;
-use App\Models\Cart;
-use App\Models\CartLine;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Services\CheckoutService;
 
 beforeEach(function () {
@@ -13,10 +9,7 @@ beforeEach(function () {
 });
 
 it('creates a checkout from a cart', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 2, 'unit_price' => 2500, 'subtotal' => 5000, 'total' => 5000]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store'], 2500, 2);
 
     $checkout = $this->checkoutService->createFromCart($cart);
 
@@ -25,10 +18,7 @@ it('creates a checkout from a cart', function () {
 });
 
 it('prevents duplicate orders from same checkout', function () {
-    $cart = Cart::factory()->for($this->ctx['store'])->create();
-    $product = Product::factory()->active()->for($this->ctx['store'])->create();
-    $variant = ProductVariant::factory()->for($product)->create(['price_amount' => 2500]);
-    CartLine::factory()->for($cart)->create(['variant_id' => $variant->id, 'quantity' => 1, 'unit_price' => 2500, 'subtotal' => 2500, 'total' => 2500]);
+    ['cart' => $cart] = createCartWithProduct($this->ctx['store']);
 
     $checkout = $this->checkoutService->createFromCart($cart);
 

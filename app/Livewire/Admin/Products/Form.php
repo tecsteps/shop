@@ -146,9 +146,7 @@ class Form extends Component
             'store_id' => $store->id,
             'title' => $this->title,
             'handle' => Str::slug($this->title),
-            'description_html' => $this->description_html
-                ? strip_tags($this->description_html, '<p><br><strong><em><ul><ol><li><h2><h3><h4><a><img>')
-                : null,
+            'description_html' => sanitize_html($this->description_html),
             'status' => $this->status,
             'vendor' => $this->vendor ?: null,
             'product_type' => $this->product_type ?: null,
