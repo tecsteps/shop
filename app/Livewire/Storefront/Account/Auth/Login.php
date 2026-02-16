@@ -40,7 +40,7 @@ class Login extends Component
         RateLimiter::clear($throttleKey);
         session()->regenerate();
 
-        $this->redirect('/');
+        $this->redirect(route('storefront.account'));
     }
 
     public function render(): mixed
