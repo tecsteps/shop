@@ -32,6 +32,8 @@ Route::middleware('store.resolve')->group(function (): void {
     Route::get('/cart', Storefront\Cart\Show::class)->name('storefront.cart');
     Route::get('/search', Storefront\Search\Index::class)->name('storefront.search');
     Route::get('/pages/{handle}', Storefront\Pages\Show::class)->name('storefront.pages.show');
+    Route::get('/checkout', Storefront\Checkout\Show::class)->name('storefront.checkout');
+    Route::get('/checkout/confirmation', Storefront\Checkout\Confirmation::class)->name('storefront.checkout.confirmation');
     Route::get('/account/login', Storefront\Account\Auth\Login::class)->name('storefront.login');
     Route::get('/account/register', Storefront\Account\Auth\Register::class)->name('storefront.register');
 });
