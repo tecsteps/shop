@@ -1,9 +1,5 @@
 <?php
 
-beforeEach(function () {
-    //
-});
-
 it('resolves store from hostname for storefront requests', function () {
     $ctx = createStoreContext();
 

@@ -21,7 +21,7 @@ it('blocks unauthorized user from editing a product', function () {
     $product = Product::factory()->for($this->ctx['store'])->create();
 
     $response = test()->actingAs($this->unauthorizedUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/products/{$product->id}/edit");
 
     $response->assertForbidden();
@@ -31,7 +31,7 @@ it('allows store owner to edit a product', function () {
     $product = Product::factory()->for($this->ctx['store'])->create();
 
     $response = actingAsAdmin($this->ctx['user'])
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/products/{$product->id}/edit");
 
     $response->assertStatus(200);
@@ -41,7 +41,7 @@ it('blocks unauthorized user from viewing order details', function () {
     $order = Order::factory()->for($this->ctx['store'])->create();
 
     $response = test()->actingAs($this->unauthorizedUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/orders/{$order->id}");
 
     $response->assertForbidden();
@@ -51,7 +51,7 @@ it('blocks unauthorized user from editing a discount', function () {
     $discount = Discount::factory()->for($this->ctx['store'])->create();
 
     $response = test()->actingAs($this->unauthorizedUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/discounts/{$discount->id}/edit");
 
     $response->assertForbidden();
@@ -61,7 +61,7 @@ it('blocks unauthorized user from editing a collection', function () {
     $collection = Collection::factory()->for($this->ctx['store'])->create();
 
     $response = test()->actingAs($this->unauthorizedUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/collections/{$collection->id}/edit");
 
     $response->assertForbidden();
@@ -71,7 +71,7 @@ it('blocks unauthorized user from viewing customer details', function () {
     $customer = Customer::factory()->for($this->ctx['store'])->create();
 
     $response = test()->actingAs($this->unauthorizedUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/customers/{$customer->id}");
 
     $response->assertForbidden();
@@ -81,7 +81,7 @@ it('blocks unauthorized user from editing a page', function () {
     $page = Page::factory()->create(['store_id' => $this->ctx['store']->id]);
 
     $response = test()->actingAs($this->unauthorizedUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get("/admin/pages/{$page->id}/edit");
 
     $response->assertForbidden();
@@ -94,7 +94,7 @@ it('allows staff role to view products', function () {
     Product::factory()->for($this->ctx['store'])->create();
 
     $response = test()->actingAs($staffUser)
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
+        ->withHeader('Host', 'shop.test')
         ->get('/admin/products');
 
     $response->assertStatus(200);

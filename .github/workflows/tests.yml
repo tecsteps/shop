@@ -52,6 +52,7 @@ jobs:
 
       - name: Configure Test Environment
         run: |
+          sed -i 's|APP_URL=http://localhost|APP_URL=http://shop.test|' .env
           sed -i 's/CACHE_STORE=database/CACHE_STORE=array/' .env
           sed -i 's/SESSION_DRIVER=database/SESSION_DRIVER=array/' .env
           sed -i 's/QUEUE_CONNECTION=database/QUEUE_CONNECTION=sync/' .env
