@@ -2,11 +2,9 @@
 
 use App\Models\Customer;
 use App\Models\Order;
-use Illuminate\Support\Facades\Cache;
 
 beforeEach(function () {
     $this->ctx = createStoreContext();
-    Cache::flush();
 });
 
 it('renders the customer dashboard', function () {

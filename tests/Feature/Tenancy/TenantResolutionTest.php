@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Cache;
-
 beforeEach(function () {
-    Cache::flush();
+    //
 });
 
 it('resolves store from hostname for storefront requests', function () {
