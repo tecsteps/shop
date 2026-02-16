@@ -5,9 +5,7 @@ beforeEach(function () {
 });
 
 it('renders the admin dashboard', function () {
-    $response = actingAsAdmin($this->ctx['user'])
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
-        ->get('/admin');
+    $response = adminRequest($this->ctx)->get('/admin');
 
     $response->assertStatus(200);
 });

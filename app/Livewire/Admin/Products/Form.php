@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Products;
 
+use App\Livewire\Admin\Concerns\HasStoreForm;
 use App\Models\Product;
 use App\Models\ProductOptionValue;
 use Illuminate\Support\Str;
@@ -12,6 +13,7 @@ use Livewire\WithFileUploads;
 #[Layout('components.admin.layout', ['title' => 'Product'])]
 class Form extends Component
 {
+    use HasStoreForm;
     use WithFileUploads;
 
     public ?Product $product = null;
@@ -36,6 +38,16 @@ class Form extends Component
 
     /** @var array<int, \Livewire\Features\SupportFileUploads\TemporaryUploadedFile> */
     public array $newMedia = [];
+
+    protected function modelProperty(): string
+    {
+        return 'product';
+    }
+
+    protected function modelClass(): string
+    {
+        return Product::class;
+    }
 
     public function mount(?Product $product = null): void
     {
@@ -127,20 +139,12 @@ class Form extends Component
 
     public function save(): void
     {
-        $this->validate([
+        $store = $this->authorizeAndValidate([
             'title' => ['required', 'string', 'max:255'],
             'status' => ['required', 'in:draft,active,archived'],
             'variants' => ['required', 'array', 'min:1'],
             'variants.*.price' => ['required', 'numeric', 'min:0'],
         ]);
-
-        if ($this->product) {
-            $this->authorize('update', $this->product);
-        } else {
-            $this->authorize('create', Product::class);
-        }
-
-        $store = app('current_store');
 
         $productData = [
             'store_id' => $store->id,

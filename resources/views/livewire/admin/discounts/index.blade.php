@@ -4,9 +4,8 @@
         <flux:button variant="primary" href="{{ route('admin.discounts.create') }}">Create discount</flux:button>
     </div>
 
-    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
-            <thead class="bg-gray-50 dark:bg-zinc-800/50">
+    <x-admin.data-table>
+        <x-slot:head>
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Code</th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Type</th>
@@ -14,8 +13,8 @@
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Usage</th>
                 </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-zinc-700">
+        </x-slot:head>
+        <x-slot:body>
                 @forelse($discounts as $discount)
                     <tr class="hover:bg-gray-50 dark:hover:bg-zinc-800/50">
                         <td class="px-6 py-4 text-sm font-medium"><a href="{{ route('admin.discounts.edit', $discount) }}" class="text-gray-900 hover:underline dark:text-white">{{ $discount->code }}</a></td>
@@ -35,8 +34,7 @@
                 @empty
                     <tr><td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">No discounts yet.</td></tr>
                 @endforelse
-            </tbody>
-        </table>
-    </div>
+        </x-slot:body>
+    </x-admin.data-table>
     <div class="mt-4">{{ $discounts->links() }}</div>
 </div>

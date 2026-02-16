@@ -2,7 +2,7 @@
     <form wire:submit="save" class="space-y-6">
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div class="space-y-6 lg:col-span-2">
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <flux:input wire:model="code" label="Discount code" required />
                         <flux:input wire:model="title" label="Title" />
@@ -27,17 +27,17 @@
                         <flux:input wire:model="usage_limit" label="Usage limit" type="number" />
                         <flux:input wire:model="minimum_purchase" label="Minimum purchase ($)" type="number" step="0.01" />
                     </div>
-                </div>
+                </x-admin.card>
             </div>
             <div class="space-y-6">
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <flux:select wire:model="status" label="Status">
                         <option value="draft">Draft</option>
                         <option value="active">Active</option>
                         <option value="expired">Expired</option>
                         <option value="disabled">Disabled</option>
                     </flux:select>
-                </div>
+                </x-admin.card>
                 <flux:button type="submit" variant="primary" class="w-full">{{ $discount ? 'Update' : 'Create' }} discount</flux:button>
             </div>
         </div>

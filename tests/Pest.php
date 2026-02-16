@@ -44,6 +44,17 @@ function actingAsAdmin(\App\Models\User $user)
     return test()->actingAs($user);
 }
 
+/**
+ * Act as admin with store session pre-configured.
+ *
+ * @param  array<string, mixed>  $ctx  The store context from createStoreContext()
+ */
+function adminRequest(array $ctx): \Illuminate\Testing\TestResponse|\Tests\TestCase
+{
+    return actingAsAdmin($ctx['user'])
+        ->withSession(['current_store_id' => $ctx['store']->id]);
+}
+
 function actingAsCustomer(\App\Models\Customer $customer)
 {
     return test()->actingAs($customer, 'customer');

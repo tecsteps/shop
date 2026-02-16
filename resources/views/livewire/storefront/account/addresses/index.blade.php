@@ -8,7 +8,7 @@
     </div>
 
     @if($showForm)
-        <div class="mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+        <x-admin.card class="mb-6">
             <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">{{ $editingId ? 'Edit' : 'New' }} Address</h3>
             <form wire:submit="save" class="space-y-4">
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -31,12 +31,12 @@
                     <flux:button wire:click="$set('showForm', false)" variant="ghost">Cancel</flux:button>
                 </div>
             </form>
-        </div>
+        </x-admin.card>
     @endif
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         @forelse($addresses as $address)
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 @if($address->is_default)
                     <flux:badge size="sm" variant="primary" class="mb-2">Default</flux:badge>
                 @endif
@@ -54,7 +54,7 @@
                     @endunless
                     <flux:button wire:click="delete({{ $address->id }})" variant="danger" size="sm">Delete</flux:button>
                 </div>
-            </div>
+            </x-admin.card>
         @empty
             <p class="col-span-2 py-8 text-center text-sm text-gray-500 dark:text-gray-400">No saved addresses.</p>
         @endforelse

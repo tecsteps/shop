@@ -6,7 +6,7 @@
 
     <div class="space-y-4">
         @foreach($menus as $menu)
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <div class="mb-3 flex items-center justify-between">
                     <h3 class="font-semibold text-gray-900 dark:text-white">{{ $menu->name }}</h3>
                     <div class="flex gap-2">
@@ -23,7 +23,7 @@
                     @endforeach
                 </ul>
                 <flux:button wire:click="openItemModal({{ $menu->id }})" variant="ghost" size="sm" class="mt-2">Add item</flux:button>
-            </div>
+            </x-admin.card>
         @endforeach
     </div>
 

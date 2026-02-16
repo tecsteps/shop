@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Pages;
 
+use App\Livewire\Admin\Concerns\HasStoreForm;
 use App\Models\Page;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
@@ -10,6 +11,8 @@ use Livewire\Component;
 #[Layout('components.admin.layout', ['title' => 'Page'])]
 class Form extends Component
 {
+    use HasStoreForm;
+
     public ?Page $page = null;
 
     public string $title = '';
@@ -17,6 +20,16 @@ class Form extends Component
     public string $content = '';
 
     public string $status = 'draft';
+
+    protected function modelProperty(): string
+    {
+        return 'page';
+    }
+
+    protected function modelClass(): string
+    {
+        return Page::class;
+    }
 
     public function mount(?Page $page = null): void
     {
@@ -31,18 +44,10 @@ class Form extends Component
 
     public function save(): void
     {
-        if ($this->page) {
-            $this->authorize('update', $this->page);
-        } else {
-            $this->authorize('create', Page::class);
-        }
-
-        $this->validate([
+        $store = $this->authorizeAndValidate([
             'title' => ['required', 'string', 'max:255'],
             'status' => ['required', 'in:draft,published,archived'],
         ]);
-
-        $store = app('current_store');
 
         $data = [
             'store_id' => $store->id,
@@ -53,14 +58,7 @@ class Form extends Component
             'published_at' => $this->status === 'published' ? now() : null,
         ];
 
-        if ($this->page) {
-            $this->page->update($data);
-        } else {
-            Page::query()->create($data);
-        }
-
-        session()->flash('success', $this->page ? 'Page updated.' : 'Page created.');
-        $this->redirect(route('admin.pages.index'));
+        $this->persistModel($data, 'admin.pages.index');
     }
 
     public function render(): mixed

@@ -9,10 +9,8 @@
         @endforeach
     </div>
 
-    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
-                <thead class="bg-gray-50 dark:bg-zinc-800/50">
+    <x-admin.data-table>
+        <x-slot:head>
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Order</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Date</th>
@@ -21,8 +19,8 @@
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Fulfillment</th>
                         <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Total</th>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-zinc-700">
+        </x-slot:head>
+        <x-slot:body>
                     @forelse($orders as $order)
                         <tr class="cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800/50" wire:click="$dispatch('navigate', { url: '{{ route('admin.orders.show', $order) }}' })" onclick="window.location='{{ route('admin.orders.show', $order) }}'">
                             <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">#{{ $order->order_number }}</td>
@@ -43,9 +41,7 @@
                     @empty
                         <tr><td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">No orders found.</td></tr>
                     @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
+        </x-slot:body>
+    </x-admin.data-table>
     <div class="mt-4">{{ $orders->links() }}</div>
 </div>

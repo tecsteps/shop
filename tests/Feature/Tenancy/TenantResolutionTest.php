@@ -19,9 +19,7 @@ it('returns 404 for unknown hostname', function () {
 it('resolves store from session for admin requests', function () {
     $ctx = createStoreContext();
 
-    $response = actingAsAdmin($ctx['user'])
-        ->withSession(['current_store_id' => $ctx['store']->id])
-        ->get('/admin');
+    $response = adminRequest($ctx)->get('/admin');
 
     $response->assertStatus(200);
 });

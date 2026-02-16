@@ -57,7 +57,7 @@
 
     <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
         @if($order->shipping_address_json)
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">Shipping Address</h3>
                 @php $addr = $order->shipping_address_json; @endphp
                 <div class="text-sm text-gray-600 dark:text-gray-400">
@@ -66,17 +66,17 @@
                     <p>{{ $addr['city'] ?? '' }}, {{ $addr['province'] ?? '' }} {{ $addr['zip'] ?? '' }}</p>
                     <p>{{ $addr['country'] ?? '' }}</p>
                 </div>
-            </div>
+            </x-admin.card>
         @endif
-        <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+        <x-admin.card>
             <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">Payment</h3>
             <p class="text-sm text-gray-600 dark:text-gray-400">{{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}</p>
-        </div>
+        </x-admin.card>
     </div>
 
     {{-- Fulfillments --}}
     @if($order->fulfillments->count())
-        <div class="mt-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+        <x-admin.card class="mt-6">
             <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Shipping Updates</h3>
             @foreach($order->fulfillments as $fulfillment)
                 <div class="mb-3 rounded border border-gray-100 p-3 dark:border-zinc-700">
@@ -89,6 +89,6 @@
                     @endif
                 </div>
             @endforeach
-        </div>
+        </x-admin.card>
     @endif
 </div>

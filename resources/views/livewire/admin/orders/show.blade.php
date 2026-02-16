@@ -74,7 +74,7 @@
 
             {{-- Fulfillments --}}
             @if($order->fulfillments->count())
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Fulfillments</h3>
                     @foreach($order->fulfillments as $fulfillment)
                         <div class="mb-4 rounded border border-gray-100 p-4 dark:border-zinc-700">
@@ -100,12 +100,12 @@
                             </ul>
                         </div>
                     @endforeach
-                </div>
+                </x-admin.card>
             @endif
 
             {{-- Refunds --}}
             @if($order->refunds->count())
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Refunds</h3>
                     @foreach($order->refunds as $refund)
                         <div class="mb-2 flex items-center justify-between rounded border border-gray-100 p-3 dark:border-zinc-700">
@@ -116,11 +116,11 @@
                             <flux:badge size="sm">{{ ucfirst($refund->status->value) }}</flux:badge>
                         </div>
                     @endforeach
-                </div>
+                </x-admin.card>
             @endif
 
             {{-- Timeline --}}
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Timeline</h3>
                 <div class="relative space-y-4">
                     <div class="absolute bottom-0 left-3 top-0 w-px bg-gray-200 dark:bg-zinc-700"></div>
@@ -161,23 +161,23 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
+            </x-admin.card>
         </div>
 
         {{-- Sidebar --}}
         <div class="space-y-6">
             {{-- Customer --}}
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Customer</h3>
                 <p class="text-sm text-gray-700 dark:text-gray-300">{{ $order->email }}</p>
                 @if($order->customer)
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $order->customer->first_name }} {{ $order->customer->last_name }}</p>
                 @endif
-            </div>
+            </x-admin.card>
 
             {{-- Shipping address --}}
             @if($order->shipping_address_json)
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Shipping address</h3>
                     @php $addr = $order->shipping_address_json; @endphp
                     <div class="text-sm text-gray-600 dark:text-gray-400">
@@ -187,12 +187,12 @@
                         <p>{{ $addr['city'] ?? '' }}, {{ $addr['province'] ?? '' }} {{ $addr['zip'] ?? '' }}</p>
                         <p>{{ $addr['country'] ?? '' }}</p>
                     </div>
-                </div>
+                </x-admin.card>
             @endif
 
             {{-- Billing address --}}
             @if($order->billing_address_json)
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Billing address</h3>
                     @php $baddr = $order->billing_address_json; @endphp
                     <div class="text-sm text-gray-600 dark:text-gray-400">
@@ -201,11 +201,11 @@
                         <p>{{ $baddr['city'] ?? '' }}, {{ $baddr['province'] ?? '' }} {{ $baddr['zip'] ?? '' }}</p>
                         <p>{{ $baddr['country'] ?? '' }}</p>
                     </div>
-                </div>
+                </x-admin.card>
             @endif
 
             {{-- Payment info --}}
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Payment</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Method: {{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}</p>
                 @foreach($order->payments as $payment)
@@ -216,7 +216,7 @@
                         @endif
                     </div>
                 @endforeach
-            </div>
+            </x-admin.card>
         </div>
     </div>
 

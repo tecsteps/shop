@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Collections;
 
+use App\Livewire\Admin\Concerns\HasStoreForm;
 use App\Models\Collection;
 use App\Models\Product;
 use Illuminate\Support\Str;
@@ -11,6 +12,8 @@ use Livewire\Component;
 #[Layout('components.admin.layout', ['title' => 'Collection'])]
 class Form extends Component
 {
+    use HasStoreForm;
+
     public ?Collection $collection = null;
 
     public string $title = '';
@@ -23,6 +26,16 @@ class Form extends Component
 
     /** @var array<int> */
     public array $selectedProducts = [];
+
+    protected function modelProperty(): string
+    {
+        return 'collection';
+    }
+
+    protected function modelClass(): string
+    {
+        return Collection::class;
+    }
 
     public function mount(?Collection $collection = null): void
     {
@@ -51,18 +64,10 @@ class Form extends Component
 
     public function save(): void
     {
-        if ($this->collection) {
-            $this->authorize('update', $this->collection);
-        } else {
-            $this->authorize('create', Collection::class);
-        }
-
-        $this->validate([
+        $store = $this->authorizeAndValidate([
             'title' => ['required', 'string', 'max:255'],
             'status' => ['required', 'in:draft,active,archived'],
         ]);
-
-        $store = app('current_store');
 
         $data = [
             'store_id' => $store->id,
@@ -73,21 +78,13 @@ class Form extends Component
             'type' => 'manual',
         ];
 
-        if ($this->collection) {
-            $this->collection->update($data);
-            $collection = $this->collection;
-        } else {
-            $collection = Collection::query()->create($data);
-        }
+        $collection = $this->persistModel($data, 'admin.collections.index');
 
         $syncData = [];
         foreach ($this->selectedProducts as $pos => $productId) {
             $syncData[$productId] = ['position' => $pos];
         }
         $collection->products()->sync($syncData);
-
-        session()->flash('success', $this->collection ? 'Collection updated.' : 'Collection created.');
-        $this->redirect(route('admin.collections.index'));
     }
 
     public function render(): mixed

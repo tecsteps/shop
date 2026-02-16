@@ -9,9 +9,7 @@ beforeEach(function () {
 it('lists orders page', function () {
     Order::factory()->count(3)->for($this->ctx['store'])->create();
 
-    $response = actingAsAdmin($this->ctx['user'])
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
-        ->get('/admin/orders');
+    $response = adminRequest($this->ctx)->get('/admin/orders');
 
     $response->assertStatus(200);
 });
@@ -19,9 +17,7 @@ it('lists orders page', function () {
 it('shows order detail page', function () {
     $order = Order::factory()->for($this->ctx['store'])->create();
 
-    $response = actingAsAdmin($this->ctx['user'])
-        ->withSession(['current_store_id' => $this->ctx['store']->id])
-        ->get("/admin/orders/{$order->id}");
+    $response = adminRequest($this->ctx)->get("/admin/orders/{$order->id}");
 
     $response->assertStatus(200);
 });

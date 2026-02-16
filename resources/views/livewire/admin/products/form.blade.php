@@ -3,15 +3,15 @@
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {{-- Main column --}}
             <div class="space-y-6 lg:col-span-2">
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <flux:input wire:model="title" label="Title" required />
                     <div class="mt-4">
                         <flux:textarea wire:model="description_html" label="Description" rows="5" />
                     </div>
-                </div>
+                </x-admin.card>
 
                 {{-- Media --}}
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Media</h3>
                     @if($product && $product->media->count())
                         <div class="mb-4 flex flex-wrap gap-2">
@@ -22,10 +22,10 @@
                     @endif
                     <input type="file" wire:model="newMedia" multiple accept="image/*"
                            class="block w-full text-sm text-gray-500 file:mr-4 file:rounded file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100">
-                </div>
+                </x-admin.card>
 
                 {{-- Options --}}
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <div class="mb-4 flex items-center justify-between">
                         <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Options</h3>
                         <flux:button wire:click="addOption" variant="ghost" size="sm">Add option</flux:button>
@@ -40,10 +40,10 @@
                     @if(count($options) > 0)
                         <flux:button wire:click="generateVariants" variant="ghost" size="sm" class="mt-2">Generate variants</flux:button>
                     @endif
-                </div>
+                </x-admin.card>
 
                 {{-- Variants --}}
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Variants</h3>
                     <div class="space-y-4">
                         @foreach($variants as $i => $variant)
@@ -64,24 +64,24 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
+                </x-admin.card>
             </div>
 
             {{-- Sidebar --}}
             <div class="space-y-6">
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <flux:select wire:model="status" label="Status">
                         <option value="draft">Draft</option>
                         <option value="active">Active</option>
                         <option value="archived">Archived</option>
                     </flux:select>
-                </div>
+                </x-admin.card>
 
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <flux:input wire:model="vendor" label="Vendor" class="mb-4" />
                     <flux:input wire:model="product_type" label="Product type" class="mb-4" />
                     <flux:input wire:model="tags" label="Tags" placeholder="Comma separated" />
-                </div>
+                </x-admin.card>
 
                 <flux:button type="submit" variant="primary" class="w-full">
                     {{ $product ? 'Update product' : 'Save product' }}

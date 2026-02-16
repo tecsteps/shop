@@ -6,7 +6,7 @@
 
     <div class="space-y-4">
         @foreach($zones as $zone)
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <div class="mb-3 flex items-center justify-between">
                     <div>
                         <h3 class="font-semibold text-gray-900 dark:text-white">{{ $zone->name }}</h3>
@@ -32,7 +32,7 @@
                     </tbody>
                 </table>
                 <flux:button wire:click="openRateModal({{ $zone->id }})" variant="ghost" size="sm" class="mt-2">Add rate</flux:button>
-            </div>
+            </x-admin.card>
         @endforeach
     </div>
 

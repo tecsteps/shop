@@ -2,15 +2,15 @@
     <form wire:submit="save" class="space-y-6">
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div class="space-y-6 lg:col-span-2">
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <flux:input wire:model="title" label="Title" required />
                     <div class="mt-4">
                         <flux:textarea wire:model="description_html" label="Description" rows="4" />
                     </div>
-                </div>
+                </x-admin.card>
 
                 {{-- Product picker --}}
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Products</h3>
                     <flux:input wire:model.live.debounce.300ms="productSearch" placeholder="Search products..." icon="magnifying-glass" />
 
@@ -30,17 +30,17 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
+                </x-admin.card>
             </div>
 
             <div class="space-y-6">
-                <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+                <x-admin.card>
                     <flux:select wire:model="status" label="Status">
                         <option value="draft">Draft</option>
                         <option value="active">Active</option>
                         <option value="archived">Archived</option>
                     </flux:select>
-                </div>
+                </x-admin.card>
                 <flux:button type="submit" variant="primary" class="w-full">{{ $collection ? 'Update' : 'Create' }} collection</flux:button>
             </div>
         </div>

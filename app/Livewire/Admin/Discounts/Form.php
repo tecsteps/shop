@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Discounts;
 
+use App\Livewire\Admin\Concerns\HasStoreForm;
 use App\Models\Discount;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -9,6 +10,8 @@ use Livewire\Component;
 #[Layout('components.admin.layout', ['title' => 'Discount'])]
 class Form extends Component
 {
+    use HasStoreForm;
+
     public ?Discount $discount = null;
 
     public string $code = '';
@@ -31,6 +34,16 @@ class Form extends Component
 
     public string $status = 'draft';
 
+    protected function modelProperty(): string
+    {
+        return 'discount';
+    }
+
+    protected function modelClass(): string
+    {
+        return Discount::class;
+    }
+
     public function mount(?Discount $discount = null): void
     {
         if ($discount && $discount->exists) {
@@ -51,19 +64,11 @@ class Form extends Component
 
     public function save(): void
     {
-        if ($this->discount) {
-            $this->authorize('update', $this->discount);
-        } else {
-            $this->authorize('create', Discount::class);
-        }
-
-        $this->validate([
+        $store = $this->authorizeAndValidate([
             'code' => ['required', 'string', 'max:50'],
             'value_type' => ['required', 'in:percent,fixed,free_shipping'],
             'status' => ['required', 'in:draft,active,expired,disabled'],
         ]);
-
-        $store = app('current_store');
 
         $data = [
             'store_id' => $store->id,
@@ -79,14 +84,7 @@ class Form extends Component
             'status' => $this->status,
         ];
 
-        if ($this->discount) {
-            $this->discount->update($data);
-        } else {
-            Discount::query()->create($data);
-        }
-
-        session()->flash('success', $this->discount ? 'Discount updated.' : 'Discount created.');
-        $this->redirect(route('admin.discounts.index'));
+        $this->persistModel($data, 'admin.discounts.index');
     }
 
     public function render(): mixed

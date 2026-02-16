@@ -38,7 +38,7 @@
 
         <div class="space-y-6">
             {{-- Addresses --}}
-            <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <x-admin.card>
                 <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Addresses</h3>
                 @forelse($customer->addresses as $address)
                     <div class="mb-3 rounded border border-gray-100 p-3 text-sm text-gray-600 dark:border-zinc-700 dark:text-gray-400">
@@ -51,7 +51,7 @@
                 @empty
                     <p class="text-sm text-gray-500 dark:text-gray-400">No addresses.</p>
                 @endforelse
-            </div>
+            </x-admin.card>
         </div>
     </div>
 </div>
