@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StoreUserSeeder::class,
             StoreSettingsSeeder::class,
+            ThemeSeeder::class,
+            PageSeeder::class,
+            NavigationMenuSeeder::class,
         ]);
     }
 }

@@ -26,6 +26,12 @@ Route::prefix('admin')->group(function (): void {
 
 Route::middleware('store.resolve')->group(function (): void {
     Route::get('/', Storefront\Home::class)->name('storefront.home');
+    Route::get('/collections', Storefront\Collections\Index::class)->name('storefront.collections.index');
+    Route::get('/collections/{handle}', Storefront\Collections\Show::class)->name('storefront.collections.show');
+    Route::get('/products/{handle}', Storefront\Products\Show::class)->name('storefront.products.show');
+    Route::get('/cart', Storefront\Cart\Show::class)->name('storefront.cart');
+    Route::get('/search', Storefront\Search\Index::class)->name('storefront.search');
+    Route::get('/pages/{handle}', Storefront\Pages\Show::class)->name('storefront.pages.show');
     Route::get('/account/login', Storefront\Account\Auth\Login::class)->name('storefront.login');
     Route::get('/account/register', Storefront\Account\Auth\Register::class)->name('storefront.register');
 });
