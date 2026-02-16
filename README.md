@@ -1,7 +1,7 @@
 You are building a complete shop system in Laravel. You must implement ALL specifications
 in `specs/` in a single uninterrupted session - do NOT stop, do NOT ask questions.
 
-IMPORTANT: Use Claude Code **Team Mode**. Ensure the orchestrating main agent is delegating EVERYTHING to teammates and keeps its own context as free as possible to it can focus on the big picture and flow control.
+IMPORTANT: Use Claude Code **Team Mode**. Ensure the orchestrating main agent is delegating EVERYTHING to teammate-agents and keeps its own context as free as possible to it can focus on the big picture and flow control.
 
 ## Prime Directives
 - **Do not stop.** Complete everything in one go.
@@ -11,7 +11,7 @@ IMPORTANT: Use Claude Code **Team Mode**. Ensure the orchestrating main agent is
   Then in the Phase 6 review section, restore the stronger language:
   markdown## Phase 6: Fresh-Eyes Review (Team Mode)
 
-Delegate a **full code review** to a sub-agent with this brief:
+Delegate a **full code review** to a teammate-agent with this brief:
 
 > You are a strict senior PHP/Laravel reviewer. **Ignore all prior reasoning.**
 > You have NOT seen this code before. Review the entire codebase for:
@@ -30,7 +30,7 @@ Delegate a **full code review** to a sub-agent with this brief:
 Then:
 - Fix all critical and major findings.
 - Re-run PHPStan, Deptrac, Pest.
-- If critical findings were fixed, delegate to **another fresh sub-agent** for a second review.
+- If critical findings were fixed, delegate to **another fresh teammate-agent** for a second review.
 - Max 3 review rounds total. No feature is complete without independent review.
   And the showcase section should keep the explicit restart:
   markdownIf ANY bug appears during the showcase, fix it, re-run ALL quality gates,
@@ -45,7 +45,7 @@ Use **team mode** for parallelizable work.
 ## Prime Directives
 
 - **Do not stop.** Complete everything in one go without interruption.
-- **Use team mode.** Delegate parallelizable work to sub-agents.
+- **Use team mode.** Delegate parallelizable work to teammate-agents.
 - **Commit after every meaningful iteration** with a descriptive commit message.
 - **Continuously update `specs/progress.md`** with current status after every step.
 - **If something is ambiguous, decide, document your decision in progress.md, and move on.**
@@ -175,7 +175,7 @@ Commit progress after every meaningful iteration.
 
 ## Phase 6: Fresh-Eyes Review (Team Mode)
 
-Delegate a **full code review** to a sub-agent with this brief:
+Delegate a **full code review** to a teammate-agent with this brief:
 
 > You are a strict senior PHP/Laravel reviewer. **Ignore all prior reasoning.**
 > You have NOT seen this code before. Review the entire codebase for:
@@ -195,7 +195,7 @@ Delegate a **full code review** to a sub-agent with this brief:
 Then:
 - Fix all critical and major findings.
 - Re-run PHPStan, Deptrac, Pest.
-- If critical findings were fixed, delegate to **another fresh sub-agent** for a second review.
+- If critical findings were fixed, delegate to **another fresh teammate-agent** for a second review.
 - Max 3 review rounds total.
 - **No feature is complete without independent review.**
 
@@ -225,24 +225,27 @@ Commit and push after every fix.
 
 ## Phase 8: Final Review Meeting & Showcase
 
-Present a structured showcase to me:
+Present a structured showcase to me by walking through the **entire `specs/testplan.md`**
+using Playwright MCP. This is both the showcase AND the final verification.
 
 ### Customer Side
-Walk through (via Playwright MCP) every customer-facing feature, narrating what you are doing
-and which requirement/acceptance criterion it satisfies.
+Walk through (via Playwright MCP) every customer-facing scenario from the testplan,
+narrating what you are doing and which requirement/acceptance criterion it satisfies.
 
 ### Admin Side
-Walk through (via Playwright MCP) every admin-facing feature, narrating what you are doing
-and which requirement/acceptance criterion it satisfies.
+Walk through (via Playwright MCP) every admin-facing scenario from the testplan,
+narrating what you are doing and which requirement/acceptance criterion it satisfies.
 
-### QA Self-Verification
-Before finalizing, explicitly:
-- List each acceptance criterion from specs/testplan.md.
-- Confirm how it is implemented.
-- Confirm which test covers it.
-- Confirm Playwright E2E verification status.
-- Validate edge cases and negative paths.
-- Ensure no undefined behavior exists.
+### Edge Cases & Negative Paths
+Walk through (via Playwright MCP) every edge case and negative path from the testplan:
+invalid inputs, unauthorized access, empty states, boundary conditions.
+
+For EACH testplan item, report ✅ or ❌ with what you observed.
+
+### QA Flow & Fix
+
+Write test results into specs/qa_admin.md
+If something is not working, fix it and do a full regression test again. Repeat until it's 100% working.
 
 ### Quality Summary
 Report final status of:
@@ -255,35 +258,3 @@ Report final status of:
 
 **If ANY bug appears during the showcase, fix it, re-run ALL quality gates,
 and restart the review meeting from the beginning.**
-
----
-
-## Strict Rules (Apply at ALL Times)
-
-### Code Quality
-- **No `mixed` types.** Ever. Anywhere.
-- **No `@phpstan-ignore` or error suppression.**
-- **No `$guarded = []`.** Use explicit `$fillable`.
-- **Explicit return types on every method.**
-- **Fully typed properties** with constructor promotion where appropriate.
-- **No dynamic properties.**
-- **No relying on docblocks to hide real type problems.**
-
-### Architecture
-- Respect architectural layers defined in `deptrac.yaml`.
-- No cross-layer violations. No circular dependencies.
-- If a dependency is required, introduce an interface in the correct layer.
-- Do not modify architecture unless explicitly instructed.
-
-### Testing
-- Every feature must include automated Pest tests.
-- Include both unit and integration tests when appropriate.
-- Cover success paths, failure paths, and edge cases.
-- Tests must be deterministic.
-- Tests validate behavior, not implementation details.
-
-### Process
-- Commit after every meaningful iteration with a descriptive message.
-- Update `specs/progress.md` continuously.
-- Every commit must pass PHPStan + Pest before being made.
-- Do not stop or ask questions. If ambiguous, decide and document.

@@ -1,17 +1,31 @@
 {
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "laravel-boost",
-    "herd"
-  ],
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true
-  },
-  "permissions": {
-    "allow": [
-      "Bash(git add:*)",
-      "Bash(git commit:*)"
-    ]
-  }
+    "permissions": {
+        "allow": [
+            "Bash(git add:*)",
+            "Bash(git commit:*)",
+            "WebFetch(domain:example.com)"
+        ]
+    },
+    "enableAllProjectMcpServers": true,
+    "enabledMcpjsonServers": [
+        "laravel-boost",
+        "herd"
+    ],
+    "sandbox": {
+        "enabled": true,
+        "autoAllowBashIfSandboxed": true
+    },
+    "hooks": {
+        "SessionStart": [
+            {
+                "matcher": "compact",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "cat README.md"
+                    }
+                ]
+            }
+        ]
+    }
 }
