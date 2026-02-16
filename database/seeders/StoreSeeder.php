@@ -13,12 +13,24 @@ class StoreSeeder extends Seeder
     {
         $organization = Organization::where('slug', 'acme-corp')->firstOrFail();
 
-        Store::create([
-            'organization_id' => $organization->id,
-            'name' => 'Acme Fashion',
-            'slug' => 'acme-fashion',
-            'status' => StoreStatus::Active,
-            'currency' => 'USD',
-        ]);
+        Store::firstOrCreate(
+            ['slug' => 'acme-fashion'],
+            [
+                'organization_id' => $organization->id,
+                'name' => 'Acme Fashion',
+                'status' => StoreStatus::Active,
+                'currency' => 'EUR',
+            ]
+        );
+
+        Store::firstOrCreate(
+            ['slug' => 'acme-electronics'],
+            [
+                'organization_id' => $organization->id,
+                'name' => 'Acme Electronics',
+                'status' => StoreStatus::Active,
+                'currency' => 'EUR',
+            ]
+        );
     }
 }

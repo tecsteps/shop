@@ -9,9 +9,9 @@ class OrganizationSeeder extends Seeder
 {
     public function run(): void
     {
-        Organization::create([
-            'name' => 'Acme Corp',
-            'slug' => 'acme-corp',
-        ]);
+        Organization::firstOrCreate(
+            ['slug' => 'acme-corp'],
+            ['name' => 'Acme Corp']
+        );
     }
 }

@@ -21,6 +21,8 @@ class CheckoutFactory extends Factory
             'customer_id' => null,
             'email' => fake()->safeEmail(),
             'status' => CheckoutStatus::Started,
+            'discount_amount' => 0,
+            'shipping_amount' => 0,
             'expires_at' => now()->addHours(24),
         ];
     }

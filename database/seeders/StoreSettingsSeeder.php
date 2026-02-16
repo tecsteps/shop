@@ -10,15 +10,30 @@ class StoreSettingsSeeder extends Seeder
 {
     public function run(): void
     {
-        $store = Store::where('slug', 'acme-fashion')->firstOrFail();
+        $fashion = Store::where('slug', 'acme-fashion')->firstOrFail();
 
-        StoreSettings::create([
-            'store_id' => $store->id,
-            'store_name' => 'Acme Fashion',
-            'store_email' => 'hello@acme.test',
-            'timezone' => 'UTC',
-            'weight_unit' => 'kg',
-            'currency' => 'USD',
-        ]);
+        StoreSettings::firstOrCreate(
+            ['store_id' => $fashion->id],
+            [
+                'store_name' => 'Acme Fashion',
+                'store_email' => 'hello@acme-fashion.test',
+                'timezone' => 'Europe/Berlin',
+                'weight_unit' => 'g',
+                'currency' => 'EUR',
+            ]
+        );
+
+        $electronics = Store::where('slug', 'acme-electronics')->firstOrFail();
+
+        StoreSettings::firstOrCreate(
+            ['store_id' => $electronics->id],
+            [
+                'store_name' => 'Acme Electronics',
+                'store_email' => 'hello@acme-electronics.test',
+                'timezone' => 'Europe/Berlin',
+                'weight_unit' => 'g',
+                'currency' => 'EUR',
+            ]
+        );
     }
 }
