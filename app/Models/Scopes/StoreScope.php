@@ -11,7 +11,9 @@ class StoreScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         if (app()->bound('current_store')) {
-            $builder->where($model->getTable().'.store_id', app('current_store')->id);
+            /** @var \App\Models\Store $store */
+            $store = app('current_store');
+            $builder->where($model->getTable().'.store_id', $store->id);
         }
     }
 }

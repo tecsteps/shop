@@ -58,6 +58,7 @@ class User extends Authenticatable
     /**
      * Get the user's initials
      */
+    /** @return BelongsToMany<Store, $this> */
     public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'store_users')
@@ -68,13 +69,16 @@ class User extends Authenticatable
 
     public function roleForStore(Store $store): ?StoreUserRole
     {
-        $pivot = $this->stores()->where('stores.id', $store->id)->first()?->pivot;
+        $storeRecord = $this->stores()->where('stores.id', $store->id)->first();
 
-        if (! $pivot) {
+        if (! $storeRecord) {
             return null;
         }
 
-        return StoreUserRole::from($pivot->role);
+        /** @var string $role */
+        $role = $storeRecord->pivot->getAttribute('role');
+
+        return StoreUserRole::from($role);
     }
 
     public function initials(): string

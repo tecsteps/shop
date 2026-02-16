@@ -1,0 +1,1303 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Auth/CustomerUserProvider.php
+
+		-
+			message: '#^Method App\\Auth\\CustomerUserProvider\:\:retrieveByCredentials\(\) has parameter \$credentials with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Auth/CustomerUserProvider.php
+
+		-
+			message: '#^Method App\\Auth\\CustomerUserProvider\:\:retrieveById\(\) should return \(Illuminate\\Contracts\\Auth\\Authenticatable&Illuminate\\Database\\Eloquent\\Model\)\|null but returns App\\Models\\Customer\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Customer\>\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Auth/CustomerUserProvider.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''amount'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''line_items'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''order_line_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''quantity'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''reason'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''tracking_company'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''tracking_number'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''tracking_url'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/OrderController.php
+
+		-
+			message: '#^Cannot access offset ''status'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Admin/ProductController.php
+
+		-
+			message: '#^Only iterables can be unpacked, mixed given\.$#'
+			identifier: arrayUnpacking.nonIterable
+			count: 1
+			path: app/Http/Controllers/Api/Admin/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Model\:\:update\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Admin/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Product\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Admin/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''quantity'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Cannot access offset ''variant_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\Storefront\\CartController\:\:formatCart\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:create\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Parameter \#2 \$variantId of method App\\Services\\CartService\:\:addLine\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Parameter \#3 \$qty of method App\\Services\\CartService\:\:addLine\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Parameter \#3 \$qty of method App\\Services\\CartService\:\:updateLineQuantity\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CartController.php
+
+		-
+			message: '#^Cannot access offset ''cart_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Cannot access offset ''code'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Cannot access offset ''email'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Cannot access offset ''payment_method'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Cannot access offset ''shipping_rate_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Parameter \#1 \$cart of method App\\Services\\CheckoutService\:\:createFromCart\(\) expects App\\Models\\Cart, App\\Models\\Cart\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Cart\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Parameter \#2 \$data of method App\\Services\\CheckoutService\:\:setAddress\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Parameter \#2 \$method of method App\\Services\\CheckoutService\:\:selectPaymentMethod\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Parameter \#2 \$paymentDetails of method App\\Services\\CheckoutService\:\:completeCheckout\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Parameter \#2 \$rateId of method App\\Services\\CheckoutService\:\:setShippingMethod\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/Storefront/CheckoutController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Store\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Store\>\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/ResolveStore.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\ResolveStore\:\:handle\(\) should return Symfony\\Component\\HttpFoundation\\Response but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Middleware/ResolveStore.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\ResolveStore\:\:resolveFromHostname\(\) should return App\\Models\\Store\|null but returns App\\Models\\Store\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Store\>\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Middleware/ResolveStore.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\ResolveStore\:\:resolveFromSession\(\) should return App\\Models\\Store\|null but returns App\\Models\\Store\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Store\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Middleware/ResolveStore.php
+
+		-
+			message: '#^Parameter \#1 \$value of method Carbon\\CarbonImmutable\:\:subDays\(\) expects float\|int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/CancelUnpaidBankTransferOrders.php
+
+		-
+			message: '#^Method App\\Jobs\\DeliverWebhook\:\:__construct\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Jobs/DeliverWebhook.php
+
+		-
+			message: '#^Parameter \#1 \$content of method Illuminate\\Http\\Client\\PendingRequest\<false\>\:\:withBody\(\) expects Psr\\Http\\Message\\StreamInterface\|string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/DeliverWebhook.php
+
+		-
+			message: '#^Parameter \#1 \$payload of method App\\Services\\WebhookService\:\:sign\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/DeliverWebhook.php
+
+		-
+			message: '#^Method App\\Livewire\\Actions\\Logout\:\:__invoke\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Actions/Logout.php
+
+		-
+			message: '#^Cannot call method update\(\) on App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Auth/Login.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Collections\\Form\:\:\$selectedProducts \(array\<int\>\) does not accept array\<mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Collections\\Form\:\:\$status \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Collections/Form.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Collections/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Customers/Index.php
+
+		-
+			message: '#^Cannot call method latest\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Customers/Show.php
+
+		-
+			message: '#^Cannot call method limit\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Customers/Show.php
+
+		-
+			message: '#^Binary operation "/" between mixed and int\<1, max\> results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Livewire/Admin/Dashboard.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Dashboard.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Discounts\\Form\:\:\$ends_at \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Discounts\\Form\:\:\$starts_at \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Discounts\\Form\:\:\$status \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Discounts\\Form\:\:\$type \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Discounts\\Form\:\:\$value_type \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Discounts/Form.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Discounts/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Inventory/Index.php
+
+		-
+			message: '#^Cannot access property \$handle on App\\Models\\NavigationMenu\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Navigation/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Navigation/Index.php
+
+		-
+			message: '#^Cannot access property \$name on App\\Models\\NavigationMenu\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Navigation/Index.php
+
+		-
+			message: '#^Cannot call method orderBy\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Navigation/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Orders/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Pages/Form.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Pages/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Pages\\Form\:\:\$status \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Pages/Form.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Pages/Index.php
+
+		-
+			message: '#^Cannot access property \$currency on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Products\\Form\:\:\$status \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Products\\Form\:\:\$variants \(array\<int, array\{price\: string, compare_at_price\: string, sku\: string, barcode\: string, weight\: string, quantity\: int, option_values\: array\<string\>\}\>\) does not accept non\-empty\-array\<int, array\{price\: string, compare_at_price\: string, sku\: string, barcode\: string, weight\: string, quantity\: int, option_values\: array\<mixed\>\}\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>quantity_on_hand" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Products/Form.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Products/Index.php
+
+		-
+			message: '#^Cannot call method where\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Products/Index.php
+
+		-
+			message: '#^Method App\\Livewire\\Admin\\Products\\Index\:\:getProductsQuery\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Livewire/Admin/Products/Index.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Products\\Index\:\:\$selected \(array\<int\>\) does not accept array\<mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Products/Index.php
+
+		-
+			message: '#^Cannot access property \$currency on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$name on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$settings on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$store_email on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$store_name on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$timezone on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$weight_unit on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Index\:\:\$currency \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Index\:\:\$store_email \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Index\:\:\$store_name \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Index\:\:\$timezone \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Index\:\:\$weight_unit \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Index.php
+
+		-
+			message: '#^Cannot access property \$countries_json on App\\Models\\ShippingZone\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Settings/Shipping.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Settings/Shipping.php
+
+		-
+			message: '#^Cannot access property \$name on App\\Models\\ShippingZone\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Shipping.php
+
+		-
+			message: '#^Cannot access property \$charge_tax_on_shipping on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$mode on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$prices_include_tax on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$rate_basis_points on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$taxSettings on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$tax_name on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$value on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Taxes\:\:\$charge_tax_on_shipping \(bool\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Taxes\:\:\$mode \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Taxes\:\:\$prices_include_tax \(bool\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Property App\\Livewire\\Admin\\Settings\\Taxes\:\:\$tax_name \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Admin/Settings/Taxes.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Admin/Themes/Index.php
+
+		-
+			message: '#^Cannot call method delete\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/DeleteUserForm.php
+
+		-
+			message: '#^Cannot access offset ''password'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Livewire/Settings/Password.php
+
+		-
+			message: '#^Cannot call method update\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/Password.php
+
+		-
+			message: '#^Cannot access property \$email on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot access property \$email_verified_at on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot access property \$name on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot call method fill\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot call method hasVerifiedEmail\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot call method isDirty\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot call method save\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Cannot call method sendEmailVerificationNotification\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Instanceof between Illuminate\\Contracts\\Auth\\MustVerifyEmail and Illuminate\\Contracts\\Auth\\MustVerifyEmail will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Livewire/Settings/Profile.php
+
+		-
+			message: '#^Call to an undefined method App\\Models\\Customer\|App\\Models\\User\:\:twoFactorQrCodeSvg\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Cannot access property \$two_factor_confirmed_at on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Cannot access property \$two_factor_secret on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Cannot call method hasEnabledTwoFactorAuthentication\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Method App\\Livewire\\Settings\\TwoFactor\:\:getModalConfigProperty\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Parameter \#1 \$value of function decrypt expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Property App\\Livewire\\Settings\\TwoFactor\:\:\$manualSetupKey \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Property App\\Livewire\\Settings\\TwoFactor\:\:\$qrCodeSvg \(string\) does not accept string\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Settings/TwoFactor.php
+
+		-
+			message: '#^Cannot access property \$two_factor_recovery_codes on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Settings/TwoFactor/RecoveryCodes.php
+
+		-
+			message: '#^Cannot call method hasEnabledTwoFactorAuthentication\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Settings/TwoFactor/RecoveryCodes.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Settings/TwoFactor/RecoveryCodes.php
+
+		-
+			message: '#^Property App\\Livewire\\Settings\\TwoFactor\\RecoveryCodes\:\:\$recoveryCodes \(array\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Settings/TwoFactor/RecoveryCodes.php
+
+		-
+			message: '#^Property App\\Livewire\\Settings\\TwoFactor\\RecoveryCodes\:\:\$recoveryCodes type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Livewire/Settings/TwoFactor/RecoveryCodes.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\Customer\|null\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: app/Livewire/Storefront/Account/Addresses/Index.php
+
+		-
+			message: '#^Cannot call method addresses\(\) on App\\Models\\Customer\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Storefront/Account/Addresses/Index.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Livewire/Storefront/Account/Auth/Register.php
+
+		-
+			message: '#^Cannot call method orders\(\) on App\\Models\\Customer\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Storefront/Account/Dashboard.php
+
+		-
+			message: '#^Cannot call method orders\(\) on App\\Models\\Customer\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Storefront/Account/Orders/Index.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\Customer\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Storefront/Account/Orders/Show.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:getOrCreateForSession\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Livewire/Storefront/Cart/Show.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:getOrCreateForSession\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Livewire/Storefront/CartDrawer.php
+
+		-
+			message: '#^Property App\\Livewire\\Storefront\\Checkout\\Confirmation\:\:\$orderId \(int\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Confirmation.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:getOrCreateForSession\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\ShippingCalculator\:\:getAvailableRates\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#2 \$address of method App\\Services\\ShippingCalculator\:\:getAvailableRates\(\) expects array\<string, mixed\>, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Parameter \#2 \$rateId of method App\\Services\\CheckoutService\:\:setShippingMethod\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Checkout/Show.php
+
+		-
+			message: '#^Cannot call method on\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Livewire/Storefront/Collections/Show.php
+
+		-
+			message: '#^Cannot call method where\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Livewire/Storefront/Collections/Show.php
+
+		-
+			message: '#^Cannot access property \$name on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Livewire/Storefront/Home.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Storefront/Home.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\CartService\:\:getOrCreateForSession\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Products/Show.php
+
+		-
+			message: '#^Property App\\Livewire\\Storefront\\Products\\Show\:\:\$selectedOptions \(array\<string, int\>\) does not accept array\<int\|string, int\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/Storefront/Products/Show.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\SearchService\:\:search\(\) expects App\\Models\\Store, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Storefront/Search/Index.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:users\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\User, \$this\(App\\Models\\Store\), Illuminate\\Database\\Eloquent\\Relations\\Pivot, ''pivot''\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\User, \$this\(App\\Models\\Store\), App\\Models\\StoreUser, ''pivot''\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:stores\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\Store, \$this\(App\\Models\\User\), Illuminate\\Database\\Eloquent\\Relations\\Pivot, ''pivot''\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\Store, \$this\(App\\Models\\User\), App\\Models\\StoreUser, ''pivot''\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Cannot access offset ''hash'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$hasher of class App\\Auth\\CustomerUserProvider constructor expects Illuminate\\Contracts\\Hashing\\Hasher, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:lower\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/FortifyServiceProvider.php
+
+		-
+			message: '#^Method App\\Services\\AnalyticsService\:\:getDailyMetrics\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/AnalyticsService.php
+
+		-
+			message: '#^Method App\\Services\\AnalyticsService\:\:track\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/AnalyticsService.php
+
+		-
+			message: '#^Binary operation "\+" between mixed and int results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Services/CartService.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\Customer\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/CartService.php
+
+		-
+			message: '#^Cannot access property \$status on App\\Models\\Product\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/CartService.php
+
+		-
+			message: '#^Cannot call method update\(\) on App\\Models\\Cart\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/CheckoutService.php
+
+		-
+			message: '#^Parameter \#2 \$cart of method App\\Services\\ShippingCalculator\:\:calculate\(\) expects App\\Models\\Cart, App\\Models\\Cart\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/CheckoutService.php
+
+		-
+			message: '#^Cannot call method isFuture\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/DiscountService.php
+
+		-
+			message: '#^Cannot call method isPast\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/DiscountService.php
+
+		-
+			message: '#^Parameter \#1 \$order of method App\\Services\\FulfillmentService\:\:updateOrderFulfillmentStatus\(\) expects App\\Models\\Order, App\\Models\\Order\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/FulfillmentService.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 1
+			path: app/Services/NavigationService.php
+
+		-
+			message: '#^Method App\\Services\\NavigationService\:\:buildTree\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/NavigationService.php
+
+		-
+			message: '#^Cannot access property \$currency on App\\Models\\Cart\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\Product\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$inventoryItem on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$is_default on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$lines on App\\Models\\Cart\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$product on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$requires_shipping on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$sku on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$title on App\\Models\\Product\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot call method update\(\) on App\\Models\\Cart\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\OrderService\:\:generateOrderNumber\(\) expects App\\Models\\Store, App\\Models\\Store\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method App\\Enums\\PaymentMethod\:\:from\(\) expects int\|string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/OrderService.php
+
+		-
+			message: '#^Cannot access property \$currency on App\\Models\\Cart\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/PricingEngine.php
+
+		-
+			message: '#^Cannot access property \$lines on App\\Models\\Cart\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/PricingEngine.php
+
+		-
+			message: '#^Parameter \#3 \$address of method App\\Services\\TaxCalculator\:\:calculate\(\) expects array\<string, mixed\>, array\|string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/PricingEngine.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''barcode'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''compare_at_amount'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''price_amount'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''quantity_on_hand'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''sku'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''values'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Cannot access offset ''weight_g'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\ProductService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\ProductService\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\ProductService\:\:update\(\) should return App\\Models\\Product but returns App\\Models\\Product\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method App\\Support\\HandleGenerator\:\:generate\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/ProductService.php
+
+		-
+			message: '#^Method App\\Services\\SearchService\:\:autocomplete\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/SearchService.php
+
+		-
+			message: '#^Method App\\Services\\SearchService\:\:search\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/SearchService.php
+
+		-
+			message: '#^Method App\\Services\\SearchService\:\:search\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/SearchService.php
+
+		-
+			message: '#^Parameter \#1 \$string of function trim expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/SearchService.php
+
+		-
+			message: '#^Cannot call method where\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/ShippingCalculator.php
+
+		-
+			message: '#^Method App\\Services\\ShippingCalculator\:\:getAvailableRates\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/ShippingCalculator.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/ShippingCalculator.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\ProductVariant\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/VariantMatrixService.php
+
+		-
+			message: '#^Parameter \#1 \$sets of method App\\Services\\VariantMatrixService\:\:cartesianProduct\(\) expects array\<int, array\<int, int\>\>, array\<int, array\<mixed\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/VariantMatrixService.php
+
+		-
+			message: '#^Method App\\Services\\WebhookService\:\:dispatch\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/WebhookService.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, array\|string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/WebhookService.php
+
+		-
+			message: '#^Unsafe call to private method App\\Support\\HandleGenerator\:\:handleExists\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Support/HandleGenerator.php

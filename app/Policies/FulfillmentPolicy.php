@@ -19,6 +19,9 @@ class FulfillmentPolicy
 
     public function update(User $user, Fulfillment $fulfillment): bool
     {
-        return $this->isOwnerAdminOrStaff($user, $fulfillment->store_id);
+        /** @var int $storeId */
+        $storeId = $fulfillment->order?->store_id;
+
+        return $this->isOwnerAdminOrStaff($user, $storeId);
     }
 }

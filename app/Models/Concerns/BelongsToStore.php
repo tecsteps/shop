@@ -3,6 +3,8 @@
 namespace App\Models\Concerns;
 
 use App\Models\Scopes\StoreScope;
+use App\Models\Store;
+use Illuminate\Database\Eloquent\Model;
 
 trait BelongsToStore
 {
@@ -10,9 +12,11 @@ trait BelongsToStore
     {
         static::addGlobalScope(new StoreScope);
 
-        static::creating(function ($model): void {
-            if (app()->bound('current_store') && ! $model->store_id) {
-                $model->store_id = app('current_store')->id;
+        static::creating(function (Model $model): void {
+            if (app()->bound('current_store') && ! $model->getAttribute('store_id')) {
+                /** @var Store $store */
+                $store = app('current_store');
+                $model->setAttribute('store_id', $store->id);
             }
         });
     }

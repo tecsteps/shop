@@ -31,16 +31,19 @@ class WebhookSubscription extends Model
         ];
     }
 
+    /** @return BelongsTo<Store, $this> */
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
+    /** @return BelongsTo<AppInstallation, $this> */
     public function appInstallation(): BelongsTo
     {
         return $this->belongsTo(AppInstallation::class);
     }
 
+    /** @return HasMany<WebhookDelivery, $this> */
     public function deliveries(): HasMany
     {
         return $this->hasMany(WebhookDelivery::class, 'subscription_id');

@@ -29,11 +29,13 @@ class Theme extends Model
         ];
     }
 
+    /** @return HasMany<ThemeFile, $this> */
     public function files(): HasMany
     {
         return $this->hasMany(ThemeFile::class);
     }
 
+    /** @return HasOne<ThemeSettings, $this> */
     public function themeSettings(): HasOne
     {
         return $this->hasOne(ThemeSettings::class);

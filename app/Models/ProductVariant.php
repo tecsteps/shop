@@ -40,16 +40,19 @@ class ProductVariant extends Model
         ];
     }
 
+    /** @return BelongsTo<Product, $this> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
+    /** @return HasOne<InventoryItem, $this> */
     public function inventoryItem(): HasOne
     {
         return $this->hasOne(InventoryItem::class, 'variant_id');
     }
 
+    /** @return BelongsToMany<ProductOptionValue, $this> */
     public function optionValues(): BelongsToMany
     {
         return $this->belongsToMany(ProductOptionValue::class, 'variant_option_values', 'variant_id', 'product_option_value_id');

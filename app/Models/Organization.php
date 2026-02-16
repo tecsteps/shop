@@ -16,6 +16,7 @@ class Organization extends Model
         'slug',
     ];
 
+    /** @return HasMany<Store, $this> */
     public function stores(): HasMany
     {
         return $this->hasMany(Store::class);

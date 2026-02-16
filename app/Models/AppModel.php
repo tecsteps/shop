@@ -29,11 +29,13 @@ class AppModel extends Model
         ];
     }
 
+    /** @return HasMany<AppInstallation, $this> */
     public function installations(): HasMany
     {
         return $this->hasMany(AppInstallation::class, 'app_id');
     }
 
+    /** @return HasMany<OauthClient, $this> */
     public function oauthClients(): HasMany
     {
         return $this->hasMany(OauthClient::class, 'app_id');

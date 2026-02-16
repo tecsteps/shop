@@ -18,6 +18,7 @@ class OauthClient extends Model
         'redirect_uri',
     ];
 
+    /** @return BelongsTo<AppModel, $this> */
     public function app(): BelongsTo
     {
         return $this->belongsTo(AppModel::class, 'app_id');

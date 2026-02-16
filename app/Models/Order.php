@@ -61,31 +61,37 @@ class Order extends Model
         ];
     }
 
+    /** @return BelongsTo<Store, $this> */
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
+    /** @return BelongsTo<Customer, $this> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
+    /** @return HasMany<OrderLine, $this> */
     public function lines(): HasMany
     {
         return $this->hasMany(OrderLine::class);
     }
 
+    /** @return HasMany<Payment, $this> */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
 
+    /** @return HasMany<Refund, $this> */
     public function refunds(): HasMany
     {
         return $this->hasMany(Refund::class);
     }
 
+    /** @return HasMany<Fulfillment, $this> */
     public function fulfillments(): HasMany
     {
         return $this->hasMany(Fulfillment::class);

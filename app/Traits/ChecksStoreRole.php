@@ -3,21 +3,29 @@
 namespace App\Traits;
 
 use App\Enums\StoreUserRole;
+use App\Models\Store;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 trait ChecksStoreRole
 {
     protected function getStoreRole(User $user, int $storeId): ?StoreUserRole
     {
-        $pivot = $user->stores()->where('stores.id', $storeId)->first()?->pivot;
+        $store = $user->stores()->where('stores.id', $storeId)->first();
 
-        if (! $pivot) {
+        if (! $store) {
             return null;
         }
 
-        return StoreUserRole::from($pivot->role);
+        /** @var string $role */
+        $role = $store->pivot->getAttribute('role');
+
+        return StoreUserRole::from($role);
     }
 
+    /**
+     * @param  array<int, StoreUserRole>  $roles
+     */
     protected function hasRole(User $user, int $storeId, array $roles): bool
     {
         $role = $this->getStoreRole($user, $storeId);
@@ -44,14 +52,20 @@ trait ChecksStoreRole
         return $this->getStoreRole($user, $storeId) !== null;
     }
 
-    protected function resolveStoreId($model = null): ?int
+    protected function resolveStoreId(?Model $model = null): ?int
     {
-        if ($model && isset($model->store_id)) {
-            return $model->store_id;
+        if ($model && $model->getAttribute('store_id')) {
+            /** @var int $storeId */
+            $storeId = $model->getAttribute('store_id');
+
+            return $storeId;
         }
 
         if (app()->bound('current_store')) {
-            return app('current_store')->id;
+            /** @var Store $store */
+            $store = app('current_store');
+
+            return $store->id;
         }
 
         return null;

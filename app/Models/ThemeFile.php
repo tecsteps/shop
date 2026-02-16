@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ThemeFile extends Model
 {
+    /** @use HasFactory<\Database\Factories\ThemeFileFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -16,6 +17,7 @@ class ThemeFile extends Model
         'content',
     ];
 
+    /** @return BelongsTo<Theme, $this> */
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);

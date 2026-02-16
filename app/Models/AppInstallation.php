@@ -27,11 +27,13 @@ class AppInstallation extends Model
         ];
     }
 
+    /** @return BelongsTo<AppModel, $this> */
     public function app(): BelongsTo
     {
         return $this->belongsTo(AppModel::class, 'app_id');
     }
 
+    /** @return BelongsTo<Store, $this> */
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);

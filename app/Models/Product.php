@@ -36,32 +36,38 @@ class Product extends Model
         ];
     }
 
+    /** @return BelongsTo<Store, $this> */
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
+    /** @return HasMany<ProductVariant, $this> */
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
     }
 
+    /** @return HasMany<ProductOption, $this> */
     public function options(): HasMany
     {
         return $this->hasMany(ProductOption::class);
     }
 
+    /** @return HasMany<ProductMedia, $this> */
     public function media(): HasMany
     {
         return $this->hasMany(ProductMedia::class);
     }
 
+    /** @return BelongsToMany<Collection, $this> */
     public function collections(): BelongsToMany
     {
         return $this->belongsToMany(Collection::class, 'collection_products')
             ->withPivot('position');
     }
 
+    /** @return HasMany<ProductVariant, $this> */
     public function defaultVariant(): HasMany
     {
         return $this->hasMany(ProductVariant::class)->where('is_default', true);

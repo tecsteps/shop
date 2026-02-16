@@ -27,6 +27,7 @@ class OauthToken extends Model
         ];
     }
 
+    /** @return BelongsTo<AppInstallation, $this> */
     public function installation(): BelongsTo
     {
         return $this->belongsTo(AppInstallation::class, 'installation_id');

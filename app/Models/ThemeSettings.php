@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ThemeSettings extends Model
 {
+    /** @use HasFactory<\Database\Factories\ThemeSettingsFactory> */
     use HasFactory;
 
     protected $primaryKey = 'theme_id';
@@ -26,6 +27,7 @@ class ThemeSettings extends Model
         ];
     }
 
+    /** @return BelongsTo<Theme, $this> */
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);

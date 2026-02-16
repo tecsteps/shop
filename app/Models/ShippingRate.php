@@ -31,6 +31,7 @@ class ShippingRate extends Model
         ];
     }
 
+    /** @return BelongsTo<ShippingZone, $this> */
     public function zone(): BelongsTo
     {
         return $this->belongsTo(ShippingZone::class, 'zone_id');

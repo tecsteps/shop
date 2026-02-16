@@ -30,11 +30,13 @@ class ShippingZone extends Model
         ];
     }
 
+    /** @return BelongsTo<Store, $this> */
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
+    /** @return HasMany<ShippingRate, $this> */
     public function rates(): HasMany
     {
         return $this->hasMany(ShippingRate::class, 'zone_id');

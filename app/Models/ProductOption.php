@@ -20,11 +20,13 @@ class ProductOption extends Model
         'position',
     ];
 
+    /** @return BelongsTo<Product, $this> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
+    /** @return HasMany<ProductOptionValue, $this> */
     public function values(): HasMany
     {
         return $this->hasMany(ProductOptionValue::class)->orderBy('position');

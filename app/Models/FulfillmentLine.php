@@ -24,11 +24,13 @@ class FulfillmentLine extends Model
         ];
     }
 
+    /** @return BelongsTo<Fulfillment, $this> */
     public function fulfillment(): BelongsTo
     {
         return $this->belongsTo(Fulfillment::class);
     }
 
+    /** @return BelongsTo<OrderLine, $this> */
     public function orderLine(): BelongsTo
     {
         return $this->belongsTo(OrderLine::class);

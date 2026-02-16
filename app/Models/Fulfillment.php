@@ -32,11 +32,13 @@ class Fulfillment extends Model
         ];
     }
 
+    /** @return BelongsTo<Order, $this> */
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }
 
+    /** @return HasMany<FulfillmentLine, $this> */
     public function lines(): HasMany
     {
         return $this->hasMany(FulfillmentLine::class);
