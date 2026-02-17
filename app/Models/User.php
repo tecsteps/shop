@@ -2,32 +2,33 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
+use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var list<string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'status',
+        'last_login_at',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -38,21 +39,39 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'password' => 'hashed',
+            'status' => UserStatus::class,
         ];
     }
 
     /**
-     * Get the user's initials
+     * @return BelongsToMany<Store, $this>
      */
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')
+            ->using(StoreUser::class)
+            ->withPivot('role');
+    }
+
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        $pivot = $this->stores()->where('stores.id', $store->id)->first()?->pivot;
+
+        if (! $pivot) {
+            return null;
+        }
+
+        return $pivot->role;
+    }
+
     public function initials(): string
     {
         return Str::of($this->name)

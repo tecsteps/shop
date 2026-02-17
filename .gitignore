@@ -1,5 +1,6 @@
 /.phpunit.cache
 /node_modules
+/storage/phpstan/cache
 /public/build
 /public/hot
 /public/storage

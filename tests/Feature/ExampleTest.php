@@ -1,7 +1,9 @@
 <?php
 
 it('returns a successful response', function () {
-    $response = $this->get('/');
+    $ctx = createStoreContext();
+
+    $response = $this->get('http://acme-fashion.test/');
 
     $response->assertStatus(200);
 });
