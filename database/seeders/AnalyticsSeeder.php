@@ -24,11 +24,11 @@ class AnalyticsSeeder extends Seeder
     {
         for ($i = 30; $i >= 0; $i--) {
             $dayFactor = 1 + (30 - $i) * 0.03;
-            $visits = (int) round(rand(50, 100) * $dayFactor);
-            $addToCart = (int) round($visits * rand(18, 25) / 100);
-            $checkoutStarted = (int) round($addToCart * rand(40, 55) / 100);
-            $orders = max(2, (int) round($checkoutStarted * rand(35, 55) / 100));
-            $aov = rand(4000, 9000);
+            $visits = (int) round(random_int(50, 100) * $dayFactor);
+            $addToCart = (int) round($visits * random_int(18, 25) / 100);
+            $checkoutStarted = (int) round($addToCart * random_int(40, 55) / 100);
+            $orders = max(2, (int) round($checkoutStarted * random_int(35, 55) / 100));
+            $aov = random_int(4000, 9000);
             $revenue = $orders * $aov;
 
             AnalyticsDaily::create([
@@ -68,16 +68,16 @@ class AnalyticsSeeder extends Seeder
 
         for ($s = 0; $s < $sessionCount; $s++) {
             $sessionId = Str::uuid()->toString();
-            $eventsInSession = rand(5, 8);
-            $hasCustomer = rand(1, 100) <= 30;
+            $eventsInSession = random_int(5, 8);
+            $hasCustomer = random_int(1, 100) <= 30;
             $customerId = $hasCustomer ? $customers[array_rand($customers)] : null;
 
             // Session starts at a random time in the last 7 days, weighted toward recent
             $daysAgo = $this->weightedRandom(0, 6);
-            $sessionStart = now()->subDays($daysAgo)->subHours(rand(0, 23))->subMinutes(rand(0, 59));
+            $sessionStart = now()->subDays($daysAgo)->subHours(random_int(0, 23))->subMinutes(random_int(0, 59));
 
             for ($e = 0; $e < $eventsInSession; $e++) {
-                $eventTime = $sessionStart->copy()->addMinutes($e * rand(1, 5));
+                $eventTime = $sessionStart->copy()->addMinutes($e * random_int(1, 5));
                 $eventType = $this->pickEventType($e, $eventsInSession);
                 $properties = $this->buildEventProperties($eventType, $products, $pages, $searchQueries, $referrers);
 
@@ -138,18 +138,18 @@ class AnalyticsSeeder extends Seeder
             'product_view' => $this->productViewProperties($products, $referrers),
             'add_to_cart' => $this->addToCartProperties($products),
             'checkout_started' => [
-                'cart_id' => rand(1, 100),
-                'item_count' => rand(1, 4),
-                'cart_total' => rand(2000, 15000),
+                'cart_id' => random_int(1, 100),
+                'item_count' => random_int(1, 4),
+                'cart_total' => random_int(2000, 15000),
             ],
             'checkout_completed' => [
-                'order_id' => rand(1, 100),
-                'order_number' => '#'.rand(1001, 1999),
-                'total_amount' => rand(3000, 20000),
+                'order_id' => random_int(1, 100),
+                'order_number' => '#'.random_int(1001, 1999),
+                'total_amount' => random_int(3000, 20000),
             ],
             'search' => [
                 'query' => $searchQueries[array_rand($searchQueries)],
-                'results_count' => rand(0, 20),
+                'results_count' => random_int(0, 20),
             ],
             default => [],
         };
@@ -184,7 +184,7 @@ class AnalyticsSeeder extends Seeder
         return [
             'product_id' => $product->id,
             'variant_id' => $variant?->id,
-            'quantity' => rand(1, 3),
+            'quantity' => random_int(1, 3),
             'price_amount' => $variant?->price_amount ?? 2999,
         ];
     }
@@ -193,7 +193,7 @@ class AnalyticsSeeder extends Seeder
     {
         // Weighted toward lower values (more recent days)
         $range = $max - $min;
-        $random = pow(mt_rand() / mt_getrandmax(), 0.5) * $range;
+        $random = pow(random_int(0, PHP_INT_MAX) / PHP_INT_MAX, 0.5) * $range;
 
         return $min + (int) round($random);
     }
