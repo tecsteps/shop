@@ -49,6 +49,13 @@ class Login extends Component
 
         session()->regenerate();
 
+        // Auto-select the user's first store
+        $user = Auth::guard('web')->user();
+        $firstStore = $user?->stores()->first();
+        if ($firstStore) {
+            session(['current_store_id' => $firstStore->id]);
+        }
+
         $this->redirectIntended(default: '/admin');
     }
 

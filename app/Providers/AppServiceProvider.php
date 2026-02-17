@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +54,11 @@ class AppServiceProvider extends ServiceProvider
         $this->configureGates();
 
         Product::observe(ProductObserver::class);
+
+        Livewire::addPersistentMiddleware([
+            \App\Http\Middleware\ResolveStore::class,
+            \App\Http\Middleware\CustomerAuthenticate::class,
+        ]);
 
         $this->configureEventListeners();
     }
