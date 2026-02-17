@@ -11,7 +11,7 @@ IMPORTANT: Use Claude Code **Team Mode**. Ensure the orchestrating main agent is
   Then in the Phase 6 review section, restore the stronger language:
   markdown## Phase 6: Fresh-Eyes Review (Team Mode)
 
-Delegate a **full code review** to a teammate-agent with this brief:
+After every epic, delegate a **full code review** to a teammate-agent with this brief:
 
 > You are a strict senior PHP/Laravel reviewer. **Ignore all prior reasoning.**
 > You have NOT seen this code before. Review the entire codebase for:
@@ -217,7 +217,7 @@ Commit progress after every meaningful iteration.
     - Push again.
     - Wait, recheck.
     - Max 3 iterations.
-5. Target: 0 issues, A rating across all dimensions.
+5. Target: 0 issues, A rating across all dimensions. The overall quality gate MUST NOT be "failed"
 
 Commit and push after every fix.
 
@@ -241,6 +241,10 @@ Walk through (via Playwright MCP) every edge case and negative path from the tes
 invalid inputs, unauthorized access, empty states, boundary conditions.
 
 For EACH testplan item, report ✅ or ❌ with what you observed.
+
+Make sure all links (storefront + admin) are working and there are no 404 or 500 errors.
+
+Before the final review, delete storage/logs/browser.log and storage/logs/laraverl.log and check both files afterwards for errors.
 
 ### QA Flow & Fix
 

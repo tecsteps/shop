@@ -3,8 +3,9 @@
         "claude_code"
     ],
     "guidelines": true,
-    "herd_mcp": false,
+    "herd_mcp": true,
     "mcp": true,
+    "nightwatch_mcp": false,
     "packages": [
         "laravel/fortify"
     ],
