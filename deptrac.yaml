@@ -1,0 +1,85 @@
+deptrac:
+  paths:
+    - ./app
+
+  layers:
+    - name: Models
+      collectors:
+        - type: directory
+          value: app/Models/.*
+
+    - name: Enums
+      collectors:
+        - type: directory
+          value: app/Enums/.*
+
+    - name: Services
+      collectors:
+        - type: directory
+          value: app/Services/.*
+
+    - name: Controllers
+      collectors:
+        - type: directory
+          value: app/Http/Controllers/.*
+
+    - name: Livewire
+      collectors:
+        - type: directory
+          value: app/Livewire/.*
+
+    - name: Policies
+      collectors:
+        - type: directory
+          value: app/Policies/.*
+
+    - name: FormRequests
+      collectors:
+        - type: directory
+          value: app/Http/Requests/.*
+
+    - name: Events
+      collectors:
+        - type: directory
+          value: app/Events/.*
+
+    - name: Listeners
+      collectors:
+        - type: directory
+          value: app/Listeners/.*
+
+    - name: Middleware
+      collectors:
+        - type: directory
+          value: app/Http/Middleware/.*
+
+  ruleset:
+    Models:
+      - Enums
+    Services:
+      - Models
+      - Enums
+      - Events
+    Controllers:
+      - Services
+      - Models
+      - Enums
+      - FormRequests
+    Livewire:
+      - Services
+      - Models
+      - Enums
+    Policies:
+      - Models
+      - Enums
+    FormRequests:
+      - Models
+      - Enums
+    Listeners:
+      - Services
+      - Models
+      - Enums
+    Middleware:
+      - Models
+      - Enums
+      - Services

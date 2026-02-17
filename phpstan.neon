@@ -1,0 +1,7 @@
+parameters:
+    paths:
+        - app
+    level: max
+    tmpDir: storage/phpstan
+    parallel:
+        maximumNumberOfProcesses: 1

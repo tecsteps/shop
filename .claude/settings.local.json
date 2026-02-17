@@ -3,6 +3,14 @@
         "allow": [
             "Bash(git add:*)",
             "Bash(git commit:*)",
+            "Bash(php artisan:*)",
+            "Bash(vendor/bin/phpstan:*)",
+            "Bash(vendor/bin/deptrac:*)",
+            "Bash(vendor/bin/pint:*)",
+            "Bash(vendor/bin/pest:*)",
+            "Bash(npm run build:*)",
+            "Bash(git push:*)",
+            "Bash(gh pr create:*)",
             "WebFetch(domain:example.com)"
         ]
     },
@@ -22,7 +30,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "cat README.md"
+                        "command": "cat specs/progress.md 2>/dev/null || echo 'No progress yet - read README.md to begin'"
                     }
                 ]
             }
