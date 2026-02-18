@@ -1,0 +1,104 @@
+<?php declare(strict_types = 1);
+
+// osfsl-/Users/fabianwesner/Herd/shop/database/factories/ThemeSettingsFactory.php-PHPStan\BetterReflection\Reflection\ReflectionClass-Database\Factories\ThemeSettingsFactory
+return \PHPStan\Cache\CacheItem::__set_state(array(
+   'variableKey' => 'v2-f676facc57756f0d4762a8c8136e1fd647bf30981bef52eaa38aed9c253b6197-8.4.17-6.65.0.9',
+   'data' => 
+  array (
+    'locatedSource' => 
+    array (
+      'class' => 'PHPStan\\BetterReflection\\SourceLocator\\Located\\LocatedSource',
+      'data' => 
+      array (
+        'name' => 'Database\\Factories\\ThemeSettingsFactory',
+        'filename' => '/Users/fabianwesner/Herd/shop/database/factories/ThemeSettingsFactory.php',
+      ),
+    ),
+    'namespace' => 'Database\\Factories',
+    'name' => 'Database\\Factories\\ThemeSettingsFactory',
+    'shortName' => 'ThemeSettingsFactory',
+    'isInterface' => false,
+    'isTrait' => false,
+    'isEnum' => false,
+    'isBackedEnum' => false,
+    'modifiers' => 0,
+    'docComment' => '/**
+ * @extends Factory<ThemeSettings>
+ */',
+    'attributes' => 
+    array (
+    ),
+    'startLine' => 12,
+    'endLine' => 51,
+    'startColumn' => 1,
+    'endColumn' => 1,
+    'parentClassName' => 'Illuminate\\Database\\Eloquent\\Factories\\Factory',
+    'implementsClassNames' => 
+    array (
+    ),
+    'traitClassNames' => 
+    array (
+    ),
+    'immediateConstants' => 
+    array (
+    ),
+    'immediateProperties' => 
+    array (
+    ),
+    'immediateMethods' => 
+    array (
+      'definition' => 
+      array (
+        'name' => 'definition',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'array',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => '/**
+ * @return array<string, mixed>
+ */',
+        'startLine' => 17,
+        'endLine' => 50,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'Database\\Factories',
+        'declaringClassName' => 'Database\\Factories\\ThemeSettingsFactory',
+        'implementingClassName' => 'Database\\Factories\\ThemeSettingsFactory',
+        'currentClassName' => 'Database\\Factories\\ThemeSettingsFactory',
+        'aliasName' => NULL,
+      ),
+    ),
+    'traitsData' => 
+    array (
+      'aliases' => 
+      array (
+      ),
+      'modifiers' => 
+      array (
+      ),
+      'precedences' => 
+      array (
+      ),
+      'hashes' => 
+      array (
+      ),
+    ),
+  ),
+));
