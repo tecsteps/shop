@@ -2,6 +2,10 @@
 
 namespace App\Livewire\Storefront;
 
+use App\Enums\CollectionStatus;
+use App\Enums\ProductStatus;
+use App\Models\Collection;
+use App\Models\Product;
 use App\Services\ThemeSettingsService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -21,6 +25,23 @@ class Home extends Component
 
     public function render(): \Illuminate\Contracts\View\View
     {
-        return view('livewire.storefront.home');
+        $collections = Collection::query()
+            ->withoutGlobalScopes()
+            ->where('status', CollectionStatus::Active)
+            ->limit(3)
+            ->get();
+
+        $products = Product::query()
+            ->withoutGlobalScopes()
+            ->where('status', ProductStatus::Active)
+            ->with(['variants' => fn ($q) => $q->where('is_default', true)])
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        return view('livewire.storefront.home', [
+            'collections' => $collections,
+            'products' => $products,
+        ]);
     }
 }

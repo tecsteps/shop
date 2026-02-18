@@ -38,8 +38,12 @@ class NavigationService
      */
     public function resolveUrl(NavigationItem $item): ?string
     {
+        if ($item->url) {
+            return $item->url;
+        }
+
         return match ($item->type) {
-            NavigationItemType::Link => $item->url,
+            NavigationItemType::Link => null,
             NavigationItemType::Page => $item->resource_id ? '/pages/'.$item->resource_id : null,
             NavigationItemType::Collection => $item->resource_id ? '/collections/'.$item->resource_id : null,
             NavigationItemType::Product => $item->resource_id ? '/products/'.$item->resource_id : null,

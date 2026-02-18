@@ -48,6 +48,11 @@ class Login extends Component
             $user = $guard->user();
             $user->update(['last_login_at' => now()]);
 
+            $firstStore = $user->stores()->first();
+            if ($firstStore) {
+                session(['current_store_id' => $firstStore->id]);
+            }
+
             Log::channel('json')->info('Admin login success', [
                 'user_id' => $user->id,
                 'email' => $user->email,
