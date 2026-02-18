@@ -96,7 +96,7 @@ it('rejects expired discount at checkout', function () {
     expect($checkout->totals_json['discount'])->toBe(0);
 });
 
-it('increments usage count on order completion', function () {
+it('does not increment usage count on checkout completion alone', function () {
     $discount = Discount::factory()->create([
         'store_id' => $this->store->id,
         'code' => 'COUNT',
@@ -122,7 +122,8 @@ it('increments usage count on order completion', function () {
     $checkout = $this->checkoutService->selectPaymentMethod($checkout, 'credit_card');
     $checkout = $this->checkoutService->completeCheckout($checkout);
 
-    expect($discount->fresh()->usage_count)->toBe(6);
+    // Usage count is only incremented by OrderService::createFromCheckout
+    expect($discount->fresh()->usage_count)->toBe(5);
 });
 
 it('handles free shipping discount at checkout', function () {

@@ -22,8 +22,12 @@ class Show extends Component
 
     public function render(): \Illuminate\Contracts\View\View
     {
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
+
         $collection = Collection::query()
             ->withoutGlobalScopes()
+            ->where('store_id', $store->id)
             ->where('handle', $this->handle)
             ->where('status', CollectionStatus::Active)
             ->first();

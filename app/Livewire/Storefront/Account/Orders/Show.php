@@ -23,8 +23,12 @@ class Show extends Component
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
+
         $order = Order::query()
             ->withoutGlobalScopes()
+            ->where('store_id', $store->id)
             ->where('customer_id', $customer->id)
             ->where('order_number', $this->orderNumber)
             ->with(['lines', 'payments', 'fulfillments', 'refunds'])

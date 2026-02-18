@@ -191,20 +191,36 @@ class OrderService
     }
 
     /**
-     * Generate the next sequential order number for a store.
+     * Generate the next sequential order number for a store with retry on duplicate.
      */
     public function generateOrderNumber(int $storeId): string
     {
-        /** @var int|null $maxNumber */
-        $maxNumber = Order::query()
-            ->withoutGlobalScopes()
-            ->where('store_id', $storeId)
-            ->selectRaw("MAX(CAST(REPLACE(order_number, '#', '') AS INTEGER)) as max_num")
-            ->value('max_num');
+        $maxRetries = 3;
 
-        $nextNumber = ($maxNumber ?: 1000) + 1;
+        for ($attempt = 0; $attempt < $maxRetries; $attempt++) {
+            /** @var int|null $maxNumber */
+            $maxNumber = Order::query()
+                ->withoutGlobalScopes()
+                ->where('store_id', $storeId)
+                ->selectRaw("MAX(CAST(REPLACE(order_number, '#', '') AS INTEGER)) as max_num")
+                ->value('max_num');
 
-        return '#'.$nextNumber;
+            $nextNumber = ($maxNumber ?: 1000) + 1 + $attempt;
+
+            $candidate = '#'.$nextNumber;
+
+            $exists = Order::query()
+                ->withoutGlobalScopes()
+                ->where('store_id', $storeId)
+                ->where('order_number', $candidate)
+                ->exists();
+
+            if (! $exists) {
+                return $candidate;
+            }
+        }
+
+        return '#'.(($maxNumber ?: 1000) + 1 + $maxRetries);
     }
 
     /**

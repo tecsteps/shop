@@ -52,7 +52,7 @@ class RefundService
         }
 
         /** @var Refund $result */
-        $result = DB::transaction(function () use ($order, $capturedPayment, $refundAmount, $reason, $restock) {
+        $result = DB::transaction(function () use ($order, $capturedPayment, $refundAmount, $totalRefunded, $reason, $restock) {
             $providerResult = $this->paymentProvider->refund($capturedPayment, $refundAmount);
 
             /** @var Refund $refund */
@@ -67,12 +67,7 @@ class RefundService
             ]);
 
             if ($providerResult->success) {
-                // Calculate total refunded including this refund
-                /** @var int $alreadyRefunded */
-                $alreadyRefunded = $order->refunds()
-                    ->where('status', RefundStatus::Processed->value)
-                    ->sum('amount');
-                $totalRefundedNow = $alreadyRefunded + $refundAmount;
+                $totalRefundedNow = $totalRefunded + $refundAmount;
 
                 if ($totalRefundedNow >= $order->total_amount) {
                     $order->update([

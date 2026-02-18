@@ -31,10 +31,6 @@ class Show extends Component
             ->with(['variants' => fn ($q) => $q->orderBy('position')])
             ->firstOrFail();
 
-        if (! $product) {
-            abort(404);
-        }
-
         $defaultVariant = $product->variants->firstWhere('is_default', true)
             ?? $product->variants->first();
 
@@ -45,8 +41,12 @@ class Show extends Component
 
     public function addToCart(): void
     {
+        /** @var Store $store */
+        $store = app('current_store');
+
         $product = Product::query()
             ->withoutGlobalScopes()
+            ->where('store_id', $store->id)
             ->where('handle', $this->handle)
             ->where('status', ProductStatus::Active)
             ->first();
@@ -55,7 +55,6 @@ class Show extends Component
             return;
         }
 
-        $store = Store::query()->findOrFail($product->store_id);
         $cartService = app(CartService::class);
 
         $cart = $this->getOrCreateCart($store, $cartService);
@@ -77,8 +76,12 @@ class Show extends Component
 
     public function render(): \Illuminate\Contracts\View\View
     {
+        /** @var Store $store */
+        $store = app('current_store');
+
         $product = Product::query()
             ->withoutGlobalScopes()
+            ->where('store_id', $store->id)
             ->where('handle', $this->handle)
             ->where('status', ProductStatus::Active)
             ->with([
@@ -102,7 +105,10 @@ class Show extends Component
         $cartId = session('cart_id');
 
         if ($cartId) {
-            $cart = Cart::query()->withoutGlobalScopes()->find($cartId);
+            /** @var Cart|null $cart */
+            $cart = Cart::query()->withoutGlobalScopes()
+                ->where('store_id', $store->id)
+                ->find($cartId);
             if ($cart) {
                 return $cart;
             }

@@ -25,14 +25,19 @@ class Home extends Component
 
     public function render(): \Illuminate\Contracts\View\View
     {
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
+
         $collections = Collection::query()
             ->withoutGlobalScopes()
+            ->where('store_id', $store->id)
             ->where('status', CollectionStatus::Active)
             ->limit(3)
             ->get();
 
         $products = Product::query()
             ->withoutGlobalScopes()
+            ->where('store_id', $store->id)
             ->where('status', ProductStatus::Active)
             ->with(['variants' => fn ($q) => $q->where('is_default', true)])
             ->latest()

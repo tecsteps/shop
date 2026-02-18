@@ -131,14 +131,17 @@ class DeliverWebhook implements ShouldQueue
 
     protected function checkCircuitBreaker(WebhookSubscription $subscription): void
     {
-        $consecutiveFailures = WebhookDelivery::query()
+        /** @var \Illuminate\Support\Collection<int, WebhookDelivery> $recentDeliveries */
+        $recentDeliveries = WebhookDelivery::query()
             ->where('subscription_id', $subscription->id)
-            ->where('status', WebhookDeliveryStatus::Failed)
             ->latest('last_attempt_at')
-            ->limit(5)
-            ->count();
+            ->take(5)
+            ->get();
 
-        if ($consecutiveFailures >= 5) {
+        $allFailed = $recentDeliveries->count() >= 5
+            && $recentDeliveries->every(fn (WebhookDelivery $d): bool => $d->status === WebhookDeliveryStatus::Failed);
+
+        if ($allFailed) {
             $subscription->update([
                 'status' => WebhookSubscriptionStatus::Paused,
             ]);

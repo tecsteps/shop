@@ -75,7 +75,7 @@ class Show extends Component
         /** @var RefundService $service */
         $service = app(RefundService::class);
 
-        $service->create($this->order, $this->refundAmount, $this->refundReason ?: null);
+        $service->create($this->order, $this->refundAmount, $this->refundReason ?: null, $this->restockItems);
 
         $this->order->refresh();
         $this->showRefundModal = false;

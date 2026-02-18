@@ -128,6 +128,9 @@ class CheckoutService
 
     /**
      * Complete checkout (payment_selected -> completed). Idempotent.
+     *
+     * Inventory commit and discount usage increment are handled exclusively
+     * by OrderService::createFromCheckout to prevent double operations.
      */
     public function completeCheckout(Checkout $checkout): Checkout
     {
@@ -137,30 +140,12 @@ class CheckoutService
 
         $this->assertTransition($checkout, CheckoutStatus::Completed);
 
-        $checkout->loadMissing('cart.lines.variant.inventoryItem');
-
-        // Commit inventory (on_hand down, reserved down)
-        foreach ($checkout->cart->lines as $line) {
-            if ($line->variant->inventoryItem) {
-                $this->inventoryService->commit($line->variant->inventoryItem, $line->quantity);
-            }
-        }
-
         $checkout->update([
             'status' => CheckoutStatus::Completed,
             'completed_at' => now(),
         ]);
 
         $checkout->cart->update(['status' => CartStatus::Converted]);
-
-        // Increment discount usage if applicable
-        if ($checkout->discount_code) {
-            \App\Models\Discount::query()
-                ->withoutGlobalScopes()
-                ->where('store_id', $checkout->store_id)
-                ->whereRaw('LOWER(code) = ?', [strtolower($checkout->discount_code)])
-                ->increment('usage_count');
-        }
 
         return $checkout->refresh();
     }

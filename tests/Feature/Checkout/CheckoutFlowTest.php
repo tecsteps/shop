@@ -63,8 +63,9 @@ it('completes full checkout happy path', function () {
     expect($checkout->status)->toBe(CheckoutStatus::Completed)
         ->and($checkout->cart->status)->toBe(CartStatus::Converted);
 
+    // Inventory commit handled by OrderService::createFromCheckout, not completeCheckout
     $inventory = InventoryItem::where('variant_id', $variant->id)->first();
-    expect($inventory->quantity_on_hand)->toBe(8);
+    expect($inventory->quantity_on_hand)->toBe(10);
 });
 
 it('rejects checkout for empty cart', function () {

@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Cart;
 
 use App\Models\Cart;
+use App\Models\CartLine;
 use App\Services\CartService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -25,11 +26,12 @@ class Show extends Component
     {
         $cart = $this->getCart();
 
+        /** @var \Illuminate\Database\Eloquent\Collection<int, CartLine> $lines */
         $lines = $cart
             ? $cart->lines()->with('variant.product')->get()
             : collect();
 
-        $subtotal = $lines->sum(fn ($line) => $line->unit_price_amount * $line->quantity);
+        $subtotal = $lines->sum(fn (CartLine $line) => $line->unit_price_amount * $line->quantity);
         $currency = $cart->currency ?? 'EUR';
 
         return view('livewire.storefront.cart.show', [
@@ -48,6 +50,14 @@ class Show extends Component
             return null;
         }
 
-        return Cart::query()->withoutGlobalScopes()->find($cartId);
+        /** @var \App\Models\Store $store */
+        $store = app('current_store');
+
+        /** @var Cart|null $cart */
+        $cart = Cart::query()->withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->find($cartId);
+
+        return $cart;
     }
 }
