@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ThemeSeeder::class,
             PageSeeder::class,
             NavigationSeeder::class,
+            ShippingAndTaxSeeder::class,
         ]);
     }
 }
