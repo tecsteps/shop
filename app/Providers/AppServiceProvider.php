@@ -70,5 +70,13 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request): Limit {
             return Limit::perMinute(5)->by($request->ip() ?? '127.0.0.1');
         });
+
+        RateLimiter::for('api.storefront', function (Request $request): Limit {
+            return Limit::perMinute(120)->by($request->ip() ?? '127.0.0.1');
+        });
+
+        RateLimiter::for('api.admin', function (Request $request): Limit {
+            return Limit::perMinute(60)->by($request->user()?->id ?: ($request->ip() ?? '127.0.0.1'));
+        });
     }
 }
