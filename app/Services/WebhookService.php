@@ -26,12 +26,14 @@ class WebhookService
             ->get();
 
         foreach ($subscriptions as $subscription) {
-            $delivery = WebhookDelivery::create([
+            $delivery = new WebhookDelivery;
+            $delivery->fill([
                 'subscription_id' => $subscription->id,
                 'event_id' => Str::uuid()->toString(),
                 'attempt_count' => 0,
                 'status' => 'pending',
             ]);
+            $delivery->save();
 
             DeliverWebhook::dispatch($delivery, $payload);
         }

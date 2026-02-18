@@ -12,7 +12,9 @@ class Dashboard extends Component
 {
     public function logout(): void
     {
-        Auth::guard('customer')->logout();
+        /** @var \Illuminate\Auth\SessionGuard $guard */
+        $guard = Auth::guard('customer');
+        $guard->logout();
         session()->invalidate();
         session()->regenerateToken();
 

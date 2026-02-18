@@ -45,12 +45,13 @@ class Show extends Component
         /** @var FulfillmentService $service */
         $service = app(FulfillmentService::class);
 
-        $lines = $this->order->lines->map(fn ($line) => [
-            'order_line_id' => $line->id,
-            'quantity' => $line->quantity,
-        ])->toArray();
+        /** @var array<int, int> $lines */
+        $lines = $this->order->lines->pluck('quantity', 'id')->all();
 
-        $service->create($this->order, $lines, $this->trackingNumber ?: null, $this->trackingUrl ?: null);
+        $service->create($this->order, $lines, [
+            'tracking_number' => $this->trackingNumber ?: null,
+            'tracking_url' => $this->trackingUrl ?: null,
+        ]);
 
         $this->order->refresh();
         $this->showFulfillmentModal = false;

@@ -45,7 +45,7 @@ class Form extends Component
     {
         if ($discount?->exists) {
             $this->discount = $discount;
-            $this->code = $discount->code;
+            $this->code = (string) $discount->code;
             $this->type = $discount->type->value;
             $this->valueType = $discount->value_type->value;
             $this->value = $discount->value_amount;

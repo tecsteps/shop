@@ -19,7 +19,7 @@ class Show extends Component
 
     public function render(): View
     {
-        $this->customer->load(['orders' => function ($query) {
+        $this->customer->load(['orders' => function (\Illuminate\Database\Eloquent\Relations\HasMany $query): void {
             $query->latest('placed_at')->limit(10);
         }, 'addresses']);
 

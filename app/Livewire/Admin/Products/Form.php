@@ -51,14 +51,14 @@ class Form extends Component
             $this->status = $product->status->value;
             $this->vendor = $product->vendor ?? '';
             $this->type = $product->product_type ?? '';
-            $this->tags = is_array($product->tags) ? implode(', ', $product->tags) : '';
+            $this->tags = implode(', ', $product->tags ?? []);
 
             $defaultVariant = $product->variants()->first();
             if ($defaultVariant) {
                 $this->price = $defaultVariant->price_amount;
                 $this->sku = $defaultVariant->sku ?? '';
                 $inventoryItem = $defaultVariant->inventoryItem;
-                $this->inventoryQuantity = $inventoryItem?->quantity_on_hand ?? 0;
+                $this->inventoryQuantity = $inventoryItem->quantity_on_hand ?? 0;
             }
         }
     }

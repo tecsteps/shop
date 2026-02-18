@@ -21,7 +21,8 @@ class AnalyticsService
         ?string $sessionId = null,
         ?int $customerId = null
     ): AnalyticsEvent {
-        return AnalyticsEvent::create([
+        $event = new AnalyticsEvent;
+        $event->fill([
             'store_id' => $store->id,
             'type' => $type,
             'properties_json' => $properties,
@@ -30,6 +31,9 @@ class AnalyticsService
             'occurred_at' => now(),
             'created_at' => now(),
         ]);
+        $event->save();
+
+        return $event;
     }
 
     /**
@@ -39,6 +43,7 @@ class AnalyticsService
      */
     public function getDailyMetrics(Store $store, string $startDate, string $endDate): Collection
     {
+        /** @var Collection<int, AnalyticsDaily> */
         return AnalyticsDaily::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)

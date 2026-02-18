@@ -45,11 +45,13 @@ class Index extends Component
         } else {
             /** @var Store $store */
             $store = app('current_store');
-            $this->selectedIds = Product::query()
+            /** @var array<int> $ids */
+            $ids = Product::query()
                 ->withoutGlobalScopes()
                 ->where('store_id', $store->id)
                 ->pluck('id')
                 ->toArray();
+            $this->selectedIds = $ids;
             $this->selectAll = true;
         }
     }

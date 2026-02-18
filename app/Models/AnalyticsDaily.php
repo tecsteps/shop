@@ -26,6 +26,7 @@ class AnalyticsDaily extends Model
 
     protected $table = 'analytics_daily';
 
+    /** @phpstan-ignore property.defaultValue */
     protected $primaryKey = ['store_id', 'date'];
 
     protected $fillable = [

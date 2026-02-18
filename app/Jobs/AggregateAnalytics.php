@@ -66,8 +66,10 @@ class AggregateAnalytics implements ShouldQueue
             )
             ->first();
 
-        $ordersCount = $orderData?->orders_count ?? 0;
-        $revenueAmount = $orderData?->revenue_amount ?? 0;
+        /** @var int $ordersCount */
+        $ordersCount = $orderData->orders_count ?? 0;
+        /** @var int $revenueAmount */
+        $revenueAmount = $orderData->revenue_amount ?? 0;
         $aovAmount = $ordersCount > 0 ? (int) round($revenueAmount / $ordersCount) : 0;
 
         DB::table('analytics_daily')->upsert(

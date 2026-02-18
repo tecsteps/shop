@@ -5,7 +5,6 @@ namespace App\Livewire\Admin;
 use App\Models\Order;
 use App\Models\Store;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -43,7 +42,9 @@ class Dashboard extends Component
             ->whereNotNull('placed_at')
             ->whereBetween('placed_at', [$start, $end]);
 
-        $this->totalSales = (int) (clone $query)->sum('total_amount');
+        /** @var int|float $sum */
+        $sum = (clone $query)->sum('total_amount');
+        $this->totalSales = (int) $sum;
         $this->ordersCount = (clone $query)->count();
         $this->averageOrderValue = $this->ordersCount > 0
             ? (int) round($this->totalSales / $this->ordersCount)
@@ -51,7 +52,7 @@ class Dashboard extends Component
     }
 
     /**
-     * @return array{Carbon, Carbon}
+     * @return array{\Carbon\CarbonInterface, \Carbon\CarbonInterface}
      */
     protected function getDateRange(): array
     {
@@ -69,11 +70,13 @@ class Dashboard extends Component
         /** @var Store $store */
         $store = app('current_store');
 
-        $recentOrders = Order::query()
+        /** @var \Illuminate\Database\Eloquent\Builder<Order> $orderQuery */
+        $orderQuery = Order::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
-            ->whereNotNull('placed_at')
-            ->with('customer')
+            ->whereNotNull('placed_at');
+
+        $recentOrders = $orderQuery->with('customer')
             ->latest('placed_at')
             ->limit(10)
             ->get();

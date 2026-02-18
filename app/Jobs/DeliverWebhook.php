@@ -42,7 +42,7 @@ class DeliverWebhook implements ShouldQueue
         $secret = $subscription->signing_secret_encrypted;
         $signature = $webhookService->sign($payloadJson, $secret);
 
-        $this->delivery->increment('attempt_count');
+        $this->delivery->update(['attempt_count' => $this->delivery->attempt_count + 1]);
         $this->delivery->update(['last_attempt_at' => now()]);
 
         try {

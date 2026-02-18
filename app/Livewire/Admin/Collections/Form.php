@@ -29,7 +29,9 @@ class Form extends Component
         if ($collection?->exists) {
             $this->collection = $collection;
             $this->title = $collection->title;
-            $this->description = $collection->description ?? '';
+            /** @var string $description */
+            $description = $collection->description ?? '';
+            $this->description = $description;
             $this->status = $collection->status->value;
         }
     }

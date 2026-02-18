@@ -59,14 +59,17 @@ class Index extends Component
 
         $this->editingAddressId = $address->id;
         $this->label = $address->label ?? '';
-        $this->firstName = $address->address_json['first_name'] ?? '';
-        $this->lastName = $address->address_json['last_name'] ?? '';
-        $this->address1 = $address->address_json['address1'] ?? '';
-        $this->address2 = $address->address_json['address2'] ?? '';
-        $this->city = $address->address_json['city'] ?? '';
-        $this->zip = $address->address_json['zip'] ?? '';
-        $this->countryCode = $address->address_json['country_code'] ?? 'DE';
-        $this->phone = $address->address_json['phone'] ?? '';
+
+        /** @var array<string, string> $json */
+        $json = $address->address_json ?? [];
+        $this->firstName = $json['first_name'] ?? '';
+        $this->lastName = $json['last_name'] ?? '';
+        $this->address1 = $json['address1'] ?? '';
+        $this->address2 = $json['address2'] ?? '';
+        $this->city = $json['city'] ?? '';
+        $this->zip = $json['zip'] ?? '';
+        $this->countryCode = $json['country_code'] ?? 'DE';
+        $this->phone = $json['phone'] ?? '';
         $this->isDefault = $address->is_default;
         $this->showForm = true;
     }
