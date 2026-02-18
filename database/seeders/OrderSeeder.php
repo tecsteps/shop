@@ -312,7 +312,7 @@ class OrderSeeder extends Seeder
         OrderStatus $orderStatus,
         FinancialStatus $financialStatus,
         FulfillmentStatus $fulfillmentStatus,
-        \Illuminate\Support\Carbon $placedAt,
+        \Carbon\CarbonInterface $placedAt,
         array $address,
         array $lines,
         callable $findVariant,
@@ -381,7 +381,7 @@ class OrderSeeder extends Seeder
         Order $order,
         ?string $trackingCompany,
         ?string $trackingNumber,
-        \Illuminate\Support\Carbon $shippedAt,
+        \Carbon\CarbonInterface $shippedAt,
         FulfillmentShipmentStatus $status,
     ): void {
         $order->loadMissing('lines');
