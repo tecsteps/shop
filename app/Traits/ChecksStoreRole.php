@@ -3,16 +3,24 @@
 namespace App\Traits;
 
 use App\Enums\StoreUserRole;
+use App\Models\Store;
+use App\Models\StoreUser;
 use App\Models\User;
 
 trait ChecksStoreRole
 {
     public function getStoreRole(User $user, int $storeId): ?StoreUserRole
     {
-        $pivot = $user->stores()
+        $store = $user->stores()
             ->where('stores.id', $storeId)
-            ->first()
-            ?->pivot;
+            ->first();
+
+        if (! $store) {
+            return null;
+        }
+
+        /** @var StoreUser|null $pivot */
+        $pivot = $store->getRelation('pivot');
 
         return $pivot?->role;
     }
@@ -55,6 +63,9 @@ trait ChecksStoreRole
 
     protected function resolveStoreId(): int
     {
-        return app('current_store')->id;
+        /** @var Store $store */
+        $store = app('current_store');
+
+        return $store->id;
     }
 }

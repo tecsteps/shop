@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property int $id
+ * @property int $store_id
+ * @property string $name
+ * @property string $email
+ * @property string|null $password
+ * @property bool $marketing_opt_in
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ */
 class Customer extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */

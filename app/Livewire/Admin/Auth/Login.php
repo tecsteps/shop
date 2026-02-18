@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Auth;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Layout;
@@ -32,15 +33,18 @@ class Login extends Component
             return;
         }
 
-        if (Auth::guard('web')->attempt(
+        /** @var \Illuminate\Auth\SessionGuard $guard */
+        $guard = Auth::guard('web');
+
+        if ($guard->attempt(
             ['email' => $this->email, 'password' => $this->password],
             $this->remember
         )) {
             RateLimiter::clear($throttleKey);
             session()->regenerate();
 
-            /** @var \App\Models\User $user */
-            $user = Auth::guard('web')->user();
+            /** @var User $user */
+            $user = $guard->user();
             $user->update(['last_login_at' => now()]);
 
             $this->redirect('/admin');

@@ -10,6 +10,18 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $password
+ * @property string|null $status
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property \Illuminate\Support\Carbon|null $last_login_at
+ * @property string|null $two_factor_secret
+ * @property string|null $two_factor_recovery_codes
+ * @property \Illuminate\Support\Carbon|null $two_factor_confirmed_at
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -51,7 +63,6 @@ class User extends Authenticatable
     public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'store_users')
-            ->using(StoreUser::class)
             ->withPivot('role');
     }
 
@@ -60,10 +71,17 @@ class User extends Authenticatable
      */
     public function roleForStore(Store $store): ?StoreUserRole
     {
-        $pivot = $this->stores()
+        /** @var Store|null $storeWithPivot */
+        $storeWithPivot = $this->stores()
             ->where('stores.id', $store->id)
-            ->first()
-            ?->pivot;
+            ->first();
+
+        if (! $storeWithPivot) {
+            return null;
+        }
+
+        /** @var StoreUser|null $pivot */
+        $pivot = $storeWithPivot->getRelation('pivot');
 
         return $pivot?->role;
     }
@@ -76,7 +94,7 @@ class User extends Authenticatable
         return Str::of($this->name)
             ->explode(' ')
             ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->map(fn (string $word): string => Str::substr($word, 0, 1))
             ->implode('');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Account\Auth;
 
 use App\Models\Customer;
+use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
@@ -26,7 +27,9 @@ class Register extends Component
      */
     public function rules(): array
     {
-        $storeId = app('current_store')->id;
+        /** @var Store $store */
+        $store = app('current_store');
+        $storeId = $store->id;
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -42,17 +45,23 @@ class Register extends Component
 
     public function register(): void
     {
+        /** @var array{name: string, email: string, password: string, marketing_opt_in: bool} $validated */
         $validated = $this->validate();
 
-        $customer = Customer::create([
-            'store_id' => app('current_store')->id,
+        /** @var Store $store */
+        $store = app('current_store');
+
+        $customer = Customer::query()->create([
+            'store_id' => $store->id,
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
             'marketing_opt_in' => $this->marketing_opt_in,
         ]);
 
-        Auth::guard('customer')->login($customer);
+        /** @var \Illuminate\Auth\SessionGuard $guard */
+        $guard = Auth::guard('customer');
+        $guard->login($customer);
 
         session()->regenerate();
 

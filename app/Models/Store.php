@@ -10,6 +10,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $id
+ * @property int $organization_id
+ * @property string $name
+ * @property string $handle
+ * @property StoreStatus $status
+ * @property string $default_currency
+ * @property string $default_locale
+ * @property string $timezone
+ */
 class Store extends Model
 {
     /** @use HasFactory<\Database\Factories\StoreFactory> */
@@ -57,7 +67,6 @@ class Store extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'store_users')
-            ->using(StoreUser::class)
             ->withPivot('role');
     }
 

@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Auth\CustomerUserProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -47,15 +49,18 @@ class AppServiceProvider extends ServiceProvider
 
     protected function configureAuth(): void
     {
-        Auth::provider('customers', function ($app, array $config) {
-            return new CustomerUserProvider($app['hash']);
+        Auth::provider('customers', function (): CustomerUserProvider {
+            /** @var Hasher $hasher */
+            $hasher = app(Hasher::class);
+
+            return new CustomerUserProvider($hasher);
         });
     }
 
     protected function configureRateLimiting(): void
     {
-        RateLimiter::for('login', function ($request) {
-            return Limit::perMinute(5)->by($request->ip());
+        RateLimiter::for('login', function (Request $request): Limit {
+            return Limit::perMinute(5)->by($request->ip() ?? '127.0.0.1');
         });
     }
 }

@@ -32,7 +32,10 @@ class Login extends Component
             return;
         }
 
-        if (Auth::guard('customer')->attempt(
+        /** @var \Illuminate\Auth\SessionGuard $guard */
+        $guard = Auth::guard('customer');
+
+        if ($guard->attempt(
             ['email' => $this->email, 'password' => $this->password],
             $this->remember
         )) {

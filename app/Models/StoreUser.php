@@ -5,6 +5,11 @@ namespace App\Models;
 use App\Enums\StoreUserRole;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * @property int $store_id
+ * @property int $user_id
+ * @property StoreUserRole $role
+ */
 class StoreUser extends Pivot
 {
     public $incrementing = false;

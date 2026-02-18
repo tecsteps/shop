@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Enums\StoreStatus;
 use App\Models\Store;
 use App\Models\StoreDomain;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -21,20 +22,22 @@ class ResolveStore
         return $this->resolveForStorefront($request, $next);
     }
 
+    /**
+     * @param  Closure(Request): Response  $next
+     */
     protected function resolveForStorefront(Request $request, Closure $next): Response
     {
         $hostname = $request->getHost();
         $cacheKey = "store_domain:{$hostname}";
 
-        $storeId = Cache::remember($cacheKey, 300, function () use ($hostname) {
-            return StoreDomain::where('hostname', $hostname)->value('store_id');
-        });
+        /** @var int|null $storeId */
+        $storeId = Cache::remember($cacheKey, 300, fn (): mixed => StoreDomain::query()->where('hostname', $hostname)->value('store_id'));
 
         if (! $storeId) {
             abort(404);
         }
 
-        $store = Store::find($storeId);
+        $store = Store::query()->find($storeId);
 
         if (! $store) {
             abort(404);
@@ -49,20 +52,25 @@ class ResolveStore
         return $next($request);
     }
 
+    /**
+     * @param  Closure(Request): Response  $next
+     */
     protected function resolveForAdmin(Request $request, Closure $next): Response
     {
+        /** @var int|null $storeId */
         $storeId = $request->session()->get('current_store_id');
 
         if (! $storeId) {
             abort(403);
         }
 
-        $store = Store::find($storeId);
+        $store = Store::query()->find($storeId);
 
         if (! $store) {
             abort(403);
         }
 
+        /** @var User|null $user */
         $user = $request->user();
 
         if (! $user) {

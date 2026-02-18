@@ -3,6 +3,7 @@
 namespace App\Auth;
 
 use App\Models\Customer;
+use App\Models\Store;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -31,7 +32,9 @@ class CustomerUserProvider extends EloquentUserProvider
     protected function injectStoreId(array $credentials): array
     {
         if (! isset($credentials['store_id']) && app()->bound('current_store')) {
-            $credentials['store_id'] = app('current_store')->id;
+            /** @var Store $store */
+            $store = app('current_store');
+            $credentials['store_id'] = $store->id;
         }
 
         return $credentials;

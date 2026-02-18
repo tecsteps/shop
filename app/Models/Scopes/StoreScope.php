@@ -2,6 +2,7 @@
 
 namespace App\Models\Scopes;
 
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -13,10 +14,13 @@ class StoreScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $store = app()->bound('current_store') ? app('current_store') : null;
-
-        if ($store) {
-            $builder->where($model->getTable().'.store_id', $store->id);
+        if (! app()->bound('current_store')) {
+            return;
         }
+
+        /** @var Store $store */
+        $store = app('current_store');
+
+        $builder->where($model->getTable().'.store_id', $store->id);
     }
 }
