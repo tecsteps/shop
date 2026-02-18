@@ -2,33 +2,40 @@
 
 namespace App\Providers;
 
+use App\Auth\CustomerUserProvider;
+use App\Contracts\PaymentProvider;
+use App\Models\Product;
+use App\Observers\ProductObserver;
+use App\Services\Payment\MockPaymentProvider;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+        $this->app->singleton(ThemeSettingsService::class);
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureAuth();
+        $this->configureRateLimiting();
+
+        Product::observe(ProductObserver::class);
     }
 
-    /**
-     * Configure default behaviors for production-ready applications.
-     */
     protected function configureDefaults(): void
     {
         Date::use(CarbonImmutable::class);
@@ -46,5 +53,33 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null
         );
+    }
+
+    protected function configureAuth(): void
+    {
+        Auth::provider('customers', function (): CustomerUserProvider {
+            /** @var Hasher $hasher */
+            $hasher = app(Hasher::class);
+
+            return new CustomerUserProvider($hasher);
+        });
+    }
+
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('login', function (Request $request): Limit {
+            return Limit::perMinute(5)->by($request->ip() ?? '127.0.0.1');
+        });
+
+        RateLimiter::for('api.storefront', function (Request $request): Limit {
+            return Limit::perMinute(120)->by($request->ip() ?? '127.0.0.1');
+        });
+
+        RateLimiter::for('api.admin', function (Request $request): Limit {
+            /** @var \App\Models\User|null $user */
+            $user = $request->user();
+
+            return Limit::perMinute(60)->by($user?->id ?: ($request->ip() ?? '127.0.0.1'));
+        });
     }
 }

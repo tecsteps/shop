@@ -1,0 +1,4 @@
+[  481635ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/account/orders/1001:0
+[  569838ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/discontinued-raincoat:0
+[  589775ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[  608896ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products:0

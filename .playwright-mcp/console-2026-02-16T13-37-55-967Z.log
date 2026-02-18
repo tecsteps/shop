@@ -1,0 +1,11 @@
+[   17079ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[   17401ms] Object
+[   19071ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[   19338ms] InvalidStateError: Failed to execute 'showModal' on 'HTMLDialogElement': The dialog is already open as a non-modal dialog, and therefore cannot be opened as a modal dialog.
+    at showHtmlModal (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:4633:11)
+    at Object.error (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5434:11)
+    at sendRequest (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5524:16)
+[   19338ms] Object
+[  101601ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[  101919ms] Object
+[  295973ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products:0

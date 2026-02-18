@@ -1,0 +1,40 @@
+[      75ms] NotSupportedError: Failed to execute 'define' on 'CustomElementRegistry': the name "ui-modal" has already been used with this registry
+    at A (http://shop.test/flux/flux.js?id=dca30f4a:125:5137)
+    at http://shop.test/flux/flux.js?id=dca30f4a:125:17793
+    at http://shop.test/flux/flux.js?id=dca30f4a:128:38249
+[      75ms] [WARNING] Detected multiple instances of Livewire running @ http://shop.test/admin/login:111
+[      75ms] [WARNING] Detected multiple instances of Alpine running @ http://shop.test/admin/login:111
+[      82ms] [WARNING] Alpine Expression Error: Illegal invocation
+
+Expression: "open"
+
+ JSHandle@node @ http://shop.test/admin/login:111
+[      82ms] [WARNING] Alpine Expression Error: fluxInputViewable is not defined
+
+Expression: "fluxInputViewable"
+
+ JSHandle@node @ http://shop.test/admin/login:111
+[      83ms] [WARNING] Livewire: missing closing tags found. Ensure your template elements contain matching closing tags. JSHandle@node @ http://shop.test/admin/login:111
+[      88ms] TypeError: Illegal invocation
+    at runIfTypeOfFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1424:26)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1412:11
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3859:19
+    at reactiveEffect (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:2693:18)
+    at Object.effect2 [as effect] (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:2668:7)
+    at effect (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:935:35)
+    at wrappedEffect (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:951:29)
+    at handler2 (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3859:5)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+[      89ms] ReferenceError: fluxInputViewable is not defined
+    at [Alpine] fluxInputViewable (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:3:32)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1410:28
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3890:17)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)
+    at deferHandlingDirectives (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1535:5)
+    at initTree (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1732:5)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1678:7
+[      85ms] [WARNING] Livewire: missing closing tags found. Ensure your template elements contain matching closing tags. JSHandle@node @ http://shop.test/admin/login:111
