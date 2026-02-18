@@ -52,11 +52,11 @@ class CartController extends Controller
             ->where('store_id', $store->id)
             ->findOrFail($cart);
 
-        $this->cartService->addLine(
-            $cartModel,
-            (int) $request->validated('variant_id'),
-            (int) $request->validated('quantity'),
-        );
+        /** @var int $variantId */
+        $variantId = $request->validated('variant_id');
+        /** @var int $quantity */
+        $quantity = $request->validated('quantity');
+        $this->cartService->addLine($cartModel, $variantId, $quantity);
 
         return (new CartResource($cartModel->refresh()))->response();
     }
@@ -72,11 +72,15 @@ class CartController extends Controller
             ->findOrFail($cart);
 
         try {
+            /** @var int $updateQuantity */
+            $updateQuantity = $request->validated('quantity');
+            /** @var int $cartVersion */
+            $cartVersion = $request->validated('cart_version');
             $this->cartService->updateLineQuantity(
                 $cartModel,
                 $line,
-                (int) $request->validated('quantity'),
-                (int) $request->validated('cart_version'),
+                $updateQuantity,
+                $cartVersion,
             );
         } catch (CartVersionMismatchException) {
             return response()->json([
@@ -98,13 +102,13 @@ class CartController extends Controller
             ->where('store_id', $store->id)
             ->findOrFail($cart);
 
-        $expectedVersion = $request->input('cart_version');
+        $expectedVersion = $request->filled('cart_version') ? $request->integer('cart_version') : null;
 
         try {
             $this->cartService->removeLine(
                 $cartModel,
                 $line,
-                $expectedVersion ? (int) $expectedVersion : null,
+                $expectedVersion,
             );
         } catch (CartVersionMismatchException) {
             return response()->json([

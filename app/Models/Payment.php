@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $amount
  * @property string $currency
  * @property string|null $raw_json_encrypted
+ * @property \Illuminate\Support\Carbon|null $created_at
  * @property-read Order $order
  */
 class Payment extends Model

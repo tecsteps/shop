@@ -29,26 +29,26 @@ class OrderController extends Controller
             ->where('store_id', $store->id);
 
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            $query->where('status', $request->string('status')->toString());
         }
 
         if ($request->filled('financial_status')) {
-            $query->where('financial_status', $request->input('financial_status'));
+            $query->where('financial_status', $request->string('financial_status')->toString());
         }
 
         if ($request->filled('fulfillment_status')) {
-            $query->where('fulfillment_status', $request->input('fulfillment_status'));
+            $query->where('fulfillment_status', $request->string('fulfillment_status')->toString());
         }
 
         if ($request->filled('query')) {
-            $search = $request->input('query');
+            $search = $request->string('query')->toString();
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             });
         }
 
-        $perPage = min((int) $request->input('per_page', 25), 100);
+        $perPage = min($request->integer('per_page', 25), 100);
         $orders = $query->orderBy('placed_at', 'desc')->paginate($perPage);
 
         return response()->json([
@@ -91,6 +91,7 @@ class OrderController extends Controller
             $lines[(int) $item['order_line_id']] = (int) $item['quantity'];
         }
 
+        /** @var array<string, string|null> $trackingData */
         $trackingData = [
             'tracking_company' => $request->validated('tracking_company'),
             'tracking_number' => $request->validated('tracking_number'),
@@ -110,7 +111,7 @@ class OrderController extends Controller
             'data' => [
                 'id' => $fulfillment->id,
                 'order_id' => $orderModel->id,
-                'status' => $fulfillment->status?->value ?? $fulfillment->status,
+                'status' => $fulfillment->status->value,
                 'tracking_company' => $fulfillment->tracking_company,
                 'tracking_number' => $fulfillment->tracking_number,
                 'tracking_url' => $fulfillment->tracking_url,
@@ -133,10 +134,14 @@ class OrderController extends Controller
             ->findOrFail($order);
 
         try {
+            /** @var string|null $reason */
+            $reason = $request->validated('reason');
+            /** @var int $amount */
+            $amount = $request->validated('amount');
             $refund = $this->refundService->create(
                 $orderModel,
-                (int) $request->validated('amount'),
-                $request->validated('reason'),
+                $amount,
+                $reason,
                 (bool) $request->validated('restock', false),
             );
         } catch (\App\Exceptions\RefundExceedsPaymentException $e) {
@@ -151,7 +156,7 @@ class OrderController extends Controller
                 'order_id' => $orderModel->id,
                 'amount' => $refund->amount,
                 'reason' => $refund->reason,
-                'status' => $refund->status?->value ?? $refund->status,
+                'status' => $refund->status->value,
                 'created_at' => $refund->created_at?->toIso8601String(),
             ],
         ], 201);
@@ -159,6 +164,7 @@ class OrderController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
+        /** @var \App\Models\User|null $user */
         $user = $request->user();
 
         if (! $user) {

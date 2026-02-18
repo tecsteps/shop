@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $reason
  * @property RefundStatus $status
  * @property string|null $provider_refund_id
+ * @property \Illuminate\Support\Carbon|null $created_at
  * @property-read Order $order
  * @property-read Payment $payment
  */

@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $discount_code
  * @property string|null $note
  * @property array<string, mixed>|null $metadata
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, CartLine> $lines
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Checkout> $checkouts
  */

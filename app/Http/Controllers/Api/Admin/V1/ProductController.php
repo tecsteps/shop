@@ -27,14 +27,14 @@ class ProductController extends Controller
             ->where('store_id', $store->id);
 
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            $query->where('status', $request->string('status')->toString());
         }
 
         if ($request->filled('query')) {
-            $query->where('title', 'like', '%'.$request->input('query').'%');
+            $query->where('title', 'like', '%'.$request->string('query')->toString().'%');
         }
 
-        $perPage = min((int) $request->input('per_page', 15), 100);
+        $perPage = min($request->integer('per_page', 15), 100);
         $products = $query->orderBy('updated_at', 'desc')->paginate($perPage);
 
         return response()->json([
@@ -52,7 +52,9 @@ class ProductController extends Controller
     {
         $this->authorizeStore($request, $store);
 
-        $product = $this->productService->create($store, $request->validated());
+        /** @var array<string, mixed> $data */
+        $data = $request->validated();
+        $product = $this->productService->create($store, $data);
 
         return (new ProductResource($product))
             ->response()
@@ -80,7 +82,9 @@ class ProductController extends Controller
             ->where('store_id', $store->id)
             ->findOrFail($product);
 
-        $productModel = $this->productService->update($productModel, $request->validated());
+        /** @var array<string, mixed> $updateData */
+        $updateData = $request->validated();
+        $productModel = $this->productService->update($productModel, $updateData);
 
         return (new ProductResource($productModel))->response();
     }
@@ -113,6 +117,7 @@ class ProductController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
+        /** @var \App\Models\User|null $user */
         $user = $request->user();
 
         if (! $user) {

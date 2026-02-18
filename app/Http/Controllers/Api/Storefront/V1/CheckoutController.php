@@ -32,6 +32,7 @@ class CheckoutController extends Controller
         /** @var \App\Models\Store $store */
         $store = app('current_store');
 
+        /** @var Cart $cart */
         $cart = Cart::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
@@ -68,9 +69,11 @@ class CheckoutController extends Controller
             ->where('store_id', $store->id)
             ->findOrFail($checkout);
 
+        /** @var array{first_name: string, last_name: string, address1: string, city: string, province_code?: string, country_code: string, postal_code?: string} $shippingAddress */
         $shippingAddress = $request->validated('shipping_address');
+        /** @var array{email?: string, first_name: string, last_name: string, address1: string, city: string, province_code?: string, country_code: string, zip: string} $addressData */
         $addressData = array_merge($shippingAddress, [
-            'email' => $checkoutModel->email,
+            'email' => $checkoutModel->email ?? '',
             'zip' => $shippingAddress['postal_code'] ?? '',
         ]);
 
@@ -94,9 +97,11 @@ class CheckoutController extends Controller
             ->findOrFail($checkout);
 
         try {
+            /** @var int $shippingMethodId */
+            $shippingMethodId = $request->validated('shipping_method_id');
             $checkoutModel = $this->checkoutService->setShippingMethod(
                 $checkoutModel,
-                (int) $request->validated('shipping_method_id'),
+                $shippingMethodId,
             );
         } catch (\InvalidArgumentException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
@@ -117,6 +122,7 @@ class CheckoutController extends Controller
             ->where('store_id', $store->id)
             ->findOrFail($checkout);
 
+        /** @var string $code */
         $code = $request->validated('code');
 
         try {
@@ -141,9 +147,11 @@ class CheckoutController extends Controller
             ->findOrFail($checkout);
 
         try {
+            /** @var string $paymentMethod */
+            $paymentMethod = $request->validated('payment_method');
             $checkoutModel = $this->checkoutService->selectPaymentMethod(
                 $checkoutModel,
-                $request->validated('payment_method'),
+                $paymentMethod,
             );
         } catch (InvalidCheckoutTransitionException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
@@ -168,6 +176,7 @@ class CheckoutController extends Controller
             ], 409);
         }
 
+        /** @var array<string, mixed> $paymentData */
         $paymentData = $request->validated();
 
         try {

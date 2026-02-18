@@ -20,8 +20,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $product_type
  * @property array<int, string> $tags
  * @property \Illuminate\Support\Carbon|null $published_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Store $store
  * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductOption> $options
  * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductVariant> $variants
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductMedia> $media
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Collection> $collections
  */
 class Product extends Model
 {
