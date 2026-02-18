@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $product_type
  * @property array<int, string> $tags
  * @property \Illuminate\Support\Carbon|null $published_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductOption> $options
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductVariant> $variants
  */
 class Product extends Model
 {

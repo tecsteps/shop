@@ -27,7 +27,8 @@ class ProcessMediaUpload implements ShouldQueue
 
     public function handle(): void
     {
-        $media = ProductMedia::find($this->mediaId);
+        /** @var ProductMedia|null $media */
+        $media = ProductMedia::query()->find($this->mediaId);
 
         if (! $media || $media->status !== MediaStatus::Processing) {
             return;
@@ -55,7 +56,7 @@ class ProcessMediaUpload implements ShouldQueue
                     $image->cover($dimensions['width'], $dimensions['height']);
 
                     $resizedKey = "{$directory}/{$filename}_{$sizeName}.{$extension}";
-                    $disk->put($resizedKey, $image->toJpeg()->toString());
+                    $disk->put($resizedKey, (string) $image->toJpeg());
                 }
 
                 $original = $manager->read($originalPath);

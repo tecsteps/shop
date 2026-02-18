@@ -58,6 +58,7 @@ class NavigationItem extends Model
      */
     public function children(): HasMany
     {
+        /** @var HasMany<NavigationItem, $this> */
         return $this->hasMany(NavigationItem::class, 'menu_id', 'menu_id')
             ->where('position', '>', 0);
     }

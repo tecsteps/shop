@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $product_id
  * @property string $name
  * @property int $position
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductOptionValue> $values
  */
 class ProductOption extends Model
 {

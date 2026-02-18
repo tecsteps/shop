@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool $is_default
  * @property int $position
  * @property VariantStatus $status
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ProductOptionValue> $optionValues
  */
 class ProductVariant extends Model
 {

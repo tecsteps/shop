@@ -12,7 +12,9 @@ class Index extends Component
 
     public function mount(): void
     {
-        $this->query = request()->query('q', '');
+        $q = request()->query('q', '');
+
+        $this->query = is_string($q) ? $q : '';
     }
 
     public function render(): \Illuminate\Contracts\View\View

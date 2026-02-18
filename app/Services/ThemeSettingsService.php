@@ -37,7 +37,8 @@ class ThemeSettingsService
         $this->storeId = $store->id;
         $cacheKey = "theme_settings:{$store->id}";
 
-        $this->settings = Cache::remember($cacheKey, 300, function () use ($store): array {
+        /** @var array<string, mixed> $cached */
+        $cached = Cache::remember($cacheKey, 300, function () use ($store): array {
             $theme = Theme::query()
                 ->withoutGlobalScopes()
                 ->where('store_id', $store->id)
@@ -48,10 +49,13 @@ class ThemeSettingsService
                 return [];
             }
 
+            /** @var ThemeSettings|null $themeSettings */
             $themeSettings = ThemeSettings::query()->find($theme->id);
 
-            return $themeSettings?->settings_json ?? [];
+            return $themeSettings->settings_json ?? [];
         });
+
+        $this->settings = $cached;
 
         return $this->settings;
     }
@@ -77,6 +81,7 @@ class ThemeSettingsService
     protected function resolveStore(): ?Store
     {
         if (app()->bound('current_store')) {
+            /** @var Store */
             return app('current_store');
         }
 

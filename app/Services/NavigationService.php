@@ -13,13 +13,15 @@ class NavigationService
     /**
      * Build a navigation tree for a given menu.
      *
-     * @return Collection<int, array{id: int, label: string, url: string|null, children: array<int, mixed>}>
+     * @return Collection<int, array{id: int, label: string, url: string|null, type: string}>
      */
     public function buildTree(NavigationMenu $menu): Collection
     {
         $cacheKey = "navigation_tree:{$menu->store_id}:{$menu->handle}";
 
+        /** @var Collection<int, array{id: int, label: string, url: string|null, type: string}> */
         return Cache::remember($cacheKey, 300, function () use ($menu): Collection {
+            /** @var \Illuminate\Database\Eloquent\Collection<int, NavigationItem> $items */
             $items = $menu->items()->orderBy('position')->get();
 
             return $items->map(fn (NavigationItem $item): array => [

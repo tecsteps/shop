@@ -39,7 +39,10 @@ class InventoryService
                 );
             }
 
-            $item->increment('quantity_reserved', $quantity);
+            InventoryItem::query()
+                ->where('id', $item->id)
+                ->increment('quantity_reserved', $quantity);
+            $item->refresh();
         });
     }
 
@@ -50,7 +53,10 @@ class InventoryService
     {
         DB::transaction(function () use ($item, $quantity) {
             $item->refresh();
-            $item->decrement('quantity_reserved', min($quantity, $item->quantity_reserved));
+            InventoryItem::query()
+                ->where('id', $item->id)
+                ->decrement('quantity_reserved', min($quantity, $item->quantity_reserved));
+            $item->refresh();
         });
     }
 
@@ -61,8 +67,13 @@ class InventoryService
     {
         DB::transaction(function () use ($item, $quantity) {
             $item->refresh();
-            $item->decrement('quantity_on_hand', $quantity);
-            $item->decrement('quantity_reserved', min($quantity, $item->quantity_reserved));
+            InventoryItem::query()
+                ->where('id', $item->id)
+                ->decrement('quantity_on_hand', $quantity);
+            InventoryItem::query()
+                ->where('id', $item->id)
+                ->decrement('quantity_reserved', min($quantity, $item->quantity_reserved));
+            $item->refresh();
         });
     }
 
@@ -72,7 +83,10 @@ class InventoryService
     public function restock(InventoryItem $item, int $quantity): void
     {
         DB::transaction(function () use ($item, $quantity) {
-            $item->increment('quantity_on_hand', $quantity);
+            InventoryItem::query()
+                ->where('id', $item->id)
+                ->increment('quantity_on_hand', $quantity);
+            $item->refresh();
         });
     }
 }

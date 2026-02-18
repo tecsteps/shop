@@ -21,16 +21,20 @@ class ProductService
      */
     public function create(Store $store, array $data): Product
     {
+        /** @var Product */
         return DB::transaction(function () use ($store, $data) {
+            /** @var string $title */
+            $title = $data['title'];
+
             $handle = $this->handleGenerator->generate(
-                $data['title'],
+                $title,
                 'products',
                 $store->id
             );
 
             $product = Product::query()->withoutGlobalScopes()->create([
                 'store_id' => $store->id,
-                'title' => $data['title'],
+                'title' => $title,
                 'handle' => $handle,
                 'status' => $data['status'] ?? ProductStatus::Draft,
                 'description_html' => $data['description_html'] ?? null,
@@ -58,10 +62,13 @@ class ProductService
      */
     public function update(Product $product, array $data): Product
     {
+        /** @var Product */
         return DB::transaction(function () use ($product, $data) {
             if (isset($data['title']) && $data['title'] !== $product->title) {
+                /** @var string $title */
+                $title = $data['title'];
                 $data['handle'] = $this->handleGenerator->generate(
-                    $data['title'],
+                    $title,
                     'products',
                     $product->store_id,
                     $product->id
@@ -93,11 +100,16 @@ class ProductService
             ProductStatus::Archived->value => [ProductStatus::Active],
         ];
 
-        $allowed = $allowedTransitions[$product->status->value] ?? [];
+        $allowed = $allowedTransitions[$product->status->value];
 
         if (! in_array($newStatus, $allowed, true)) {
+            /** @var string $from */
+            $from = $product->status->value;
+            /** @var string $to */
+            $to = $newStatus->value;
+
             throw new \InvalidArgumentException(
-                "Cannot transition from {$product->status->value} to {$newStatus->value}."
+                "Cannot transition from {$from} to {$to}."
             );
         }
 

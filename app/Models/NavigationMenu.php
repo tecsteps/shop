@@ -29,6 +29,7 @@ class NavigationMenu extends Model
      */
     public function items(): HasMany
     {
+        /** @var HasMany<NavigationItem, $this> */
         return $this->hasMany(NavigationItem::class, 'menu_id')->orderBy('position');
     }
 }
