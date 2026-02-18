@@ -14,7 +14,9 @@ class ExpireAbandonedCheckouts implements ShouldQueue
 
     public function handle(CheckoutService $checkoutService): void
     {
-        $checkouts = Checkout::withoutGlobalScopes()
+        /** @var \Illuminate\Database\Eloquent\Collection<int, Checkout> $checkouts */
+        $checkouts = Checkout::query()
+            ->withoutGlobalScopes()
             ->whereNotNull('expires_at')
             ->where('expires_at', '<', now())
             ->whereNotIn('status', [

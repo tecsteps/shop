@@ -8,7 +8,6 @@ use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\ShippingRate;
-use Illuminate\Support\Facades\DB;
 
 class CheckoutService
 {
@@ -28,7 +27,8 @@ class CheckoutService
             throw new \InvalidArgumentException('Cannot create checkout for empty cart.');
         }
 
-        $checkout = Checkout::withoutGlobalScopes()->create([
+        /** @var Checkout $checkout */
+        $checkout = Checkout::query()->withoutGlobalScopes()->create([
             'store_id' => $cart->store_id,
             'cart_id' => $cart->id,
             'customer_id' => $cart->customer_id,
@@ -74,7 +74,8 @@ class CheckoutService
     {
         $this->assertTransition($checkout, CheckoutStatus::ShippingSelected);
 
-        $rate = ShippingRate::findOrFail($rateId);
+        /** @var ShippingRate $rate */
+        $rate = ShippingRate::query()->findOrFail($rateId);
 
         $shippingAddress = $checkout->shipping_address_json ?? [];
         $countryCode = $shippingAddress['country_code'] ?? '';
@@ -108,23 +109,21 @@ class CheckoutService
     {
         $this->assertTransition($checkout, CheckoutStatus::PaymentSelected);
 
-        return DB::transaction(function () use ($checkout, $paymentMethod) {
-            // Reserve inventory
-            $checkout->loadMissing('cart.lines.variant.inventoryItem');
-            foreach ($checkout->cart->lines as $line) {
-                if ($line->variant->inventoryItem) {
-                    $this->inventoryService->reserve($line->variant->inventoryItem, $line->quantity);
-                }
+        // Reserve inventory
+        $checkout->loadMissing('cart.lines.variant.inventoryItem');
+        foreach ($checkout->cart->lines as $line) {
+            if ($line->variant->inventoryItem) {
+                $this->inventoryService->reserve($line->variant->inventoryItem, $line->quantity);
             }
+        }
 
-            $checkout->update([
-                'payment_method' => $paymentMethod,
-                'status' => CheckoutStatus::PaymentSelected,
-                'expires_at' => now()->addMinutes(30),
-            ]);
+        $checkout->update([
+            'payment_method' => $paymentMethod,
+            'status' => CheckoutStatus::PaymentSelected,
+            'expires_at' => now()->addMinutes(30),
+        ]);
 
-            return $checkout->refresh();
-        });
+        return $checkout->refresh();
     }
 
     /**
@@ -138,33 +137,32 @@ class CheckoutService
 
         $this->assertTransition($checkout, CheckoutStatus::Completed);
 
-        return DB::transaction(function () use ($checkout) {
-            $checkout->loadMissing('cart.lines.variant.inventoryItem');
+        $checkout->loadMissing('cart.lines.variant.inventoryItem');
 
-            // Commit inventory (on_hand down, reserved down)
-            foreach ($checkout->cart->lines as $line) {
-                if ($line->variant->inventoryItem) {
-                    $this->inventoryService->commit($line->variant->inventoryItem, $line->quantity);
-                }
+        // Commit inventory (on_hand down, reserved down)
+        foreach ($checkout->cart->lines as $line) {
+            if ($line->variant->inventoryItem) {
+                $this->inventoryService->commit($line->variant->inventoryItem, $line->quantity);
             }
+        }
 
-            $checkout->update([
-                'status' => CheckoutStatus::Completed,
-                'completed_at' => now(),
-            ]);
+        $checkout->update([
+            'status' => CheckoutStatus::Completed,
+            'completed_at' => now(),
+        ]);
 
-            $checkout->cart->update(['status' => CartStatus::Converted]);
+        $checkout->cart->update(['status' => CartStatus::Converted]);
 
-            // Increment discount usage if applicable
-            if ($checkout->discount_code) {
-                \App\Models\Discount::withoutGlobalScopes()
-                    ->where('store_id', $checkout->store_id)
-                    ->whereRaw('LOWER(code) = ?', [strtolower($checkout->discount_code)])
-                    ->increment('usage_count');
-            }
+        // Increment discount usage if applicable
+        if ($checkout->discount_code) {
+            \App\Models\Discount::query()
+                ->withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->whereRaw('LOWER(code) = ?', [strtolower($checkout->discount_code)])
+                ->increment('usage_count');
+        }
 
-            return $checkout->refresh();
-        });
+        return $checkout->refresh();
     }
 
     /**
@@ -172,20 +170,18 @@ class CheckoutService
      */
     public function expireCheckout(Checkout $checkout): Checkout
     {
-        return DB::transaction(function () use ($checkout) {
-            if ($checkout->status === CheckoutStatus::PaymentSelected) {
-                $checkout->loadMissing('cart.lines.variant.inventoryItem');
-                foreach ($checkout->cart->lines as $line) {
-                    if ($line->variant->inventoryItem) {
-                        $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
-                    }
+        if ($checkout->status === CheckoutStatus::PaymentSelected) {
+            $checkout->loadMissing('cart.lines.variant.inventoryItem');
+            foreach ($checkout->cart->lines as $line) {
+                if ($line->variant->inventoryItem) {
+                    $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
                 }
             }
+        }
 
-            $checkout->update(['status' => CheckoutStatus::Expired]);
+        $checkout->update(['status' => CheckoutStatus::Expired]);
 
-            return $checkout->refresh();
-        });
+        return $checkout->refresh();
     }
 
     /**

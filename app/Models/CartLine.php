@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $line_discount_amount
  * @property int $line_total_amount
  * @property array<string, mixed>|null $properties
+ * @property-read Cart $cart
+ * @property-read ProductVariant $variant
  */
 class CartLine extends Model
 {

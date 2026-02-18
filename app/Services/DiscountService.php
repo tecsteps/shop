@@ -18,7 +18,9 @@ class DiscountService
      */
     public function validate(string $code, Store $store, Cart $cart): Discount
     {
-        $discount = Discount::withoutGlobalScopes()
+        /** @var Discount|null $discount */
+        $discount = Discount::query()
+            ->withoutGlobalScopes()
             ->where('store_id', $store->id)
             ->whereRaw('LOWER(code) = ?', [strtolower($code)])
             ->first();
@@ -79,8 +81,7 @@ class DiscountService
 
         $discountAmount = match ($discount->value_type) {
             DiscountValueType::Percent => (int) round($subtotal * $discount->value_amount / 100),
-            DiscountValueType::Fixed => min($discount->value_amount, $subtotal),
-            default => 0,
+            default => min($discount->value_amount, $subtotal),
         };
 
         $allocations = $this->allocateProportionally($discountAmount, $lines);

@@ -13,7 +13,8 @@ class CleanupAbandonedCarts implements ShouldQueue
 
     public function handle(): void
     {
-        Cart::withoutGlobalScopes()
+        Cart::query()
+            ->withoutGlobalScopes()
             ->where('status', CartStatus::Active->value)
             ->where('updated_at', '<', now()->subDays(14))
             ->update(['status' => CartStatus::Abandoned->value]);

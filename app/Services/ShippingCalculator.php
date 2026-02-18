@@ -22,7 +22,8 @@ class ShippingCalculator
         $countryCode = $address['country_code'] ?? '';
         $provinceCode = $address['province_code'] ?? '';
 
-        $zones = ShippingZone::withoutGlobalScopes()
+        $zones = ShippingZone::query()
+            ->withoutGlobalScopes()
             ->where('store_id', $store->id)
             ->where('is_active', true)
             ->get();
@@ -35,9 +36,13 @@ class ShippingCalculator
             return collect();
         }
 
-        return ShippingRate::whereIn('zone_id', $matchingZones->pluck('id'))
+        /** @var Collection<int, ShippingRate> $rates */
+        $rates = ShippingRate::query()
+            ->whereIn('zone_id', $matchingZones->pluck('id'))
             ->where('is_active', true)
             ->get();
+
+        return $rates;
     }
 
     /**
@@ -78,9 +83,10 @@ class ShippingCalculator
 
     private function calculateFlat(ShippingRate $rate): int
     {
+        /** @var array{amount?: int} $config */
         $config = $rate->config_json;
 
-        return (int) ($config['amount'] ?? 0);
+        return $config['amount'] ?? 0;
     }
 
     private function calculateWeight(ShippingRate $rate, Cart $cart): int
@@ -90,16 +96,19 @@ class ShippingCalculator
         });
 
         $config = $rate->config_json;
+        /** @var array<int, array{min_g: int, max_g: int, amount: int}> $ranges */
         $ranges = $config['ranges'] ?? [];
 
         foreach ($ranges as $range) {
             if ($totalWeight >= $range['min_g'] && $totalWeight <= $range['max_g']) {
-                return (int) $range['amount'];
+                return $range['amount'];
             }
         }
 
         if (! empty($ranges)) {
-            return (int) end($ranges)['amount'];
+            $lastRange = end($ranges);
+
+            return $lastRange['amount'];
         }
 
         return 0;
@@ -110,16 +119,19 @@ class ShippingCalculator
         $subtotal = $cart->lines->sum('line_subtotal_amount');
 
         $config = $rate->config_json;
+        /** @var array<int, array{min_amount: int, max_amount: int, amount: int}> $ranges */
         $ranges = $config['ranges'] ?? [];
 
         foreach ($ranges as $range) {
             if ($subtotal >= $range['min_amount'] && $subtotal <= $range['max_amount']) {
-                return (int) $range['amount'];
+                return $range['amount'];
             }
         }
 
         if (! empty($ranges)) {
-            return (int) end($ranges)['amount'];
+            $lastRange = end($ranges);
+
+            return $lastRange['amount'];
         }
 
         return 0;

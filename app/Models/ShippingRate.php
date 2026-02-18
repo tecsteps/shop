@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property ShippingRateType $type
  * @property array<string, mixed> $config_json
  * @property bool $is_active
+ * @property-read ShippingZone $zone
  */
 class ShippingRate extends Model
 {

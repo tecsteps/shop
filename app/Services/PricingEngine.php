@@ -6,6 +6,7 @@ use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\TaxSettings;
 use App\ValueObjects\PricingResult;
+use Illuminate\Database\Eloquent\Builder;
 
 class PricingEngine
 {
@@ -33,14 +34,16 @@ class PricingEngine
         $freeShipping = false;
 
         if ($checkout->discount_code) {
-            $discount = Discount::withoutGlobalScopes()
+            /** @var Discount|null $discount */
+            $discount = Discount::query()
+                ->withoutGlobalScopes()
                 ->where('store_id', $checkout->store_id)
                 ->whereRaw('LOWER(code) = ?', [strtolower($checkout->discount_code)])
                 ->where('status', 'active')
-                ->where(function ($q) {
+                ->where(function (Builder $q) {
                     $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
                 })
-                ->where(function ($q) {
+                ->where(function (Builder $q) {
                     $q->whereNull('ends_at')->orWhere('ends_at', '>=', now());
                 })
                 ->first();
@@ -71,7 +74,8 @@ class PricingEngine
         }
 
         // Step 5: Tax
-        $taxSettings = TaxSettings::where('store_id', $checkout->store_id)->first();
+        /** @var TaxSettings|null $taxSettings */
+        $taxSettings = TaxSettings::query()->where('store_id', $checkout->store_id)->first();
 
         $taxableAmount = $discountedSubtotal;
         if ($taxSettings && $taxSettings->tax_shipping) {

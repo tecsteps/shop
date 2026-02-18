@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $expires_at
  * @property \Illuminate\Support\Carbon|null $completed_at
  * @property array<string, mixed>|null $metadata
+ * @property-read Cart $cart
+ * @property-read Customer|null $customer
+ * @property-read ShippingRate|null $shippingRate
  */
 class Checkout extends Model
 {
