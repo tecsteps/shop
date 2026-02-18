@@ -43,7 +43,7 @@ function createStoreContext(string $hostname = 'test-store.test'): array
 /**
  * Authenticate as admin and set store in session.
  */
-function actingAsAdmin(User $user, ?Store $store = null): \Illuminate\Testing\TestResponse
+function actingAsAdmin(User $user, ?Store $store = null): mixed
 {
     $store = $store ?? app('current_store');
 
@@ -54,7 +54,7 @@ function actingAsAdmin(User $user, ?Store $store = null): \Illuminate\Testing\Te
 /**
  * Authenticate as customer with customer guard.
  */
-function actingAsCustomer(Customer $customer): \Illuminate\Testing\TestResponse
+function actingAsCustomer(Customer $customer): mixed
 {
     return test()->actingAs($customer, 'customer');
 }
