@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Auth;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
@@ -47,12 +48,23 @@ class Login extends Component
             $user = $guard->user();
             $user->update(['last_login_at' => now()]);
 
+            Log::channel('json')->info('Admin login success', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'ip' => $this->getRequestIp(),
+            ]);
+
             $this->redirect('/admin');
 
             return;
         }
 
         RateLimiter::hit($throttleKey, 60);
+
+        Log::channel('json')->warning('Admin login failed', [
+            'email' => $this->email,
+            'ip' => $this->getRequestIp(),
+        ]);
 
         $this->addError('email', 'Invalid credentials');
     }

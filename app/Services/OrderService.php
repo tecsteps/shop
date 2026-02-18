@@ -22,6 +22,7 @@ use App\Models\Order;
 use App\Models\OrderLine;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -173,6 +174,16 @@ class OrderService
 
             OrderCreated::dispatch($order);
 
+            Log::channel('json')->info('Order created', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'store_id' => $order->store_id,
+                'customer_id' => $order->customer_id,
+                'total_amount' => $order->total_amount,
+                'payment_method' => $method->value,
+                'financial_status' => $financialStatus->value,
+            ]);
+
             return $order;
         });
 
@@ -226,6 +237,12 @@ class OrderService
             ]);
 
             OrderCancelled::dispatch($order->refresh());
+
+            Log::channel('json')->info('Order cancelled', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'store_id' => $order->store_id,
+            ]);
 
             return $order;
         });

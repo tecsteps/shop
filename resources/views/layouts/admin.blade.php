@@ -13,6 +13,12 @@
 </head>
 <body class="h-full bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 
+    {{-- Skip link --}}
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[110] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg focus:ring-2 focus:ring-blue-500 dark:focus:bg-gray-800">
+        Skip to main content
+    </a>
+
     {{-- Toast Notifications --}}
     <div x-data="{
         toasts: [],
@@ -57,7 +63,9 @@
 
     {{-- Sidebar panel --}}
     <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-           class="fixed inset-y-0 left-0 z-50 w-64 transform overflow-y-auto border-r border-gray-200 bg-white transition-transform duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:translate-x-0">
+           class="fixed inset-y-0 left-0 z-50 w-64 transform overflow-y-auto border-r border-gray-200 bg-white transition-transform duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:translate-x-0"
+           role="complementary"
+           aria-label="Admin sidebar navigation">
         <div class="flex h-16 items-center gap-2 border-b border-gray-200 px-6 dark:border-gray-800">
             <span class="text-lg font-bold">
                 @if (app()->bound('current_store'))
@@ -68,7 +76,7 @@
             </span>
         </div>
 
-        <nav class="space-y-1 p-4">
+        <nav class="space-y-1 p-4" aria-label="Admin navigation">
             <a href="{{ route('admin.dashboard') }}" wire:navigate
                @class(['flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium', 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white' => str_starts_with($currentRoute, 'admin.dashboard'), 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white' => !str_starts_with($currentRoute, 'admin.dashboard')])>
                 <flux:icon.chart-bar class="size-5" />
@@ -167,7 +175,7 @@
         </header>
 
         {{-- Page content --}}
-        <main class="p-4 sm:p-6 lg:p-8">
+        <main id="main-content" class="p-4 sm:p-6 lg:p-8" role="main">
             {{ $slot }}
         </main>
     </div>

@@ -189,7 +189,7 @@
     </header>
 
     {{-- Main Content --}}
-    <main id="main-content" class="min-h-[calc(100vh-4rem)]">
+    <main id="main-content" class="min-h-[calc(100vh-4rem)]" role="main">
         {{ $slot }}
     </main>
 

@@ -9,6 +9,7 @@ use App\Models\Checkout;
 use App\Models\Payment;
 use App\ValueObjects\PaymentResult;
 use App\ValueObjects\RefundResult;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MockPaymentProvider implements PaymentProvider
@@ -58,6 +59,13 @@ class MockPaymentProvider implements PaymentProvider
             }
         }
 
+        Log::channel('json')->info('Payment charged', [
+            'checkout_id' => $checkout->id,
+            'method' => $method->value,
+            'reference_id' => $referenceId,
+            'status' => 'captured',
+        ]);
+
         return new PaymentResult(
             success: true,
             status: PaymentStatus::Captured,
@@ -67,9 +75,18 @@ class MockPaymentProvider implements PaymentProvider
 
     public function refund(Payment $payment, int $amount): RefundResult
     {
+        $refundId = 'mock_refund_'.Str::random(16);
+
+        Log::channel('json')->info('Payment refunded', [
+            'payment_id' => $payment->id,
+            'order_id' => $payment->order_id,
+            'amount' => $amount,
+            'refund_id' => $refundId,
+        ]);
+
         return new RefundResult(
             success: true,
-            providerRefundId: 'mock_refund_'.Str::random(16),
+            providerRefundId: $refundId,
         );
     }
 }

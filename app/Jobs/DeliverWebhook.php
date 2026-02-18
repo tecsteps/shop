@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DeliverWebhook implements ShouldQueue
 {
@@ -67,6 +68,14 @@ class DeliverWebhook implements ShouldQueue
                     'status' => WebhookDeliveryStatus::Success,
                 ]);
 
+                Log::channel('json')->info('Webhook delivered', [
+                    'delivery_id' => $this->delivery->id,
+                    'subscription_id' => $subscription->id,
+                    'event_type' => $subscription->event_type,
+                    'target_url' => $subscription->target_url,
+                    'response_code' => $response->status(),
+                ]);
+
                 return;
             }
 
@@ -87,6 +96,13 @@ class DeliverWebhook implements ShouldQueue
     {
         $this->delivery->update([
             'status' => WebhookDeliveryStatus::Failed,
+        ]);
+
+        Log::channel('json')->warning('Webhook delivery failed', [
+            'delivery_id' => $this->delivery->id,
+            'subscription_id' => $this->delivery->subscription_id,
+            'attempt_count' => $this->delivery->attempt_count,
+            'error' => $exception?->getMessage(),
         ]);
 
         $this->checkCircuitBreaker($this->delivery->subscription);

@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Account\Auth;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
@@ -42,12 +43,22 @@ class Login extends Component
             RateLimiter::clear($throttleKey);
             session()->regenerate();
 
+            Log::channel('json')->info('Customer login success', [
+                'email' => $this->email,
+                'ip' => $this->getRequestIp(),
+            ]);
+
             $this->redirect(session()->pull('url.intended', '/account'));
 
             return;
         }
 
         RateLimiter::hit($throttleKey, 60);
+
+        Log::channel('json')->warning('Customer login failed', [
+            'email' => $this->email,
+            'ip' => $this->getRequestIp(),
+        ]);
 
         $this->addError('email', 'Invalid credentials');
     }
