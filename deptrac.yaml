@@ -56,6 +56,9 @@ deptrac:
   ruleset:
     Models:
       - Enums
+    Events:
+      - Models
+      - Enums
     Services:
       - Models
       - Enums

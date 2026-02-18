@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Contracts\PaymentProvider;
+use App\Services\Payment\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(ThemeSettingsService::class);
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
     }
 
     public function boot(): void
