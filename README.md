@@ -3,3 +3,5 @@ Your mission is to implement an entire shop system based on the specifications i
 Continuously keep track of the progress in specs/progress.md Commit your progress after every relevant iteration with a meaningful message.
 
 When implementation is fully done, then make a full review meeting and showcase all features (customer- and admin-side) to me. In case bugs appear, you must fix them all and restart the review meeting.
+
+Before starting, read about team mode here: https://code.claude.com/docs/en/agent-teams
