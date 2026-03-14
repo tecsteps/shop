@@ -21,13 +21,17 @@ class CustomerFactory extends Factory
     {
         return [
             'store_id' => Store::factory(),
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
+            'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password_hash' => Hash::make('password'),
-            'phone' => fake()->phoneNumber(),
-            'accepts_marketing' => false,
-            'status' => 'active',
+            'marketing_opt_in' => false,
         ];
+    }
+
+    public function guest(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'password_hash' => null,
+        ]);
     }
 }

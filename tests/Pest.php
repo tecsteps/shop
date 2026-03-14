@@ -41,7 +41,22 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Create a full store context for testing: Organization, Store, StoreDomain, User with owner role.
+ * Binds the store as 'current_store' in the container.
+ *
+ * @return array{store: \App\Models\Store, user: \App\Models\User, domain: \App\Models\StoreDomain}
+ */
+function createStoreContext(array $storeOverrides = []): array
 {
-    // ..
+    $store = \App\Models\Store::factory()->create($storeOverrides);
+    $domain = \App\Models\StoreDomain::factory()->primary()->create([
+        'store_id' => $store->id,
+    ]);
+    $user = \App\Models\User::factory()->create();
+    $user->stores()->attach($store->id, ['role' => 'owner']);
+
+    app()->instance('current_store', $store);
+
+    return compact('store', 'user', 'domain');
 }

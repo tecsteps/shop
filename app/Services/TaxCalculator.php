@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\TaxSettings;
 use App\ValueObjects\TaxLine;
 
 class TaxCalculator
@@ -10,10 +9,11 @@ class TaxCalculator
     /**
      * Calculate tax for an amount given tax settings and shipping address.
      *
+     * @param  object{prices_include_tax: bool, config_json: array<string, mixed>}  $settings
      * @param  array{country?: string, province_code?: string}  $address
      * @return array{tax_lines: array<TaxLine>, tax_total: int}
      */
-    public function calculate(int $amount, TaxSettings $settings, array $address): array
+    public function calculate(int $amount, object $settings, array $address): array
     {
         $config = $settings->config_json ?? [];
 
