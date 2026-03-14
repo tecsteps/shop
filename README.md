@@ -11,6 +11,8 @@ Before writing any code, read all spec files and create the full task list cover
 
 This means the task list is not just "what to build" but also "how to verify it." Every lifecycle step for every phase is a first-class task from day one, so nothing gets skipped or forgotten.
 
+Overall, the task list will have ~120-130 tasks (10*12 plus final tasks).
+
 ## Phase Lifecycle
 
 Each phase follows this strict sequence. Do not advance to the next phase until all steps are complete.
@@ -49,21 +51,9 @@ All work uses team mode. The team lead is strictly an orchestrator -- it never w
 
 ### Team Structure
 
-Organize teammates by concern, not by phase. Example roles:
+Organize teammates by concern. To avoid context overflow you must use a new set of teammates per phase. Example roles:
 
 - **Backend**: Models, migrations, middleware, services, business logic
 - **Admin UI**: Livewire components, admin views, Flux UI integration
 - **Storefront UI**: Customer-facing Blade templates, Livewire components, Tailwind styling
 - **QA**: Pest feature/unit tests, test data verification, bug reports back to lead
-
-Teammates may rotate roles between phases. The QA teammate is permanent and grows the test plan throughout the project.
-
-## Key Constraints
-
-- All monetary values are integers in cents -- never use floats for money.
-- Multi-tenant: every tenant-scoped table has `store_id`. Hostname resolves to store.
-- SQLite with WAL mode. Single currency per store.
-- Admin: Livewire v4 + Flux UI Free only (no Pro components).
-- Storefront: Tailwind v4, dark mode, mobile-first, WCAG 2.2 AA.
-- Auth: session-based for web, Sanctum for API. Generic error messages on login failure.
-- Seeder data must support all E2E tests (see `specs/07-SEEDERS-AND-TEST-DATA.md` for required records).
