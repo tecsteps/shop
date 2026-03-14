@@ -53,7 +53,8 @@ All work uses team mode. The team lead is strictly an orchestrator -- it never w
 
 Organize teammates by concern. To avoid context overflow you must use a new set of teammates per phase. Example roles:
 
-- **Backend**: Models, migrations, middleware, services, business logic
-- **Admin UI**: Livewire components, admin views, Flux UI integration
-- **Storefront UI**: Customer-facing Blade templates, Livewire components, Tailwind styling
-- **QA**: Pest feature/unit tests, test data verification, bug reports back to lead
+- **Backend**: Models, migrations, middleware, services, business logic, bug fixes
+- **Admin UI**: Livewire components, admin views, Flux UI integration, bug fixes
+- **Storefront UI**: Customer-facing Blade templates, Livewire components, Tailwind styling, bug fixes
+- **QA Engineer**: Pest feature/unit tests, test data verification, bug reports back to lead
+- **QA Analyst**: Maintains the testplan for manual testing and performs the manual verification using Playwright
