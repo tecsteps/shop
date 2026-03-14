@@ -10,11 +10,28 @@ class StoreSettingsSeeder extends Seeder
 {
     public function run(): void
     {
-        $store = Store::where('handle', 'acme-fashion')->firstOrFail();
+        $fashion = Store::where('handle', 'acme-fashion')->firstOrFail();
 
         StoreSettings::create([
-            'store_id' => $store->id,
-            'settings_json' => [],
+            'store_id' => $fashion->id,
+            'settings_json' => [
+                'store_name' => 'Acme Fashion',
+                'contact_email' => 'hello@acme-fashion.test',
+                'order_number_prefix' => '#',
+                'order_number_start' => 1001,
+            ],
+        ]);
+
+        $electronics = Store::where('handle', 'acme-electronics')->firstOrFail();
+
+        StoreSettings::create([
+            'store_id' => $electronics->id,
+            'settings_json' => [
+                'store_name' => 'Acme Electronics',
+                'contact_email' => 'hello@acme-electronics.test',
+                'order_number_prefix' => '#',
+                'order_number_start' => 5001,
+            ],
         ]);
     }
 }

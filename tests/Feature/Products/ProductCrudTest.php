@@ -117,12 +117,15 @@ it('prevents active to draft when order lines exist', function () {
     $this->service->transitionStatus($product, ProductStatus::Active);
 
     $variant = $product->variants()->first();
+    $order = \App\Models\Order::factory()->create(['store_id' => $this->ctx['store']->id]);
     \Illuminate\Support\Facades\DB::table('order_lines')->insert([
         'variant_id' => $variant->id,
-        'order_id' => 1,
+        'order_id' => $order->id,
         'quantity' => 1,
         'unit_price_amount' => 2000,
+        'subtotal_amount' => 2000,
         'total_amount' => 2000,
+        'title_snapshot' => 'Ordered Product',
     ]);
 
     expect(fn () => $this->service->transitionStatus($product->fresh(), ProductStatus::Draft))
@@ -153,12 +156,15 @@ it('prevents deletion of product with order references', function () {
     ]);
 
     $variant = $product->variants()->first();
+    $order = \App\Models\Order::factory()->create(['store_id' => $this->ctx['store']->id]);
     \Illuminate\Support\Facades\DB::table('order_lines')->insert([
         'variant_id' => $variant->id,
-        'order_id' => 1,
+        'order_id' => $order->id,
         'quantity' => 1,
         'unit_price_amount' => 2000,
+        'subtotal_amount' => 2000,
         'total_amount' => 2000,
+        'title_snapshot' => 'Referenced Product',
     ]);
 
     expect(fn () => $this->service->delete($product))

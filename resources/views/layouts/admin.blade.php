@@ -41,6 +41,7 @@
             class="fixed inset-0 bg-black/50 z-40 lg:hidden"
             @click="sidebarOpen = false"
             x-cloak
+            aria-hidden="true"
         ></div>
 
         {{-- Sidebar --}}
@@ -54,6 +55,10 @@
             x-transition:leave-end="-translate-x-full"
             class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-zinc-800 border-r border-zinc-200 dark:border-zinc-700 overflow-y-auto lg:hidden"
             x-cloak
+            role="dialog"
+            aria-modal="true"
+            aria-label="Admin navigation"
+            @keydown.escape.window="sidebarOpen = false"
         >
             <livewire:admin.layout.sidebar />
         </aside>
@@ -69,7 +74,7 @@
             <header class="sticky top-0 z-20 bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
                 <div class="flex items-center justify-between h-16 px-4 sm:px-6">
                     <div class="flex items-center gap-3">
-                        <flux:button variant="ghost" icon="bars-3" class="lg:hidden" @click="sidebarOpen = true" />
+                        <flux:button variant="ghost" icon="bars-3" class="lg:hidden" @click="sidebarOpen = true" aria-label="Open navigation menu" />
                         <livewire:admin.layout.top-bar />
                     </div>
                 </div>
@@ -104,6 +109,8 @@
         }"
         @toast.window="addToast($event)"
         class="fixed top-4 right-4 z-[100] space-y-2"
+        role="status"
+        aria-live="polite"
     >
         <template x-for="toast in toasts" :key="toast.id">
             <div
@@ -121,7 +128,7 @@
                 }"
             >
                 <span class="text-sm text-zinc-700 dark:text-zinc-300" x-text="toast.message"></span>
-                <button @click="removeToast(toast.id)" class="ml-auto text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+                <button @click="removeToast(toast.id)" class="ml-auto text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" aria-label="Dismiss notification">
                     <flux:icon name="x-mark" class="size-4" />
                 </button>
             </div>

@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Admin\Analytics\Index;
-use App\Models\Order;
+use App\Models\AnalyticsDaily;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
@@ -24,16 +24,12 @@ it('renders the analytics page', function () {
 });
 
 it('shows order KPIs', function () {
-    Order::factory()->create([
+    AnalyticsDaily::factory()->create([
         'store_id' => $this->ctx['store']->id,
-        'total_amount' => 5000,
-        'placed_at' => now(),
-    ]);
-
-    Order::factory()->create([
-        'store_id' => $this->ctx['store']->id,
-        'total_amount' => 3000,
-        'placed_at' => now(),
+        'date' => now()->format('Y-m-d'),
+        'orders_count' => 2,
+        'revenue_amount' => 8000,
+        'visits_count' => 100,
     ]);
 
     Livewire::actingAs($this->ctx['user'])
@@ -44,16 +40,20 @@ it('shows order KPIs', function () {
 });
 
 it('filters by date range', function () {
-    Order::factory()->create([
+    AnalyticsDaily::factory()->create([
         'store_id' => $this->ctx['store']->id,
-        'total_amount' => 5000,
-        'placed_at' => now(),
+        'date' => now()->format('Y-m-d'),
+        'orders_count' => 1,
+        'revenue_amount' => 5000,
+        'visits_count' => 50,
     ]);
 
-    Order::factory()->create([
+    AnalyticsDaily::factory()->create([
         'store_id' => $this->ctx['store']->id,
-        'total_amount' => 3000,
-        'placed_at' => now()->subDays(60),
+        'date' => now()->subDays(60)->format('Y-m-d'),
+        'orders_count' => 1,
+        'revenue_amount' => 3000,
+        'visits_count' => 30,
     ]);
 
     Livewire::actingAs($this->ctx['user'])

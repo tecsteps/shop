@@ -124,12 +124,15 @@ it('archives orphaned variants with order references', function () {
     $this->matrixService->rebuildMatrix($product);
     $sVariant = $product->variants()->whereHas('optionValues', fn ($q) => $q->where('product_option_values.id', $sVal->id))->first();
 
+    $order = \App\Models\Order::factory()->create(['store_id' => $this->ctx['store']->id]);
     \Illuminate\Support\Facades\DB::table('order_lines')->insert([
         'variant_id' => $sVariant->id,
-        'order_id' => 1,
+        'order_id' => $order->id,
         'quantity' => 1,
         'unit_price_amount' => 2000,
+        'subtotal_amount' => 2000,
         'total_amount' => 2000,
+        'title_snapshot' => 'Test Product',
     ]);
 
     // Remove the S value

@@ -112,5 +112,10 @@
 - 9 passing Pest tests (5 delivery + 4 signature)
 - 18 test cases defined, all passing
 - Browser verified: developers page, webhook creation, apps page, 0 JS errors
-## Phase 11: Polish - NOT STARTED
+## Phase 11: Polish - COMPLETE
+- REST API: 17 endpoints (storefront cart/checkout + admin products/orders) with controllers, resources, form requests
+- Accessibility: skip links, ARIA labels, aria-live regions, keyboard navigation, focus management
+- Seeders verified against spec 07 (2 stores, 12 customers, 20 products, 5 discounts)
+- Scaffold test cleanup: removed 7 broken files, fixed 5 tests
+- 418 passing tests, 0 failures, 5 skipped
 ## Phase 12: Full Test Suite - NOT STARTED

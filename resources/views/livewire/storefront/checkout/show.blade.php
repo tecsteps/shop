@@ -17,6 +17,7 @@
                                 'text-zinc-400 dark:text-zinc-500 cursor-default' => $step > $currentStep,
                             ])
                             @if ($step > $currentStep) disabled @endif
+                            @if ($currentStep === $step) aria-current="step" @endif
                         >
                             <span @class([
                                 'flex items-center justify-center size-7 rounded-full text-xs font-bold',

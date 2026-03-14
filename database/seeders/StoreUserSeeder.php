@@ -11,11 +11,22 @@ class StoreUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $store = Store::where('handle', 'acme-fashion')->firstOrFail();
-        $user = User::where('email', 'admin@acme.test')->firstOrFail();
+        $fashion = Store::where('handle', 'acme-fashion')->firstOrFail();
+        $electronics = Store::where('handle', 'acme-electronics')->firstOrFail();
 
-        $store->users()->attach($user->id, [
-            'role' => StoreUserRole::Owner->value,
-        ]);
+        $assignments = [
+            ['email' => 'admin@acme.test', 'store' => $fashion, 'role' => StoreUserRole::Owner],
+            ['email' => 'staff@acme.test', 'store' => $fashion, 'role' => StoreUserRole::Staff],
+            ['email' => 'support@acme.test', 'store' => $fashion, 'role' => StoreUserRole::Support],
+            ['email' => 'manager@acme.test', 'store' => $fashion, 'role' => StoreUserRole::Admin],
+            ['email' => 'admin2@acme.test', 'store' => $electronics, 'role' => StoreUserRole::Owner],
+        ];
+
+        foreach ($assignments as $assignment) {
+            $user = User::where('email', $assignment['email'])->firstOrFail();
+            $assignment['store']->users()->attach($user->id, [
+                'role' => $assignment['role']->value,
+            ]);
+        }
     }
 }

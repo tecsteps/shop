@@ -20,5 +20,13 @@ class StoreSeeder extends Seeder
             'status' => StoreStatus::Active,
             'default_currency' => 'EUR',
         ]);
+
+        Store::create([
+            'organization_id' => $organization->id,
+            'name' => 'Acme Electronics',
+            'handle' => 'acme-electronics',
+            'status' => StoreStatus::Active,
+            'default_currency' => 'EUR',
+        ]);
     }
 }

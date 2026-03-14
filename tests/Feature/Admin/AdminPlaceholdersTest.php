@@ -15,13 +15,13 @@ it('requires authentication for search settings', function () {
         ->assertRedirect(route('admin.login'));
 });
 
-it('renders search settings placeholder', function () {
+it('renders search settings page', function () {
     $this->actingAs($this->ctx['user']);
 
     $this->get(route('admin.search.settings'))
         ->assertOk()
         ->assertSeeLivewire(SearchSettings::class)
-        ->assertSee('Search settings coming soon');
+        ->assertSee('Search Settings');
 });
 
 it('requires authentication for apps', function () {
