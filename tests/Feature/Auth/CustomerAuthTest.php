@@ -32,7 +32,7 @@ test('customer can authenticate via livewire login', function () {
         ->set('email', $customer->email)
         ->set('password', 'password')
         ->call('login')
-        ->assertRedirect(route('customer.account'));
+        ->assertRedirect(route('customer.dashboard'));
 
     $this->assertAuthenticatedAs($customer, 'customer');
 });
@@ -82,7 +82,7 @@ test('customer can register a new account', function () {
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
         ->call('register')
-        ->assertRedirect(route('customer.account'));
+        ->assertRedirect(route('customer.dashboard'));
 
     $this->assertAuthenticatedAs(
         Customer::where('email', 'customer@example.com')->first(),
@@ -131,7 +131,7 @@ test('customer can register with same email in different store', function () {
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
         ->call('register')
-        ->assertRedirect(route('customer.account'));
+        ->assertRedirect(route('customer.dashboard'));
 
     expect(Customer::where('email', 'shared@example.com')->count())->toBe(2);
 });

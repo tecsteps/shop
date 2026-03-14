@@ -160,7 +160,7 @@
 
                     @auth('customer')
                         <a
-                            href="{{ route('customer.account') }}"
+                            href="{{ route('customer.dashboard') }}"
                             class="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
                             aria-label="My account"
                             wire:navigate
@@ -255,7 +255,7 @@
 
                     <div class="pt-4 border-t border-zinc-200 dark:border-zinc-700 mt-4">
                         @auth('customer')
-                            <a href="{{ route('customer.account') }}" class="block py-3 px-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg" wire:navigate @click="open = false">
+                            <a href="{{ route('customer.dashboard') }}" class="block py-3 px-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg" wire:navigate @click="open = false">
                                 My Account
                             </a>
                         @else

@@ -48,11 +48,12 @@ Route::post('account/logout', function () {
     return redirect()->route('customer.login');
 })->name('customer.logout');
 
-// Customer authenticated routes (placeholder)
-Route::middleware(['auth:customer'])->group(function () {
-    Route::get('account', function () {
-        return 'My Account';
-    })->name('customer.account');
+// Customer authenticated routes
+Route::middleware(['auth:customer'])->prefix('account')->group(function () {
+    Route::get('/', \App\Livewire\Storefront\Account\Dashboard::class)->name('customer.dashboard');
+    Route::get('/orders', \App\Livewire\Storefront\Account\Orders\Index::class)->name('customer.orders');
+    Route::get('/orders/{orderNumber}', \App\Livewire\Storefront\Account\Orders\Show::class)->name('customer.orders.show');
+    Route::get('/addresses', \App\Livewire\Storefront\Account\Addresses\Index::class)->name('customer.addresses');
 });
 
 require __DIR__.'/settings.php';

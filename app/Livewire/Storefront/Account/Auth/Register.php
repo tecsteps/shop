@@ -54,7 +54,7 @@ class Register extends Component
         Auth::guard('customer')->login($customer);
         session()->regenerate();
 
-        $this->redirect(route('customer.account'), navigate: true);
+        $this->redirect(route('customer.dashboard'), navigate: true);
     }
 
     public function render()

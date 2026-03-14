@@ -446,3 +446,136 @@
 | 4.42 | No JavaScript errors on cart page | Console error count is 0 | General | pass |
 | 4.43 | No JavaScript errors on checkout pages | Console error count is 0 | General | pass |
 | 4.44 | No JavaScript errors on confirmation page | Console error count is 0 | General | pass |
+
+## Phase 5: Payments & Orders
+
+### Credit Card Payments
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.01 | Credit card payment succeeds with test card 4242... | MockPaymentProvider returns captured status | 05-BL 4.1 | pass |
+| 5.02 | Decline card 4000000000000002 returns declined error | MockPaymentProvider rejects known decline card | 05-BL 4.1 | pass |
+| 5.03 | Insufficient funds card 4000000000009995 returns error | MockPaymentProvider rejects insufficient funds card | 05-BL 4.1 | pass |
+| 5.04 | Mock payment ID starts with "mock_" prefix | Provider generates identifiable transaction IDs | 05-BL 4.1 | pass |
+
+### PayPal Payments
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.05 | PayPal payment succeeds immediately | MockPaymentProvider returns captured for PayPal | 05-BL 4.1 | pass |
+
+### Bank Transfer Payments
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.06 | Bank transfer creates pending payment | MockPaymentProvider returns pending status | 05-BL 4.1 | pass |
+| 5.07 | Admin confirms bank transfer payment | Payment transitions to captured, order to paid | 05-BL 4.2 | pass |
+| 5.08 | Cannot confirm non-bank-transfer payment | Rejects confirmation for credit card payments | 05-BL 4.2 | pass |
+| 5.09 | Cannot confirm already-captured payment | Rejects double-confirmation | 05-BL 4.2 | pass |
+| 5.10 | Auto-cancel job cancels old unpaid bank transfers | Orders older than threshold are cancelled | 05-BL 4.3 | pass |
+| 5.11 | Auto-cancel job skips recent bank transfers | Recent pending orders are preserved | 05-BL 4.3 | pass |
+
+### Order Creation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.12 | Order is created from completed checkout | All fields populated from checkout data | 05-BL 3.1 | pass |
+| 5.13 | Sequential order numbers starting at 1001 | First order gets #1001, second gets #1002 | 05-BL 3.1 | pass |
+| 5.14 | Order lines contain product/variant snapshots | Snapshot titles preserved even if product changes | 05-BL 3.1 | pass |
+| 5.15 | Inventory is committed on order creation | Stock levels decrease by ordered quantity | 05-BL 3.1 | pass |
+| 5.16 | Cart is converted to order status after checkout | Cart marked as converted | 05-BL 3.1 | pass |
+| 5.17 | OrderCreated event fires on order creation | Event dispatched with order instance | 05-BL 3.1 | pass |
+| 5.18 | Archived product snapshots are preserved in order | Product title/price captured at time of order | 05-BL 3.1 | pass |
+| 5.19 | Customer is linked to order | customer_id set from checkout | 05-BL 3.1 | pass |
+| 5.20 | Email is stored from checkout when no customer | Guest email captured on order | 05-BL 3.1 | pass |
+
+### Refunds
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.21 | Full refund updates financial status to refunded | Order financial_status transitions correctly | 05-BL 5.1 | pass |
+| 5.22 | Partial refund updates financial status to partially_refunded | Intermediate refund state tracked | 05-BL 5.1 | pass |
+| 5.23 | Refund exceeding paid amount is rejected | Cannot refund more than was paid | 05-BL 5.1 | pass |
+| 5.24 | Refund with restock restores inventory | Stock levels increase by refunded quantity | 05-BL 5.1 | pass |
+| 5.25 | Refund without restock leaves inventory unchanged | Stock levels remain the same | 05-BL 5.1 | pass |
+| 5.26 | OrderRefunded event fires on refund | Event dispatched with order and refund instances | 05-BL 5.1 | pass |
+| 5.27 | Refund reason is recorded | Reason text stored on refund record | 05-BL 5.1 | pass |
+
+### Fulfillment
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.28 | Fulfillment is created for order lines | Fulfillment record with correct line quantities | 05-BL 6.1 | pass |
+| 5.29 | Partial fulfillment sets status to partial | Order fulfillment_status reflects partial state | 05-BL 6.1 | pass |
+| 5.30 | Full fulfillment sets status to fulfilled | All lines fulfilled transitions order status | 05-BL 6.1 | pass |
+| 5.31 | Fulfillment includes tracking info | Tracking number and carrier stored | 05-BL 6.1 | pass |
+| 5.32 | Mark fulfillment as shipped updates timestamps | shipped_at set, status transitions to shipped | 05-BL 6.2 | pass |
+| 5.33 | Mark fulfillment as delivered updates timestamps | delivered_at set, status transitions to delivered | 05-BL 6.2 | pass |
+| 5.34 | Over-fulfillment is prevented | Cannot fulfill more than ordered quantity | 05-BL 6.1 | pass |
+| 5.35 | Fulfillment guard blocks pending orders | Cannot fulfill order with pending financial status | 05-BL 6.1 | pass |
+| 5.36 | Fulfillment guard allows paid orders | Paid orders can be fulfilled | 05-BL 6.1 | pass |
+| 5.37 | Fulfillment guard allows partially refunded orders | Partially refunded orders can still be fulfilled | 05-BL 6.1 | pass |
+| 5.38 | OrderFulfilled event fires on full fulfillment | Event dispatched when all lines fulfilled | 05-BL 6.1 | pass |
+
+### Digital Product Auto-Fulfill
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.39 | Digital products auto-fulfill on payment | requires_shipping=false items fulfilled automatically | 05-BL 6.3 | pass |
+| 5.40 | Digital auto-fulfill on bank transfer confirmation | Bank transfer confirmation triggers auto-fulfill | 05-BL 6.3 | pass |
+
+### Browser Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 5.41 | Full purchase flow with credit card | Add to cart, checkout, pay, see confirmation | 04-UI 7 | pass |
+| 5.42 | Decline card shows error message | Payment declined message displayed to user | 04-UI 7.4 | pass |
+| 5.43 | No JavaScript errors during checkout flow | Console error count is 0 | General | pass |
+
+## Phase 6: Customer Accounts
+
+### Customer Dashboard
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 6.01 | Dashboard renders with customer name and email | Component displays customer info | 04-UI 8.1 | pass |
+| 6.02 | Dashboard shows recent orders (last 5) | Orders listed with number, date, status, total | 04-UI 8.1 | pass |
+| 6.03 | Dashboard links to orders and addresses pages | Quick navigation to sub-pages | 04-UI 8.1 | pass |
+| 6.04 | Sign out button logs customer out | Session destroyed, redirect to login | 06-Auth 2.3 | pending |
+
+### Order History
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 6.05 | Order history lists all customer orders | Paginated table with order details | 04-UI 8.2 | pass |
+| 6.06 | Empty state shown for customer with no orders | "You have no orders yet" message | 04-UI 8.2 | pass |
+| 6.07 | Order detail shows line items and totals | Product, variant, qty, price, subtotal, shipping, tax, total | 04-UI 8.3 | pass |
+| 6.08 | Order detail shows shipping address | Address from order snapshot | 04-UI 8.3 | pass |
+| 6.09 | Order detail shows fulfillment timeline | Tracking info, shipped/delivered dates | 04-UI 8.3 | pass |
+| 6.10 | Cannot view another customer's order | Returns 404 for unauthorized order | 06-Auth 3.1 | pass |
+
+### Address Management
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 6.11 | Lists saved addresses | All customer addresses displayed | 04-UI 8.4 | pass |
+| 6.12 | Creates a new address | Address form saves correctly | 04-UI 8.4 | pass |
+| 6.13 | Updates an existing address | Edit form pre-fills and saves changes | 04-UI 8.4 | pass |
+| 6.14 | Deletes an address | Address removed from database | 04-UI 8.4 | pass |
+| 6.15 | Sets default address | Default flag toggled, other addresses unset | 04-UI 8.4 | pass |
+| 6.16 | Validates required fields on address form | first_name, last_name, address1, city, postal_code required | 04-UI 8.4 | pass |
+| 6.17 | Cannot manage another customer's addresses | Returns error for unauthorized address | 06-Auth 3.1 | pass |
+
+### Auth & Access
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 6.18 | Unauthenticated user redirected to login | auth:customer middleware enforced | 06-Auth 2.1 | pass |
+
+### Browser Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 6.19 | Login, view dashboard, navigate to orders and addresses | Full account flow works in browser | 04-UI 8 | pass |
+| 6.20 | Add and delete address in browser | Address CRUD works end-to-end | 04-UI 8.4 | pass |
+| 6.21 | No JavaScript errors on account pages | Console error count is 0 | General | pass |

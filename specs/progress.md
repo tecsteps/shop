@@ -58,7 +58,16 @@
 - Checkout-to-order integration with payment processing
 - 39 passing Pest tests
 - Seeders: customer with addresses, orders #1001-1005
-## Phase 6: Customer Accounts - NOT STARTED
+## Phase 6: Customer Accounts - COMPLETE
+- 4 Livewire components (Dashboard, Orders/Index, Orders/Show, Addresses/Index)
+- Customer dashboard with name, email, recent orders, quick links
+- Order history with pagination, order detail with line items, totals, shipping address, fulfillment timeline
+- Address management with full CRUD, default address toggle, validation
+- Routes: /account, /account/orders, /account/orders/{orderNumber}, /account/addresses
+- Security: auth:customer middleware, customer-scoped order/address access
+- Updated auth redirect for customer guard to customer.login
+- 13 passing Pest tests (6 account + 7 address management)
+- 21 manual test cases defined, all browser-verified passing
 ## Phase 7: Admin Panel - NOT STARTED
 ## Phase 8: Search - NOT STARTED
 ## Phase 9: Analytics - NOT STARTED

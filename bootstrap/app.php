@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('admin.login');
             }
 
+            if ($request->is('account/*') || $request->is('account')) {
+                return route('customer.login');
+            }
+
             return route('login');
         });
     })
