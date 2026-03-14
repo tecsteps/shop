@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             ThemeSeeder::class,
             PageSeeder::class,
             NavigationSeeder::class,
+            ShippingSeeder::class,
+            TaxSettingsSeeder::class,
+            DiscountSeeder::class,
         ]);
     }
 }

@@ -21,7 +21,8 @@ class ExpireAbandonedCheckouts implements ShouldQueue
                 CheckoutStatus::Completed->value,
                 CheckoutStatus::Expired->value,
             ])
-            ->where('updated_at', '<', now()->subHours(24))
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<', now())
             ->get();
 
         foreach ($checkouts as $checkout) {

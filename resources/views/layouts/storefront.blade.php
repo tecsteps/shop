@@ -147,13 +147,16 @@
                         <flux:icon name="magnifying-glass" class="size-5" />
                     </a>
 
-                    <a
-                        href="#"
+                    <button
+                        type="button"
+                        x-data
+                        @click="$dispatch('open-cart-drawer')"
                         class="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative"
                         aria-label="Cart"
                     >
                         <flux:icon name="shopping-bag" class="size-5" />
-                    </a>
+                        <livewire:storefront.cart-count />
+                    </button>
 
                     @auth('customer')
                         <a
@@ -265,6 +268,9 @@
             @endif
         </div>
     </div>
+
+    {{-- Cart drawer --}}
+    <livewire:storefront.cart-drawer />
 
     {{-- Main content --}}
     <main id="main-content" class="min-h-screen">

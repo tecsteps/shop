@@ -365,3 +365,84 @@
 | # | Test Case | What It Verifies | Spec Section | Status |
 |---|-----------|-----------------|--------------|--------|
 | 3.41 | Search page renders at /search | Placeholder page with search input and "coming soon" message | 04-UI | pending |
+
+## Phase 4: Cart & Checkout
+
+### Add to Cart
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.1 | Product page renders with Add to Cart button | Button visible, not disabled for in-stock product | 04-UI 5.4 | pass |
+| 4.2 | Select variant and click Add to Cart | CartService::addLine() called, item added to session cart | 04-UI 5.4, 05-BL 3.1 | pass |
+| 4.3 | Cart drawer opens after adding item | Slide-out drawer shows with added product details | 04-UI 6.1 | pass |
+| 4.4 | Cart count badge updates in header | Badge shows "1" after adding first item | 04-UI 6.1 | pass |
+| 4.5 | Adding same variant again increments quantity | Quantity increases instead of creating duplicate line | 05-BL 3.1 | pending |
+
+### Cart Drawer
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.6 | Cart drawer shows line items with image, title, variant, price | All product details rendered correctly | 04-UI 6.1 | pass |
+| 4.7 | Cart drawer quantity increase button works | Quantity increments, line total updates | 04-UI 6.1 | pass |
+| 4.8 | Cart drawer quantity decrease button works | Quantity decrements, removes item at 0 | 04-UI 6.1 | pass |
+| 4.9 | Cart drawer remove item button works | Item removed from cart, empty state shown if last item | 04-UI 6.1 | pass |
+| 4.10 | Cart drawer shows subtotal | Correct sum of line totals displayed | 04-UI 6.1 | pass |
+| 4.11 | Cart drawer View Cart link navigates to /cart | Link href points to cart page | 04-UI 6.1 | pass |
+| 4.12 | Cart drawer close button and overlay click close drawer | Drawer closes on X click or overlay click | 04-UI 6.1 | pass |
+
+### Full Cart Page
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.13 | Cart page renders at /cart with items | Full page cart with line items, order summary sidebar | 04-UI 6.2 | pass |
+| 4.14 | Cart page quantity controls work | Increase/decrease quantity updates totals in real-time | 04-UI 6.2 | pass |
+| 4.15 | Cart page remove item works | Item removed, empty state shown when cart empty | 04-UI 6.2 | pass |
+| 4.16 | Cart page empty state with "Continue Shopping" link | Shopping bag icon, empty message, link to home | 04-UI 6.2 | pass |
+| 4.17 | Cart page shipping estimate country selector | Selecting a country shows available shipping rates with prices | 04-UI 6.2 | pass |
+| 4.18 | Valid discount code "WELCOME10" accepted | Success message "Discount code applied." displayed | 04-UI 6.2, 05-BL 3.3 | pass |
+| 4.19 | Expired discount code "EXPIRED20" rejected | Error message "This discount has expired." displayed | 04-UI 6.2, 05-BL 3.3 | pass |
+| 4.20 | Invalid/nonexistent discount code rejected | Error message "Invalid discount code." displayed | 05-BL 3.3 | pending |
+
+### Checkout Flow
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.21 | Proceed to Checkout creates Checkout and redirects | Checkout model created with started status, redirects to /checkout/{id} | 04-UI 7, 05-BL 3.4 | pass |
+| 4.22 | Checkout Step 1 renders contact and address form | Email, shipping address fields with country selector | 04-UI 7.1 | pass |
+| 4.23 | Checkout Step 1 validation rejects empty required fields | Error messages shown for email, name, address, city, postal code | 04-UI 7.1 | pending |
+| 4.24 | Checkout Step 1 submit transitions to Step 2 | CheckoutService::setAddress() called, stepper updates | 04-UI 7.1, 05-BL 3.4 | pass |
+| 4.25 | Checkout Step 2 shows shipping rates for address country | Available rates from ShippingCalculator displayed with radio buttons | 04-UI 7.2 | pass |
+| 4.26 | Checkout Step 2 shows address summary with change link | Address displayed in summary box, "Change address" goes back to Step 1 | 04-UI 7.2 | pass |
+| 4.27 | Checkout Step 2 submit transitions to Step 3 | CheckoutService::setShippingMethod() called, stepper updates | 04-UI 7.2, 05-BL 3.4 | pass |
+| 4.28 | Checkout Step 3 shows payment method options | Credit Card, PayPal, Bank Transfer radio buttons | 04-UI 7.3 | pass |
+| 4.29 | Credit Card mock form shows card number, expiry, CVV | Mock form fields rendered with "testing" disclaimer | 04-UI 7.3 | pass |
+| 4.30 | PayPal option shows redirect message | "You will be redirected to PayPal" message | 04-UI 7.3 | pass |
+| 4.31 | Bank Transfer shows bank instructions | IBAN, BIC, and reference instructions displayed | 04-UI 7.3 | pass |
+| 4.32 | Order summary sidebar visible on all checkout steps | Line items, subtotal, shipping, tax, total shown | 04-UI 7.4 | pass |
+| 4.33 | Place Order completes checkout and redirects to confirmation | CheckoutService methods called, redirects to /checkout/{id}/confirmation | 04-UI 7.3, 05-BL 3.4 | pass |
+
+### Order Confirmation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.34 | Confirmation page shows thank you message | "Thank you for your order!" heading displayed | 04-UI 7.5 | pass |
+| 4.35 | Confirmation shows email address | Customer email shown in confirmation text | 04-UI 7.5 | pass |
+| 4.36 | Confirmation shows order summary with all totals | Subtotal, shipping, tax, total with correct amounts | 04-UI 7.5 | pass |
+| 4.37 | Confirmation "Continue Shopping" link navigates to home | Link back to storefront home page | 04-UI 7.5 | pass |
+
+### Stepper Navigation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.38 | Stepper shows completed steps with checkmarks | Steps before current show green checkmark icon | 04-UI 7.1 | pass |
+| 4.39 | Stepper allows navigating back to completed steps | Clicking completed step number goes back to that step | 04-UI 7.1 | pass |
+| 4.40 | Stepper disables future steps | Cannot click on steps ahead of current | 04-UI 7.1 | pass |
+
+### Console and Error Checks
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 4.41 | No JavaScript errors on product page | Console error count is 0 | General | pass |
+| 4.42 | No JavaScript errors on cart page | Console error count is 0 | General | pass |
+| 4.43 | No JavaScript errors on checkout pages | Console error count is 0 | General | pass |
+| 4.44 | No JavaScript errors on confirmation page | Console error count is 0 | General | pass |

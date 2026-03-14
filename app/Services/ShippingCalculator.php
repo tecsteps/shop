@@ -109,7 +109,7 @@ class ShippingCalculator
         $totalWeight = 0;
         foreach ($cart->lines as $line) {
             if ($line->variant && $line->variant->requires_shipping) {
-                $totalWeight += ($line->variant->weight_g ?? 0) * $line->quantity;
+                $totalWeight += ($line->variant->weight_grams ?? 0) * $line->quantity;
             }
         }
 

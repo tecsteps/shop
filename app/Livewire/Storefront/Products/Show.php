@@ -7,6 +7,7 @@ use App\Enums\ProductStatus;
 use App\Enums\VariantStatus;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Livewire\Component;
 
 class Show extends Component
@@ -54,10 +55,7 @@ class Show extends Component
         }
     }
 
-    /**
-     * @param  array<string, string>  $value
-     */
-    public function updatedSelectedOptions(array $value): void
+    public function updatedSelectedOptions(): void
     {
         $variant = $this->findMatchingVariant();
         $this->selectedVariantId = $variant?->id;
@@ -92,7 +90,25 @@ class Show extends Component
             return;
         }
 
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        if (! $store) {
+            return;
+        }
+
+        $cartService = app(CartService::class);
+        $cart = $cartService->getOrCreateForSession($store);
+
+        try {
+            $cartService->addLine($cart, $variant->id, $this->quantity);
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+
+            return;
+        }
+
+        $this->quantity = 1;
         $this->dispatch('cart-updated');
+        $this->dispatch('open-cart-drawer');
     }
 
     public function getSelectedVariant(): ?ProductVariant

@@ -35,7 +35,16 @@
 - Error pages: styled 404 and 503
 - 19 passing Pest tests
 - 22 browser-verified test cases passing
-## Phase 4: Cart & Checkout - NOT STARTED
+## Phase 4: Cart & Checkout - COMPLETE
+- Models: ShippingZone, ShippingRate, TaxSettings, Discount (new); Cart, CartLine, Checkout (verified)
+- 5 new enums (DiscountType, DiscountValueType, DiscountStatus, ShippingRateType, TaxMode)
+- Services verified: CartService, CheckoutService, DiscountService, PricingEngine, ShippingCalculator, TaxCalculator
+- Jobs: ExpireAbandonedCheckouts (15 min), CleanupAbandonedCarts (daily) registered in console
+- Storefront UI: Cart drawer, full cart page, multi-step checkout (contact/shipping/payment), order confirmation
+- Add-to-cart integration with live cart count badge
+- Seeders: 5 discount codes, 2 shipping zones with rates, tax settings (19% VAT)
+- 67 passing Pest tests (unit + feature)
+- 19/19 browser tests passing, 44 manual test cases
 ## Phase 5: Payments & Orders - NOT STARTED
 ## Phase 6: Customer Accounts - NOT STARTED
 ## Phase 7: Admin Panel - NOT STARTED

@@ -10,6 +10,9 @@ Route::get('/collections/{handle}', \App\Livewire\Storefront\Collections\Show::c
 Route::get('/products/{handle}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
 Route::get('/pages/{handle}', \App\Livewire\Storefront\Pages\Show::class)->name('storefront.pages.show');
 Route::get('/search', \App\Livewire\Storefront\Search\Index::class)->name('storefront.search');
+Route::get('/cart', \App\Livewire\Storefront\Cart\Show::class)->name('storefront.cart');
+Route::get('/checkout/{checkoutId}', \App\Livewire\Storefront\Checkout\Show::class)->name('storefront.checkout');
+Route::get('/checkout/{checkoutId}/confirmation', \App\Livewire\Storefront\Checkout\Confirmation::class)->name('storefront.checkout.confirmation');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
