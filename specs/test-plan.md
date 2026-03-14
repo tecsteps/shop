@@ -784,7 +784,7 @@
 
 | # | Test Case | What It Verifies | Spec Section | Status |
 |---|-----------|-----------------|--------------|--------|
-| 10.15 | Admin developers page loads without errors | Page renders, shows webhook management UI | 03-ADMIN | pending |
-| 10.16 | Create webhook subscription form works | Can fill and submit form, subscription appears in list | 03-ADMIN | pending |
-| 10.17 | Admin apps page loads without errors | Page renders, shows installed apps or empty state | 03-ADMIN | pending |
-| 10.18 | No JavaScript errors on Phase 10 pages | Console error count is 0 | General | pending |
+| 10.15 | Admin developers page loads without errors | Page renders, shows webhook management UI | 03-ADMIN | pass |
+| 10.16 | Create webhook subscription form works | Can fill and submit form, subscription appears in list | 03-ADMIN | pass |
+| 10.17 | Admin apps page loads without errors | Page renders, shows installed apps or empty state | 03-ADMIN | pass |
+| 10.18 | No JavaScript errors on Phase 10 pages | Console error count is 0 | General | pass |

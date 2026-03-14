@@ -29,13 +29,13 @@ it('requires authentication for apps', function () {
         ->assertRedirect(route('admin.login'));
 });
 
-it('renders apps placeholder', function () {
+it('renders apps page', function () {
     $this->actingAs($this->ctx['user']);
 
     $this->get(route('admin.apps.index'))
         ->assertOk()
         ->assertSeeLivewire(AppsIndex::class)
-        ->assertSee('Apps marketplace coming soon');
+        ->assertSee('No apps installed');
 });
 
 it('requires authentication for developers', function () {
@@ -43,11 +43,11 @@ it('requires authentication for developers', function () {
         ->assertRedirect(route('admin.login'));
 });
 
-it('renders developers placeholder', function () {
+it('renders developers page with webhook management', function () {
     $this->actingAs($this->ctx['user']);
 
     $this->get(route('admin.developers.index'))
         ->assertOk()
         ->assertSeeLivewire(DevelopersIndex::class)
-        ->assertSee('Developer tools coming soon');
+        ->assertSee('Webhook Subscriptions');
 });

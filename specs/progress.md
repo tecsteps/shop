@@ -102,6 +102,15 @@
 - Event tracking integrated into storefront: page_view (Home), product_view (Products/Show), add_to_cart (Products/Show), checkout_started (Checkout/Show), checkout_completed (Checkout/Confirmation)
 - 8 passing Pest tests (5 event ingestion + 3 aggregation)
 - 15 test cases defined, all passing
-## Phase 10: Apps & Webhooks - NOT STARTED
+## Phase 10: Apps & Webhooks - COMPLETE
+- 4 migrations (apps, app_installations, webhook_subscriptions, webhook_deliveries)
+- 4 models (App, AppInstallation, WebhookSubscription, WebhookDelivery) with factories
+- WebhookService: dispatch(), sign() HMAC-SHA256, verify()
+- DeliverWebhook job: HTTP POST with signature headers, retry backoff [60,300,1800,7200,43200], circuit breaker (pause after 5 failures)
+- Admin Developers page: webhook subscription CRUD, delivery history viewer
+- Admin Apps page: installed apps directory with detail view (scopes, status)
+- 9 passing Pest tests (5 delivery + 4 signature)
+- 18 test cases defined, all passing
+- Browser verified: developers page, webhook creation, apps page, 0 JS errors
 ## Phase 11: Polish - NOT STARTED
 ## Phase 12: Full Test Suite - NOT STARTED

@@ -1,0 +1,44 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\App;
+use App\Models\AppInstallation;
+use App\Models\Store;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<AppInstallation>
+ */
+class AppInstallationFactory extends Factory
+{
+    protected $model = AppInstallation::class;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'store_id' => Store::factory(),
+            'app_id' => App::factory(),
+            'scopes_json' => ['read_products', 'read_orders'],
+            'status' => 'active',
+            'installed_at' => now()->toIso8601String(),
+        ];
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'suspended',
+        ]);
+    }
+
+    public function uninstalled(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'uninstalled',
+        ]);
+    }
+}
