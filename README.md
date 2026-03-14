@@ -2,6 +2,27 @@
 
 Implement the complete shop system defined in `specs/`. Work through `specs/09-IMPLEMENTATION-ROADMAP.md` phase by phase (1-12), referencing the other spec files as needed. Do not stop until all phases are complete and verified. Use team mode for all work.
 
+## Upfront Task List
+
+Before writing any code, read all spec files and create the full task list covering all 12 phases. Every task across every phase must be listed upfront so progress can be tracked from the start.
+
+## Phase Lifecycle
+
+Each phase follows this strict sequence:
+
+1. **Planning** -- Break the phase into tasks, assign to teammates, agree on approach.
+2. **Development** -- Implement the phase deliverables.
+3. **Automated Testing & Fixing** -- Write Pest unit/feature tests, run them, fix failures until all pass.
+4. **Manual Test Plan** -- Write a comprehensive manual test plan for the phase covering every user-facing flow and edge case.
+5. **Browser Verification** -- The agent walks through every manual test case using Playwright MCP (non-scripted, interactive browser navigation). No test scripts -- the agent clicks, fills forms, and visually confirms behavior.
+6. **Fix & Repeat** -- Fix any issues found during browser verification, then repeat step 5 until 100% of manual test cases pass.
+
+Do not advance to the next phase until all steps are complete.
+
+## Final Regression
+
+After all 12 phases are done, run a full regression: re-execute every manual test case from every phase using Playwright MCP. Fix any issues found and re-run the full regression until it passes with zero failures.
+
 ## Team Mode Rules
 
 **The team lead is strictly an orchestrator.** It must never write code, run tests, do research, or verify results directly. Every unit of work must be delegated to a teammate.
