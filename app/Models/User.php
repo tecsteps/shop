@@ -70,7 +70,13 @@ class User extends Authenticatable
     {
         $pivot = $this->stores()->where('stores.id', $store->id)->first()?->pivot;
 
-        return $pivot ? StoreUserRole::from($pivot->role) : null;
+        if (! $pivot) {
+            return null;
+        }
+
+        $role = $pivot->role;
+
+        return $role instanceof StoreUserRole ? $role : StoreUserRole::from($role);
     }
 
     /**

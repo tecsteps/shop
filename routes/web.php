@@ -32,9 +32,63 @@ Route::prefix('admin')->group(function () {
 
 // Admin authenticated routes
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard-placeholder');
-    })->name('admin.dashboard');
+    Route::get('/', \App\Livewire\Admin\Dashboard::class)->name('admin.dashboard');
+
+    // Products
+    Route::get('/products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index');
+    Route::get('/products/create', \App\Livewire\Admin\Products\Form::class)->name('admin.products.create');
+    Route::get('/products/{product}/edit', \App\Livewire\Admin\Products\Form::class)->name('admin.products.edit');
+
+    // Collections
+    Route::get('/collections', \App\Livewire\Admin\Collections\Index::class)->name('admin.collections.index');
+    Route::get('/collections/create', \App\Livewire\Admin\Collections\Form::class)->name('admin.collections.create');
+    Route::get('/collections/{collection}/edit', \App\Livewire\Admin\Collections\Form::class)->name('admin.collections.edit');
+
+    // Inventory
+    Route::get('/inventory', \App\Livewire\Admin\Inventory\Index::class)->name('admin.inventory.index');
+
+    // Orders
+    Route::get('/orders', \App\Livewire\Admin\Orders\Index::class)->name('admin.orders.index');
+    Route::get('/orders/{order}', \App\Livewire\Admin\Orders\Show::class)->name('admin.orders.show');
+
+    // Customers
+    Route::get('/customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
+    Route::get('/customers/{customer}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
+
+    // Discounts
+    Route::get('/discounts', \App\Livewire\Admin\Discounts\Index::class)->name('admin.discounts.index');
+    Route::get('/discounts/create', \App\Livewire\Admin\Discounts\Form::class)->name('admin.discounts.create');
+    Route::get('/discounts/{discount}/edit', \App\Livewire\Admin\Discounts\Form::class)->name('admin.discounts.edit');
+
+    // Settings
+    Route::get('/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index');
+    Route::get('/settings/shipping', \App\Livewire\Admin\Settings\Shipping::class)->name('admin.settings.shipping');
+    Route::get('/settings/taxes', \App\Livewire\Admin\Settings\Taxes::class)->name('admin.settings.taxes');
+
+    // Pages
+    Route::get('/pages', \App\Livewire\Admin\Pages\Index::class)->name('admin.pages.index');
+    Route::get('/pages/create', \App\Livewire\Admin\Pages\Form::class)->name('admin.pages.create');
+    Route::get('/pages/{page}/edit', \App\Livewire\Admin\Pages\Form::class)->name('admin.pages.edit');
+
+    // Navigation
+    Route::get('/navigation', \App\Livewire\Admin\Navigation\Index::class)->name('admin.navigation.index');
+
+    // Themes
+    Route::get('/themes', \App\Livewire\Admin\Themes\Index::class)->name('admin.themes.index');
+    Route::get('/themes/{theme}/editor', \App\Livewire\Admin\Themes\Editor::class)->name('admin.themes.editor');
+
+    // Analytics
+    Route::get('/analytics', \App\Livewire\Admin\Analytics\Index::class)->name('admin.analytics.index');
+
+    // Search Settings
+    Route::get('/search/settings', \App\Livewire\Admin\Search\Settings::class)->name('admin.search.settings');
+
+    // Apps
+    Route::get('/apps', \App\Livewire\Admin\Apps\Index::class)->name('admin.apps.index');
+    Route::get('/apps/{app}', \App\Livewire\Admin\Apps\Show::class)->name('admin.apps.show');
+
+    // Developers
+    Route::get('/developers', \App\Livewire\Admin\Developers\Index::class)->name('admin.developers.index');
 });
 
 // Customer auth routes (storefront)

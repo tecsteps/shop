@@ -579,3 +579,86 @@
 | 6.19 | Login, view dashboard, navigate to orders and addresses | Full account flow works in browser | 04-UI 8 | pass |
 | 6.20 | Add and delete address in browser | Address CRUD works end-to-end | 04-UI 8.4 | pass |
 | 6.21 | No JavaScript errors on account pages | Console error count is 0 | General | pass |
+
+## Phase 7: Admin Panel
+
+### Admin Dashboard
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.1 | Dashboard renders at /admin with KPI tiles | Shows Total Sales, Orders, Avg Order Value, Visitors tiles | 03-ADMIN 1.1 | pass |
+| 7.2 | Dashboard shows recent orders table | Displays order #, customer, status, total, date columns | 03-ADMIN 1.1 | pass |
+| 7.3 | Dashboard date range filter | Dropdown with Today, Last 7 days, Last 30 days, Custom range | 03-ADMIN 1.1 | pass |
+
+### Admin Products
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.4 | Product list at /admin/products | Shows 20 products with image, title, status, inventory, type, vendor | 03-ADMIN 2.1 | pass |
+| 7.5 | Product search filters by title | Typing in search narrows product list | 03-ADMIN 2.1 | pass |
+| 7.6 | Product status filter dropdown | Filters by All/Draft/Active/Archived | 03-ADMIN 2.1 | pass |
+| 7.7 | Product create form at /admin/products/create | Shows Add product button, form renders | 03-ADMIN 2.2 | pass |
+| 7.8 | Product edit form at /admin/products/{id}/edit | Clicking product name opens edit form | 03-ADMIN 2.2 | pass |
+
+### Admin Collections
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.9 | Collection list at /admin/collections | Shows collections with title, product count, status | 03-ADMIN 2.3 | pass |
+| 7.10 | Collection create/edit forms | Add collection button, edit links work | 03-ADMIN 2.3 | pass |
+
+### Admin Inventory
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.11 | Inventory list at /admin/inventory | Shows variant-level inventory with product, variant, SKU, on-hand, reserved, available | 03-ADMIN 2.4 | pass |
+| 7.12 | Inventory search by product or SKU | Search input filters inventory items | 03-ADMIN 2.4 | pass |
+| 7.13 | Inventory stock filter dropdown | Filters by All/In stock/Low stock/Out of stock | 03-ADMIN 2.4 | pass |
+| 7.14 | Inventory pagination | 147 items paginated at 30 per page | 03-ADMIN 2.4 | pass |
+
+### Admin Orders
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.15 | Order list at /admin/orders | Shows orders with #, date, customer, payment/fulfillment status, total | 03-ADMIN 3.1 | pass |
+| 7.16 | Order search by # or email | Search input filters order list | 03-ADMIN 3.1 | pass |
+| 7.17 | Order status filter tabs | Tabs for All/Pending/Paid/Fulfilled/Cancelled/Refunded | 03-ADMIN 3.1 | pass |
+| 7.18 | Order detail page at /admin/orders/{id} | Shows breadcrumb, header with status badges, timeline, line items, totals | 03-ADMIN 3.2 | pass |
+| 7.19 | Order detail shows payment details | Payment method, status, amount, reference displayed | 03-ADMIN 3.2 | pass |
+| 7.20 | Order detail shows customer and addresses | Customer info card, shipping/billing addresses in sidebar | 03-ADMIN 3.2 | pass |
+| 7.21 | Order detail Create Fulfillment button | Button present for paid unfulfilled orders | 03-ADMIN 3.2 | pass |
+| 7.22 | Order detail Refund button | Button present for paid orders | 03-ADMIN 3.2 | pass |
+
+### Admin Customers
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.23 | Customer list at /admin/customers | Shows name, email, order count, total spent, created date | 03-ADMIN 4.1 | pass |
+| 7.24 | Customer search by name or email | Search input filters customer list | 03-ADMIN 4.1 | pass |
+| 7.25 | Customer detail at /admin/customers/{id} | Shows customer info, order history, addresses | 03-ADMIN 4.2 | pass |
+
+### Admin Discounts
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.26 | Discount list at /admin/discounts | Shows code, type, value, usage, status, dates | 03-ADMIN 5.1 | pass |
+| 7.27 | Discount search by code | Search input filters discount list | 03-ADMIN 5.1 | pass |
+| 7.28 | Discount status filter dropdown | Filters by All/Active/Draft/Expired/Disabled | 03-ADMIN 5.1 | pass |
+| 7.29 | Discount create form at /admin/discounts/create | Create Discount button, form renders with type/code/value/conditions | 03-ADMIN 5.2 | pass |
+| 7.30 | Discount edit form at /admin/discounts/{id}/edit | Clicking discount code opens pre-filled edit form | 03-ADMIN 5.2 | pass |
+
+### Admin Settings, Themes, Pages
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.31 | Settings page at /admin/settings | Shows General tab with store details and defaults | 03-ADMIN 6.1 | pass |
+| 7.32 | Themes page at /admin/themes | Shows Default Theme with Published status and Customize link | 03-ADMIN 7.1 | pass |
+| 7.33 | Pages list at /admin/pages | Shows pages with title, handle, status, Add page button | 03-ADMIN 7.2 | pass |
+
+### Browser Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 7.34 | Login and navigate all admin sections | All admin pages load without errors | 03-ADMIN | pass |
+| 7.35 | No JavaScript errors on admin pages | Console error count is 0 across all admin pages | General | pass |
+| 7.36 | Sidebar navigation links work | All sidebar links navigate to correct pages | 03-ADMIN 1.2 | pass |
