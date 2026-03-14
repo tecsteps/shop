@@ -2,17 +2,22 @@
 
 namespace App\Services;
 
+use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Events\CheckoutAddressed;
+use App\Events\CheckoutCompleted;
 use App\Events\CheckoutShippingSelected;
 use App\Models\Checkout;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutService
 {
     public function __construct(
         private InventoryService $inventoryService,
+        private PaymentProvider $paymentProvider,
+        private OrderService $orderService,
     ) {}
 
     /**
@@ -89,6 +94,48 @@ class CheckoutService
         });
 
         return $checkout->refresh();
+    }
+
+    /**
+     * Complete checkout: charge payment and create order.
+     * Handles idempotency - if checkout is already completed, returns existing order.
+     *
+     * @param  array<string, mixed>  $paymentDetails
+     */
+    public function completeCheckout(Checkout $checkout, array $paymentDetails = []): Order
+    {
+        if ($checkout->status === CheckoutStatus::Completed) {
+            $order = Order::where('store_id', $checkout->store_id)
+                ->whereHas('payments', fn ($q) => $q->where('order_id', '>', 0))
+                ->latest()
+                ->firstOrFail();
+
+            return $order;
+        }
+
+        if ($checkout->status !== CheckoutStatus::PaymentSelected) {
+            throw new \InvalidArgumentException('Checkout must be in payment_selected state to complete.');
+        }
+
+        $paymentResult = $this->paymentProvider->charge(
+            $checkout,
+            $checkout->payment_method,
+            $paymentDetails,
+        );
+
+        if (! $paymentResult->success) {
+            $this->releaseInventoryForCheckout($checkout);
+
+            throw new \RuntimeException(
+                $paymentResult->errorMessage ?? 'Payment failed: '.($paymentResult->errorCode ?? 'unknown error')
+            );
+        }
+
+        $order = $this->orderService->createFromCheckout($checkout, $paymentResult);
+
+        CheckoutCompleted::dispatch($checkout->id, $order->id);
+
+        return $order;
     }
 
     /**

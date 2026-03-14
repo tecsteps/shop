@@ -45,7 +45,19 @@
 - Seeders: 5 discount codes, 2 shipping zones with rates, tax settings (19% VAT)
 - 67 passing Pest tests (unit + feature)
 - 19/19 browser tests passing, 44 manual test cases
-## Phase 5: Payments & Orders - NOT STARTED
+## Phase 5: Payments & Orders - COMPLETE
+- 7 migrations (customer_addresses, orders, order_lines, payments, refunds, fulfillments, fulfillment_lines)
+- 7 models (CustomerAddress, Order, OrderLine, Payment, Refund, Fulfillment, FulfillmentLine)
+- 6 enums (OrderStatus, FinancialStatus, FulfillmentStatus, PaymentStatus, RefundStatus, FulfillmentShipmentStatus)
+- MockPaymentProvider with magic card numbers (success/decline/insufficient funds)
+- OrderService (createFromCheckout, generateOrderNumber, cancel, confirmBankTransferPayment)
+- RefundService (full/partial refunds with restock option)
+- FulfillmentService (create with guard, markAsShipped, markAsDelivered)
+- 5 domain events (OrderCreated/Paid/Fulfilled/Cancelled/Refunded)
+- CancelUnpaidBankTransferOrders daily job
+- Checkout-to-order integration with payment processing
+- 39 passing Pest tests
+- Seeders: customer with addresses, orders #1001-1005
 ## Phase 6: Customer Accounts - NOT STARTED
 ## Phase 7: Admin Panel - NOT STARTED
 ## Phase 8: Search - NOT STARTED

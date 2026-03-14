@@ -184,8 +184,23 @@ class Show extends Component
             // Calculate final pricing
             $pricingEngine = app(PricingEngine::class);
             $pricingEngine->calculate($this->checkout);
+            $this->checkout->refresh();
+
+            // Complete checkout with payment
+            $paymentDetails = [];
+            if ($paymentMethodEnum === PaymentMethod::CreditCard) {
+                $paymentDetails = [
+                    'card_number' => $this->cardNumber,
+                    'card_expiry' => $this->cardExpiry,
+                    'card_cvv' => $this->cardCvv,
+                ];
+            }
+
+            $order = $checkoutService->completeCheckout($this->checkout, $paymentDetails);
 
             $this->redirect(route('storefront.checkout.confirmation', $this->checkout->id), navigate: true);
+        } catch (\RuntimeException $e) {
+            session()->flash('error', $e->getMessage());
         } catch (\Exception $e) {
             session()->flash('error', 'Unable to complete checkout: '.$e->getMessage());
         }
