@@ -3,9 +3,13 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Storefront routes
+Route::get('/', \App\Livewire\Storefront\Home::class)->name('storefront.home');
+Route::get('/collections', \App\Livewire\Storefront\Collections\Index::class)->name('storefront.collections.index');
+Route::get('/collections/{handle}', \App\Livewire\Storefront\Collections\Show::class)->name('storefront.collections.show');
+Route::get('/products/{handle}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
+Route::get('/pages/{handle}', \App\Livewire\Storefront\Pages\Show::class)->name('storefront.pages.show');
+Route::get('/search', \App\Livewire\Storefront\Search\Index::class)->name('storefront.search');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

@@ -277,3 +277,91 @@
 | 2.68 | T-Shirts collection contains t-shirt products | Products #1, #3, #7, #14, #16, #17 attached | 07-SEEDERS | pending |
 | 2.69 | Sale collection contains products with compare_at_price | Products #2, #20 attached | 07-SEEDERS | pending |
 | 2.70 | Each product has at least one media record | ProductMedia exists for all 20 products | 07-SEEDERS | pending |
+
+## Phase 3: Storefront
+
+### Home Page
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.1 | Home page renders at / | Page loads with storefront layout, header, footer, store name visible | 04-UI 2, 04-UI 3 | pass |
+| 3.2 | Hero section displays theme settings content | Hero heading, subheading, and CTA button from theme_settings | 04-UI 3.1 | pass |
+| 3.3 | Featured collections grid on home page | Collections configured in theme settings shown with images and titles | 04-UI 3.2 | pass |
+| 3.4 | Featured products grid on home page | Active products shown with product cards (image, title, price) | 04-UI 3.3 | pass |
+| 3.5 | Announcement bar renders from theme settings | Bar visible above header with configured text, dismissible via X button | 04-UI 2.3 | pending |
+
+### Navigation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.6 | Desktop header navigation renders main-menu items | Nav items from main-menu NavigationMenu visible in header | 04-UI 2.4 | pending |
+| 3.7 | Desktop dropdown submenus on hover | Child nav items appear in dropdown on hover | 04-UI 2.4 | pending |
+| 3.8 | Mobile hamburger menu opens navigation drawer | Clicking hamburger shows slide-out drawer with nav items | 04-UI 2.4 | pass |
+| 3.9 | Footer renders footer-menu navigation | Footer columns with nav items from footer-menu | 04-UI 2.6 | pending |
+| 3.10 | Search, cart, and account icons in header | All three icons visible and linked correctly | 04-UI 2.4 | pass |
+
+### Collections
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.11 | Collections index page at /collections | Lists all active collections with images and product counts | 04-UI 4 | pass |
+| 3.12 | Collection detail page at /collections/{handle} | Shows collection title, description, breadcrumbs, product grid | 04-UI 4.1, 4.4 | pass |
+| 3.13 | Collection filter by vendor | Vendor dropdown filters products to selected vendor only | 04-UI 4.3 | pass |
+| 3.14 | Collection filter by price range | Min/max price inputs filter products within range | 04-UI 4.3 | pass |
+| 3.15 | Collection sort by newest | Products ordered by creation date descending | 04-UI 4.2 | pending |
+| 3.16 | Collection sort by price ascending | Products ordered by price low to high | 04-UI 4.2 | pending |
+| 3.17 | Collection pagination (12 per page) | Only 12 products per page with pagination controls | 04-UI 4.6 | pending |
+| 3.18 | Collection empty state when no products match filters | "No products found" message with clear filters button | 04-UI 4.7 | pending |
+
+### Product Detail
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.19 | Product detail page at /products/{handle} | Shows title, price, description, images, variant selector | 04-UI 5 | pass |
+| 3.20 | Price formatted as "24.99 EUR" | Cents converted to decimal with currency code after amount | 04-UI Currency | pass |
+| 3.21 | Compare-at price shows strikethrough | Higher compare_at_price displayed with line-through styling | 04-UI 5.3 | pass |
+| 3.22 | Variant selector with radio pills | Options with <=6 values shown as pill-shaped radio buttons | 04-UI 5.3 | pass |
+| 3.23 | Variant selection updates price display | Selecting different variant updates shown price | 04-UI 5.3 | pending |
+| 3.24 | In-stock messaging ("In stock" green text) | Products with available inventory show green check | 04-UI 5.3 | pass |
+| 3.25 | Sold-out product shows "Out of stock" and disabled button | Deny policy with 0 inventory: red text, button says "Sold out" | 04-UI 5.3 | pass |
+| 3.26 | Backorder product shows "Available on backorder" | Continue policy with 0 inventory: blue info text | 04-UI 5.3 | pass |
+| 3.27 | Product image gallery with thumbnails | Main image + clickable thumbnail strip below | 04-UI 5.2 | pending |
+| 3.28 | Breadcrumbs on product page (Home > Collection > Product) | Breadcrumb trail with links to home and collection | 04-UI 5.3 | pass |
+| 3.29 | Draft product returns 404 | /products/{draft-handle} shows 404 error page | 04-UI 5, 05-BL | pass |
+
+### Product Card Component
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.30 | Product card shows image, title, vendor, price | All elements rendered in card component | 04-UI 4.5 | pass |
+| 3.31 | Product card Sale badge when compare_at_price set | "Sale" badge on products with higher compare_at price | 04-UI 4.5 | pass |
+| 3.32 | Product card Sold Out badge for out-of-stock deny | "Sold out" badge when all variants have 0 inventory with deny policy | 04-UI 4.5 | pass |
+
+### Static Pages
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.33 | Published page renders at /pages/{handle} | Page title and content_html displayed | 04-UI | pass |
+| 3.34 | Draft page returns 404 | /pages/{draft-handle} shows 404 error page | 04-UI | pass |
+| 3.35 | Archived page returns 404 | /pages/{archived-handle} shows 404 error page | 04-UI | pending |
+
+### Error Pages
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.36 | 404 error page renders for unknown routes | Standalone page with "Page not found" and back to home link | 04-UI Errors | pass |
+| 3.37 | 503 error page renders for suspended stores | Standalone "Store is currently under maintenance" page | 04-UI Errors | pending |
+
+### Dark Mode and Responsive
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.38 | Dark mode styling applied | Background, text, borders change with dark: prefix classes | 04-UI 2.8 | pass |
+| 3.39 | Mobile responsive layout (375px width) | Hamburger menu replaces nav, content stacks vertically | 04-UI 2.4 | pass |
+| 3.40 | Skip link visible on keyboard focus | "Skip to main content" link appears on Tab focus | 04-UI 2.2 | pass |
+
+### Search Placeholder
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 3.41 | Search page renders at /search | Placeholder page with search input and "coming soon" message | 04-UI | pending |
