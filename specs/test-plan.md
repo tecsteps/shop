@@ -160,3 +160,120 @@
 | 1.92 | Session driver set to file | config('session.driver') returns 'file' | 09-ROADMAP 1.1 | pending |
 | 1.93 | Cache driver set to file | config('cache.default') returns 'file' | 09-ROADMAP 1.1 | pending |
 | 1.94 | Queue connection set to sync | config('queue.default') returns 'sync' | 09-ROADMAP 1.1 | pending |
+
+## Phase 2: Catalog
+
+### Product CRUD
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.1 | Create a product via ProductService with title only | Product created with auto-generated handle, draft status, default variant, and inventory item | 05-BL 2.1 | pending |
+| 2.2 | Create a product with body_html, vendor, product_type, tags | All fields persisted correctly, body_html maps to description_html column | 05-BL 2.1, 01-DB | pending |
+| 2.3 | Update a product title regenerates handle | Handle re-slugified when title changes, uniqueness preserved | 05-BL 2.1 | pending |
+| 2.4 | Update a product without changing title keeps handle | Handle unchanged when only other fields modified | 05-BL 2.1 | pending |
+| 2.5 | Delete a draft product with no order references | Product, variants, options, media, inventory all cascade-deleted | 05-BL 2.1 | pending |
+| 2.6 | Delete a non-draft product is rejected | InvalidArgumentException thrown, product unchanged | 05-BL 2.1 | pending |
+| 2.7 | Delete a product with order references is rejected | InvalidArgumentException thrown even if status is draft | 05-BL 2.1 | pending |
+| 2.8 | List products filtered by status | Only products matching status filter returned | 05-BL 2.1 | pending |
+| 2.9 | Search products by title | Products with matching title substring returned | 05-BL 2.1 | pending |
+
+### Handle Generation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.10 | Handle generated from title via Str::slug | "Classic Cotton T-Shirt" becomes "classic-cotton-t-shirt" | 05-BL 2.1 | pending |
+| 2.11 | Handle collision appends numeric suffix | Second product with same title gets handle-1, third gets handle-2 | 05-BL 2.1 | pending |
+| 2.12 | Handle scoped to store | Same title in different stores generates same handle without suffix | 05-BL 2.1 | pending |
+| 2.13 | Handle excludes current record on update | Updating own title back does not cause self-collision | 05-BL 2.1 | pending |
+| 2.14 | Handle generation with special characters | Titles with accents, symbols produce clean slugs | 05-BL 2.1 | pending |
+
+### Product Status Transitions
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.15 | Draft to Active with priced variant | Status set to active, published_at set to now | 05-BL 2.1 | pending |
+| 2.16 | Draft to Active without priced variant rejected | InvalidArgumentException: needs at least one variant with price > 0 | 05-BL 2.1 | pending |
+| 2.17 | Active to Archived | Status set to archived | 05-BL 2.1 | pending |
+| 2.18 | Active to Draft (no order references) | Status reverted to draft | 05-BL 2.1 | pending |
+| 2.19 | Active to Draft with order references rejected | InvalidArgumentException thrown | 05-BL 2.1 | pending |
+| 2.20 | Archived to Draft | Status set to draft | 05-BL 2.1 | pending |
+| 2.21 | Archived to Active with priced variant | Status set to active, published_at updated | 05-BL 2.1 | pending |
+| 2.22 | Draft to Archived rejected (invalid transition) | InvalidArgumentException for disallowed transition | 05-BL 2.1 | pending |
+| 2.23 | Same status transition is no-op | No error, no update when transitioning to current status | 05-BL 2.1 | pending |
+
+### Variant Matrix Generation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.24 | Rebuild matrix with no options creates default variant | Single default variant with is_default=true | 05-BL 2.2 | pending |
+| 2.25 | Rebuild matrix with one option (3 values) creates 3 variants | S, M, L each get a variant with inventory item | 05-BL 2.2 | pending |
+| 2.26 | Rebuild matrix with two options creates cartesian product | Size(S/M/L) x Color(R/B) = 6 variants | 05-BL 2.2 | pending |
+| 2.27 | Rebuild preserves existing variants with same option values | Price, SKU, inventory unchanged for matching variants | 05-BL 2.2 | pending |
+| 2.28 | Rebuild creates new variants for added option values | Adding XL size creates new variants while preserving S/M/L | 05-BL 2.2 | pending |
+| 2.29 | Rebuild removes orphaned variants (no order refs) | Variants for removed option values are deleted | 05-BL 2.2 | pending |
+| 2.30 | Rebuild archives orphaned variants with order refs | Variants with order lines set to archived instead of deleted | 05-BL 2.2 | pending |
+| 2.31 | Variant title auto-generated from option values | Title is "S / Red" for size S, color Red | 05-BL 2.2 | pending |
+| 2.32 | Variant option values linked via pivot table | variant_option_values records created correctly | 01-DB | pending |
+
+### Inventory Management
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.33 | Check availability with sufficient stock (deny policy) | Returns true when on_hand - reserved >= requested | 05-BL 2.3 | pending |
+| 2.34 | Check availability with insufficient stock (deny policy) | Returns false when available < requested | 05-BL 2.3 | pending |
+| 2.35 | Check availability always true with continue policy | Returns true regardless of stock level | 05-BL 2.3 | pending |
+| 2.36 | Reserve inventory with sufficient stock | quantity_reserved incremented by requested amount | 05-BL 2.3 | pending |
+| 2.37 | Reserve inventory with insufficient stock (deny) throws | InsufficientInventoryException with variant_id, requested, available | 05-BL 2.3 | pending |
+| 2.38 | Reserve inventory with continue policy always succeeds | Reserved even when on_hand is 0 | 05-BL 2.3 | pending |
+| 2.39 | Release reserved inventory | quantity_reserved decremented, capped at 0 | 05-BL 2.3 | pending |
+| 2.40 | Commit inventory after payment | Both on_hand and reserved decremented | 05-BL 2.3 | pending |
+| 2.41 | Restock inventory | quantity_on_hand incremented | 05-BL 2.3 | pending |
+| 2.42 | quantityAvailable() returns on_hand minus reserved | Computed property correct after reserve/release cycles | 05-BL 2.3, 01-DB | pending |
+
+### Collection Management
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.43 | Create collection with title, handle, status | Collection persisted with store_id auto-set | 05-BL 2.4 | pending |
+| 2.44 | Collection handle unique per store | Duplicate handle in same store rejected, different store allowed | 01-DB | pending |
+| 2.45 | Attach products to collection with position | collection_products pivot records created with position | 05-BL 2.4 | pending |
+| 2.46 | Detach products from collection | Pivot records removed, products unchanged | 05-BL 2.4 | pending |
+| 2.47 | Reorder products in collection | Position values updated in pivot | 05-BL 2.4 | pending |
+| 2.48 | Collection status transitions (draft/active/archived) | Status changes apply correctly | 05-BL 2.4 | pending |
+| 2.49 | Product belongs to multiple collections | Same product in T-Shirts and New Arrivals collections | 01-DB | pending |
+
+### Media Upload and Processing
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.50 | Create product media record | Media record with type, url, alt_text, status=processing | 01-DB | pending |
+| 2.51 | ProcessMediaUpload job sets status to ready on success | Media status transitions from processing to ready | 05-BL 2.5 | pending |
+| 2.52 | ProcessMediaUpload job sets status to failed on error | Media status set to failed, error logged | 05-BL 2.5 | pending |
+| 2.53 | ProcessMediaUpload job retries up to 3 times | $tries = 3 configured on job class | 05-BL 2.5 | pending |
+| 2.54 | ProcessMediaUpload handles missing media record gracefully | Warning logged, no exception thrown | 05-BL 2.5 | pending |
+| 2.55 | Media position ordering | Multiple media per product ordered by position | 01-DB | pending |
+
+### Store Scoping for Catalog
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.56 | Products scoped to current store via BelongsToStore | Only products for bound store returned in queries | 05-BL 1.2 | pending |
+| 2.57 | Collections scoped to current store | Only collections for bound store returned | 05-BL 1.2 | pending |
+| 2.58 | Inventory items scoped to current store | Only inventory for bound store returned | 05-BL 1.2 | pending |
+| 2.59 | Product auto-assigned to current store on create | store_id set from current_store singleton | 05-BL 1.2 | pending |
+| 2.60 | Cross-store product isolation | Store A products invisible to Store B queries | 05-BL 1.2 | pending |
+
+### Seeder Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 2.61 | 20 products seeded for Acme Fashion | Product count matches expected | 07-SEEDERS | pending |
+| 2.62 | Product #1 "Classic Cotton T-Shirt" has correct attributes | Handle, price 2499, active, Size(S/M/L/XL) x Color(Black/White/Navy) = 12 variants | 07-SEEDERS | pending |
+| 2.63 | Product #2 "Premium Slim Fit Jeans" has compare_at_price | Price 7999, compare_at_price_amount 9999 | 07-SEEDERS | pending |
+| 2.64 | Product #15 has draft status | Should not appear in storefront queries | 07-SEEDERS | pending |
+| 2.65 | Product #17 sold out (inventory 0, policy deny) | All variant inventory items have quantity_on_hand=0, policy=deny | 07-SEEDERS | pending |
+| 2.66 | Product #18 backorder (inventory 0, policy continue) | All variant inventory items have quantity_on_hand=0, policy=continue | 07-SEEDERS | pending |
+| 2.67 | 3 collections seeded (T-Shirts, New Arrivals, Sale) | Collections exist with active status | 07-SEEDERS | pending |
+| 2.68 | T-Shirts collection contains t-shirt products | Products #1, #3, #7, #14, #16, #17 attached | 07-SEEDERS | pending |
+| 2.69 | Sale collection contains products with compare_at_price | Products #2, #20 attached | 07-SEEDERS | pending |
+| 2.70 | Each product has at least one media record | ProductMedia exists for all 20 products | 07-SEEDERS | pending |

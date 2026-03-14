@@ -14,7 +14,15 @@
 - 27 passing Pest tests, 5 skipped (Sanctum not yet installed)
 - 94 manual test cases defined, 15 browser-verified passing
 
-## Phase 2: Catalog - NOT STARTED
+## Phase 2: Catalog - COMPLETE
+- 9 migrations (products, product_options, product_option_values, product_variants, variant_option_values, inventory_items, collections, collection_products, product_media)
+- 7 models with relationships, factories (Product, ProductOption, ProductOptionValue, ProductVariant, InventoryItem, Collection, ProductMedia)
+- 6 enums (ProductStatus, VariantStatus, CollectionStatus, MediaType, MediaStatus, InventoryPolicy)
+- Services: ProductService, VariantMatrixService, HandleGenerator, InventoryService
+- ProcessMediaUpload job with GD-based image resizing
+- 20 seeded products with variants, options, inventory, collections
+- 45 passing Pest tests, 3 skipped (order_lines from Phase 5)
+- 70 manual test cases defined
 ## Phase 3: Themes & Storefront - NOT STARTED
 ## Phase 4: Cart & Checkout - NOT STARTED
 ## Phase 5: Payments & Orders - NOT STARTED
