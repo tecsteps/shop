@@ -11,17 +11,25 @@ Before writing any code, read all spec files and create the full task list cover
 Each phase follows this strict sequence:
 
 1. **Planning** -- Break the phase into tasks, assign to teammates, agree on approach.
-2. **Development** -- Implement the phase deliverables.
+2. **Development** -- Implement the phase deliverables. Parallelize aggressively -- backend and UI teammates can work simultaneously when they own different files.
 3. **Automated Testing & Fixing** -- Write Pest unit/feature tests, run them, fix failures until all pass.
-4. **Manual Test Plan** -- Write a comprehensive manual test plan for the phase covering every user-facing flow and edge case.
+4. **Manual Test Plan** -- Write a comprehensive manual test plan for the phase covering every user-facing flow and edge case. Maintain this in `specs/test-plan.md`. Test cases must map to specific acceptance criteria from the specs and track: test name, what it verifies, pass/fail status, and the spec section it covers.
 5. **Browser Verification** -- The agent walks through every manual test case using Playwright MCP (non-scripted, interactive browser navigation). No test scripts -- the agent clicks, fills forms, and visually confirms behavior.
-6. **Fix & Repeat** -- Fix any issues found during browser verification, then repeat step 5 until 100% of manual test cases pass.
+6. **Log & Exception Check** -- Review application logs and browser console logs for errors and exceptions. Fix all issues found.
+7. **Verify Background Jobs** -- Confirm all queued jobs, scheduled tasks, and cron jobs execute correctly and without errors.
+8. **Fix & Repeat** -- Fix any issues found during browser verification or log checks, then repeat steps 5-7 until 100% of manual test cases pass with zero exceptions.
+9. **Commit** -- Run `vendor/bin/pint --dirty`, then commit with a message like `Phase N: <summary>`. Update `specs/progress.md`.
 
 Do not advance to the next phase until all steps are complete.
 
 ## Final Regression
 
-After all 12 phases are done, run a full regression: re-execute every manual test case from every phase using Playwright MCP. Fix any issues found and re-run the full regression until it passes with zero failures.
+After all 12 phases are done:
+
+1. Run `php artisan test` -- 100% of Pest tests must pass.
+2. Run `vendor/bin/pint --dirty` -- zero formatting issues.
+3. Audit the test plan against every spec file and confirm full coverage. Fill any gaps.
+4. Re-execute every manual test case from every phase using Playwright MCP. Fix any issues found and re-run the full regression until it passes with zero failures.
 
 ## Team Mode Rules
 
@@ -47,54 +55,6 @@ Organize teammates by concern, not by phase. Example roles:
 - **QA**: Pest feature/unit tests, test data verification, bug reports back to lead
 
 Teammates may rotate roles between phases as needed. The QA teammate is permanent and grows the test plan throughout the project.
-
-## Phase Execution
-
-For each phase in the roadmap:
-
-1. **Delegate implementation** to the appropriate teammates with clear scope.
-2. **Delegate tests** for that phase's deliverables to the QA teammate in parallel.
-3. **Gate**: Do not advance to the next phase until all tests pass and the QA teammate confirms.
-4. **Commit**: After each phase passes its gate, commit with a message like `Phase N: <summary>`.
-5. **Update progress**: Keep `specs/progress.md` current after every phase.
-
-Within a phase, parallelize aggressively. Backend and UI teammates can work simultaneously when they own different files.
-
-## Verification Strategy
-
-This is the most critical part. The project is only done when every feature is tested and confirmed working.
-
-### Test Plan (Built Incrementally)
-
-The QA teammate must maintain a living test plan in `specs/test-plan.md`. This file grows phase by phase:
-
-- After each phase, the QA teammate adds test cases covering that phase's deliverables.
-- Test cases must map to specific acceptance criteria from the specs.
-- The test plan must track: test name, what it verifies, pass/fail status, and the spec section it covers.
-- By phase 12, the test plan must cover every acceptance criterion across all spec files.
-
-### Test Layers
-
-1. **Pest Unit/Feature Tests**: Cover all business logic, models, middleware, policies, validation, calculations (monetary math, discounts, tax, shipping). These run fast and catch regressions early. Write them alongside implementation in every phase.
-2. **Pest Browser Tests (Playwright)**: Cover all user-facing flows per `specs/08-PLAYWRIGHT-E2E-PLAN.md`. These confirm the UI works end-to-end. The target is 143+ browser tests across 18 suites.
-
-### Final Verification (Phase 12)
-
-Before declaring done:
-
-1. Run `php artisan test` -- 100% of tests must pass.
-2. Run the full Pest browser test suite -- all 143 E2E tests must pass.
-3. Run `vendor/bin/pint --dirty` -- zero formatting issues.
-4. The QA teammate must audit the test plan against every spec file and confirm full coverage. Any gaps must be filled.
-
-## Review Meeting
-
-When all phases are complete and all tests pass, conduct a review meeting:
-
-- Walk through every feature (admin-side and customer-side) using the browser via Playwright MCP.
-- Demonstrate each feature works by navigating the actual UI.
-- If any bug is found, fix it, re-run all tests, and restart the review from the beginning.
-- The review is only complete when the full walkthrough finishes with zero bugs.
 
 ## Key Constraints (from specs)
 
