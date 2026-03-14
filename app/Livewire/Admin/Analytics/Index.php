@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Analytics;
 
-use App\Models\Order;
+use App\Services\AnalyticsService;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 
@@ -20,6 +20,17 @@ class Index extends Component
 
     public int $averageOrderValue = 0;
 
+    public int $visitsCount = 0;
+
+    public int $addToCartCount = 0;
+
+    public int $checkoutStartedCount = 0;
+
+    public int $checkoutCompletedCount = 0;
+
+    /** @var array<int, array{date: string, revenue: int, orders: int}> */
+    public array $chartData = [];
+
     public function mount(): void
     {
         $this->loadAnalytics();
@@ -30,19 +41,51 @@ class Index extends Component
         $this->loadAnalytics();
     }
 
+    public function updatedCustomStartDate(): void
+    {
+        if ($this->dateRange === 'custom') {
+            $this->loadAnalytics();
+        }
+    }
+
+    public function updatedCustomEndDate(): void
+    {
+        if ($this->dateRange === 'custom') {
+            $this->loadAnalytics();
+        }
+    }
+
     public function loadAnalytics(): void
     {
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        if (! $store) {
+            return;
+        }
+
         [$startDate, $endDate] = $this->getDateRange();
 
-        $query = Order::query()
-            ->whereNotNull('placed_at')
-            ->whereBetween('placed_at', [$startDate, $endDate]);
+        $analyticsService = app(AnalyticsService::class);
+        $metrics = $analyticsService->getDailyMetrics(
+            $store,
+            $startDate->format('Y-m-d'),
+            $endDate->format('Y-m-d')
+        );
 
-        $this->totalSales = (int) $query->sum('total_amount');
-        $this->ordersCount = $query->count();
+        $this->totalSales = (int) $metrics->sum('revenue_amount');
+        $this->ordersCount = (int) $metrics->sum('orders_count');
         $this->averageOrderValue = $this->ordersCount > 0
             ? (int) ($this->totalSales / $this->ordersCount)
             : 0;
+        $this->visitsCount = (int) $metrics->sum('visits_count');
+        $this->addToCartCount = (int) $metrics->sum('add_to_cart_count');
+        $this->checkoutStartedCount = (int) $metrics->sum('checkout_started_count');
+        $this->checkoutCompletedCount = (int) $metrics->sum('checkout_completed_count');
+
+        $this->chartData = $metrics->map(fn ($m) => [
+            'date' => $m->date,
+            'revenue' => $m->revenue_amount,
+            'orders' => $m->orders_count,
+        ])->values()->toArray();
     }
 
     /**
@@ -71,9 +114,14 @@ class Index extends Component
 
     public function render()
     {
+        $conversionRate = $this->visitsCount > 0
+            ? round(($this->checkoutCompletedCount / $this->visitsCount) * 100, 1)
+            : 0;
+
         return view('livewire.admin.analytics.index', [
             'formattedTotalSales' => $this->formatCurrency($this->totalSales),
             'formattedAov' => $this->formatCurrency($this->averageOrderValue),
+            'conversionRate' => $conversionRate,
         ])->layout('layouts.admin', ['title' => 'Analytics']);
     }
 }

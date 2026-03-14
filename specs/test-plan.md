@@ -662,3 +662,129 @@
 | 7.34 | Login and navigate all admin sections | All admin pages load without errors | 03-ADMIN | pass |
 | 7.35 | No JavaScript errors on admin pages | Console error count is 0 across all admin pages | General | pass |
 | 7.36 | Sidebar navigation links work | All sidebar links navigate to correct pages | 03-ADMIN 1.2 | pass |
+
+## Phase 8: Search
+
+### Search Service
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 8.1 | Search finds products by title | FTS5 indexes product titles and returns matches | 05-BUSINESS 9.1 | pass |
+| 8.2 | Search finds products by vendor | FTS5 indexes vendor field | 05-BUSINESS 9.1 | pass |
+| 8.3 | Search excludes non-active products | Only active/published products appear in results | 05-BUSINESS 9.1 | pass |
+| 8.4 | Search scoped to current store | Results only contain products from the searched store | 05-BUSINESS 9.1 | pass |
+| 8.5 | Search queries are logged | SearchQuery record created with query text and results count | 05-BUSINESS 9.2 | pass |
+| 8.6 | Search results paginate | Results respect perPage parameter | 05-BUSINESS 9.1 | pass |
+| 8.7 | Search returns empty for no matches | Zero results returned for non-matching query | 05-BUSINESS 9.1 | pass |
+
+### Autocomplete
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 8.8 | Autocomplete matches prefix | Products matching the typed prefix are returned | 05-BUSINESS 9.3 | pass |
+| 8.9 | Autocomplete limits results | Maximum number of suggestions is enforced | 05-BUSINESS 9.3 | pass |
+| 8.10 | Autocomplete rejects short prefix | Queries under 2 chars return empty | 05-BUSINESS 9.3 | pass |
+
+### Storefront Search Page
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 8.11 | Search page renders at /search | Search input and empty state display | 04-STOREFRONT 6.1 | pending |
+| 8.12 | Search with query shows results | Product grid appears with matching products | 04-STOREFRONT 6.1 | pending |
+| 8.13 | Autocomplete suggestions appear | Typing in search input shows product suggestions | 04-STOREFRONT 6.2 | pending |
+| 8.14 | Filter by vendor | Vendor dropdown filters search results | 04-STOREFRONT 6.3 | pending |
+| 8.15 | Sort by price | Price sort reorders results | 04-STOREFRONT 6.3 | pending |
+| 8.16 | No results message | "No results found" shown for unmatched queries | 04-STOREFRONT 6.1 | pending |
+
+### Admin Search Settings
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 8.17 | Search settings page renders at /admin/search/settings | Synonyms and stopwords textareas display | 03-ADMIN 8.1 | pending |
+| 8.18 | Save synonyms and stop words | Settings saved and toast confirmation shown | 03-ADMIN 8.1 | pending |
+| 8.19 | Reindex button works | Reindex count message appears | 03-ADMIN 8.1 | pending |
+
+### Browser Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 8.20 | Search from storefront header | Clicking search icon navigates to /search | 04-STOREFRONT 6.1 | pending |
+| 8.21 | Full search results page with filters/sort | Results display with vendor filter and sort dropdowns | 04-STOREFRONT 6.1 | pending |
+| 8.22 | No JavaScript errors on search pages | Console error count is 0 | General | pending |
+
+## Phase 9: Analytics
+
+### Event Ingestion
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 9.1 | Track page_view event | AnalyticsService inserts page_view event with properties | 01-DB 7.1 | pass |
+| 9.2 | Track add_to_cart event | AnalyticsService inserts add_to_cart event with variant_id | 01-DB 7.1 | pass |
+| 9.3 | Events scoped to store | Events belong to correct store_id | 01-DB 7.1 | pass |
+| 9.4 | Session ID included | session_id stored when provided | 01-DB 7.1 | pass |
+| 9.5 | Customer ID included | customer_id stored when provided | 01-DB 7.1 | pass |
+
+### Aggregation
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 9.6 | Aggregate daily metrics | AggregateAnalytics job produces correct visits, add_to_cart, checkout counts | 01-DB 7.2 | pass |
+| 9.7 | Calculate revenue and AOV | Job calculates revenue_amount and aov_amount from orders | 01-DB 7.2 | pass |
+| 9.8 | Idempotent aggregation | Running job twice produces single analytics_daily row | 01-DB 7.2 | pass |
+
+### Admin Analytics Dashboard
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 9.9 | Analytics page renders at /admin/analytics | KPI cards, conversion funnel, daily sales table display | 03-ADMIN 7.1 | pass |
+| 9.10 | Date range selector works | Changing date range updates displayed metrics | 03-ADMIN 7.1 | pass |
+| 9.11 | Conversion funnel displays correctly | Visits, Add to Cart, Checkout Started, Completed shown | 03-ADMIN 7.1 | pass |
+
+### Browser Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 9.12 | Storefront home page tracks page_view | Visiting / creates analytics_events row | 05-BIZ | pass |
+| 9.13 | Product page tracks product_view | Visiting product page creates product_view event | 05-BIZ | pass |
+| 9.14 | Admin analytics shows data after aggregation | Running AggregateAnalytics job populates dashboard | 03-ADMIN 7.1 | pass |
+| 9.15 | No JavaScript errors on analytics pages | Console error count is 0 | General | pass |
+
+## Phase 10: Apps & Webhooks
+
+### Webhook Service
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 10.1 | WebhookService dispatches to matching subscriptions | dispatch() finds active subscriptions for event type and queues jobs | 09-ROADMAP 10.2 | pass |
+| 10.2 | WebhookService signs payload with HMAC-SHA256 | sign() returns correct 64-char hex HMAC | 09-ROADMAP 10.2 | pass |
+| 10.3 | WebhookService verifies valid signature | verify() returns true for matching payload/signature/secret | 09-ROADMAP 10.2 | pass |
+| 10.4 | WebhookService rejects tampered payload | verify() returns false when payload is modified | 09-ROADMAP 10.2 | pass |
+| 10.5 | WebhookService rejects wrong secret | verify() returns false when secret differs | 09-ROADMAP 10.2 | pass |
+
+### DeliverWebhook Job
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 10.6 | Job delivers payload to target URL | HTTP POST with correct headers and payload | 09-ROADMAP 10.2 | pass |
+| 10.7 | Job includes signature headers | X-Platform-Signature, X-Platform-Event, X-Platform-Delivery-Id, X-Platform-Timestamp | 09-ROADMAP 10.2 | pass |
+| 10.8 | Job marks delivery failed on non-2xx response | status='failed', response_status recorded | 09-ROADMAP 10.2 | pass |
+| 10.9 | Job increments consecutive failures | consecutive_failures counter increases on failure | 09-ROADMAP 10.2 | pass |
+| 10.10 | Job pauses subscription after 5 consecutive failures | Circuit breaker: status changes to 'paused' | 09-ROADMAP 10.2 | pass |
+
+### Admin Pages
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 10.11 | Developers page requires authentication | Redirects to login when unauthenticated | 06-AUTH | pass |
+| 10.12 | Developers page renders webhook management | Shows 'Webhook Subscriptions' heading and create button | 03-ADMIN | pass |
+| 10.13 | Apps page requires authentication | Redirects to login when unauthenticated | 06-AUTH | pass |
+| 10.14 | Apps page renders with no apps installed | Shows 'No apps installed' message | 03-ADMIN | pass |
+
+### Browser Verification
+
+| # | Test Case | What It Verifies | Spec Section | Status |
+|---|-----------|-----------------|--------------|--------|
+| 10.15 | Admin developers page loads without errors | Page renders, shows webhook management UI | 03-ADMIN | pending |
+| 10.16 | Create webhook subscription form works | Can fill and submit form, subscription appears in list | 03-ADMIN | pending |
+| 10.17 | Admin apps page loads without errors | Page renders, shows installed apps or empty state | 03-ADMIN | pending |
+| 10.18 | No JavaScript errors on Phase 10 pages | Console error count is 0 | General | pending |

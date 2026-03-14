@@ -5,6 +5,7 @@ namespace App\Livewire\Storefront\Checkout;
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Models\Checkout;
+use App\Services\AnalyticsService;
 use App\Services\CheckoutService;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
@@ -67,6 +68,17 @@ class Show extends Component
         }
 
         $this->checkout = $checkout;
+
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        if ($store) {
+            app(AnalyticsService::class)->track(
+                $store,
+                'checkout_started',
+                ['checkout_id' => $checkout->id],
+                session()->getId(),
+                auth('customer')->id()
+            );
+        }
 
         // Pre-fill from existing checkout data
         if ($checkout->email) {

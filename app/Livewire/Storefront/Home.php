@@ -7,6 +7,7 @@ use App\Enums\ProductStatus;
 use App\Enums\VariantStatus;
 use App\Models\Collection;
 use App\Models\Product;
+use App\Services\AnalyticsService;
 use App\Services\ThemeSettingsService;
 use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Component;
@@ -48,6 +49,17 @@ class Home extends Component
                 ->where('status', CollectionStatus::Active)
                 ->limit(4)
                 ->get();
+        }
+
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        if ($store) {
+            app(AnalyticsService::class)->track(
+                $store,
+                'page_view',
+                ['url' => '/'],
+                session()->getId(),
+                auth('customer')->id()
+            );
         }
 
         $this->featuredProducts = Product::query()

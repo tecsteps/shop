@@ -85,8 +85,23 @@
 - Placeholder pages: Search settings, Apps marketplace, Developers
 - 16 Livewire components, 30 Blade views, 13 admin routes
 - 57 passing Pest tests (settings, pages, navigation, themes, analytics, placeholders)
-## Phase 8: Search - NOT STARTED
-## Phase 9: Analytics - NOT STARTED
+## Phase 8: Search - COMPLETE
+- 2 models (SearchSettings, SearchQuery) with BelongsToStore trait
+- SearchService: FTS5 search, autocomplete, syncProduct, removeProduct, reindexAll
+- ProductObserver: auto-syncs products to FTS5 index on create/update/delete
+- Storefront search page: full-text search with autocomplete, vendor/collection/price filters, sort options, pagination
+- Admin search settings: synonyms, stop words, reindex button
+- 10 passing Pest tests (7 search + 3 autocomplete)
+- Browser verified: search page, autocomplete, results grid, filters, admin settings, 0 JS errors
+## Phase 9: Analytics - COMPLETE
+- 2 migrations (analytics_events, analytics_daily)
+- 2 models (AnalyticsEvent, AnalyticsDaily) with BelongsToStore trait, factories
+- AnalyticsService: track() for event ingestion, getDailyMetrics() for aggregated data
+- AggregateAnalytics job: daily aggregation of events into analytics_daily, idempotent upserts
+- Admin Analytics dashboard: KPI cards (revenue, orders, AOV, visits), conversion funnel, daily sales table, date range filtering
+- Event tracking integrated into storefront: page_view (Home), product_view (Products/Show), add_to_cart (Products/Show), checkout_started (Checkout/Show), checkout_completed (Checkout/Confirmation)
+- 8 passing Pest tests (5 event ingestion + 3 aggregation)
+- 15 test cases defined, all passing
 ## Phase 10: Apps & Webhooks - NOT STARTED
 ## Phase 11: Polish - NOT STARTED
 ## Phase 12: Full Test Suite - NOT STARTED

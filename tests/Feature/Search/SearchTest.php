@@ -2,20 +2,38 @@
 
 use App\Enums\ProductStatus;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\SearchQuery;
 use App\Services\SearchService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->store = createStoreContext();
+    $this->context = createStoreContext();
+    $this->store = $this->context['store'];
     $this->service = app(SearchService::class);
 });
 
+function createSearchableProduct(mixed $store, array $overrides = []): Product
+{
+    $product = Product::factory()->active()->create(array_merge([
+        'store_id' => $store->id,
+    ], $overrides));
+
+    ProductVariant::factory()->create([
+        'product_id' => $product->id,
+    ]);
+
+    app(SearchService::class)->syncProduct($product);
+
+    return $product;
+}
+
 it('finds products by title', function () {
-    $product = Product::factory()->active()->create([
-        'store_id' => $this->store->id,
+    $product = createSearchableProduct($this->store, [
         'title' => 'Running Shoes Pro',
     ]);
-    $this->service->syncProduct($product);
 
     $results = $this->service->search($this->store, 'Running');
 
@@ -24,12 +42,10 @@ it('finds products by title', function () {
 });
 
 it('finds products by vendor', function () {
-    $product = Product::factory()->active()->create([
-        'store_id' => $this->store->id,
+    $product = createSearchableProduct($this->store, [
         'title' => 'Classic Sneaker',
         'vendor' => 'NikeStore',
     ]);
-    $this->service->syncProduct($product);
 
     $results = $this->service->search($this->store, 'NikeStore');
 
@@ -43,12 +59,12 @@ it('excludes non-active products from results', function () {
         'title' => 'Draft Widget',
         'status' => ProductStatus::Draft,
     ]);
-    $active = Product::factory()->active()->create([
-        'store_id' => $this->store->id,
+    ProductVariant::factory()->create(['product_id' => $draft->id]);
+    $this->service->syncProduct($draft);
+
+    $active = createSearchableProduct($this->store, [
         'title' => 'Active Widget',
     ]);
-    $this->service->syncProduct($draft);
-    $this->service->syncProduct($active);
 
     $results = $this->service->search($this->store, 'Widget');
 
@@ -57,18 +73,16 @@ it('excludes non-active products from results', function () {
 });
 
 it('scopes search results to the current store', function () {
-    $product = Product::factory()->active()->create([
-        'store_id' => $this->store->id,
+    $product = createSearchableProduct($this->store, [
         'title' => 'Store A Product',
     ]);
-    $this->service->syncProduct($product);
 
-    $otherStore = createStoreContext();
-    $otherProduct = Product::factory()->active()->create([
-        'store_id' => $otherStore->id,
+    $otherContext = createStoreContext();
+    $otherStore = $otherContext['store'];
+    app()->instance('current_store', $otherStore);
+    createSearchableProduct($otherStore, [
         'title' => 'Store B Product',
     ]);
-    $this->service->syncProduct($otherProduct);
 
     app()->instance('current_store', $this->store);
 
@@ -79,11 +93,9 @@ it('scopes search results to the current store', function () {
 });
 
 it('logs search queries', function () {
-    $product = Product::factory()->active()->create([
-        'store_id' => $this->store->id,
+    createSearchableProduct($this->store, [
         'title' => 'Logged Search Item',
     ]);
-    $this->service->syncProduct($product);
 
     $this->service->search($this->store, 'Logged');
 
@@ -94,4 +106,27 @@ it('logs search queries', function () {
     expect($log)->not->toBeNull()
         ->and($log->query)->toBe('Logged')
         ->and($log->results_count)->toBe(1);
+});
+
+it('paginates search results', function () {
+    for ($i = 1; $i <= 15; $i++) {
+        createSearchableProduct($this->store, [
+            'title' => "Searchable Item {$i}",
+        ]);
+    }
+
+    $results = $this->service->search($this->store, 'searchable', [], 5);
+
+    expect($results->perPage())->toBe(5);
+    expect($results->total())->toBe(15);
+    expect($results->count())->toBe(5);
+});
+
+it('returns empty results for no matches', function () {
+    createSearchableProduct($this->store, [
+        'title' => 'Leather Wallet',
+    ]);
+
+    $results = $this->service->search($this->store, 'xyznonexistent');
+    expect($results->total())->toBe(0);
 });

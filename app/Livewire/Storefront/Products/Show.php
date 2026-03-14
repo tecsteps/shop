@@ -7,6 +7,7 @@ use App\Enums\ProductStatus;
 use App\Enums\VariantStatus;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\AnalyticsService;
 use App\Services\CartService;
 use Livewire\Component;
 
@@ -43,6 +44,17 @@ class Show extends Component
         }
 
         $this->product = $product;
+
+        $store = app()->bound('current_store') ? app('current_store') : null;
+        if ($store) {
+            app(AnalyticsService::class)->track(
+                $store,
+                'product_view',
+                ['product_id' => $product->id, 'handle' => $product->handle],
+                session()->getId(),
+                auth('customer')->id()
+            );
+        }
 
         $defaultVariant = $product->variants->firstWhere('is_default', true)
             ?? $product->variants->first();
@@ -105,6 +117,14 @@ class Show extends Component
 
             return;
         }
+
+        app(AnalyticsService::class)->track(
+            $store,
+            'add_to_cart',
+            ['variant_id' => $variant->id, 'product_id' => $this->product->id, 'quantity' => $this->quantity],
+            session()->getId(),
+            auth('customer')->id()
+        );
 
         $this->quantity = 1;
         $this->dispatch('cart-updated');
