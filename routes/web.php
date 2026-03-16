@@ -4,6 +4,11 @@ use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Auth\Logout as AdminLogout;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Collections\Index as CollectionsIndex;
+use App\Livewire\Storefront\Collections\Show as CollectionShow;
+use App\Livewire\Storefront\Home;
+use App\Livewire\Storefront\Pages\Show as PageShow;
+use App\Livewire\Storefront\Products\Show as ProductShow;
 use Illuminate\Support\Facades\Route;
 
 Route::view('dashboard', 'dashboard')
@@ -27,9 +32,11 @@ Route::prefix('admin')
 
 // Storefront Routes (store resolved from hostname)
 Route::middleware(['storefront'])->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
+    Route::get('/', Home::class)->name('home');
+    Route::get('collections', CollectionsIndex::class)->name('storefront.collections.index');
+    Route::get('collections/{handle}', CollectionShow::class)->name('storefront.collections.show');
+    Route::get('products/{handle}', ProductShow::class)->name('storefront.products.show');
+    Route::get('pages/{handle}', PageShow::class)->name('storefront.pages.show');
 
     Route::get('account/login', CustomerLogin::class)->name('storefront.account.login');
     Route::get('account/register', CustomerRegister::class)->name('storefront.account.register');

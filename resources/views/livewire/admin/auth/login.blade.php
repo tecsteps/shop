@@ -8,10 +8,11 @@
         <form wire:submit="login" class="flex flex-col gap-6">
             <flux:field>
                 <flux:input wire:model="email" label="Email" type="email" placeholder="admin@example.com" required autofocus />
-                @error('email')
-                    <flux:text class="text-red-500 text-sm">{{ $message }}</flux:text>
-                @enderror
             </flux:field>
+
+            @error('email')
+                <flux:text class="text-red-500 text-sm">{{ $message }}</flux:text>
+            @enderror
 
             <flux:field>
                 <flux:input wire:model="password" label="Password" type="password" placeholder="Password" required />

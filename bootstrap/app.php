@@ -20,6 +20,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('admin', [
             ResolveStore::class.':admin',
         ]);
+
+        $middleware->redirectGuestsTo(function (\Illuminate\Http\Request $request): string {
+            if ($request->is('admin/*') || $request->is('admin')) {
+                return route('admin.login');
+            }
+
+            return route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

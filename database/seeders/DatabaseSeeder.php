@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin User',
+            'email' => 'admin@acme.test',
         ]);
 
         $this->call([
@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
             StoreDomainSeeder::class,
             StoreUserSeeder::class,
             StoreSettingsSeeder::class,
+            ThemeSeeder::class,
+            PageSeeder::class,
+            NavigationSeeder::class,
+            CatalogSeeder::class,
         ]);
     }
 }

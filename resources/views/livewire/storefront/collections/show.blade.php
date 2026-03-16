@@ -1,0 +1,146 @@
+@php
+    $store = app()->bound('current_store') ? app('current_store') : null;
+    $currency = $store?->default_currency ?? 'EUR';
+    $hasFilters = $inStock || $minPrice !== null || $maxPrice !== null;
+@endphp
+
+<div>
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <x-storefront.breadcrumbs :items="[
+            ['label' => 'Collections', 'url' => '/collections'],
+            ['label' => $collectionTitle],
+        ]" />
+
+        {{-- Collection Header --}}
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $collectionTitle }}</h1>
+            @if($collectionDescription)
+                <div class="prose dark:prose-invert mt-4 max-w-3xl">
+                    {!! $collectionDescription !!}
+                </div>
+            @endif
+        </div>
+
+        {{-- Toolbar --}}
+        <div class="mb-6 flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ $totalProducts }} {{ $totalProducts === 1 ? 'product' : 'products' }}
+            </p>
+            <div class="flex items-center gap-4">
+                <label for="sort" class="sr-only">Sort</label>
+                <select wire:model.live="sort"
+                        id="sort"
+                        class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                    <option value="featured">Featured</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="newest">Newest</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- Active Filter Pills --}}
+        @if($hasFilters)
+            <div class="mb-4 flex flex-wrap items-center gap-2">
+                @if($inStock)
+                    <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        In stock
+                        <button wire:click="$set('inStock', false)" class="ml-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Remove in stock filter">
+                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </span>
+                @endif
+                @if($minPrice !== null)
+                    <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        Min: {{ $minPrice }} {{ $currency }}
+                        <button wire:click="$set('minPrice', null)" class="ml-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Remove min price filter">
+                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </span>
+                @endif
+                @if($maxPrice !== null)
+                    <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        Max: {{ $maxPrice }} {{ $currency }}
+                        <button wire:click="$set('maxPrice', null)" class="ml-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Remove max price filter">
+                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </span>
+                @endif
+                <button wire:click="clearFilters" class="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                    Clear all
+                </button>
+            </div>
+        @endif
+
+        <div class="lg:flex lg:gap-8">
+            {{-- Filter Sidebar --}}
+            <aside class="hidden w-64 shrink-0 lg:block">
+                @if($hasFilters)
+                    <button wire:click="clearFilters" class="mb-4 text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                        Clear all filters
+                    </button>
+                @endif
+
+                <div class="space-y-6">
+                    {{-- In Stock --}}
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Availability</h3>
+                        <label class="mt-2 flex items-center gap-2">
+                            <input type="checkbox" wire:model.live="inStock" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">In stock</span>
+                        </label>
+                    </div>
+
+                    {{-- Price Range --}}
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Price</h3>
+                        <div class="mt-2 flex gap-2">
+                            <input type="number"
+                                   wire:model.live.debounce.500ms="minPrice"
+                                   placeholder="Min"
+                                   class="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                            <input type="number"
+                                   wire:model.live.debounce.500ms="maxPrice"
+                                   placeholder="Max"
+                                   class="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            {{-- Product Grid --}}
+            <div class="flex-1" wire:loading.class="opacity-50">
+                @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator && $products->isEmpty())
+                    <div class="py-16 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                        <h3 class="mt-4 text-lg font-semibold text-gray-900 dark:text-white">No products found</h3>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Try adjusting your filters or browse our full collection.</p>
+                        @if($hasFilters)
+                            <button wire:click="clearFilters" class="mt-4 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                                Clear filters
+                            </button>
+                        @endif
+                    </div>
+                @else
+                    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:gap-6">
+                        @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            @foreach($products as $product)
+                                <div wire:key="product-{{ $product->id }}">
+                                    <x-storefront.product-card :product="$product" :currency="$currency" />
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+
+                    @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator && $products->hasPages())
+                        <div class="mt-8">
+                            {{ $products->links() }}
+                        </div>
+                    @endif
+                @endif
+            </div>
+        </div>
+    </div>
+</div>

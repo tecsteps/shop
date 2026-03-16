@@ -95,7 +95,7 @@ it('logs out and invalidates session', function () {
 it('redirects unauthenticated users to login', function () {
     $response = $this->get('/admin');
 
-    $response->assertRedirect(route('login'));
+    $response->assertRedirect(route('admin.login'));
 });
 
 it('supports remember me functionality', function () {
