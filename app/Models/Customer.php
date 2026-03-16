@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Customer extends Authenticatable
@@ -33,5 +34,15 @@ class Customer extends Authenticatable
             'password' => 'hashed',
             'marketing_opt_in' => 'boolean',
         ];
+    }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function checkouts(): HasMany
+    {
+        return $this->hasMany(Checkout::class);
     }
 }

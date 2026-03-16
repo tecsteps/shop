@@ -20,10 +20,14 @@ class DatabaseSeeder extends Seeder
             StoreDomainSeeder::class,
             StoreUserSeeder::class,
             StoreSettingsSeeder::class,
+            TaxSettingsSeeder::class,
+            ShippingSeeder::class,
             ThemeSeeder::class,
             PageSeeder::class,
             NavigationSeeder::class,
             CatalogSeeder::class,
+            DiscountSeeder::class,
+            SearchSettingsSeeder::class,
         ]);
     }
 }

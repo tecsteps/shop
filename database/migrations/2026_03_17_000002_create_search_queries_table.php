@@ -14,7 +14,7 @@ return new class extends Migration
             $table->text('query');
             $table->text('filters_json')->nullable();
             $table->integer('results_count')->default(0);
-            $table->text('created_at')->nullable();
+            $table->timestamp('created_at')->nullable();
 
             $table->index('store_id', 'idx_search_queries_store_id');
             $table->index(['store_id', 'created_at'], 'idx_search_queries_store_created');

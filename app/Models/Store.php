@@ -56,4 +56,19 @@ class Store extends Model
     {
         return $this->hasOne(StoreSettings::class);
     }
+
+    public function taxSettings(): HasOne
+    {
+        return $this->hasOne(TaxSettings::class);
+    }
+
+    public function shippingZones(): HasMany
+    {
+        return $this->hasMany(ShippingZone::class);
+    }
+
+    public function discounts(): HasMany
+    {
+        return $this->hasMany(Discount::class);
+    }
 }

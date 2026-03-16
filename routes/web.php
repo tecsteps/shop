@@ -9,6 +9,7 @@ use App\Livewire\Storefront\Collections\Show as CollectionShow;
 use App\Livewire\Storefront\Home;
 use App\Livewire\Storefront\Pages\Show as PageShow;
 use App\Livewire\Storefront\Products\Show as ProductShow;
+use App\Livewire\Storefront\Search\Index as SearchIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::view('dashboard', 'dashboard')
@@ -37,6 +38,7 @@ Route::middleware(['storefront'])->group(function () {
     Route::get('collections/{handle}', CollectionShow::class)->name('storefront.collections.show');
     Route::get('products/{handle}', ProductShow::class)->name('storefront.products.show');
     Route::get('pages/{handle}', PageShow::class)->name('storefront.pages.show');
+    Route::get('search', SearchIndex::class)->name('storefront.search');
 
     Route::get('account/login', CustomerLogin::class)->name('storefront.account.login');
     Route::get('account/register', CustomerRegister::class)->name('storefront.account.register');

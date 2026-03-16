@@ -12,7 +12,7 @@ return new class extends Migration
             $table->foreignId('store_id')->primary()->constrained()->cascadeOnDelete();
             $table->text('synonyms_json')->default('[]');
             $table->text('stop_words_json')->default('[]');
-            $table->text('updated_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

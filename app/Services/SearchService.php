@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\SearchQuery;
 use App\Models\Store;
@@ -34,7 +35,7 @@ class SearchService
         $productsQuery = Product::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
-            ->where('status', 'active')
+            ->where('status', ProductStatus::Active)
             ->whereIn('id', $productIds);
 
         if (! empty($filters['vendor'])) {
@@ -62,7 +63,7 @@ class SearchService
             'price_asc' => $productsQuery->orderByRaw('(SELECT MIN(price_amount) FROM product_variants WHERE product_variants.product_id = products.id) ASC'),
             'price_desc' => $productsQuery->orderByRaw('(SELECT MIN(price_amount) FROM product_variants WHERE product_variants.product_id = products.id) DESC'),
             'newest' => $productsQuery->orderBy('created_at', 'desc'),
-            default => $productsQuery->orderByRaw('FIELD(id, '.($productIds->isEmpty() ? '0' : $productIds->implode(',')).')'),
+            default => $productsQuery->orderByRaw($this->buildRelevanceOrderSql($productIds)),
         };
 
         $results = $productsQuery->paginate($perPage);
@@ -94,9 +95,9 @@ class SearchService
         return Product::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
-            ->where('status', 'active')
+            ->where('status', ProductStatus::Active)
             ->whereIn('id', $productIds)
-            ->with('media')
+            ->with(['media', 'variants'])
             ->limit($limit)
             ->get();
     }
@@ -144,7 +145,7 @@ class SearchService
         Product::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
-            ->where('status', 'active')
+            ->where('status', ProductStatus::Active)
             ->chunk(100, function ($products) {
                 foreach ($products as $product) {
                     $this->syncProduct($product);
@@ -192,6 +193,22 @@ class SearchService
         }
 
         return implode(' ', $escaped);
+    }
+
+    /**
+     * Build a SQLite-compatible ORDER BY clause to preserve FTS5 relevance ordering.
+     *
+     * @param  \Illuminate\Support\Collection<int, int>  $productIds
+     */
+    protected function buildRelevanceOrderSql(\Illuminate\Support\Collection $productIds): string
+    {
+        if ($productIds->isEmpty()) {
+            return 'id';
+        }
+
+        $cases = $productIds->values()->map(fn (mixed $id, int $index) => 'WHEN id = '.(int) $id.' THEN '.$index);
+
+        return 'CASE '.$cases->implode(' ').' ELSE '.count($productIds).' END';
     }
 
     /**

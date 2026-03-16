@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Services\SearchService;
 
@@ -11,14 +12,14 @@ class ProductObserver
 
     public function created(Product $product): void
     {
-        if ($product->status->value === 'active') {
+        if ($product->status === ProductStatus::Active) {
             $this->searchService->syncProduct($product);
         }
     }
 
     public function updated(Product $product): void
     {
-        if ($product->status->value === 'active') {
+        if ($product->status === ProductStatus::Active) {
             $this->searchService->syncProduct($product);
         } else {
             $this->searchService->removeProduct($product->id);
