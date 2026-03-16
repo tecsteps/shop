@@ -120,11 +120,11 @@
                     @endif
 
                     {{-- Tags --}}
-                    @if($product->tags)
+                    @if(! empty($product->tags))
                         <div class="mt-6 flex flex-wrap gap-2">
-                            @foreach(explode(',', $product->tags) as $tag)
+                            @foreach($product->tags as $tag)
                                 <span class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                                    {{ trim($tag) }}
+                                    {{ $tag }}
                                 </span>
                             @endforeach
                         </div>

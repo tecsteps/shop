@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Storefront\Collections;
 
+use App\Enums\CollectionStatus;
+use App\Enums\ProductStatus;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -37,7 +39,7 @@ class Show extends Component
         if (class_exists(\App\Models\Collection::class)) {
             $collection = \App\Models\Collection::query()
                 ->where('handle', $handle)
-                ->where('status', 'active')
+                ->where('status', CollectionStatus::Active)
                 ->first();
 
             if (! $collection) {
@@ -85,24 +87,38 @@ class Show extends Component
         if (class_exists(\App\Models\Product::class) && class_exists(\App\Models\Collection::class)) {
             $collection = \App\Models\Collection::query()
                 ->where('handle', $this->handle)
-                ->where('status', 'active')
+                ->where('status', CollectionStatus::Active)
                 ->first();
 
             if ($collection) {
                 $query = $collection->products()
-                    ->where('products.status', 'active');
+                    ->where('products.status', ProductStatus::Active)
+                    ->with(['variants', 'media']);
+
+                if ($this->minPrice !== null || $this->maxPrice !== null || in_array($this->sort, ['price_asc', 'price_desc'])) {
+                    $query->joinSub(
+                        \App\Models\ProductVariant::query()
+                            ->selectRaw('product_id, MIN(price_amount) as min_price')
+                            ->where('is_default', true)
+                            ->groupBy('product_id'),
+                        'default_prices',
+                        'products.id',
+                        '=',
+                        'default_prices.product_id'
+                    );
+                }
 
                 if ($this->minPrice !== null) {
-                    $query->where('products.price_amount', '>=', $this->minPrice * 100);
+                    $query->where('default_prices.min_price', '>=', $this->minPrice * 100);
                 }
 
                 if ($this->maxPrice !== null) {
-                    $query->where('products.price_amount', '<=', $this->maxPrice * 100);
+                    $query->where('default_prices.min_price', '<=', $this->maxPrice * 100);
                 }
 
                 $query = match ($this->sort) {
-                    'price_asc' => $query->orderBy('products.price_amount', 'asc'),
-                    'price_desc' => $query->orderBy('products.price_amount', 'desc'),
+                    'price_asc' => $query->orderBy('default_prices.min_price', 'asc'),
+                    'price_desc' => $query->orderBy('default_prices.min_price', 'desc'),
                     'newest' => $query->orderBy('products.created_at', 'desc'),
                     default => $query->orderBy('products.title', 'asc'),
                 };

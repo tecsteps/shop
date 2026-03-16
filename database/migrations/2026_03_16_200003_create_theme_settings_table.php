@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('theme_settings', function (Blueprint $table) {
             $table->foreignId('theme_id')->primary()->constrained()->cascadeOnDelete();
             $table->text('settings_json')->default('{}');
-            $table->text('updated_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

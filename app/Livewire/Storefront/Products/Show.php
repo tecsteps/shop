@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Products;
 
+use App\Enums\ProductStatus;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -27,7 +28,7 @@ class Show extends Component
         if (class_exists(\App\Models\Product::class)) {
             $this->product = \App\Models\Product::query()
                 ->where('handle', $handle)
-                ->where('status', 'active')
+                ->where('status', ProductStatus::Active)
                 ->with(['variants', 'options.values', 'media'])
                 ->first();
 

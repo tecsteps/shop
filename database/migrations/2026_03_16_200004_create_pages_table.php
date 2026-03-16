@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('handle');
             $table->text('body_html')->nullable();
             $table->text('status')->default('draft');
-            $table->text('published_at')->nullable();
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
             $table->unique(['store_id', 'handle'], 'idx_pages_store_handle');

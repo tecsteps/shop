@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureRateLimiting();
         $this->configureAuth();
+        $this->configureObservers();
     }
 
     protected function configureDefaults(): void
@@ -58,6 +61,11 @@ class AppServiceProvider extends ServiceProvider
         Auth::provider('customer', function ($app, array $config) {
             return new CustomerUserProvider($app['hash']);
         });
+    }
+
+    protected function configureObservers(): void
+    {
+        Product::observe(ProductObserver::class);
     }
 
     protected function configureRateLimiting(): void

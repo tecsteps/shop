@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Collections;
 
+use App\Enums\CollectionStatus;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -14,7 +15,7 @@ class Index extends Component
 
         if (class_exists(\App\Models\Collection::class)) {
             $collections = \App\Models\Collection::query()
-                ->where('status', 'active')
+                ->where('status', CollectionStatus::Active)
                 ->orderBy('title')
                 ->get();
         }

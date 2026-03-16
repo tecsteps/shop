@@ -15,7 +15,7 @@ return new class extends Migration
             $table->text('name');
             $table->text('version')->nullable();
             $table->text('status')->default('draft');
-            $table->text('published_at')->nullable();
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
             $table->index('store_id', 'idx_themes_store_id');
