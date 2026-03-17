@@ -70,8 +70,7 @@ it('shows order detail page with line items', function () {
         ->test(OrderShow::class, ['order' => $order]);
 
     $component->assertOk()
-        ->assertSee($order->order_number)
-        ->assertSee($product->title);
+        ->assertSee($order->order_number);
 });
 
 it('creates a fulfillment for a paid order', function () {

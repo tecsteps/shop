@@ -124,7 +124,7 @@ class Dashboard extends Component
                 'date' => $dateKey,
                 'count' => (int) ($orders[$dateKey]->count ?? 0),
             ];
-            $current->addDay();
+            $current = $current->addDay();
         }
     }
 

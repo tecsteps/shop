@@ -1,0 +1,16 @@
+[      70ms] [WARNING] Alpine Expression Error: fluxModal is not defined
+
+Expression: "fluxModal('item-form', 'z6Ri5z0891dakO1iLOCw')"
+
+ JSHandle@node @ http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1325
+[      77ms] ReferenceError: fluxModal is not defined
+    at [Alpine] fluxModal('item-form', 'z6Ri5z0891dakO1iLOCw') (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:3:16)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1410:28
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3890:17)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)
+    at deferHandlingDirectives (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1535:5)
+    at initTree (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1732:5)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1678:7

@@ -27,11 +27,13 @@ class Taxes extends Component
             ->first();
 
         if ($settings) {
-            $this->mode = $settings->mode ?? 'manual';
+            $this->mode = $settings->mode instanceof \App\Enums\TaxMode
+                ? $settings->mode->value
+                : ($settings->mode ?? 'manual');
             $this->pricesIncludeTax = $settings->prices_include_tax ?? false;
             $this->provider = $settings->provider ?? '';
-            $this->providerApiKey = $settings->provider_api_key ?? '';
-            $this->manualRates = $settings->manual_rates ?? [];
+            $this->providerApiKey = $settings->config_json['provider_api_key'] ?? '';
+            $this->manualRates = $settings->config_json['manual_rates'] ?? [];
         }
     }
 
@@ -53,9 +55,11 @@ class Taxes extends Component
             [
                 'mode' => $this->mode,
                 'prices_include_tax' => $this->pricesIncludeTax,
-                'provider' => $this->provider ?: null,
-                'provider_api_key' => $this->providerApiKey ?: null,
-                'manual_rates' => $this->manualRates,
+                'provider' => $this->provider ?: 'none',
+                'config_json' => [
+                    'provider_api_key' => $this->providerApiKey ?: null,
+                    'manual_rates' => $this->manualRates,
+                ],
             ]
         );
 

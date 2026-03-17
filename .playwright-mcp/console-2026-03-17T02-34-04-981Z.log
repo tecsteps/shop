@@ -1,0 +1,9 @@
+[    1167ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[    6930ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   16238ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   19943ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   32794ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   36941ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   41248ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   53045ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0
+[   59738ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/admin/orders:0

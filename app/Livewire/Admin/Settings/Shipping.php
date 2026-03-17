@@ -49,7 +49,7 @@ class Shipping extends Component
     {
         $this->editingZone = $zone;
         $this->zoneName = $zone?->name ?? '';
-        $this->zoneCountries = $zone?->countries ?? [];
+        $this->zoneCountries = $zone?->countries_json ?? [];
         $this->modal('zone-form')->show();
     }
 
@@ -62,7 +62,7 @@ class Shipping extends Component
         $data = [
             'store_id' => session('store_id'),
             'name' => $this->zoneName,
-            'countries' => $this->zoneCountries,
+            'countries_json' => $this->zoneCountries,
         ];
 
         if ($this->editingZone) {
@@ -87,7 +87,7 @@ class Shipping extends Component
         $this->editingRate = $rate;
         $this->rateName = $rate?->name ?? '';
         $this->rateType = $rate?->type ?? 'flat';
-        $this->rateConfig = $rate?->config ?? ['price' => '0'];
+        $this->rateConfig = $rate?->config_json ?? ['price' => '0'];
         $this->rateActive = $rate?->is_active ?? true;
         $this->modal('rate-form')->show();
     }
@@ -99,10 +99,10 @@ class Shipping extends Component
         ]);
 
         $data = [
-            'shipping_zone_id' => $this->editingZoneId,
+            'zone_id' => $this->editingZoneId,
             'name' => $this->rateName,
             'type' => $this->rateType,
-            'config' => $this->rateConfig,
+            'config_json' => $this->rateConfig,
             'is_active' => $this->rateActive,
         ];
 
@@ -128,7 +128,7 @@ class Shipping extends Component
             $service = app(ShippingService::class);
             $zones = $this->zones;
             $matched = $zones->first(function ($zone) {
-                return in_array($this->testAddress['country'], $zone->countries ?? []);
+                return in_array($this->testAddress['country'], $zone->countries_json ?? []);
             });
 
             if ($matched) {
@@ -136,7 +136,7 @@ class Shipping extends Component
                     'zone' => $matched->name,
                     'rates' => $matched->rates->where('is_active', true)->map(fn ($r) => [
                         'name' => $r->name,
-                        'price' => $r->config['price'] ?? 0,
+                        'price' => $r->config_json['price'] ?? 0,
                     ])->values()->toArray(),
                 ];
             } else {

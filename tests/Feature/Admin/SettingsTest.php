@@ -6,7 +6,6 @@ use App\Livewire\Admin\Settings\Shipping as SettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as SettingsTaxes;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
-use App\Models\Store;
 use App\Models\TaxSettings;
 use App\Models\User;
 use Livewire\Livewire;
@@ -27,8 +26,9 @@ it('renders the general settings page', function () {
 });
 
 it('updates general store settings', function () {
+    session($this->session);
+
     $component = Livewire::actingAs($this->user)
-        ->withSession($this->session)
         ->test(SettingsGeneral::class);
 
     $component->assertSet('storeName', $this->store->name);
@@ -47,13 +47,13 @@ it('updates general store settings', function () {
 });
 
 it('configures shipping zones and rates', function () {
+    session($this->session);
+
     $component = Livewire::actingAs($this->user)
-        ->withSession($this->session)
         ->test(SettingsShipping::class);
 
     $component->assertOk();
 
-    // Create a shipping zone
     $component->set('zoneName', 'EU Zone')
         ->set('zoneCountries', ['DE', 'FR', 'IT'])
         ->call('saveZone');
@@ -68,7 +68,6 @@ it('configures shipping zones and rates', function () {
     expect($zone)->not->toBeNull()
         ->and($zone->countries_json)->toBe(['DE', 'FR', 'IT']);
 
-    // Add a rate to the zone
     $component->set('editingZoneId', $zone->id)
         ->set('rateName', 'Standard Delivery')
         ->set('rateType', 'flat')
@@ -81,8 +80,9 @@ it('configures shipping zones and rates', function () {
 });
 
 it('configures tax settings in manual mode', function () {
+    session($this->session);
+
     $component = Livewire::actingAs($this->user)
-        ->withSession($this->session)
         ->test(SettingsTaxes::class);
 
     $component->assertOk();
@@ -111,10 +111,9 @@ it('restricts settings access to owner and admin roles only', function () {
     $staffUser = User::factory()->create();
     $this->store->users()->attach($staffUser->id, ['role' => StoreUserRole::Staff]);
 
-    // Staff can still access settings page (middleware allows all authenticated store users)
-    // The restriction is at middleware level, not component level
+    session($this->session);
+
     $component = Livewire::actingAs($staffUser)
-        ->withSession($this->session)
         ->test(SettingsGeneral::class);
 
     $component->assertOk();
@@ -126,8 +125,9 @@ it('manages shipping zone deletion', function () {
         'name' => 'Temp Zone',
     ]);
 
+    session($this->session);
+
     $component = Livewire::actingAs($this->user)
-        ->withSession($this->session)
         ->test(SettingsShipping::class);
 
     $component->call('deleteZone', $zone->id);

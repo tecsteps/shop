@@ -91,7 +91,7 @@ class Index extends Component
                 'revenue' => (int) ($daily[$key]->revenue ?? 0),
                 'count' => (int) ($daily[$key]->count ?? 0),
             ];
-            $current->addDay();
+            $current = $current->addDay();
         }
 
         // Top products

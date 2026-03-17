@@ -1,6 +1,8 @@
 <?php
 
+use App\Livewire\Admin\Dashboard;
 use App\Models\Order;
+use Livewire\Livewire;
 
 beforeEach(function () {
     $this->ctx = createStoreContext();
@@ -21,15 +23,16 @@ it('shows KPI tiles with correct sales data', function () {
         'placed_at' => now()->subDays(5),
     ]);
 
-    $this->actingAs($this->user);
     session($this->session);
 
-    $dashboard = new \App\Livewire\Admin\Dashboard;
-    $dashboard->mount();
+    $component = Livewire::actingAs($this->user)
+        ->test(Dashboard::class);
 
-    expect($dashboard->ordersCount)->toBe(3)
-        ->and($dashboard->totalSales)->toBe(15000)
-        ->and($dashboard->averageOrderValue)->toBe(5000);
+    $component->assertSet('ordersCount', 3)
+        ->assertSet('totalSales', 15000)
+        ->assertSet('averageOrderValue', 5000)
+        ->assertSee('Total Sales')
+        ->assertSee('Orders');
 });
 
 it('calculates percentage change compared to previous period', function () {
@@ -45,14 +48,14 @@ it('calculates percentage change compared to previous period', function () {
         'placed_at' => now()->subDays(35),
     ]);
 
-    $this->actingAs($this->user);
     session($this->session);
 
-    $dashboard = new \App\Livewire\Admin\Dashboard;
-    $dashboard->mount();
+    $component = Livewire::actingAs($this->user)
+        ->test(Dashboard::class);
 
-    expect($dashboard->ordersCount)->toBe(2)
-        ->and($dashboard->salesChange)->toBeGreaterThan(0);
+    $component->assertSet('ordersCount', 2);
+
+    expect($component->get('salesChange'))->toBeGreaterThan(0);
 });
 
 it('filters KPI data by date range', function () {
@@ -68,18 +71,18 @@ it('filters KPI data by date range', function () {
         'placed_at' => now()->subDays(60),
     ]);
 
-    $this->actingAs($this->user);
     session($this->session);
 
-    $dashboard = new \App\Livewire\Admin\Dashboard;
-    $dashboard->mount();
+    $component = Livewire::actingAs($this->user)
+        ->test(Dashboard::class);
 
-    expect($dashboard->ordersCount)->toBe(1)
-        ->and($dashboard->totalSales)->toBe(3000);
+    // Default last_30_days includes only the recent order
+    $component->assertSet('ordersCount', 1)
+        ->assertSet('totalSales', 3000);
 
-    $dashboard->dateRange = 'today';
-    $dashboard->updatedDateRange();
+    // Switch to today
+    $component->set('dateRange', 'today');
 
-    expect($dashboard->ordersCount)->toBe(1)
-        ->and($dashboard->totalSales)->toBe(3000);
+    $component->assertSet('ordersCount', 1)
+        ->assertSet('totalSales', 3000);
 });
