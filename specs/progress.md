@@ -42,9 +42,9 @@
 ### Phase 4: Cart, Checkout, Discounts, Shipping, Taxes
 - [x] Planning complete
 - [x] Implementation (7 migrations, 7 models, 7 services, 7 value objects)
-- [ ] Code review (in progress)
-- [ ] Pest tests (in progress)
-- [ ] Browser verification (in progress)
+- [x] Code review (4 fixes: migration types, enum literals, N+1, var init)
+- [x] Pest tests (102 tests: 48 unit + 54 feature)
+- [x] Browser verification (5 pass, 1 partial, 3 bugs fixed)
 
 ### Phase 5: Payments, Orders, Fulfillment
 - [x] Planning complete
