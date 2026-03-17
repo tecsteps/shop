@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\PaymentProvider;
 use App\Enums\FinancialStatus;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Enums\RefundStatus;
 use App\Events\OrderRefunded;
 use App\Models\InventoryItem;
@@ -66,7 +67,7 @@ class RefundService
                     'status' => OrderStatus::Refunded,
                 ]);
 
-                $payment->update(['status' => \App\Enums\PaymentStatus::Refunded]);
+                $payment->update(['status' => PaymentStatus::Refunded]);
             } else {
                 $order->update([
                     'financial_status' => FinancialStatus::PartiallyRefunded,

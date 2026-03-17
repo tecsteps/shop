@@ -23,10 +23,9 @@ class MockPaymentProvider implements PaymentProvider
      */
     public function charge(Checkout $checkout, array $paymentMethodData): PaymentResult
     {
-        $method = PaymentMethod::from($checkout->payment_method->value);
-        $referenceId = 'mock_' . Str::random(24);
+        $referenceId = 'mock_'.Str::random(24);
 
-        return match ($method) {
+        return match ($checkout->payment_method) {
             PaymentMethod::CreditCard => $this->chargeCreditCard($paymentMethodData, $referenceId),
             PaymentMethod::Paypal => PaymentResult::success(PaymentStatus::Captured, $referenceId, [
                 'provider' => 'mock',
@@ -44,7 +43,7 @@ class MockPaymentProvider implements PaymentProvider
 
     public function refund(Payment $payment, int $amount): RefundResult
     {
-        $refundId = 'mock_refund_' . Str::random(24);
+        $refundId = 'mock_refund_'.Str::random(24);
 
         return RefundResult::success($refundId);
     }

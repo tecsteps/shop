@@ -1,6 +1,6 @@
 # Shop Implementation Progress
 
-## Status: Phase 5 in progress (Phases 1-4, 8 complete)
+## Status: Phases 6, 7, 9, 10 in parallel (Phases 1-5, 8 complete)
 
 ## Team
 - **Team Lead**: Coordination, task assignment, progress tracking
@@ -48,9 +48,8 @@
 
 ### Phase 5: Payments, Orders, Fulfillment
 - [x] Planning complete
-- [ ] Implementation (in progress)
-- [ ] Code review
-- [ ] Pest tests
+- [x] Implementation (7 migrations, 7 models, 4 services, MockPaymentProvider)
+- [ ] Code review + tests (in progress)
 - [ ] Browser verification
 
 ### Phase 6: Customer Accounts

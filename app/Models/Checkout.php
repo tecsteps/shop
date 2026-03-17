@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CheckoutStatus;
+use App\Enums\PaymentMethod;
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,7 @@ class Checkout extends Model
     {
         return [
             'status' => CheckoutStatus::class,
+            'payment_method' => PaymentMethod::class,
             'shipping_address_json' => 'array',
             'billing_address_json' => 'array',
             'tax_provider_snapshot_json' => 'array',

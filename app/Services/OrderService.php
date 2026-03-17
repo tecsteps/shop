@@ -38,21 +38,6 @@ class OrderService
      */
     public function completeCheckout(Checkout $checkout, array $paymentMethodData): Order
     {
-        $existingOrder = Order::query()
-            ->withoutGlobalScopes()
-            ->whereHas('payments', function ($q) use ($checkout) {
-                $q->where('order_id', '>', 0);
-            })
-            ->where('store_id', $checkout->store_id)
-            ->where('email', $checkout->email)
-            ->whereHas('lines', function ($q) use ($checkout) {
-                $cart = $checkout->cart;
-                if ($cart) {
-                    $q->whereIn('variant_id', $cart->lines()->pluck('variant_id'));
-                }
-            })
-            ->first();
-
         // Idempotency: check if checkout is already completed
         if ($checkout->status === CheckoutStatus::Completed) {
             $order = Order::query()
@@ -126,7 +111,7 @@ class OrderService
 
                 $titleSnapshot = $product?->title ?? 'Unknown Product';
                 if ($variant?->title) {
-                    $titleSnapshot .= ' - ' . $variant->title;
+                    $titleSnapshot .= ' - '.$variant->title;
                 }
 
                 OrderLine::query()->create([
@@ -217,7 +202,7 @@ class OrderService
 
         $nextNumber = $maxNumber ? $maxNumber + 1 : 1001;
 
-        return '#' . $nextNumber;
+        return '#'.$nextNumber;
     }
 
     public function cancel(Order $order, string $reason = ''): void

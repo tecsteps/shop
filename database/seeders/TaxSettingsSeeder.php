@@ -19,7 +19,7 @@ class TaxSettingsSeeder extends Seeder
                 'provider' => 'none',
                 'prices_include_tax' => true,
                 'config_json' => [
-                    'default_rate' => 1900,
+                    'default_rate_bps' => 1900,
                     'tax_name' => 'VAT',
                 ],
             ]);

@@ -10,7 +10,7 @@ class OrganizationSeeder extends Seeder
     public function run(): void
     {
         Organization::factory()->create([
-            'name' => 'Acme Corporation',
+            'name' => 'Acme Corp',
             'billing_email' => 'billing@acme.test',
         ]);
     }
