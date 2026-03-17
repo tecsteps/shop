@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('discount_code')->nullable();
             $table->text('tax_provider_snapshot_json')->nullable();
             $table->text('totals_json')->nullable();
-            $table->text('expires_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 
             $table->index('store_id', 'idx_checkouts_store_id');

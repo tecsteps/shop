@@ -1,0 +1,15 @@
+[      62ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[     657ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[    7161ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[   11424ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[   20373ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[   25029ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[   33558ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[   47251ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[  221430ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[  237396ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[  244842ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[  248779ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0
+[  257893ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/products/does-not-exist:0
+[  277985ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/products/does-not-exist:0
+[  333576ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/does-not-exist:0

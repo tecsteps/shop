@@ -71,4 +71,9 @@ class Store extends Model
     {
         return $this->hasMany(Discount::class);
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }

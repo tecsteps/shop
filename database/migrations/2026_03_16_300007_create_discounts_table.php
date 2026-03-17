@@ -16,8 +16,8 @@ return new class extends Migration
             $table->text('code')->nullable();
             $table->text('value_type');
             $table->integer('value_amount')->default(0);
-            $table->text('starts_at');
-            $table->text('ends_at')->nullable();
+            $table->timestamp('starts_at');
+            $table->timestamp('ends_at')->nullable();
             $table->integer('usage_limit')->nullable();
             $table->integer('usage_count')->default(0);
             $table->text('rules_json')->default('{}');

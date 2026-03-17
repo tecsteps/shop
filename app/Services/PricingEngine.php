@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\DiscountStatus;
+use App\Enums\DiscountType;
 use App\Enums\DiscountValueType;
 use App\Models\Checkout;
 use App\Models\Discount;
@@ -28,19 +30,30 @@ class PricingEngine
         $subtotal = 0;
         $lines = [];
 
+        $productIds = $cart->lines
+            ->map(fn ($line) => $line->variant?->product_id)
+            ->filter()
+            ->unique()
+            ->values();
+
+        $collectionMap = $productIds->isNotEmpty()
+            ? DB::table('collection_products')
+                ->whereIn('product_id', $productIds)
+                ->get()
+                ->groupBy('product_id')
+                ->map(fn ($rows) => $rows->pluck('collection_id')->toArray())
+                ->toArray()
+            : [];
+
         foreach ($cart->lines as $line) {
             $lineSubtotal = $line->unit_price_amount * $line->quantity;
             $subtotal += $lineSubtotal;
+            $productId = $line->variant?->product_id;
 
             $lines[] = [
                 'line_id' => $line->id,
-                'product_id' => $line->variant?->product_id,
-                'collection_ids' => $line->variant?->product_id
-                    ? DB::table('collection_products')
-                        ->where('product_id', $line->variant->product_id)
-                        ->pluck('collection_id')
-                        ->toArray()
-                    : [],
+                'product_id' => $productId,
+                'collection_ids' => $productId ? ($collectionMap[$productId] ?? []) : [],
                 'line_subtotal_amount' => $lineSubtotal,
                 'quantity' => $line->quantity,
             ];
@@ -49,6 +62,7 @@ class PricingEngine
         // Step 3: Discount
         $discountAmount = 0;
         $lineDiscounts = [];
+        $freeShipping = false;
 
         if ($checkout->discount_code) {
             $discount = Discount::query()
@@ -62,7 +76,6 @@ class PricingEngine
                 $discountAmount = $result['total_discount'];
                 $lineDiscounts = $result['line_discounts'];
 
-                // Check for free shipping discount
                 if ($discount->value_type === DiscountValueType::FreeShipping) {
                     $freeShipping = true;
                 }
@@ -73,8 +86,8 @@ class PricingEngine
         $automaticDiscounts = Discount::query()
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
-            ->where('type', 'automatic')
-            ->where('status', 'active')
+            ->where('type', DiscountType::Automatic)
+            ->where('status', DiscountStatus::Active)
             ->where('starts_at', '<=', now())
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>=', now());
@@ -120,7 +133,7 @@ class PricingEngine
             }
         }
 
-        if (isset($freeShipping) && $freeShipping) {
+        if ($freeShipping) {
             $shippingAmount = 0;
         }
 

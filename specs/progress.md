@@ -1,6 +1,6 @@
 # Shop Implementation Progress
 
-## Status: Phase 4 in progress (Phases 1-3 complete)
+## Status: Phase 5 in progress (Phases 1-4, 8 complete)
 
 ## Team
 - **Team Lead**: Coordination, task assignment, progress tracking
@@ -40,15 +40,15 @@
 - [ ] Browser verification
 
 ### Phase 4: Cart, Checkout, Discounts, Shipping, Taxes
-- [ ] Planning complete
-- [ ] Implementation
-- [ ] Code review
-- [ ] Pest tests
-- [ ] Browser verification
+- [x] Planning complete
+- [x] Implementation (7 migrations, 7 models, 7 services, 7 value objects)
+- [ ] Code review (in progress)
+- [ ] Pest tests (in progress)
+- [ ] Browser verification (in progress)
 
 ### Phase 5: Payments, Orders, Fulfillment
-- [ ] Planning complete
-- [ ] Implementation
+- [x] Planning complete
+- [ ] Implementation (in progress)
 - [ ] Code review
 - [ ] Pest tests
 - [ ] Browser verification
@@ -68,10 +68,10 @@
 - [ ] Browser verification
 
 ### Phase 8: Search
-- [ ] Planning complete
-- [ ] Implementation
-- [ ] Code review
-- [ ] Pest tests
+- [x] Planning complete
+- [x] Implementation (FTS5, SearchService, 2 Livewire components)
+- [x] Code review (SQL safety fix, N+1 fix, enum consistency)
+- [x] Pest tests (21 tests)
 - [ ] Browser verification
 
 ### Phase 9: Analytics

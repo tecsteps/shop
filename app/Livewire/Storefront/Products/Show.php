@@ -114,7 +114,7 @@ class Show extends Component
             return;
         }
 
-        $this->dispatch('cart-updated');
+        $this->dispatch('add-to-cart', variantId: $this->selectedVariantId, quantity: $this->quantity);
     }
 
     public function render(): \Illuminate\View\View

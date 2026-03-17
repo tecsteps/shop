@@ -32,7 +32,7 @@
 
         @if($section === 'featured_collections')
             {{-- Featured Collections --}}
-            <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <section class="mx-auto max-w-7xl bg-white px-4 py-16 dark:bg-gray-950 sm:px-6 lg:px-8">
                 <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white lg:text-3xl">
                     Shop by Collection
                 </h2>
@@ -53,7 +53,7 @@
 
         @if($section === 'featured_products')
             {{-- Featured Products --}}
-            <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <section class="mx-auto max-w-7xl bg-white px-4 py-16 dark:bg-gray-950 sm:px-6 lg:px-8">
                 <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white lg:text-3xl">
                     Featured Products
                 </h2>
@@ -98,7 +98,7 @@
 
         @if($section === 'rich_text')
             {{-- Rich Text Section --}}
-            <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+            <section class="mx-auto max-w-3xl bg-white px-4 py-16 dark:bg-gray-950 sm:px-6 lg:px-8">
                 <div class="prose dark:prose-invert mx-auto">
                     <p class="text-gray-600 dark:text-gray-400">
                         Quality products, exceptional service, and fast shipping. That is what we stand for.

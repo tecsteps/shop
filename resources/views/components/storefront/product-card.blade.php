@@ -6,8 +6,9 @@
 @php
     $title = $product->title ?? 'Product';
     $handle = $product->handle ?? '#';
-    $price = $product->price_amount ?? 0;
-    $compareAtPrice = $product->compare_at_price_amount ?? null;
+    $defaultVariant = $product->variants?->firstWhere('is_default', true) ?? $product->variants?->first();
+    $price = $defaultVariant?->price_amount ?? 0;
+    $compareAtPrice = $defaultVariant?->compare_at_price_amount ?? null;
     $isOnSale = $compareAtPrice && $compareAtPrice > $price;
     $image = $product->media?->first();
     $imageUrl = $image?->url ?? null;
