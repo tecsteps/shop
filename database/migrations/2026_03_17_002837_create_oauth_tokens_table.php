@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('installation_id')->constrained('app_installations')->cascadeOnDelete();
             $table->text('access_token_hash');
             $table->text('refresh_token_hash')->nullable();
-            $table->text('expires_at');
+            $table->timestamp('expires_at');
 
             $table->index('installation_id', 'idx_oauth_tokens_installation_id');
             $table->unique('access_token_hash', 'idx_oauth_tokens_access_hash');

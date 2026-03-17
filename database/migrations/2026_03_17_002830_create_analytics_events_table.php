@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->text('properties_json')->default('{}');
             $table->text('client_event_id')->nullable();
-            $table->text('occurred_at')->nullable();
-            $table->text('created_at')->nullable();
+            $table->timestamp('occurred_at')->nullable();
+            $table->timestamp('created_at')->nullable();
 
             $table->index('store_id', 'idx_analytics_events_store_id');
             $table->index(['store_id', 'type'], 'idx_analytics_events_store_type');

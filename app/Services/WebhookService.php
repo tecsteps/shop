@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\WebhookSubscriptionStatus;
 use App\Jobs\DeliverWebhook;
 use App\Models\Store;
 use App\Models\WebhookDelivery;
@@ -21,7 +22,7 @@ class WebhookService
             ->withoutGlobalScopes()
             ->where('store_id', $store->id)
             ->where('event_type', $eventType)
-            ->where('status', 'active')
+            ->where('status', WebhookSubscriptionStatus::Active)
             ->get();
 
         foreach ($subscriptions as $subscription) {

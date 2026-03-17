@@ -15,7 +15,7 @@ return new class extends Migration
             $table->text('event_id');
             $table->integer('attempt_count')->default(1);
             $table->text('status')->default('pending');
-            $table->text('last_attempt_at')->nullable();
+            $table->timestamp('last_attempt_at')->nullable();
             $table->integer('response_code')->nullable();
             $table->text('response_body_snippet')->nullable();
 

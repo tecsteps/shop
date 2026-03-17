@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\WebhookSubscriptionStatus;
 use App\Models\WebhookDelivery;
 use App\Models\WebhookSubscription;
 use App\Services\WebhookService;
@@ -34,7 +35,7 @@ class DeliverWebhook implements ShouldQueue
         }
 
         $subscription = WebhookSubscription::query()->withoutGlobalScopes()->find($delivery->subscription_id);
-        if (! $subscription || $subscription->status->value !== 'active') {
+        if (! $subscription || $subscription->status !== WebhookSubscriptionStatus::Active) {
             return;
         }
 
@@ -64,7 +65,8 @@ class DeliverWebhook implements ShouldQueue
 
             if (! $response->successful()) {
                 $this->checkCircuitBreaker($subscription);
-                $this->fail(new \RuntimeException('Webhook delivery failed with status '.$response->status()));
+
+                throw new \RuntimeException('Webhook delivery failed with status '.$response->status());
             }
         } catch (\Exception $e) {
             $delivery->update([

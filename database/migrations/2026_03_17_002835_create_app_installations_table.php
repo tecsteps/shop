@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('app_id')->constrained()->cascadeOnDelete();
             $table->text('scopes_json')->default('[]');
             $table->text('status')->default('active');
-            $table->text('installed_at')->nullable();
+            $table->timestamp('installed_at')->nullable();
 
             $table->unique(['store_id', 'app_id'], 'idx_app_installations_store_app');
             $table->index('store_id', 'idx_app_installations_store_id');

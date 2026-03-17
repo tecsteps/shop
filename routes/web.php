@@ -1,7 +1,30 @@
 <?php
 
+use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
+use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Auth\Logout as AdminLogout;
+use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
+use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
+use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
+use App\Livewire\Admin\Customers\Show as AdminCustomerShow;
+use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Developers\Index as AdminDevelopersIndex;
+use App\Livewire\Admin\Discounts\Form as AdminDiscountForm;
+use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
+use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
+use App\Livewire\Admin\Navigation\Index as AdminNavigationIndex;
+use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
+use App\Livewire\Admin\Orders\Show as AdminOrderShow;
+use App\Livewire\Admin\Pages\Form as AdminPageForm;
+use App\Livewire\Admin\Pages\Index as AdminPagesIndex;
+use App\Livewire\Admin\Products\Form as AdminProductForm;
+use App\Livewire\Admin\Products\Index as AdminProductsIndex;
+use App\Livewire\Admin\Settings\General as AdminSettingsGeneral;
+use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
+use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
+use App\Livewire\Admin\Themes\Editor as AdminThemeEditor;
+use App\Livewire\Admin\Themes\Index as AdminThemesIndex;
 use App\Livewire\Storefront\Account\Addresses\Index as AddressesIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
@@ -33,9 +56,59 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')
     ->middleware(['web', 'auth', 'admin'])
     ->group(function () {
-        Route::get('/', function () {
-            return view('dashboard');
-        })->name('admin.dashboard');
+        Route::get('/', AdminDashboard::class)->name('admin.dashboard');
+
+        // Products
+        Route::get('products', AdminProductsIndex::class)->name('admin.products.index');
+        Route::get('products/create', AdminProductForm::class)->name('admin.products.create');
+        Route::get('products/{product}/edit', AdminProductForm::class)->name('admin.products.edit');
+
+        // Collections
+        Route::get('collections', AdminCollectionsIndex::class)->name('admin.collections.index');
+        Route::get('collections/create', AdminCollectionForm::class)->name('admin.collections.create');
+        Route::get('collections/{collection}/edit', AdminCollectionForm::class)->name('admin.collections.edit');
+
+        // Inventory
+        Route::get('inventory', AdminInventoryIndex::class)->name('admin.inventory.index');
+
+        // Orders
+        Route::get('orders', AdminOrdersIndex::class)->name('admin.orders.index');
+        Route::get('orders/{order}', AdminOrderShow::class)->name('admin.orders.show');
+
+        // Customers
+        Route::get('customers', AdminCustomersIndex::class)->name('admin.customers.index');
+        Route::get('customers/{customer}', AdminCustomerShow::class)->name('admin.customers.show');
+
+        // Discounts
+        Route::get('discounts', AdminDiscountsIndex::class)->name('admin.discounts.index');
+        Route::get('discounts/create', AdminDiscountForm::class)->name('admin.discounts.create');
+        Route::get('discounts/{discount}/edit', AdminDiscountForm::class)->name('admin.discounts.edit');
+
+        // Settings
+        Route::get('settings', AdminSettingsGeneral::class)->name('admin.settings.index');
+        Route::get('settings/shipping', AdminSettingsShipping::class)->name('admin.settings.shipping');
+        Route::get('settings/taxes', AdminSettingsTaxes::class)->name('admin.settings.taxes');
+
+        // Themes
+        Route::get('themes', AdminThemesIndex::class)->name('admin.themes.index');
+        Route::get('themes/{theme}/editor', AdminThemeEditor::class)->name('admin.themes.editor');
+
+        // Pages
+        Route::get('pages', AdminPagesIndex::class)->name('admin.pages.index');
+        Route::get('pages/create', AdminPageForm::class)->name('admin.pages.create');
+        Route::get('pages/{page}/edit', AdminPageForm::class)->name('admin.pages.edit');
+
+        // Navigation
+        Route::get('navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
+
+        // Analytics
+        Route::get('analytics', AdminAnalyticsIndex::class)->name('admin.analytics.index');
+
+        // Apps
+        Route::get('apps', AdminAppsIndex::class)->name('admin.apps.index');
+
+        // Developers
+        Route::get('developers', AdminDevelopersIndex::class)->name('admin.developers.index');
     });
 
 // Storefront Routes (store resolved from hostname)

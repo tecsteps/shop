@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->text('name');
             $table->text('status')->default('active');
-            $table->text('created_at')->nullable();
+            $table->timestamp('created_at')->nullable();
 
             $table->index('status', 'idx_apps_status');
         });
