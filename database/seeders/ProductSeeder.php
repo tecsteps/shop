@@ -623,9 +623,15 @@ class ProductSeeder extends Seeder
     {
         foreach ($handles as $position => $handle) {
             if ($collections->has($handle)) {
-                $collection = Collection::query()->withoutGlobalScopes()->find($collections->get($handle));
-                $existingCount = $collection->products()->count();
-                $collection->products()->attach($product->id, ['position' => $existingCount]);
+                $collectionId = $collections->get($handle);
+                $existingCount = \Illuminate\Support\Facades\DB::table('collection_products')
+                    ->where('collection_id', $collectionId)
+                    ->count();
+                \Illuminate\Support\Facades\DB::table('collection_products')->insert([
+                    'collection_id' => $collectionId,
+                    'product_id' => $product->id,
+                    'position' => $existingCount,
+                ]);
             }
         }
     }

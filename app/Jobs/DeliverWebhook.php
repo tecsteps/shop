@@ -33,7 +33,7 @@ class DeliverWebhook implements ShouldQueue
             return;
         }
 
-        $subscription = $delivery->subscription;
+        $subscription = WebhookSubscription::query()->withoutGlobalScopes()->find($delivery->subscription_id);
         if (! $subscription || $subscription->status->value !== 'active') {
             return;
         }
