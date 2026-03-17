@@ -4,12 +4,16 @@
         <div
             wire:click="toggle"
             class="fixed inset-0 z-30 bg-black/50 lg:hidden"
+            role="button"
+            tabindex="0"
+            aria-label="Close sidebar"
         ></div>
     @endif
 
     {{-- Sidebar --}}
     <aside
         class="fixed left-0 top-0 z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-white transition-transform dark:border-gray-800 dark:bg-gray-900 {{ $collapsed ? '-translate-x-full lg:translate-x-0' : 'translate-x-0' }}"
+        aria-label="Admin sidebar"
     >
         {{-- Brand --}}
         <div class="flex h-16 items-center gap-3 px-6">
@@ -19,7 +23,7 @@
         <flux:separator />
 
         {{-- Navigation --}}
-        <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4" aria-label="Admin navigation">
             {{-- Dashboard --}}
             <a
                 href="{{ route('admin.dashboard') }}"

@@ -137,7 +137,7 @@ class Dashboard extends Component
             ->join('order_lines', 'products.id', '=', 'order_lines.product_id')
             ->join('orders', 'orders.id', '=', 'order_lines.order_id')
             ->whereBetween('orders.placed_at', [$start, $end])
-            ->selectRaw('products.title, SUM(order_lines.quantity) as units_sold, SUM(order_lines.line_total) as revenue')
+            ->selectRaw('products.title, SUM(order_lines.quantity) as units_sold, SUM(order_lines.total_amount) as revenue')
             ->groupBy('products.id', 'products.title')
             ->orderByDesc('revenue')
             ->limit(5)

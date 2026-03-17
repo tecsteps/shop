@@ -67,6 +67,7 @@ class Index extends Component
     public function bulkSetActive(): void
     {
         Product::withoutGlobalScopes()
+            ->where('store_id', session('store_id'))
             ->whereIn('id', $this->selectedIds)
             ->update(['status' => ProductStatus::Active]);
 
@@ -78,6 +79,7 @@ class Index extends Component
     public function bulkArchive(): void
     {
         Product::withoutGlobalScopes()
+            ->where('store_id', session('store_id'))
             ->whereIn('id', $this->selectedIds)
             ->update(['status' => ProductStatus::Archived]);
 
@@ -94,6 +96,7 @@ class Index extends Component
     public function bulkDelete(): void
     {
         Product::withoutGlobalScopes()
+            ->where('store_id', session('store_id'))
             ->whereIn('id', $this->selectedIds)
             ->update(['status' => ProductStatus::Archived]);
 

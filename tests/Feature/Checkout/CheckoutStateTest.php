@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\CheckoutStatus;
+use App\Enums\PaymentMethod;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Models\InventoryItem;
 use App\Models\Product;
@@ -132,7 +133,7 @@ it('transitions from shipping_selected to payment_selected', function () {
     $checkout = $this->checkoutService->selectPaymentMethod($checkout, 'credit_card');
 
     expect($checkout->status)->toBe(CheckoutStatus::PaymentSelected)
-        ->and($checkout->payment_method)->toBe('credit_card')
+        ->and($checkout->payment_method)->toBe(PaymentMethod::CreditCard)
         ->and($checkout->expires_at)->not->toBeNull();
 });
 

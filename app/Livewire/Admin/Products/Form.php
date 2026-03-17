@@ -68,11 +68,11 @@ class Form extends Component
             $this->variants = $product->variants->map(fn (ProductVariant $v) => [
                 'id' => $v->id,
                 'sku' => $v->sku ?? '',
-                'price' => (string) ($v->price / 100),
-                'compareAtPrice' => $v->compare_at_price ? (string) ($v->compare_at_price / 100) : '',
+                'price' => (string) ($v->price_amount / 100),
+                'compareAtPrice' => $v->compare_at_amount ? (string) ($v->compare_at_amount / 100) : '',
                 'quantity' => (string) ($v->inventoryItem?->quantity_on_hand ?? 0),
                 'requiresShipping' => $v->requires_shipping,
-                'optionValues' => $v->option1.($v->option2 ? ' / '.$v->option2 : '').($v->option3 ? ' / '.$v->option3 : ''),
+                'optionValues' => $v->optionValues->pluck('value')->implode(' / ') ?: 'Default',
             ])->toArray();
         } else {
             $this->variants = [[
@@ -215,14 +215,11 @@ class Form extends Component
             $variantAttrs = [
                 'product_id' => $this->product->id,
                 'sku' => $variantData['sku'] ?: null,
-                'price' => (int) round((float) $variantData['price'] * 100),
-                'compare_at_price' => $variantData['compareAtPrice'] ? (int) round((float) $variantData['compareAtPrice'] * 100) : null,
+                'price_amount' => (int) round((float) $variantData['price'] * 100),
+                'compare_at_amount' => $variantData['compareAtPrice'] ? (int) round((float) $variantData['compareAtPrice'] * 100) : null,
                 'requires_shipping' => $variantData['requiresShipping'],
                 'is_default' => $position === 0,
                 'position' => $position,
-                'option1' => $optionParts[0] ?? null,
-                'option2' => $optionParts[1] ?? null,
-                'option3' => $optionParts[2] ?? null,
             ];
 
             if ($variant) {

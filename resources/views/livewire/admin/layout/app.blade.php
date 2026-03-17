@@ -13,6 +13,12 @@
         @livewireStyles
     </head>
     <body class="min-h-screen bg-gray-50 text-gray-700 antialiased dark:bg-gray-950 dark:text-gray-300">
+        {{-- Skip Link --}}
+        <a href="#admin-main-content"
+           class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-gray-900 focus:shadow-lg focus:ring-2 focus:ring-blue-500 dark:focus:bg-gray-900 dark:focus:text-white">
+            Skip to main content
+        </a>
+
         {{-- Toast Notifications --}}
         <div x-data="{ toasts: [] }"
              @toast.window="
@@ -55,7 +61,7 @@
                 <livewire:admin.layout.top-bar />
 
                 {{-- Page Content --}}
-                <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+                <main id="admin-main-content" class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
                     {{ $slot }}
                 </main>
             </div>

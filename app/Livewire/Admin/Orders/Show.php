@@ -2,10 +2,6 @@
 
 namespace App\Livewire\Admin\Orders;
 
-use App\Enums\FinancialStatus;
-use App\Enums\FulfillmentShipmentStatus;
-use App\Enums\FulfillmentStatus;
-use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
 use App\Services\FulfillmentService;
@@ -148,7 +144,7 @@ class Show extends Component
                 if ($rl['selected'] && $rl['quantity'] > 0) {
                     $line = $this->order->lines->firstWhere('id', $rl['line_id']);
                     if ($line) {
-                        $amount += $line->unit_price * $rl['quantity'];
+                        $amount += $line->unit_price_amount * $rl['quantity'];
                     }
                 }
             }

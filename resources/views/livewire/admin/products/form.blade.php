@@ -104,7 +104,8 @@
             <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900" x-data="{ open: false }">
                 <button @click="open = !open" class="flex w-full items-center justify-between text-left">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Search engine listing</span>
-                    <flux:icon x-bind:name="open ? 'chevron-up' : 'chevron-down'" variant="mini" class="h-4 w-4 text-gray-400" />
+                    <span x-show="open"><flux:icon name="chevron-up" variant="mini" class="h-4 w-4 text-gray-400" /></span>
+                    <span x-show="!open"><flux:icon name="chevron-down" variant="mini" class="h-4 w-4 text-gray-400" /></span>
                 </button>
                 <div x-show="open" x-transition class="mt-4">
                     <flux:field>
