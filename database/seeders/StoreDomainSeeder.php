@@ -36,5 +36,13 @@ class StoreDomainSeeder extends Seeder
             'is_primary' => true,
             'tls_mode' => 'managed',
         ]);
+
+        StoreDomain::factory()->create([
+            'store_id' => $fashion->id,
+            'hostname' => 'shop.test',
+            'type' => 'storefront',
+            'is_primary' => false,
+            'tls_mode' => 'managed',
+        ]);
     }
 }

@@ -43,7 +43,8 @@ class Index extends Component
             ->where('inventory_items.store_id', session('store_id'))
             ->join('product_variants', 'product_variants.id', '=', 'inventory_items.variant_id')
             ->join('products', 'products.id', '=', 'product_variants.product_id')
-            ->select('inventory_items.*', 'products.title as product_title', 'product_variants.sku', 'product_variants.option1', 'product_variants.option2', 'product_variants.option3');
+            ->select('inventory_items.*', 'products.title as product_title', 'product_variants.sku')
+            ->with(['variant.optionValues']);
 
         if ($this->search) {
             $query->where(function ($q) {

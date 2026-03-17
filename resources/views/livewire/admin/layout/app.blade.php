@@ -9,6 +9,7 @@
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
         @fluxAppearance
         @livewireStyles
     </head>
@@ -67,6 +68,7 @@
             </div>
         </div>
 
+        @fluxScripts
         @livewireScripts
     </body>
 </html>

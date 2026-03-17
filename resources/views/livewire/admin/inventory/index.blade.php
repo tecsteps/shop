@@ -32,7 +32,7 @@
                     <tr class="border-b border-gray-100 dark:border-gray-800" wire:key="inv-{{ $item->id }}">
                         <td class="px-4 py-3">{{ $item->product_title }}</td>
                         <td class="px-4 py-3 text-gray-500">
-                            {{ collect([$item->option1, $item->option2, $item->option3])->filter()->implode(' / ') ?: 'Default' }}
+                            {{ $item->variant?->optionValues->pluck('value')->implode(' / ') ?: 'Default' }}
                         </td>
                         <td class="px-4 py-3">{{ $item->sku ?? '-' }}</td>
                         <td class="px-4 py-3">
@@ -47,8 +47,8 @@
                         </td>
                         <td class="px-4 py-3">{{ $item->quantity_reserved }}</td>
                         <td class="px-4 py-3">
-                            <flux:badge :color="$item->out_of_stock_policy === 'continue' ? 'green' : 'zinc'" size="sm">
-                                {{ $item->out_of_stock_policy ?? 'deny' }}
+                            <flux:badge :color="$item->policy?->value === 'continue' ? 'green' : 'zinc'" size="sm">
+                                {{ ucfirst($item->policy?->value ?? 'deny') }}
                             </flux:badge>
                         </td>
                     </tr>

@@ -29,6 +29,10 @@ return Application::configure(basePath: dirname(__DIR__))
             return route('login');
         });
     })
+    ->booted(function (): void {
+        app(\Livewire\Mechanisms\PersistentMiddleware\PersistentMiddleware::class)
+            ->addPersistentMiddleware(ResolveStore::class);
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();

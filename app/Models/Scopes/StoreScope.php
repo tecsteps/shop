@@ -10,6 +10,10 @@ class StoreScope implements Scope
 {
     public function apply(Builder $builder, Model $model): void
     {
+        if (! app()->bound('current_store')) {
+            return;
+        }
+
         $store = app('current_store');
 
         if ($store) {

@@ -31,8 +31,8 @@
                         </td>
                         <td class="px-4 py-3 text-gray-500">{{ $page->handle }}</td>
                         <td class="px-4 py-3">
-                            <flux:badge :color="$page->status === 'active' ? 'green' : 'zinc'" size="sm">
-                                {{ ucfirst($page->status ?? 'draft') }}
+                            <flux:badge :color="$page->status->value === 'published' ? 'green' : 'zinc'" size="sm">
+                                {{ ucfirst($page->status->value) }}
                             </flux:badge>
                         </td>
                         <td class="px-4 py-3 text-gray-500">{{ $page->updated_at->diffForHumans() }}</td>
