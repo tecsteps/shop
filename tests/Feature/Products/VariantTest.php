@@ -82,14 +82,26 @@ it('archives orphaned variants with order references', function () {
 
     $mVariant = $product->variants()->get()->last();
 
-    // Simulate order_lines table
-    \Illuminate\Support\Facades\Schema::create('order_lines', function ($table) {
-        $table->id();
-        $table->foreignId('variant_id');
-    });
+    // Create order line reference using the real order_lines table
+    $order = \App\Models\Order::withoutGlobalScopes()->create([
+        'store_id' => $context['store']->id,
+        'order_number' => '#9997',
+        'payment_method' => 'credit_card',
+        'status' => 'paid',
+        'financial_status' => 'paid',
+        'fulfillment_status' => 'unfulfilled',
+        'currency' => 'EUR',
+        'total_amount' => 1999,
+        'placed_at' => now(),
+    ]);
 
-    \Illuminate\Support\Facades\DB::table('order_lines')->insert([
+    \App\Models\OrderLine::create([
+        'order_id' => $order->id,
         'variant_id' => $mVariant->id,
+        'title_snapshot' => 'Variant Test',
+        'price_amount' => 1999,
+        'quantity' => 1,
+        'total_amount' => 1999,
     ]);
 
     // Remove M option value to orphan its variant

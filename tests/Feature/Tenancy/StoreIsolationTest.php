@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Organization;
 use App\Models\Scopes\StoreScope;
 use App\Models\Store;
@@ -60,4 +61,19 @@ it('allows cross-store access when global scope is removed', function () {
     app()->instance('current_store', $storeA);
 
     expect(Customer::withoutGlobalScope(StoreScope::class)->count())->toBe(8);
+});
+
+it('scopes order queries to the current store', function () {
+    $ctx = createStoreContext();
+    $storeA = $ctx['store'];
+
+    Order::factory()->count(2)->create(['store_id' => $storeA->id]);
+
+    $orgB = Organization::factory()->create();
+    $storeB = Store::factory()->create(['organization_id' => $orgB->id]);
+    Order::factory()->count(4)->create(['store_id' => $storeB->id]);
+
+    app()->instance('current_store', $storeA);
+
+    expect(Order::count())->toBe(2);
 });

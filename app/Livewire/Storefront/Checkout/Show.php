@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Checkout;
 
 use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Services\CheckoutService;
@@ -41,6 +42,12 @@ class Show extends Component
     public ?int $selectedRateId = null;
 
     public string $paymentMethod = 'credit_card';
+
+    public string $cardNumber = '';
+
+    public string $cardExpiry = '';
+
+    public string $cardCvv = '';
 
     public string $discountCode = '';
 
@@ -172,13 +179,30 @@ class Show extends Component
 
     public function submitPayment(): void
     {
+        $this->errorMessage = null;
+
         $checkout = Checkout::withoutGlobalScopes()->find($this->checkoutId);
         $checkoutService = app(CheckoutService::class);
 
         $checkoutService->selectPaymentMethod($checkout, $this->paymentMethod);
-        $checkoutService->completeCheckout($checkout);
 
-        $this->redirect(route('storefront.checkout.confirmation'));
+        $paymentData = [];
+        if ($this->paymentMethod === 'credit_card') {
+            $paymentData = ['card_number' => $this->cardNumber];
+        }
+
+        try {
+            $order = $checkoutService->completeCheckout($checkout->fresh(), $paymentData);
+            session()->forget('cart_id');
+            session()->put('last_order_id', $order->id);
+            $this->redirect(route('storefront.checkout.confirmation'));
+        } catch (PaymentFailedException $e) {
+            $this->errorMessage = match ($e->errorCode) {
+                'card_declined' => 'Payment was declined. Please try a different card.',
+                'insufficient_funds' => 'Insufficient funds. Please try a different card.',
+                default => 'Payment failed. Please try again.',
+            };
+        }
     }
 
     public function getAvailableRates(): Collection

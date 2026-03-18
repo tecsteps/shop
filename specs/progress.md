@@ -1,6 +1,6 @@
 # Shop Implementation Progress
 
-## Status: Phase 5 - Starting
+## Status: Phase 6 - Starting
 
 ## Phase Overview
 
@@ -10,8 +10,8 @@
 | 2 | Catalog (Products, Variants, Inventory, Collections, Media) | Complete | 2026-03-18 | 2026-03-18 |
 | 3 | Themes, Pages, Navigation, Storefront Layout | Complete | 2026-03-18 | 2026-03-18 |
 | 4 | Cart, Checkout, Discounts, Shipping, Taxes | Complete | 2026-03-18 | 2026-03-18 |
-| 5 | Payments, Orders, Fulfillment | In Progress | 2026-03-18 | - |
-| 6 | Customer Accounts | Pending | - | - |
+| 5 | Payments, Orders, Fulfillment | Complete | 2026-03-18 | 2026-03-18 |
+| 6 | Customer Accounts | In Progress | 2026-03-18 | - |
 | 7 | Admin Panel | Pending | - | - |
 | 8 | Search | Pending | - | - |
 | 9 | Analytics | Pending | - | - |
@@ -94,13 +94,24 @@
 ## Phase 5 Details
 
 ### Steps
-- [ ] 5.1: Customer/Order/Payment/Refund/Fulfillment Migrations
-- [ ] 5.2: Models (Customer addresses, Order, OrderLine, Payment, Refund, Fulfillment, FulfillmentLine)
-- [ ] 5.3: MockPaymentProvider (magic card numbers)
-- [ ] 5.4: OrderService (create from checkout, order numbers)
-- [ ] 5.5: RefundService
-- [ ] 5.6: FulfillmentService (with fulfillment guard)
-- [ ] 5.7: Events (OrderCreated, OrderPaid, etc.)
+- [x] 5.1-5.2: Migrations (7) + Models (7 new + 2 updated) + Enums (7)
+- [x] 5.3: MockPaymentProvider (magic cards, bank transfer deferred)
+- [x] 5.4: OrderService (atomic transactions, snapshots, order numbers)
+- [x] 5.5: RefundService (partial/full, restock)
+- [x] 5.6: FulfillmentService (guard, ship, deliver)
+- [x] 5.7: Events (5 order events)
+- [x] 5.8: Checkout completion wired (card fields, decline handling, confirmation)
+- [x] 5.9: Bank transfer flow + confirmation page
+- [x] Pest tests (59 new, 304 total, 0 failures)
+- [x] Code review passed
+- [x] QA passed (all payment flows, decline+retry, bank transfer instructions)
+- [x] Controller approved
+
+## Phase 6 Details
+
+### Steps
+- [ ] 6.1: Customer account Livewire components (dashboard, orders, addresses)
+- [ ] 6.2: Routes for customer account section
 - [ ] Pest tests written and passing
 - [ ] Code review passed
 - [ ] QA verification passed

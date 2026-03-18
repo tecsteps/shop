@@ -6,10 +6,16 @@ use App\Enums\CollectionStatus;
 use App\Enums\DiscountStatus;
 use App\Enums\DiscountType;
 use App\Enums\DiscountValueType;
+use App\Enums\FinancialStatus;
+use App\Enums\FulfillmentShipmentStatus;
+use App\Enums\FulfillmentStatus;
 use App\Enums\InventoryPolicy;
 use App\Enums\MediaStatus;
 use App\Enums\NavigationItemType;
+use App\Enums\OrderStatus;
 use App\Enums\PageStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Enums\ProductStatus;
 use App\Enums\ShippingRateType;
 use App\Enums\TaxMode;
@@ -18,11 +24,16 @@ use App\Enums\VariantStatus;
 use App\Models\Collection;
 use App\Models\Customer;
 use App\Models\Discount;
+use App\Models\Fulfillment;
+use App\Models\FulfillmentLine;
 use App\Models\InventoryItem;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
+use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\Organization;
 use App\Models\Page;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductMedia;
 use App\Models\ProductOption;
@@ -88,10 +99,13 @@ class DatabaseSeeder extends Seeder
             'marketing_opt_in' => false,
         ]);
 
+        $customer = Customer::withoutGlobalScopes()->where('store_id', $store->id)->first();
+
         $this->seedCatalog($store);
         $this->seedThemeAndNavigation($store);
         $this->seedShippingAndTax($store);
         $this->seedDiscounts($store);
+        $this->seedOrders($store, $customer);
     }
 
     private function seedCatalog(Store $store): void
@@ -284,6 +298,210 @@ class DatabaseSeeder extends Seeder
             'byte_size' => 150000,
             'position' => 0,
             'status' => MediaStatus::Ready,
+        ]);
+    }
+
+    private function seedOrders(Store $store, Customer $customer): void
+    {
+        $variant = ProductVariant::whereHas('product', fn ($q) => $q->withoutGlobalScopes()->where('store_id', $store->id))
+            ->where('status', VariantStatus::Active)
+            ->first();
+
+        // Order #1001: Paid, unfulfilled (credit card)
+        $order1 = Order::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'customer_id' => $customer->id,
+            'order_number' => '#1001',
+            'payment_method' => PaymentMethod::CreditCard,
+            'status' => OrderStatus::Paid,
+            'financial_status' => FinancialStatus::Paid,
+            'fulfillment_status' => FulfillmentStatus::Unfulfilled,
+            'currency' => 'EUR',
+            'subtotal_amount' => 4998,
+            'shipping_amount' => 499,
+            'tax_amount' => 950,
+            'total_amount' => 6447,
+            'email' => 'customer@acme.test',
+            'shipping_address_json' => ['first_name' => 'John', 'last_name' => 'Doe', 'address1' => '123 Main St', 'city' => 'Berlin', 'country' => 'DE', 'postal_code' => '10115'],
+            'billing_address_json' => ['first_name' => 'John', 'last_name' => 'Doe', 'address1' => '123 Main St', 'city' => 'Berlin', 'country' => 'DE', 'postal_code' => '10115'],
+            'placed_at' => now()->subDays(3),
+        ]);
+
+        OrderLine::create([
+            'order_id' => $order1->id,
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'title_snapshot' => $variant->product->title ?? 'Classic Cotton T-Shirt',
+            'sku_snapshot' => $variant->sku,
+            'price_amount' => 2499,
+            'quantity' => 2,
+            'total_amount' => 4998,
+            'requires_shipping' => true,
+        ]);
+
+        Payment::create([
+            'order_id' => $order1->id,
+            'provider' => 'mock',
+            'method' => PaymentMethod::CreditCard,
+            'provider_payment_id' => 'mock_seed_001',
+            'status' => PaymentStatus::Captured,
+            'amount' => 6447,
+            'currency' => 'EUR',
+            'created_at' => now()->subDays(3),
+        ]);
+
+        // Order #1002: Paid, fulfilled (same customer)
+        $order2 = Order::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'customer_id' => $customer->id,
+            'order_number' => '#1002',
+            'payment_method' => PaymentMethod::Paypal,
+            'status' => OrderStatus::Fulfilled,
+            'financial_status' => FinancialStatus::Paid,
+            'fulfillment_status' => FulfillmentStatus::Fulfilled,
+            'currency' => 'EUR',
+            'subtotal_amount' => 5999,
+            'shipping_amount' => 499,
+            'tax_amount' => 1140,
+            'total_amount' => 7638,
+            'email' => 'customer@acme.test',
+            'placed_at' => now()->subDays(10),
+        ]);
+
+        $line2 = OrderLine::create([
+            'order_id' => $order2->id,
+            'title_snapshot' => 'Premium Slim Fit Jeans',
+            'sku_snapshot' => 'PRE-30-IND',
+            'price_amount' => 5999,
+            'quantity' => 1,
+            'total_amount' => 5999,
+            'requires_shipping' => true,
+        ]);
+
+        Payment::create([
+            'order_id' => $order2->id,
+            'provider' => 'mock',
+            'method' => PaymentMethod::Paypal,
+            'provider_payment_id' => 'mock_seed_002',
+            'status' => PaymentStatus::Captured,
+            'amount' => 7638,
+            'currency' => 'EUR',
+            'created_at' => now()->subDays(10),
+        ]);
+
+        $fulfillment = Fulfillment::create([
+            'order_id' => $order2->id,
+            'status' => FulfillmentShipmentStatus::Delivered,
+            'tracking_company' => 'DHL',
+            'tracking_number' => '1234567890',
+            'shipped_at' => now()->subDays(8),
+            'delivered_at' => now()->subDays(6),
+            'created_at' => now()->subDays(9),
+        ]);
+
+        FulfillmentLine::create([
+            'fulfillment_id' => $fulfillment->id,
+            'order_line_id' => $line2->id,
+            'quantity' => 1,
+        ]);
+
+        // Order #1003: Pending bank transfer (same customer)
+        $order3 = Order::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'customer_id' => $customer->id,
+            'order_number' => '#1003',
+            'payment_method' => PaymentMethod::BankTransfer,
+            'status' => OrderStatus::Pending,
+            'financial_status' => FinancialStatus::Pending,
+            'fulfillment_status' => FulfillmentStatus::Unfulfilled,
+            'currency' => 'EUR',
+            'subtotal_amount' => 2499,
+            'shipping_amount' => 499,
+            'tax_amount' => 475,
+            'total_amount' => 3473,
+            'email' => 'customer@acme.test',
+            'placed_at' => now()->subDays(1),
+        ]);
+
+        OrderLine::create([
+            'order_id' => $order3->id,
+            'title_snapshot' => 'Classic Cotton T-Shirt',
+            'sku_snapshot' => 'CLA-S-BLA',
+            'price_amount' => 2499,
+            'quantity' => 1,
+            'total_amount' => 2499,
+            'requires_shipping' => true,
+        ]);
+
+        Payment::create([
+            'order_id' => $order3->id,
+            'provider' => 'mock',
+            'method' => PaymentMethod::BankTransfer,
+            'provider_payment_id' => 'mock_seed_003',
+            'status' => PaymentStatus::Pending,
+            'amount' => 3473,
+            'currency' => 'EUR',
+            'created_at' => now()->subDays(1),
+        ]);
+
+        // Order #1004: Cancelled order (same customer)
+        Order::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'customer_id' => $customer->id,
+            'order_number' => '#1004',
+            'payment_method' => PaymentMethod::CreditCard,
+            'status' => OrderStatus::Cancelled,
+            'financial_status' => FinancialStatus::Voided,
+            'fulfillment_status' => FulfillmentStatus::Unfulfilled,
+            'currency' => 'EUR',
+            'total_amount' => 3999,
+            'email' => 'customer@acme.test',
+            'cancel_reason' => 'Customer requested cancellation',
+            'placed_at' => now()->subDays(5),
+            'cancelled_at' => now()->subDays(4),
+        ]);
+
+        // Order #1005: For admin order management tests (guest order)
+        $order5 = Order::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'customer_id' => null,
+            'order_number' => '#1005',
+            'payment_method' => PaymentMethod::CreditCard,
+            'status' => OrderStatus::Paid,
+            'financial_status' => FinancialStatus::Paid,
+            'fulfillment_status' => FulfillmentStatus::Unfulfilled,
+            'currency' => 'EUR',
+            'subtotal_amount' => 8999,
+            'shipping_amount' => 1499,
+            'tax_amount' => 1710,
+            'total_amount' => 12208,
+            'email' => 'guest@example.com',
+            'shipping_address_json' => ['first_name' => 'Guest', 'last_name' => 'Buyer', 'address1' => '789 Elm St', 'city' => 'Munich', 'country' => 'DE', 'postal_code' => '80331'],
+            'billing_address_json' => ['first_name' => 'Guest', 'last_name' => 'Buyer', 'address1' => '789 Elm St', 'city' => 'Munich', 'country' => 'DE', 'postal_code' => '80331'],
+            'placed_at' => now()->subDays(1),
+        ]);
+
+        OrderLine::create([
+            'order_id' => $order5->id,
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'title_snapshot' => $variant->product->title ?? 'Denim Jacket Classic',
+            'sku_snapshot' => $variant->sku,
+            'price_amount' => 8999,
+            'quantity' => 1,
+            'total_amount' => 8999,
+            'requires_shipping' => true,
+        ]);
+
+        Payment::create([
+            'order_id' => $order5->id,
+            'provider' => 'mock',
+            'method' => PaymentMethod::CreditCard,
+            'provider_payment_id' => 'mock_seed_005',
+            'status' => PaymentStatus::Captured,
+            'amount' => 12208,
+            'currency' => 'EUR',
+            'created_at' => now()->subDays(1),
         ]);
     }
 

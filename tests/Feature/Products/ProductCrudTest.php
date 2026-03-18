@@ -118,14 +118,26 @@ it('prevents active to draft when order lines exist', function () {
 
     $service->transitionStatus($product, ProductStatus::Active);
 
-    // Simulate order_lines table with a reference
-    \Illuminate\Support\Facades\Schema::create('order_lines', function ($table) {
-        $table->id();
-        $table->foreignId('variant_id');
-    });
+    // Create order line reference using the real order_lines table
+    $order = \App\Models\Order::withoutGlobalScopes()->create([
+        'store_id' => $context['store']->id,
+        'order_number' => '#9999',
+        'payment_method' => 'credit_card',
+        'status' => 'paid',
+        'financial_status' => 'paid',
+        'fulfillment_status' => 'unfulfilled',
+        'currency' => 'EUR',
+        'total_amount' => 2499,
+        'placed_at' => now(),
+    ]);
 
-    \Illuminate\Support\Facades\DB::table('order_lines')->insert([
+    \App\Models\OrderLine::create([
+        'order_id' => $order->id,
         'variant_id' => $product->variants->first()->id,
+        'title_snapshot' => 'Ordered Product',
+        'price_amount' => 2499,
+        'quantity' => 1,
+        'total_amount' => 2499,
     ]);
 
     $product->refresh();
@@ -156,13 +168,25 @@ it('prevents deletion of product with order references', function () {
         'title' => 'Cannot Delete',
     ]);
 
-    \Illuminate\Support\Facades\Schema::create('order_lines', function ($table) {
-        $table->id();
-        $table->foreignId('variant_id');
-    });
+    $order = \App\Models\Order::withoutGlobalScopes()->create([
+        'store_id' => $context['store']->id,
+        'order_number' => '#9998',
+        'payment_method' => 'credit_card',
+        'status' => 'paid',
+        'financial_status' => 'paid',
+        'fulfillment_status' => 'unfulfilled',
+        'currency' => 'EUR',
+        'total_amount' => 2499,
+        'placed_at' => now(),
+    ]);
 
-    \Illuminate\Support\Facades\DB::table('order_lines')->insert([
+    \App\Models\OrderLine::create([
+        'order_id' => $order->id,
         'variant_id' => $product->variants->first()->id,
+        'title_snapshot' => 'Cannot Delete',
+        'price_amount' => 2499,
+        'quantity' => 1,
+        'total_amount' => 2499,
     ]);
 
     expect(fn () => $service->delete($product))

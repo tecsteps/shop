@@ -291,9 +291,9 @@ it('transitions from payment_selected to completed', function () {
 
     $checkoutService->setShippingMethod($checkout->fresh(), $ctx['rate']->id);
     $checkoutService->selectPaymentMethod($checkout->fresh(), 'credit_card');
-    $result = $checkoutService->completeCheckout($checkout->fresh());
+    $order = $checkoutService->completeCheckout($checkout->fresh(), ['card_number' => '4242424242424242']);
 
-    expect($result->status)->toBe(CheckoutStatus::Completed);
+    expect($order->status)->toBe(\App\Enums\OrderStatus::Paid);
 });
 
 it('rejects invalid state transitions', function () {

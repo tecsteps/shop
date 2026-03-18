@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
-use App\Enums\CartStatus;
+use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
+use App\Enums\PaymentMethod;
 use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -17,6 +20,8 @@ class CheckoutService
         private PricingEngine $pricingEngine,
         private InventoryService $inventoryService,
         private ShippingCalculator $shippingCalculator,
+        private PaymentProvider $paymentProvider,
+        private OrderService $orderService,
     ) {}
 
     public function createFromCart(Cart $cart): Checkout
@@ -79,7 +84,8 @@ class CheckoutService
 
     public function selectPaymentMethod(Checkout $checkout, string $paymentMethod): void
     {
-        if ($checkout->status !== CheckoutStatus::ShippingSelected) {
+        $allowedStatuses = [CheckoutStatus::ShippingSelected, CheckoutStatus::PaymentSelected];
+        if (! in_array($checkout->status, $allowedStatuses)) {
             throw new InvalidCheckoutTransitionException(
                 "Cannot select payment from status {$checkout->status->value}."
             );
@@ -90,12 +96,16 @@ class CheckoutService
             throw new InvalidArgumentException("Invalid payment method: {$paymentMethod}.");
         }
 
-        DB::transaction(function () use ($checkout, $paymentMethod) {
-            $cart = $checkout->cart()->with(['lines.variant.inventoryItem'])->first();
+        $alreadySelected = $checkout->status === CheckoutStatus::PaymentSelected;
 
-            foreach ($cart->lines as $line) {
-                if ($line->variant->inventoryItem) {
-                    $this->inventoryService->reserve($line->variant->inventoryItem, $line->quantity);
+        DB::transaction(function () use ($checkout, $paymentMethod, $alreadySelected) {
+            if (! $alreadySelected) {
+                $cart = $checkout->cart()->with(['lines.variant.inventoryItem'])->first();
+
+                foreach ($cart->lines as $line) {
+                    if ($line->variant->inventoryItem) {
+                        $this->inventoryService->reserve($line->variant->inventoryItem, $line->quantity);
+                    }
                 }
             }
 
@@ -107,10 +117,17 @@ class CheckoutService
         });
     }
 
-    public function completeCheckout(Checkout $checkout, array $paymentData = []): Checkout
+    public function completeCheckout(Checkout $checkout, array $paymentData = []): Order
     {
         if ($checkout->status === CheckoutStatus::Completed) {
-            return $checkout;
+            $existingOrder = Order::withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->whereHas('payments', fn ($q) => $q->where('order_id', '>', 0))
+                ->latest()
+                ->first();
+            if ($existingOrder) {
+                return $existingOrder;
+            }
         }
 
         if ($checkout->status !== CheckoutStatus::PaymentSelected) {
@@ -119,14 +136,24 @@ class CheckoutService
             );
         }
 
-        return DB::transaction(function () use ($checkout) {
-            $cart = $checkout->cart;
-            $cart->update(['status' => CartStatus::Converted]);
+        $method = PaymentMethod::from($checkout->payment_method);
+        $paymentResult = $this->paymentProvider->charge($checkout, $method, $paymentData);
 
-            $checkout->update(['status' => CheckoutStatus::Completed]);
+        if (! $paymentResult->success) {
+            $cart = $checkout->cart()->with(['lines.variant.inventoryItem'])->first();
+            foreach ($cart->lines as $line) {
+                if ($line->variant->inventoryItem && $line->variant->inventoryItem->quantity_reserved > 0) {
+                    $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
+                }
+            }
 
-            return $checkout->fresh();
-        });
+            throw new PaymentFailedException(
+                errorCode: $paymentResult->errorCode ?? 'unknown',
+                message: $paymentResult->errorMessage ?? 'Payment failed.',
+            );
+        }
+
+        return $this->orderService->createFromCheckout($checkout, $paymentResult);
     }
 
     public function expireCheckout(Checkout $checkout): void

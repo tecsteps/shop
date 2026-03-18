@@ -128,6 +128,29 @@
                 </label>
             </div>
 
+            {{-- Credit card fields --}}
+            @if($paymentMethod === 'credit_card')
+                <div class="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+                    <div>
+                        <label for="cardNumber" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Card Number</label>
+                        <input wire:model="cardNumber" type="text" id="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19"
+                               class="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-white">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="cardExpiry" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Expiry (MM/YY)</label>
+                            <input wire:model="cardExpiry" type="text" id="cardExpiry" placeholder="12/28" maxlength="5"
+                                   class="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cardCvv" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">CVV</label>
+                            <input wire:model="cardCvv" type="text" id="cardCvv" placeholder="123" maxlength="4"
+                                   class="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             {{-- Discount code --}}
             <div>
                 <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">Discount Code</h3>

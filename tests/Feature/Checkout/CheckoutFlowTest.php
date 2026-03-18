@@ -133,8 +133,8 @@ it('completes full checkout happy path', function () {
     expect($checkout->status)->toBe(CheckoutStatus::PaymentSelected)
         ->and($checkout->expires_at)->not->toBeNull();
 
-    $result = $checkoutService->completeCheckout($checkout);
-    expect($result->status)->toBe(CheckoutStatus::Completed)
+    $order = $checkoutService->completeCheckout($checkout, ['card_number' => '4242424242424242']);
+    expect($order->status)->toBe(\App\Enums\OrderStatus::Paid)
         ->and($ctx['cart']->fresh()->status)->toBe(CartStatus::Converted);
 });
 
@@ -207,8 +207,8 @@ it('prevents duplicate orders from same checkout', function () {
     $checkoutService->setShippingMethod($checkout->fresh(), $ctx['rate']->id);
     $checkoutService->selectPaymentMethod($checkout->fresh(), 'credit_card');
 
-    $result1 = $checkoutService->completeCheckout($checkout->fresh());
+    $order = $checkoutService->completeCheckout($checkout->fresh(), ['card_number' => '4242424242424242']);
 
-    // Second call should not create a duplicate
-    expect($result1->status)->toBe(CheckoutStatus::Completed);
+    // Should return an order
+    expect($order->status)->toBe(\App\Enums\OrderStatus::Paid);
 });
