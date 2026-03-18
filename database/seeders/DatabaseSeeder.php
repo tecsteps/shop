@@ -48,6 +48,7 @@ use App\Models\TaxSettings;
 use App\Models\Theme;
 use App\Models\ThemeSettings;
 use App\Models\User;
+use App\Services\SearchService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -106,6 +107,8 @@ class DatabaseSeeder extends Seeder
         $this->seedShippingAndTax($store);
         $this->seedDiscounts($store);
         $this->seedOrders($store, $customer);
+
+        app(SearchService::class)->reindexStore($store);
     }
 
     private function seedCatalog(Store $store): void
