@@ -127,4 +127,14 @@ class Store extends Model
     {
         return $this->hasMany(AnalyticsDaily::class);
     }
+
+    public function appInstallations(): HasMany
+    {
+        return $this->hasMany(AppInstallation::class);
+    }
+
+    public function webhookSubscriptions(): HasMany
+    {
+        return $this->hasMany(WebhookSubscription::class);
+    }
 }

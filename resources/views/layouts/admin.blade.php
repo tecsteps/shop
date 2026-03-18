@@ -68,6 +68,12 @@
                 <flux:sidebar.item icon="chart-pie" :href="route('admin.analytics.index')" :current="request()->routeIs('admin.analytics.*')" wire:navigate>
                     {{ __('Analytics') }}
                 </flux:sidebar.item>
+                <flux:sidebar.item icon="squares-2x2" :href="route('admin.apps.index')" :current="request()->routeIs('admin.apps.*')" wire:navigate>
+                    {{ __('Apps') }}
+                </flux:sidebar.item>
+                <flux:sidebar.item icon="code-bracket" :href="route('admin.developers.index')" :current="request()->routeIs('admin.developers.*')" wire:navigate>
+                    {{ __('Developers') }}
+                </flux:sidebar.item>
                 <flux:sidebar.item icon="cog-6-tooth" :href="route('admin.settings.index')" :current="request()->routeIs('admin.settings.*')" wire:navigate>
                     {{ __('Settings') }}
                 </flux:sidebar.item>

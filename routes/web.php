@@ -1,12 +1,14 @@
 <?php
 
 use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
+use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionsForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
 use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
 use App\Livewire\Admin\Customers\Show as AdminCustomersShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Developers\Index as AdminDevelopersIndex;
 use App\Livewire\Admin\Discounts\Form as AdminDiscountsForm;
 use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
 use App\Livewire\Admin\Navigation\Index as AdminNavigationIndex;
@@ -91,6 +93,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
 
         Route::get('/analytics', AdminAnalyticsIndex::class)->name('admin.analytics.index');
+
+        Route::get('/apps', AdminAppsIndex::class)->name('admin.apps.index');
+        Route::get('/developers', AdminDevelopersIndex::class)->name('admin.developers.index');
     });
 });
 
