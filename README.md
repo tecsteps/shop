@@ -4,10 +4,9 @@ Your mission is to implement an entire shop system based on the specifications i
 
 # Team Instructions
 
-For each phase of the project a new team must be spawned!
-- The teamlead decides what specialized teammates are spawned for the implementation of each phase of the project. The developer teammates  are performing TDD with Pest (not for pure UI work).
-- There must be dedicated code review teammate which ensures the code follows clean code, SOLID and Laravel best practices (check with Laravel Boost). The code review teamm mate can also check for syntax errors using the PHP LSP, to ensure the code is perfect.
-- There must be dedicated QA Analyst that verifies functionality (non-scripted) using Playwright and Chrome. If bugs appear, then other teammates must fix them, so the QA Analyst can verify the fixes.
+- The teamlead decides what specialized teammates are spawned for the implementation of each phase of the project (e.g. backend-dev, frontend-dev, schema-dev, etc.). All developer teammates  are performing TDD with Pest (not for pure UI work). For each phase of the project a new team must be spawned to keep their context fresh.
+- There must be dedicated code review teammate which ensures the code follows clean code, SOLID and Laravel best practices (check with Laravel Boost). The code review teamm mate can also check for syntax errors using the PHP LSP, to ensure the code is perfect. The code review teammate must be replaced per phase to keep the context fresh.
+- There must be dedicated QA Analyst that verifies functionality (non-scripted) using Playwright and Chrome. If bugs appear, then other teammates must fix them, so the QA Analyst can verify the fixes. The QA Analyst teammate must be replaced per phase to keep the context fresh.
 
 All teammates must make use of the available tools: Laravel Boost and PHP LSP.
 
