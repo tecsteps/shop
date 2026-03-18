@@ -118,6 +118,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'json' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/json.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+            'formatter' => Monolog\Formatter\JsonFormatter::class,
+        ],
+
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,

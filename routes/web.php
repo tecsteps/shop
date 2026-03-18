@@ -2,6 +2,7 @@
 
 use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
 use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
+use App\Livewire\Admin\Apps\Show as AdminAppsShow;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionsForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
@@ -18,6 +19,7 @@ use App\Livewire\Admin\Pages\Form as AdminPagesForm;
 use App\Livewire\Admin\Pages\Index as AdminPagesIndex;
 use App\Livewire\Admin\Products\Form as AdminProductsForm;
 use App\Livewire\Admin\Products\Index as AdminProductsIndex;
+use App\Livewire\Admin\Search\Settings as AdminSearchSettings;
 use App\Livewire\Admin\Settings\Index as AdminSettingsIndex;
 use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
@@ -95,7 +97,10 @@ Route::prefix('admin')->group(function () {
         Route::get('/analytics', AdminAnalyticsIndex::class)->name('admin.analytics.index');
 
         Route::get('/apps', AdminAppsIndex::class)->name('admin.apps.index');
+        Route::get('/apps/{installation}', AdminAppsShow::class)->name('admin.apps.show');
         Route::get('/developers', AdminDevelopersIndex::class)->name('admin.developers.index');
+
+        Route::get('/search/settings', AdminSearchSettings::class)->name('admin.search.settings');
     });
 });
 

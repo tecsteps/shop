@@ -23,6 +23,7 @@ use App\Enums\ThemeStatus;
 use App\Enums\VariantStatus;
 use App\Models\Collection;
 use App\Models\Customer;
+use App\Models\CustomerAddress;
 use App\Models\Discount;
 use App\Models\Fulfillment;
 use App\Models\FulfillmentLine;
@@ -39,6 +40,7 @@ use App\Models\ProductMedia;
 use App\Models\ProductOption;
 use App\Models\ProductOptionValue;
 use App\Models\ProductVariant;
+use App\Models\SearchSettings;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Models\Store;
@@ -102,11 +104,45 @@ class DatabaseSeeder extends Seeder
 
         $customer = Customer::withoutGlobalScopes()->where('store_id', $store->id)->first();
 
+        CustomerAddress::create([
+            'customer_id' => $customer->id,
+            'label' => 'Home',
+            'address_json' => [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'address1' => '123 Main St',
+                'city' => 'Berlin',
+                'country' => 'DE',
+                'postal_code' => '10115',
+            ],
+            'is_default' => true,
+        ]);
+
+        CustomerAddress::create([
+            'customer_id' => $customer->id,
+            'label' => 'Office',
+            'address_json' => [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'address1' => '456 Business Ave',
+                'city' => 'Munich',
+                'country' => 'DE',
+                'postal_code' => '80331',
+            ],
+            'is_default' => false,
+        ]);
+
         $this->seedCatalog($store);
         $this->seedThemeAndNavigation($store);
         $this->seedShippingAndTax($store);
         $this->seedDiscounts($store);
         $this->seedOrders($store, $customer);
+
+        SearchSettings::create([
+            'store_id' => $store->id,
+            'synonyms_json' => [],
+            'stop_words_json' => [],
+        ]);
 
         app(SearchService::class)->reindexStore($store);
     }
