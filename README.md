@@ -17,7 +17,7 @@ There must be a dedicated controller teammate that stays for the whole project. 
 
 When all phases are developed, the teamlead spawns a dedicated fresh teammate to make a final verification using Playwright/Chrome based on specs/08-PLAYWRIGHT-E2E-PLAN.md. All test cases have to be verified. They must be correct and complete. All verification checks must be tracked in specs/final-e2e-qa.md
 
-If bugs or gaps are detected, other teammates fix them. The controller must confirm everything is working.
+If bugs or gaps are detected, other teammates fix them. The controller must confirm everything is working and the final E2E test was performed and all test cases were successfully verified.
 
 # Team Lead
 
