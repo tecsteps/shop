@@ -1,6 +1,26 @@
 <?php
 
+use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Admin\Collections\Form as AdminCollectionsForm;
+use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
+use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
+use App\Livewire\Admin\Customers\Show as AdminCustomersShow;
+use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Discounts\Form as AdminDiscountsForm;
+use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
+use App\Livewire\Admin\Navigation\Index as AdminNavigationIndex;
+use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
+use App\Livewire\Admin\Orders\Show as AdminOrdersShow;
+use App\Livewire\Admin\Pages\Form as AdminPagesForm;
+use App\Livewire\Admin\Pages\Index as AdminPagesIndex;
+use App\Livewire\Admin\Products\Form as AdminProductsForm;
+use App\Livewire\Admin\Products\Index as AdminProductsIndex;
+use App\Livewire\Admin\Settings\Index as AdminSettingsIndex;
+use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
+use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
+use App\Livewire\Admin\Themes\Editor as AdminThemesEditor;
+use App\Livewire\Admin\Themes\Index as AdminThemesIndex;
 use App\Livewire\Storefront\Account\Addresses\Index as AddressesIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
@@ -37,9 +57,40 @@ Route::prefix('admin')->group(function () {
     })->name('admin.logout');
 
     Route::middleware(['auth', 'admin'])->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('admin.dashboard');
+        Route::get('/', AdminDashboard::class)->name('admin.dashboard');
+
+        Route::get('/products', AdminProductsIndex::class)->name('admin.products.index');
+        Route::get('/products/create', AdminProductsForm::class)->name('admin.products.create');
+        Route::get('/products/{product}/edit', AdminProductsForm::class)->name('admin.products.edit');
+
+        Route::get('/orders', AdminOrdersIndex::class)->name('admin.orders.index');
+        Route::get('/orders/{order}', AdminOrdersShow::class)->name('admin.orders.show');
+
+        Route::get('/collections', AdminCollectionsIndex::class)->name('admin.collections.index');
+        Route::get('/collections/create', AdminCollectionsForm::class)->name('admin.collections.create');
+        Route::get('/collections/{collection}/edit', AdminCollectionsForm::class)->name('admin.collections.edit');
+
+        Route::get('/customers', AdminCustomersIndex::class)->name('admin.customers.index');
+        Route::get('/customers/{customer}', AdminCustomersShow::class)->name('admin.customers.show');
+
+        Route::get('/discounts', AdminDiscountsIndex::class)->name('admin.discounts.index');
+        Route::get('/discounts/create', AdminDiscountsForm::class)->name('admin.discounts.create');
+        Route::get('/discounts/{discount}/edit', AdminDiscountsForm::class)->name('admin.discounts.edit');
+
+        Route::get('/settings', AdminSettingsIndex::class)->name('admin.settings.index');
+        Route::get('/settings/shipping', AdminSettingsShipping::class)->name('admin.settings.shipping');
+        Route::get('/settings/taxes', AdminSettingsTaxes::class)->name('admin.settings.taxes');
+
+        Route::get('/pages', AdminPagesIndex::class)->name('admin.pages.index');
+        Route::get('/pages/create', AdminPagesForm::class)->name('admin.pages.create');
+        Route::get('/pages/{page}/edit', AdminPagesForm::class)->name('admin.pages.edit');
+
+        Route::get('/themes', AdminThemesIndex::class)->name('admin.themes.index');
+        Route::get('/themes/{theme}/editor', AdminThemesEditor::class)->name('admin.themes.editor');
+
+        Route::get('/navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
+
+        Route::get('/analytics', AdminAnalyticsIndex::class)->name('admin.analytics.index');
     });
 });
 
