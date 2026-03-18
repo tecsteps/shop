@@ -1,8 +1,12 @@
 <?php
 
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Storefront\Account\Addresses\Index as AddressesIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Account\Dashboard as AccountDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as OrdersIndex;
+use App\Livewire\Storefront\Account\Orders\Show as OrdersShow;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
@@ -72,9 +76,10 @@ Route::middleware(['storefront'])->group(function () {
     })->name('storefront.logout');
 
     Route::middleware(['auth:customer'])->group(function () {
-        Route::get('account', function () {
-            return view('storefront.account');
-        })->name('storefront.account');
+        Route::get('account', AccountDashboard::class)->name('storefront.account');
+        Route::get('account/orders', OrdersIndex::class)->name('storefront.account.orders');
+        Route::get('account/orders/{orderNumber}', OrdersShow::class)->name('storefront.account.orders.show');
+        Route::get('account/addresses', AddressesIndex::class)->name('storefront.account.addresses');
     });
 });
 
