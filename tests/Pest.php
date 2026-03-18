@@ -1,47 +1,49 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
-|
-*/
+use App\Enums\StoreUserRole;
+use App\Models\Customer;
+use App\Models\Organization;
+use App\Models\Store;
+use App\Models\StoreDomain;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function something()
+/**
+ * @return array{organization: Organization, store: Store, domain: StoreDomain, user: User}
+ */
+function createStoreContext(string $hostname = 'test-store.test', StoreUserRole $role = StoreUserRole::Owner): array
 {
-    // ..
+    $organization = Organization::factory()->create();
+    $store = Store::factory()->create(['organization_id' => $organization->id]);
+    $domain = StoreDomain::factory()->create([
+        'store_id' => $store->id,
+        'hostname' => $hostname,
+    ]);
+    $user = User::factory()->create();
+    $user->stores()->attach($store->id, ['role' => $role->value]);
+
+    app()->instance('current_store', $store);
+
+    return compact('organization', 'store', 'domain', 'user');
+}
+
+function actingAsAdmin(User $user, Store $store): \Illuminate\Testing\TestResponse
+{
+    test()->actingAs($user);
+    session(['current_store_id' => $store->id]);
+
+    return test();
+}
+
+function actingAsCustomer(Customer $customer): void
+{
+    test()->actingAs($customer, 'customer');
 }

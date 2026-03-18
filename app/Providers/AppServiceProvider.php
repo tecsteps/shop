@@ -2,33 +2,34 @@
 
 namespace App\Providers;
 
+use App\Auth\CustomerUserProvider;
+use App\Http\Middleware\ResolveStore;
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureAuth();
+        $this->configureRateLimiting();
+        $this->configureLivewire();
     }
 
-    /**
-     * Configure default behaviors for production-ready applications.
-     */
     protected function configureDefaults(): void
     {
         Date::use(CarbonImmutable::class);
@@ -46,5 +47,26 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null
         );
+    }
+
+    protected function configureAuth(): void
+    {
+        Auth::provider('customer', function ($app, array $config) {
+            return new CustomerUserProvider($app['hash'], $config['model']);
+        });
+    }
+
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+    }
+
+    protected function configureLivewire(): void
+    {
+        Livewire::addPersistentMiddleware([
+            ResolveStore::class,
+        ]);
     }
 }
