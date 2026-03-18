@@ -6,6 +6,7 @@ use App\Enums\CollectionStatus;
 use App\Enums\ProductStatus;
 use App\Models\Collection;
 use App\Models\Product;
+use App\Services\AnalyticsService;
 use App\Services\ThemeSettingsService;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -40,6 +41,12 @@ class Home extends Component
             ->latest('published_at')
             ->limit($count)
             ->get();
+    }
+
+    public function mount(): void
+    {
+        $store = app('current_store');
+        app(AnalyticsService::class)->track($store, 'page_view', ['url' => '/'], session()->getId());
     }
 
     public function render(): View

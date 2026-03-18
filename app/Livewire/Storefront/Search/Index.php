@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Search;
 
+use App\Services\AnalyticsService;
 use App\Services\SearchService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
@@ -88,6 +89,13 @@ class Index extends Component
     public function updatedQuery(): void
     {
         $this->resetPage();
+
+        if (trim($this->query) !== '') {
+            $store = app('current_store');
+            app(AnalyticsService::class)->track($store, 'search', [
+                'query' => $this->query,
+            ], session()->getId());
+        }
     }
 
     public function updatedSort(): void

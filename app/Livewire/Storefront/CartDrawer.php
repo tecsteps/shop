@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront;
 
 use App\Models\Cart;
+use App\Services\AnalyticsService;
 use App\Services\CartService;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -50,7 +51,17 @@ class CartDrawer extends Component
             return;
         }
 
+        $line = $cart->lines->firstWhere('id', $lineId);
+
         app(CartService::class)->removeLine($cart, $lineId);
+
+        if ($line) {
+            $store = app('current_store');
+            app(AnalyticsService::class)->track($store, 'remove_from_cart', [
+                'variant_id' => $line->variant_id,
+            ], session()->getId());
+        }
+
         $this->dispatch('cart-count-updated');
     }
 

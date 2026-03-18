@@ -6,6 +6,7 @@ use App\Enums\InventoryPolicy;
 use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\AnalyticsService;
 use App\Services\CartService;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -38,6 +39,12 @@ class Show extends Component
                 $this->selectedOptions[$optionValue->option->name] = $optionValue->value;
             }
         }
+
+        $store = app('current_store');
+        app(AnalyticsService::class)->track($store, 'product_view', [
+            'product_id' => $this->product->id,
+            'handle' => $this->product->handle,
+        ], session()->getId());
     }
 
     #[Computed]
@@ -94,6 +101,12 @@ class Show extends Component
         $cartService = app(CartService::class);
         $cart = $cartService->getOrCreateForSession($store);
         $cartService->addLine($cart, $variant->id, $this->quantity);
+
+        app(AnalyticsService::class)->track($store, 'add_to_cart', [
+            'product_id' => $this->product->id,
+            'variant_id' => $variant->id,
+            'quantity' => $this->quantity,
+        ], session()->getId());
 
         $this->dispatch('cart-updated');
         $this->dispatch('cart-count-updated');

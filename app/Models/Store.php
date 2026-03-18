@@ -117,4 +117,14 @@ class Store extends Model
     {
         return $this->hasOne(SearchSettings::class);
     }
+
+    public function analyticsEvents(): HasMany
+    {
+        return $this->hasMany(AnalyticsEvent::class);
+    }
+
+    public function analyticsDaily(): HasMany
+    {
+        return $this->hasMany(AnalyticsDaily::class);
+    }
 }

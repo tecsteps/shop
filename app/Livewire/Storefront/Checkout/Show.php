@@ -6,6 +6,7 @@ use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Services\AnalyticsService;
 use App\Services\CheckoutService;
 use App\Services\DiscountService;
 use App\Services\ShippingCalculator;
@@ -71,6 +72,11 @@ class Show extends Component
         $checkoutService = app(CheckoutService::class);
         $checkout = $checkoutService->createFromCart($cart);
         $this->checkoutId = $checkout->id;
+
+        $store = app('current_store');
+        app(AnalyticsService::class)->track($store, 'checkout_started', [
+            'checkout_id' => $checkout->id,
+        ], session()->getId());
     }
 
     public function submitAddress(): void
@@ -193,6 +199,13 @@ class Show extends Component
 
         try {
             $order = $checkoutService->completeCheckout($checkout->fresh(), $paymentData);
+
+            $store = app('current_store');
+            app(AnalyticsService::class)->track($store, 'checkout_completed', [
+                'order_id' => $order->id,
+                'total_amount' => $order->total_amount,
+            ], session()->getId());
+
             session()->forget('cart_id');
             session()->put('last_order_id', $order->id);
             $this->redirect(route('storefront.checkout.confirmation'));
