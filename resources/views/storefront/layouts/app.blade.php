@@ -97,12 +97,23 @@
                     </button>
 
                     {{-- Cart --}}
+                    @php
+                        $cartId = session('cart_id');
+                        $cartItemCount = $cartId
+                            ? \App\Models\CartLine::where('cart_id', $cartId)->sum('quantity')
+                            : 0;
+                    @endphp
                     <a href="{{ route('storefront.cart') }}"
                        class="relative rounded-md p-2 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
-                       aria-label="Cart">
+                       aria-label="Cart"
+                       x-data="{ count: {{ $cartItemCount }} }"
+                       @cart-count-updated.window="fetch('/cart-count').then(r => r.json()).then(d => count = d.count).catch(() => {})">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                         </svg>
+                        <span x-show="count > 0"
+                              x-text="count"
+                              class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-xs font-medium text-white dark:bg-white dark:text-zinc-900"></span>
                     </a>
 
                     {{-- Account --}}

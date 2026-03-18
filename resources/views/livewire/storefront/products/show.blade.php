@@ -130,7 +130,7 @@
                 {{-- Add to cart --}}
                 <div class="mt-6">
                     @if($stockInfo['canAddToCart'])
-                        <button class="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <button wire:click="addToCart" class="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Add to cart
                         </button>
                     @else

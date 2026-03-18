@@ -6,6 +6,7 @@ use App\Enums\InventoryPolicy;
 use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -80,6 +81,22 @@ class Show extends Component
         }
 
         return ['status' => 'sold_out', 'message' => 'Out of stock', 'canAddToCart' => false];
+    }
+
+    public function addToCart(): void
+    {
+        $variant = $this->selectedVariant;
+        if (! $variant) {
+            return;
+        }
+
+        $store = app('current_store');
+        $cartService = app(CartService::class);
+        $cart = $cartService->getOrCreateForSession($store);
+        $cartService->addLine($cart, $variant->id, $this->quantity);
+
+        $this->dispatch('cart-updated');
+        $this->dispatch('cart-count-updated');
     }
 
     public function updatedSelectedOptions(): void

@@ -1,6 +1,6 @@
 # Shop Implementation Progress
 
-## Status: Phase 4 - Starting
+## Status: Phase 5 - Starting
 
 ## Phase Overview
 
@@ -9,8 +9,8 @@
 | 1 | Foundation (Migrations, Models, Middleware, Auth) | Complete | 2026-03-18 | 2026-03-18 |
 | 2 | Catalog (Products, Variants, Inventory, Collections, Media) | Complete | 2026-03-18 | 2026-03-18 |
 | 3 | Themes, Pages, Navigation, Storefront Layout | Complete | 2026-03-18 | 2026-03-18 |
-| 4 | Cart, Checkout, Discounts, Shipping, Taxes | In Progress | 2026-03-18 | - |
-| 5 | Payments, Orders, Fulfillment | Pending | - | - |
+| 4 | Cart, Checkout, Discounts, Shipping, Taxes | Complete | 2026-03-18 | 2026-03-18 |
+| 5 | Payments, Orders, Fulfillment | In Progress | 2026-03-18 | - |
 | 6 | Customer Accounts | Pending | - | - |
 | 7 | Admin Panel | Pending | - | - |
 | 8 | Search | Pending | - | - |
@@ -78,15 +78,29 @@
 ## Phase 4 Details
 
 ### Steps
-- [ ] 4.1: Cart/Checkout/Discount/Shipping/Tax Migrations
-- [ ] 4.2: Models (Cart, CartLine, Checkout, ShippingZone, ShippingRate, TaxSettings, Discount)
-- [ ] 4.3: CartService
-- [ ] 4.4: DiscountService
-- [ ] 4.5: ShippingCalculator
-- [ ] 4.6: TaxCalculator
-- [ ] 4.7: PricingEngine
-- [ ] 4.8: CheckoutService (state machine)
-- [ ] 4.9: Cart/Checkout UI (CartDrawer, Cart page, Checkout flow)
+- [x] 4.1-4.2: Migrations (7) + Models (7) + Enums (7)
+- [x] 4.3: CartService (session binding, version, merge on login)
+- [x] 4.4: DiscountService (validate, calculate, proportional allocation)
+- [x] 4.5: ShippingCalculator (zone matching, flat/weight/price rates)
+- [x] 4.6: TaxCalculator (integer math, basis points, inclusive/exclusive)
+- [x] 4.7: PricingEngine (7-step pipeline)
+- [x] 4.8: CheckoutService (state machine with idempotent complete)
+- [x] 4.9: Cart/Checkout UI (drawer, cart page, 3-step checkout, discount input)
+- [x] Pest tests (94 new, 245 total, 0 failures)
+- [x] Code review passed
+- [x] QA passed (all discount codes, checkout flow, cart UX verified)
+- [x] Controller approved
+
+## Phase 5 Details
+
+### Steps
+- [ ] 5.1: Customer/Order/Payment/Refund/Fulfillment Migrations
+- [ ] 5.2: Models (Customer addresses, Order, OrderLine, Payment, Refund, Fulfillment, FulfillmentLine)
+- [ ] 5.3: MockPaymentProvider (magic card numbers)
+- [ ] 5.4: OrderService (create from checkout, order numbers)
+- [ ] 5.5: RefundService
+- [ ] 5.6: FulfillmentService (with fulfillment guard)
+- [ ] 5.7: Events (OrderCreated, OrderPaid, etc.)
 - [ ] Pest tests written and passing
 - [ ] Code review passed
 - [ ] QA verification passed

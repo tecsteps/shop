@@ -1,11 +1,20 @@
 <?php
 
+use App\Enums\CartStatus;
+use App\Enums\ProductStatus;
+use App\Enums\VariantStatus;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Models\Cart;
+use App\Models\CartLine;
 use App\Models\Customer;
+use App\Models\InventoryItem;
 use App\Models\Organization;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\StoreDomain;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
@@ -175,6 +184,88 @@ it('allows same email in different stores', function () {
 
     expect($customer)->not->toBeNull();
     $this->assertAuthenticatedAs($customer, 'customer');
+});
+
+it('merges guest cart into customer cart on login', function () {
+    $ctx = createStoreContext('customer-store.test');
+    $store = $ctx['store'];
+
+    $customer = Customer::withoutGlobalScopes()->create([
+        'store_id' => $store->id,
+        'email' => 'merge@example.com',
+        'password_hash' => Hash::make('password'),
+        'name' => 'Merge Customer',
+    ]);
+
+    $product = Product::withoutGlobalScopes()->create([
+        'store_id' => $store->id,
+        'title' => 'Merge Product',
+        'handle' => 'merge-product-'.rand(1000, 9999),
+        'status' => ProductStatus::Active,
+        'published_at' => now(),
+    ]);
+
+    $variant = ProductVariant::create([
+        'product_id' => $product->id,
+        'price_amount' => 2500,
+        'currency' => 'EUR',
+        'is_default' => true,
+        'position' => 0,
+        'status' => VariantStatus::Active,
+    ]);
+
+    InventoryItem::withoutGlobalScopes()->create([
+        'store_id' => $store->id,
+        'variant_id' => $variant->id,
+        'quantity_on_hand' => 50,
+        'quantity_reserved' => 0,
+        'policy' => 'deny',
+    ]);
+
+    // Customer has an existing cart with qty 1
+    $customerCart = Cart::withoutGlobalScopes()->create([
+        'store_id' => $store->id,
+        'customer_id' => $customer->id,
+        'currency' => 'EUR',
+        'cart_version' => 1,
+        'status' => CartStatus::Active,
+    ]);
+
+    CartLine::create([
+        'cart_id' => $customerCart->id,
+        'variant_id' => $variant->id,
+        'quantity' => 1,
+        'unit_price_amount' => 2500,
+        'line_subtotal_amount' => 2500,
+        'line_discount_amount' => 0,
+        'line_total_amount' => 2500,
+    ]);
+
+    // Guest cart with qty 3 for the same variant
+    $guestCart = Cart::withoutGlobalScopes()->create([
+        'store_id' => $store->id,
+        'currency' => 'EUR',
+        'cart_version' => 1,
+        'status' => CartStatus::Active,
+    ]);
+
+    CartLine::create([
+        'cart_id' => $guestCart->id,
+        'variant_id' => $variant->id,
+        'quantity' => 3,
+        'unit_price_amount' => 2500,
+        'line_subtotal_amount' => 7500,
+        'line_discount_amount' => 0,
+        'line_total_amount' => 7500,
+    ]);
+
+    $cartService = app(CartService::class);
+    $merged = $cartService->mergeOnLogin($guestCart, $customerCart);
+
+    // Max strategy: max(1, 3) = 3
+    expect($merged->lines)->toHaveCount(1)
+        ->and($merged->lines->first()->quantity)->toBe(3)
+        ->and($guestCart->fresh()->status)->toBe(CartStatus::Abandoned);
 });
 
 it('logs out customer and redirects to login', function () {

@@ -75,7 +75,7 @@ it('returns 404 for draft product', function () {
 it('returns 200 for cart page', function () {
     $this->get('http://test-store.test/cart')
         ->assertStatus(200)
-        ->assertSee('Your Cart');
+        ->assertSee('Shopping Cart');
 });
 
 it('returns 200 for search page', function () {

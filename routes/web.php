@@ -4,6 +4,8 @@ use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
 use App\Livewire\Storefront\Cart\Show as CartShow;
+use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
+use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Livewire\Storefront\Collections\Index as CollectionsIndex;
 use App\Livewire\Storefront\Collections\Show as CollectionsShow;
 use App\Livewire\Storefront\Home;
@@ -44,7 +46,18 @@ Route::middleware(['storefront'])->group(function () {
     Route::get('/collections/{handle}', CollectionsShow::class)->name('storefront.collections.show');
     Route::get('/products/{handle}', ProductsShow::class)->name('storefront.products.show');
     Route::get('/cart', CartShow::class)->name('storefront.cart');
+    Route::get('/checkout', CheckoutShow::class)->name('storefront.checkout');
+    Route::get('/checkout/confirmation', CheckoutConfirmation::class)->name('storefront.checkout.confirmation');
     Route::get('/search', SearchIndex::class)->name('storefront.search');
+
+    Route::get('/cart-count', function () {
+        $cartId = session('cart_id');
+        $count = $cartId
+            ? \App\Models\CartLine::where('cart_id', $cartId)->sum('quantity')
+            : 0;
+
+        return response()->json(['count' => $count]);
+    })->name('storefront.cart.count');
     Route::get('/pages/{handle}', PagesShow::class)->name('storefront.pages.show');
 
     Route::get('account/login', CustomerLogin::class)->name('storefront.login');

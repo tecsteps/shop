@@ -3,15 +3,21 @@
 namespace Database\Seeders;
 
 use App\Enums\CollectionStatus;
+use App\Enums\DiscountStatus;
+use App\Enums\DiscountType;
+use App\Enums\DiscountValueType;
 use App\Enums\InventoryPolicy;
 use App\Enums\MediaStatus;
 use App\Enums\NavigationItemType;
 use App\Enums\PageStatus;
 use App\Enums\ProductStatus;
+use App\Enums\ShippingRateType;
+use App\Enums\TaxMode;
 use App\Enums\ThemeStatus;
 use App\Enums\VariantStatus;
 use App\Models\Collection;
 use App\Models\Customer;
+use App\Models\Discount;
 use App\Models\InventoryItem;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
@@ -22,9 +28,12 @@ use App\Models\ProductMedia;
 use App\Models\ProductOption;
 use App\Models\ProductOptionValue;
 use App\Models\ProductVariant;
+use App\Models\ShippingRate;
+use App\Models\ShippingZone;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\StoreSettings;
+use App\Models\TaxSettings;
 use App\Models\Theme;
 use App\Models\ThemeSettings;
 use App\Models\User;
@@ -81,6 +90,8 @@ class DatabaseSeeder extends Seeder
 
         $this->seedCatalog($store);
         $this->seedThemeAndNavigation($store);
+        $this->seedShippingAndTax($store);
+        $this->seedDiscounts($store);
     }
 
     private function seedCatalog(Store $store): void
@@ -273,6 +284,128 @@ class DatabaseSeeder extends Seeder
             'byte_size' => 150000,
             'position' => 0,
             'status' => MediaStatus::Ready,
+        ]);
+    }
+
+    private function seedShippingAndTax(Store $store): void
+    {
+        // Domestic shipping zone (DE)
+        $domesticZone = ShippingZone::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'name' => 'Domestic',
+            'countries_json' => ['DE'],
+            'regions_json' => [],
+        ]);
+
+        ShippingRate::create([
+            'zone_id' => $domesticZone->id,
+            'name' => 'Standard Shipping',
+            'type' => ShippingRateType::Flat,
+            'config_json' => ['amount' => 499],
+            'is_active' => true,
+        ]);
+
+        // International shipping zone
+        $internationalZone = ShippingZone::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'name' => 'International',
+            'countries_json' => ['US', 'GB', 'FR', 'AT', 'CH'],
+            'regions_json' => [],
+        ]);
+
+        ShippingRate::create([
+            'zone_id' => $internationalZone->id,
+            'name' => 'International Shipping',
+            'type' => ShippingRateType::Flat,
+            'config_json' => ['amount' => 1499],
+            'is_active' => true,
+        ]);
+
+        // Tax settings: manual mode, 19% rate
+        TaxSettings::create([
+            'store_id' => $store->id,
+            'mode' => TaxMode::Manual,
+            'provider' => 'none',
+            'prices_include_tax' => false,
+            'config_json' => ['tax_rate_basis_points' => 1900],
+        ]);
+    }
+
+    private function seedDiscounts(Store $store): void
+    {
+        // WELCOME10 - 10% off, min 20 EUR (2000 cents)
+        Discount::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'type' => DiscountType::Code,
+            'code' => 'WELCOME10',
+            'value_type' => DiscountValueType::Percent,
+            'value_amount' => 10,
+            'starts_at' => now()->subMonth(),
+            'ends_at' => now()->addYear(),
+            'usage_limit' => null,
+            'usage_count' => 0,
+            'rules_json' => ['min_purchase_amount' => 2000],
+            'status' => DiscountStatus::Active,
+        ]);
+
+        // FLAT5 - 5 EUR fixed discount
+        Discount::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'type' => DiscountType::Code,
+            'code' => 'FLAT5',
+            'value_type' => DiscountValueType::Fixed,
+            'value_amount' => 500,
+            'starts_at' => now()->subMonth(),
+            'ends_at' => now()->addYear(),
+            'usage_limit' => null,
+            'usage_count' => 0,
+            'rules_json' => [],
+            'status' => DiscountStatus::Active,
+        ]);
+
+        // FREESHIP - free shipping
+        Discount::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'type' => DiscountType::Code,
+            'code' => 'FREESHIP',
+            'value_type' => DiscountValueType::FreeShipping,
+            'value_amount' => 0,
+            'starts_at' => now()->subMonth(),
+            'ends_at' => now()->addYear(),
+            'usage_limit' => null,
+            'usage_count' => 0,
+            'rules_json' => [],
+            'status' => DiscountStatus::Active,
+        ]);
+
+        // EXPIRED20 - expired discount
+        Discount::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'type' => DiscountType::Code,
+            'code' => 'EXPIRED20',
+            'value_type' => DiscountValueType::Percent,
+            'value_amount' => 20,
+            'starts_at' => now()->subMonths(2),
+            'ends_at' => now()->subDay(),
+            'usage_limit' => null,
+            'usage_count' => 0,
+            'rules_json' => [],
+            'status' => DiscountStatus::Active,
+        ]);
+
+        // MAXED - usage limit reached
+        Discount::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'type' => DiscountType::Code,
+            'code' => 'MAXED',
+            'value_type' => DiscountValueType::Percent,
+            'value_amount' => 10,
+            'starts_at' => now()->subMonth(),
+            'ends_at' => now()->addYear(),
+            'usage_limit' => 5,
+            'usage_count' => 5,
+            'rules_json' => [],
+            'status' => DiscountStatus::Active,
         ]);
     }
 
