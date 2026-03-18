@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
 use App\Http\Middleware\ResolveStore;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $this->app->singleton(ThemeSettingsService::class);
     }
 
     public function boot(): void

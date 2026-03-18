@@ -5,12 +5,18 @@ namespace Database\Seeders;
 use App\Enums\CollectionStatus;
 use App\Enums\InventoryPolicy;
 use App\Enums\MediaStatus;
+use App\Enums\NavigationItemType;
+use App\Enums\PageStatus;
 use App\Enums\ProductStatus;
+use App\Enums\ThemeStatus;
 use App\Enums\VariantStatus;
 use App\Models\Collection;
 use App\Models\Customer;
 use App\Models\InventoryItem;
+use App\Models\NavigationItem;
+use App\Models\NavigationMenu;
 use App\Models\Organization;
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductMedia;
 use App\Models\ProductOption;
@@ -19,6 +25,8 @@ use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\StoreSettings;
+use App\Models\Theme;
+use App\Models\ThemeSettings;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -72,6 +80,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->seedCatalog($store);
+        $this->seedThemeAndNavigation($store);
     }
 
     private function seedCatalog(Store $store): void
@@ -264,6 +273,105 @@ class DatabaseSeeder extends Seeder
             'byte_size' => 150000,
             'position' => 0,
             'status' => MediaStatus::Ready,
+        ]);
+    }
+
+    private function seedThemeAndNavigation(Store $store): void
+    {
+        // Default theme
+        $theme = Theme::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'name' => 'Default Theme',
+            'version' => '1.0.0',
+            'status' => ThemeStatus::Published,
+            'published_at' => now(),
+        ]);
+
+        ThemeSettings::create([
+            'theme_id' => $theme->id,
+            'settings_json' => [
+                'announcement_bar_enabled' => true,
+                'announcement_bar_text' => 'Free shipping on orders over 50 EUR',
+                'announcement_bar_link' => '/collections',
+                'announcement_bar_bg_color' => '#1f2937',
+                'sticky_header' => true,
+                'hero_heading' => 'Welcome to Acme Fashion',
+                'hero_subheading' => 'Discover our latest collection of premium clothing',
+                'hero_cta_text' => 'Shop New Arrivals',
+                'hero_cta_link' => '/collections/new-arrivals',
+                'featured_collections_count' => 4,
+                'featured_products_count' => 8,
+            ],
+        ]);
+
+        // About page
+        Page::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'title' => 'About',
+            'handle' => 'about',
+            'body_html' => '<h2>About Acme Fashion</h2><p>Acme Fashion is a modern fashion brand committed to quality, sustainability, and style. Founded in 2020, we design clothing that looks good and feels great.</p><p>Our mission is to make premium fashion accessible to everyone.</p>',
+            'status' => PageStatus::Published,
+            'published_at' => now(),
+        ]);
+
+        // Main menu
+        $mainMenu = NavigationMenu::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'handle' => 'main-menu',
+            'title' => 'Main Menu',
+        ]);
+
+        // Get collections for navigation
+        $collections = Collection::withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->get();
+
+        $position = 0;
+        foreach ($collections as $collection) {
+            NavigationItem::create([
+                'menu_id' => $mainMenu->id,
+                'type' => NavigationItemType::Collection,
+                'label' => $collection->title,
+                'resource_id' => $collection->id,
+                'position' => $position++,
+            ]);
+        }
+
+        // About page link
+        $aboutPage = Page::withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->where('handle', 'about')
+            ->first();
+
+        NavigationItem::create([
+            'menu_id' => $mainMenu->id,
+            'type' => NavigationItemType::Page,
+            'label' => 'About',
+            'resource_id' => $aboutPage->id,
+            'position' => $position,
+        ]);
+
+        // Footer menu
+        $footerMenu = NavigationMenu::withoutGlobalScopes()->create([
+            'store_id' => $store->id,
+            'handle' => 'footer-menu',
+            'title' => 'Footer Menu',
+        ]);
+
+        NavigationItem::create([
+            'menu_id' => $footerMenu->id,
+            'type' => NavigationItemType::Page,
+            'label' => 'About',
+            'resource_id' => $aboutPage->id,
+            'position' => 0,
+        ]);
+
+        NavigationItem::create([
+            'menu_id' => $footerMenu->id,
+            'type' => NavigationItemType::Link,
+            'label' => 'Contact',
+            'url' => '/pages/contact',
+            'position' => 1,
         ]);
     }
 }

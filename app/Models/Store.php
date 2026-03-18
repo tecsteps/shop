@@ -67,4 +67,19 @@ class Store extends Model
     {
         return $this->hasMany(Collection::class);
     }
+
+    public function themes(): HasMany
+    {
+        return $this->hasMany(Theme::class);
+    }
+
+    public function pages(): HasMany
+    {
+        return $this->hasMany(Page::class);
+    }
+
+    public function navigationMenus(): HasMany
+    {
+        return $this->hasMany(NavigationMenu::class);
+    }
 }
