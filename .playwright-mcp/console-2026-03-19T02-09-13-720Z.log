@@ -1,0 +1,4 @@
+[     272ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/cotton-polo-shirt.jpg:0
+[     302ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/classic-cotton-t-shirt.jpg:0
+[     309ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/organic-cotton-hoodie.jpg:0
+[     357ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/relaxed-fit-t-shirt.jpg:0

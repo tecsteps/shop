@@ -1,0 +1,9 @@
+[     129ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/handmade-tote-bag.jpg:0
+[     134ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/cotton-polo-shirt.jpg:0
+[     145ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/high-waist-wide-leg-jeans.jpg:0
+[     148ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/limited-edition-sneakers.jpg:0
+[   20625ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/high-waist-wide-leg-jeans.jpg:0
+[   20626ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/premium-slim-fit-jeans.jpg:0
+[   20744ms] undefined
+[   20757ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://shop.test/storage/products/high-waist-wide-leg-jeans.jpg:0
+[   20757ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://shop.test/storage/products/premium-slim-fit-jeans.jpg:0

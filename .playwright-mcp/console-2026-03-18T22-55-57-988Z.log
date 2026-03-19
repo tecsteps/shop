@@ -1,0 +1,5 @@
+[     104ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/collections/products/cashmere-v-neck-sweater.jpg:0
+[     104ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/collections/products/limited-edition-sneakers.jpg:0
+[     105ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/collections/products/classic-cotton-t-shirt.jpg:0
+[     115ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/collections/products/premium-slim-fit-jeans.jpg:0
+[     115ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/collections/products/wool-blend-cardigan.jpg:0
