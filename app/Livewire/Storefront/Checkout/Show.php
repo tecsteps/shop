@@ -88,7 +88,7 @@ class Show extends Component
             'address1' => 'required|string',
             'city' => 'required|string',
             'country' => 'required|string|size:2',
-            'postalCode' => 'required|string',
+            'postalCode' => 'required|string|min:3|max:10|regex:/^[a-zA-Z0-9\s\-]+$/',
         ]);
 
         $checkout = Checkout::withoutGlobalScopes()->find($this->checkoutId);

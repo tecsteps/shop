@@ -56,9 +56,9 @@
                                 @endif
                             </td>
                             <td class="p-3">
-                                <flux:badge size="sm" :color="match($discount->status->value) {
+                                <flux:badge size="sm" :color="match($discount->effective_status->value) {
                                     'active' => 'green', 'draft' => 'zinc', 'expired' => 'red', 'disabled' => 'yellow',
-                                }">{{ ucfirst($discount->status->value) }}</flux:badge>
+                                }">{{ ucfirst($discount->effective_status->value) }}</flux:badge>
                             </td>
                             <td class="p-3">{{ $discount->usage_count }}{{ $discount->usage_limit ? ' / '.$discount->usage_limit : '' }}</td>
                             <td class="p-3 text-zinc-500 text-xs">

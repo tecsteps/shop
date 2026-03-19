@@ -13,6 +13,7 @@
             autocomplete="email"
             placeholder="email@example.com"
         />
+        <flux:error name="email" />
 
         <flux:input
             wire:model="password"

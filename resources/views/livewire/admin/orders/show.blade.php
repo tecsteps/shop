@@ -99,7 +99,9 @@
                     @foreach($order->fulfillments as $fulfillment)
                         <div class="p-4 @if(!$loop->last) border-b border-zinc-100 dark:border-zinc-800 @endif">
                             <div class="flex justify-between items-center mb-2">
-                                <flux:badge size="sm">{{ ucfirst($fulfillment->status->value) }}</flux:badge>
+                                <flux:badge size="sm" :color="match($fulfillment->status->value) {
+                                    'shipped' => 'blue', 'delivered' => 'green', default => 'zinc',
+                                }">{{ ucfirst($fulfillment->status->value) }}</flux:badge>
                                 <flux:text class="text-zinc-500 text-xs">{{ $fulfillment->created_at?->diffForHumans() }}</flux:text>
                             </div>
                             @if($fulfillment->tracking_number)
@@ -107,6 +109,14 @@
                                     {{ __('Tracking') }}: {{ $fulfillment->tracking_company }} - {{ $fulfillment->tracking_number }}
                                 </flux:text>
                             @endif
+                            <div class="mt-2 flex gap-2">
+                                @if($fulfillment->status === \App\Enums\FulfillmentShipmentStatus::Pending)
+                                    <flux:button size="sm" wire:click="markAsShipped({{ $fulfillment->id }})">{{ __('Mark as shipped') }}</flux:button>
+                                @endif
+                                @if($fulfillment->status === \App\Enums\FulfillmentShipmentStatus::Shipped)
+                                    <flux:button size="sm" wire:click="markAsDelivered({{ $fulfillment->id }})">{{ __('Mark as delivered') }}</flux:button>
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -133,6 +143,54 @@
                     @endforeach
                 </div>
             @endif
+
+            {{-- Timeline --}}
+            <div class="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+                <div class="p-4 border-b border-zinc-200 dark:border-zinc-700">
+                    <flux:heading size="md">{{ __('Timeline') }}</flux:heading>
+                </div>
+                <div class="p-4">
+                    <ol class="relative border-l border-zinc-200 dark:border-zinc-700 space-y-4 ml-2">
+                        @foreach($order->fulfillments->sortByDesc('created_at') as $fulfillment)
+                            @if($fulfillment->delivered_at)
+                                <li class="ml-4">
+                                    <div class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-green-500 dark:border-zinc-900"></div>
+                                    <flux:text class="text-sm font-medium">{{ __('Delivered') }}</flux:text>
+                                    <flux:text class="text-xs text-zinc-500">{{ $fulfillment->delivered_at->format('M d, Y g:i A') }}</flux:text>
+                                </li>
+                            @endif
+                            @if($fulfillment->shipped_at)
+                                <li class="ml-4">
+                                    <div class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-blue-500 dark:border-zinc-900"></div>
+                                    <flux:text class="text-sm font-medium">{{ __('Shipped') }}</flux:text>
+                                    <flux:text class="text-xs text-zinc-500">{{ $fulfillment->shipped_at->format('M d, Y g:i A') }}</flux:text>
+                                </li>
+                            @endif
+                            <li class="ml-4">
+                                <div class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-zinc-400 dark:border-zinc-900"></div>
+                                <flux:text class="text-sm font-medium">{{ __('Fulfillment created') }}</flux:text>
+                                <flux:text class="text-xs text-zinc-500">{{ $fulfillment->created_at->format('M d, Y g:i A') }}</flux:text>
+                            </li>
+                        @endforeach
+
+                        @foreach($order->payments->sortByDesc('created_at') as $payment)
+                            <li class="ml-4">
+                                <div class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-green-500 dark:border-zinc-900"></div>
+                                <flux:text class="text-sm font-medium">{{ __('Payment') }} {{ $payment->status->value }}</flux:text>
+                                <flux:text class="text-xs text-zinc-500">{{ $payment->created_at->format('M d, Y g:i A') }}</flux:text>
+                            </li>
+                        @endforeach
+
+                        @if($order->placed_at)
+                            <li class="ml-4">
+                                <div class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-zinc-900 dark:bg-white dark:border-zinc-900"></div>
+                                <flux:text class="text-sm font-medium">{{ __('Order placed') }}</flux:text>
+                                <flux:text class="text-xs text-zinc-500">{{ $order->placed_at->format('M d, Y g:i A') }}</flux:text>
+                            </li>
+                        @endif
+                    </ol>
+                </div>
+            </div>
         </div>
 
         {{-- Right Sidebar --}}

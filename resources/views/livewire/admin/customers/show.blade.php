@@ -64,12 +64,16 @@
                 <div class="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
                     <flux:heading size="md" class="mb-3">{{ __('Addresses') }}</flux:heading>
                     @foreach($customer->addresses as $address)
+                        @php $addr = $address->address_json; @endphp
                         <div class="text-sm space-y-1 @if(!$loop->last) mb-4 pb-4 border-b border-zinc-100 dark:border-zinc-800 @endif">
-                            <div>{{ $address->first_name }} {{ $address->last_name }}</div>
-                            <div>{{ $address->address1 }}</div>
-                            @if($address->address2)<div>{{ $address->address2 }}</div>@endif
-                            <div>{{ $address->city }}, {{ $address->province_code }} {{ $address->zip }}</div>
-                            <div>{{ $address->country_code }}</div>
+                            @if($address->label)
+                                <div class="font-semibold">{{ $address->label }}</div>
+                            @endif
+                            <div>{{ $addr['first_name'] ?? '' }} {{ $addr['last_name'] ?? '' }}</div>
+                            <div>{{ $addr['address1'] ?? '' }}</div>
+                            @if(!empty($addr['address2']))<div>{{ $addr['address2'] }}</div>@endif
+                            <div>{{ $addr['postal_code'] ?? '' }} {{ $addr['city'] ?? '' }}</div>
+                            <div>{{ $addr['country_code'] ?? '' }}</div>
                         </div>
                     @endforeach
                 </div>

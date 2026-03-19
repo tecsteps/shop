@@ -41,4 +41,13 @@ class Discount extends Model
             'ends_at' => 'datetime',
         ];
     }
+
+    public function getEffectiveStatusAttribute(): DiscountStatus
+    {
+        if ($this->status === DiscountStatus::Active && $this->ends_at && $this->ends_at->isPast()) {
+            return DiscountStatus::Expired;
+        }
+
+        return $this->status;
+    }
 }

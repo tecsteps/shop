@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Settings;
 
+use App\Models\StoreDomain;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -14,6 +15,8 @@ class Index extends Component
     public string $defaultCurrency = '';
 
     public string $timezone = '';
+
+    public string $newDomainHostname = '';
 
     public function mount(): void
     {
@@ -41,8 +44,38 @@ class Index extends Component
         $this->dispatch('toast', type: 'success', message: __('Settings saved.'));
     }
 
+    public function addDomain(): void
+    {
+        $this->validate([
+            'newDomainHostname' => ['required', 'string', 'max:255'],
+        ]);
+
+        $store = app('current_store');
+
+        StoreDomain::create([
+            'store_id' => $store->id,
+            'hostname' => $this->newDomainHostname,
+            'type' => 'storefront',
+            'is_primary' => $store->domains()->count() === 0,
+        ]);
+
+        $this->newDomainHostname = '';
+        $this->dispatch('toast', type: 'success', message: __('Domain added.'));
+    }
+
+    public function removeDomain(int $domainId): void
+    {
+        $store = app('current_store');
+        $store->domains()->where('id', $domainId)->delete();
+        $this->dispatch('toast', type: 'success', message: __('Domain removed.'));
+    }
+
     public function render(): View
     {
-        return view('livewire.admin.settings.index');
+        $store = app('current_store');
+
+        return view('livewire.admin.settings.index', [
+            'domains' => $store->domains()->orderByDesc('is_primary')->get(),
+        ]);
     }
 }

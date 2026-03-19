@@ -142,6 +142,34 @@ class Show extends Component
         }
     }
 
+    public function markAsShipped(int $fulfillmentId, FulfillmentService $fulfillmentService): void
+    {
+        $fulfillment = $this->order->fulfillments()->findOrFail($fulfillmentId);
+
+        try {
+            $fulfillmentService->markAsShipped($fulfillment);
+            $this->order->refresh();
+            $this->order->load('fulfillments.lines');
+            $this->dispatch('toast', type: 'success', message: __('Fulfillment marked as shipped.'));
+        } catch (\Exception $e) {
+            $this->dispatch('toast', type: 'error', message: $e->getMessage());
+        }
+    }
+
+    public function markAsDelivered(int $fulfillmentId, FulfillmentService $fulfillmentService): void
+    {
+        $fulfillment = $this->order->fulfillments()->findOrFail($fulfillmentId);
+
+        try {
+            $fulfillmentService->markAsDelivered($fulfillment);
+            $this->order->refresh();
+            $this->order->load('fulfillments.lines');
+            $this->dispatch('toast', type: 'success', message: __('Fulfillment marked as delivered.'));
+        } catch (\Exception $e) {
+            $this->dispatch('toast', type: 'error', message: $e->getMessage());
+        }
+    }
+
     public function confirmPayment(OrderService $orderService): void
     {
         try {
