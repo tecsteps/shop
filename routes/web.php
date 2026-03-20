@@ -27,8 +27,18 @@ Route::prefix('admin')->group(function () {
         ->name('admin.logout');
 });
 
-// Customer storefront auth routes
+// Storefront routes
 Route::middleware('resolve.store:storefront')->group(function () {
+    // Public storefront pages
+    Route::get('/', \App\Livewire\Storefront\Home::class)->name('storefront.home');
+    Route::get('/collections', \App\Livewire\Storefront\Collections\Index::class)->name('storefront.collections.index');
+    Route::get('/collections/{handle}', \App\Livewire\Storefront\Collections\Show::class)->name('storefront.collections.show');
+    Route::get('/products/{handle}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
+    Route::get('/cart', \App\Livewire\Storefront\Cart\Show::class)->name('storefront.cart');
+    Route::get('/search', \App\Livewire\Storefront\Search\Index::class)->name('storefront.search');
+    Route::get('/pages/{handle}', \App\Livewire\Storefront\Pages\Show::class)->name('storefront.pages.show');
+
+    // Customer auth routes (no auth required)
     Route::get('account/login', CustomerLogin::class)
         ->middleware('guest:customer')
         ->name('customer.login');
