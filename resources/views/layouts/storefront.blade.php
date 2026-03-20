@@ -85,7 +85,7 @@
                 {{-- Action Icons --}}
                 <div class="flex items-center gap-2">
                     {{-- Search --}}
-                    <button @click="Livewire.dispatch('open-search-modal')"
+                    <button x-data @click="Livewire.dispatch('open-search-modal')"
                             class="hidden rounded-md p-2 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 lg:block dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
                             aria-label="Search">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
