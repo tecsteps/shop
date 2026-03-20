@@ -167,6 +167,43 @@ it('removes line when quantity is set to zero', function () {
     expect($cart->lines)->toHaveCount(0);
 });
 
+it('rejects negative quantity in addLine', function () {
+    $product = Product::factory()->create(['store_id' => $this->store->id, 'status' => 'active']);
+    $variant = ProductVariant::factory()->create(['product_id' => $product->id, 'price_amount' => 1000]);
+
+    $cart = $this->cartService->create($this->store);
+
+    expect(fn () => $this->cartService->addLine($cart, $variant->id, -3))
+        ->toThrow(InvalidCartException::class, 'Quantity must be greater than zero.');
+});
+
+it('rejects zero quantity in addLine', function () {
+    $product = Product::factory()->create(['store_id' => $this->store->id, 'status' => 'active']);
+    $variant = ProductVariant::factory()->create(['product_id' => $product->id, 'price_amount' => 1000]);
+
+    $cart = $this->cartService->create($this->store);
+
+    expect(fn () => $this->cartService->addLine($cart, $variant->id, 0))
+        ->toThrow(InvalidCartException::class, 'Quantity must be greater than zero.');
+});
+
+it('rejects negative quantity in updateLineQuantity', function () {
+    $product = Product::factory()->create(['store_id' => $this->store->id, 'status' => 'active']);
+    $variant = ProductVariant::factory()->create(['product_id' => $product->id, 'price_amount' => 1000]);
+    InventoryItem::factory()->create([
+        'store_id' => $this->store->id,
+        'variant_id' => $variant->id,
+        'quantity_on_hand' => 10,
+        'policy' => 'deny',
+    ]);
+
+    $cart = $this->cartService->create($this->store);
+    $line = $this->cartService->addLine($cart, $variant->id, 2);
+
+    expect(fn () => $this->cartService->updateLineQuantity($cart, $line->id, -1))
+        ->toThrow(InvalidCartException::class, 'Quantity must not be negative.');
+});
+
 it('merges guest cart into customer cart using MAX quantity', function () {
     $product = Product::factory()->create(['store_id' => $this->store->id, 'status' => 'active']);
     $variant = ProductVariant::factory()->create(['product_id' => $product->id, 'price_amount' => 2500]);

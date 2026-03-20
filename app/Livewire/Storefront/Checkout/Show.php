@@ -40,8 +40,6 @@ class Show extends Component
     // Payment
     public string $paymentMethod = 'credit_card';
 
-    public string $cardNumber = '';
-
     // Discount
     public string $discountCode = '';
 
@@ -147,7 +145,7 @@ class Show extends Component
         }
     }
 
-    public function submitPayment(): void
+    public function submitPayment(string $cardNumber = ''): void
     {
         $this->error = null;
 
@@ -159,12 +157,14 @@ class Show extends Component
 
             $paymentMethodData = [];
             if ($this->paymentMethod === 'credit_card') {
-                $paymentMethodData['card_number'] = $this->cardNumber;
+                $paymentMethodData['card_number'] = $cardNumber;
             }
 
             $checkoutService->completeCheckout($checkout->fresh(), $paymentMethodData);
 
             session()->forget('cart_id');
+
+            session(['completed_checkout_id' => $checkout->id]);
 
             $this->redirect(route('storefront.checkout.confirmation', $checkout));
         } catch (\App\Exceptions\PaymentFailedException $e) {

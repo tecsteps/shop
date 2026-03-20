@@ -33,6 +33,10 @@ class CartService
 
     public function addLine(Cart $cart, int $variantId, int $quantity): CartLine
     {
+        if ($quantity <= 0) {
+            throw new InvalidCartException('Quantity must be greater than zero.');
+        }
+
         return DB::transaction(function () use ($cart, $variantId, $quantity) {
             $variant = ProductVariant::with(['product', 'inventoryItem'])->find($variantId);
 
@@ -96,10 +100,14 @@ class CartService
 
     public function updateLineQuantity(Cart $cart, int $lineId, int $quantity): ?CartLine
     {
+        if ($quantity < 0) {
+            throw new InvalidCartException('Quantity must not be negative.');
+        }
+
         return DB::transaction(function () use ($cart, $lineId, $quantity) {
             $line = $cart->lines()->findOrFail($lineId);
 
-            if ($quantity <= 0) {
+            if ($quantity === 0) {
                 $this->removeLine($cart, $lineId);
 
                 return null;

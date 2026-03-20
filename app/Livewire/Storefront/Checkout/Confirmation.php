@@ -14,6 +14,20 @@ class Confirmation extends Component
 
     public function mount(Checkout $checkout): void
     {
+        $isOwner = false;
+
+        if ($checkout->customer_id && auth('customer')->id() === $checkout->customer_id) {
+            $isOwner = true;
+        }
+
+        if (session('completed_checkout_id') === $checkout->id) {
+            $isOwner = true;
+        }
+
+        if (! $isOwner) {
+            abort(403);
+        }
+
         $this->checkout = $checkout;
         $this->checkout->load('cart.lines.variant.product');
 

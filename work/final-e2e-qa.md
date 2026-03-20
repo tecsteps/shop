@@ -420,6 +420,16 @@ All 19 originally failing test cases were re-tested after fixes were applied and
 |---|-----------|----------------|-----------------|------------|---------------|
 | 9 | RefundStatus enum not cast to string | Admin orders 4, 8 (clickable links) | 500 error on order detail for refunded orders | `instanceof` check in orders/show.blade.php:123 | PASS |
 
+### Final Confirmation Re-test (3 specific tests after last fixes)
+
+Fresh `php artisan migrate:fresh --seed` run. Re-tested 6.7, 9.7, 9.12 on 2026-03-20.
+
+| # | Test | What was verified | Screenshot | Result |
+|---|------|-------------------|-----------|--------|
+| 6.7 | Domains tab loads | Type column shows "Storefront" and "Admin" (not raw enum objects) | `retest-6.7-domains-final.png` | PASS |
+| 9.7 | Postal code rejects "!!!" | Error: "The postal code format is invalid. Use only letters, numbers, spaces, and hyphens (3-10 characters)." | `retest-9.7-postal-validation-final.png` | PASS |
+| 9.12 | Decline card shows error | Card 4000000000000002 shows "Payment declined: Your card was declined." | `retest-9.12-card-decline.png` | PASS |
+
 ### Re-test: 3 Auth Pages (visual verification)
 
 | Page | URL | Screenshot | Visual Assessment |
@@ -510,4 +520,8 @@ All pages look like a real, professional e-commerce site:
 | `retest-10.1-customer-register.png` | Customer register (re-test) | 1280x800 | OK |
 | `retest-9.12-decline.png` | Card decline error (re-test) | 1280x800 | OK |
 
-**38 screenshots total. 38 OK, 0 FAIL.**
+| `retest-6.7-domains-final.png` | Admin settings (Domains) final | 1280x800 | OK |
+| `retest-9.7-postal-validation-final.png` | Postal code validation | 1280x800 | OK |
+| `retest-9.12-card-decline.png` | Card decline (final) | 1280x800 | OK |
+
+**41 screenshots total. 41 OK, 0 FAIL.**

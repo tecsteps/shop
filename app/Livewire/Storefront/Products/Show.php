@@ -84,6 +84,12 @@ class Show extends Component
             return;
         }
 
+        if ($this->quantity < 1) {
+            $this->cartError = 'Quantity must be at least 1.';
+
+            return;
+        }
+
         try {
             $store = app('current_store');
             $cartService = app(CartService::class);

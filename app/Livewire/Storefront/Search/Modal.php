@@ -4,6 +4,7 @@ namespace App\Livewire\Storefront\Search;
 
 use App\Models\Store;
 use App\Services\SearchService;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Modal extends Component
@@ -12,6 +13,7 @@ class Modal extends Component
 
     public string $query = '';
 
+    #[On('open-search-modal')]
     public function openModal(): void
     {
         $this->open = true;

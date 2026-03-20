@@ -14,6 +14,10 @@ class Show extends Component
 
     public function updateQuantity(int $lineId, int $quantity): void
     {
+        if ($quantity < 0) {
+            return;
+        }
+
         $cart = $this->getCart();
 
         if (! $cart) {
