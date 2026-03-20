@@ -19,15 +19,13 @@ class NavigationSeeder extends Seeder
 
     private function seedFashionMenus(): void
     {
-        $store = Store::where('handle', 'like', '%fashion%')->first();
-
-        if (! $store) {
-            $store = Store::first();
-        }
+        $store = Store::where('handle', 'acme-fashion')->first();
 
         if (! $store) {
             return;
         }
+
+        app()->instance('current_store', $store);
 
         // Main menu
         $mainMenu = NavigationMenu::create([
@@ -44,22 +42,24 @@ class NavigationSeeder extends Seeder
             'position' => 0,
         ]);
 
-        // Collection items - these reference collections that will be created in Phase 2
-        // For now use link type with paths
-        $collectionLinks = [
-            ['label' => 'New Arrivals', 'url' => '/collections/new-arrivals', 'position' => 1],
-            ['label' => 'T-Shirts', 'url' => '/collections/t-shirts', 'position' => 2],
-            ['label' => 'Pants & Jeans', 'url' => '/collections/pants-jeans', 'position' => 3],
-            ['label' => 'Sale', 'url' => '/collections/sale', 'position' => 4],
+        $collectionItems = [
+            ['label' => 'New Arrivals', 'handle' => 'new-arrivals', 'position' => 1],
+            ['label' => 'T-Shirts', 'handle' => 't-shirts', 'position' => 2],
+            ['label' => 'Pants & Jeans', 'handle' => 'pants-jeans', 'position' => 3],
+            ['label' => 'Sale', 'handle' => 'sale', 'position' => 4],
         ];
 
-        foreach ($collectionLinks as $link) {
+        $collections = \App\Models\Collection::where('store_id', $store->id)->get()->keyBy('handle');
+
+        foreach ($collectionItems as $item) {
+            $collection = $collections->get($item['handle']);
             NavigationItem::create([
                 'menu_id' => $mainMenu->id,
-                'type' => NavigationItemType::Link,
-                'label' => $link['label'],
-                'url' => $link['url'],
-                'position' => $link['position'],
+                'type' => $collection ? NavigationItemType::Collection : NavigationItemType::Link,
+                'label' => $item['label'],
+                'url' => $collection ? null : '/collections/'.$item['handle'],
+                'resource_id' => $collection?->id,
+                'position' => $item['position'],
             ]);
         }
 
@@ -98,11 +98,13 @@ class NavigationSeeder extends Seeder
 
     private function seedElectronicsMenus(): void
     {
-        $store = Store::where('handle', 'like', '%electronics%')->first();
+        $store = Store::where('handle', 'acme-electronics')->first();
 
         if (! $store) {
             return;
         }
+
+        app()->instance('current_store', $store);
 
         $mainMenu = NavigationMenu::create([
             'store_id' => $store->id,
@@ -118,18 +120,22 @@ class NavigationSeeder extends Seeder
             'position' => 0,
         ]);
 
-        $collectionLinks = [
-            ['label' => 'Featured', 'url' => '/collections/featured', 'position' => 1],
-            ['label' => 'Accessories', 'url' => '/collections/accessories', 'position' => 2],
+        $collectionItems = [
+            ['label' => 'Featured', 'handle' => 'featured', 'position' => 1],
+            ['label' => 'Accessories', 'handle' => 'accessories', 'position' => 2],
         ];
 
-        foreach ($collectionLinks as $link) {
+        $collections = \App\Models\Collection::where('store_id', $store->id)->get()->keyBy('handle');
+
+        foreach ($collectionItems as $item) {
+            $collection = $collections->get($item['handle']);
             NavigationItem::create([
                 'menu_id' => $mainMenu->id,
-                'type' => NavigationItemType::Link,
-                'label' => $link['label'],
-                'url' => $link['url'],
-                'position' => $link['position'],
+                'type' => $collection ? NavigationItemType::Collection : NavigationItemType::Link,
+                'label' => $item['label'],
+                'url' => $collection ? null : '/collections/'.$item['handle'],
+                'resource_id' => $collection?->id,
+                'position' => $item['position'],
             ]);
         }
     }

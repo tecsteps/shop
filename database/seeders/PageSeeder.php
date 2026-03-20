@@ -11,15 +11,13 @@ class PageSeeder extends Seeder
 {
     public function run(): void
     {
-        $fashionStore = Store::where('handle', 'like', '%fashion%')->first();
-
-        if (! $fashionStore) {
-            $fashionStore = Store::first();
-        }
+        $fashionStore = Store::where('handle', 'acme-fashion')->first();
 
         if (! $fashionStore) {
             return;
         }
+
+        app()->instance('current_store', $fashionStore);
 
         $publishedAt = now()->subMonths(3);
 
