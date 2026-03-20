@@ -79,7 +79,7 @@ class Form extends Component
                 'product_type' => $this->product_type ?: null,
                 'tags' => $tags,
             ]);
-            $this->dispatch('toast', type: 'success', message: 'Product created.');
+            session()->flash('toast', ['type' => 'success', 'message' => 'Product created.']);
 
             return redirect()->route('admin.products.edit', $product);
         }

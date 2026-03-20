@@ -17,6 +17,17 @@ pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
+pest()->extend(Tests\TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Tests\Concerns\SeedsDatabase::class)
+    ->beforeEach(function () {
+        Pest\Browser\Playwright\Playwright::setHost('acme-fashion.test');
+    })
+    ->afterEach(function () {
+        Pest\Browser\Playwright\Playwright::setHost(null);
+    })
+    ->in('Browser');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
@@ -78,4 +89,23 @@ function actingAsAdmin(User $user, ?Store $store = null): \Illuminate\Testing\Te
 function actingAsCustomer(Customer $customer): \Illuminate\Testing\TestCase
 {
     return test()->actingAs($customer, 'customer');
+}
+
+/**
+ * Log in as admin via browser and navigate to a target admin page.
+ */
+function browserAdminLogin(string $targetPath = '/admin'): \Pest\Browser\Api\PendingAwaitablePage
+{
+    $page = test()->visit('/admin/login', ['host' => 'acme-fashion.test']);
+
+    $page->fill('email', 'admin@acme.test')
+        ->fill('password', 'password')
+        ->click('Log in')
+        ->assertSee('Dashboard');
+
+    if ($targetPath !== '/admin') {
+        $page = test()->visit($targetPath, ['host' => 'acme-fashion.test']);
+    }
+
+    return $page;
 }

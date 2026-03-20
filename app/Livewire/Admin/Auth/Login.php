@@ -52,6 +52,13 @@ class Login extends Component
 
         session()->regenerate();
 
+        $user = Auth::guard('web')->user();
+        $firstStore = $user->stores()->first();
+
+        if ($firstStore) {
+            session()->put('current_store_id', $firstStore->id);
+        }
+
         return redirect()->intended('/admin');
     }
 

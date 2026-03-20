@@ -1,5 +1,8 @@
 <div>
-    <flux:heading size="xl">Discounts</flux:heading>
+    <div class="flex items-center justify-between">
+        <flux:heading size="xl">Discounts</flux:heading>
+        <flux:button href="{{ route('admin.discounts.create') }}" variant="primary">New discount</flux:button>
+    </div>
     <div class="mt-6">
         <flux:input wire:model.live.debounce.300ms="search" placeholder="Search discount codes..." icon="magnifying-glass" />
     </div>
@@ -17,7 +20,9 @@
             <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
                 @forelse($discounts as $discount)
                     <tr wire:key="discount-{{ $discount->id }}">
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $discount->code }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                            <a href="{{ route('admin.discounts.edit', $discount) }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ $discount->code }}</a>
+                        </td>
                         <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ ucfirst(str_replace('_', ' ', $discount->type->value ?? $discount->type)) }}</td>
                         <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
                             @if(($discount->value_type->value ?? $discount->value_type) === 'percent')

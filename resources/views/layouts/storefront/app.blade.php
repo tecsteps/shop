@@ -236,6 +236,7 @@
     {{-- Search modal --}}
     @livewire('storefront.search.modal')
 
+    @fluxScripts
     @livewireScripts
 </body>
 </html>

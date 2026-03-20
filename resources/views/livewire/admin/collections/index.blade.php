@@ -1,6 +1,7 @@
 <div>
     <div class="flex items-center justify-between">
         <flux:heading size="xl">Collections</flux:heading>
+        <flux:button href="{{ route('admin.collections.create') }}" variant="primary">New collection</flux:button>
     </div>
 
     <div class="mt-6">
@@ -19,10 +20,12 @@
             <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
                 @forelse($collections as $collection)
                     <tr wire:key="collection-{{ $collection->id }}">
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $collection->title }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                            <a href="{{ route('admin.collections.edit', $collection) }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ $collection->title }}</a>
+                        </td>
                         <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $collection->products_count }}</td>
                         <td class="px-4 py-3">
-                            <flux:badge size="sm" :color="$collection->status === 'published' ? 'green' : 'yellow'">{{ ucfirst($collection->status) }}</flux:badge>
+                            <flux:badge size="sm" :color="$collection->status->value === 'active' ? 'green' : 'yellow'">{{ ucfirst($collection->status->value) }}</flux:badge>
                         </td>
                     </tr>
                 @empty

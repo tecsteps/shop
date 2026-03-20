@@ -56,7 +56,7 @@ class Show extends Component
         }
 
         try {
-            app(RefundService::class)->refund($order, $payment, $this->refundAmount, $this->refundReason, $this->refundRestock);
+            app(RefundService::class)->create($order, $payment, $this->refundAmount, $this->refundReason, $this->refundRestock);
             $this->refundAmount = 0;
             $this->refundReason = '';
             $this->refundRestock = false;
@@ -86,12 +86,18 @@ class Show extends Component
         }
 
         try {
-            $fulfillment = app(FulfillmentService::class)->createFulfillment(
+            $tracking = null;
+            if ($this->trackingNumber || $this->trackingUrl || $this->trackingCompany) {
+                $tracking = [
+                    'tracking_number' => $this->trackingNumber ?: null,
+                    'tracking_url' => $this->trackingUrl ?: null,
+                    'tracking_company' => $this->trackingCompany ?: null,
+                ];
+            }
+            $fulfillment = app(FulfillmentService::class)->create(
                 $order,
                 $linesToFulfill,
-                $this->trackingNumber ?: null,
-                $this->trackingUrl ?: null,
-                $this->trackingCompany ?: null,
+                $tracking,
             );
             $this->trackingNumber = '';
             $this->trackingUrl = '';

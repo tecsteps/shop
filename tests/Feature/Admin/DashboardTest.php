@@ -18,7 +18,7 @@ it('renders the admin dashboard', function () {
 
 it('requires authentication for the admin dashboard', function () {
     $this->get('/admin')
-        ->assertRedirect(route('login'));
+        ->assertRedirect(route('admin.login'));
 });
 
 it('displays KPI tiles with analytics data', function () {

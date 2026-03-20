@@ -21,6 +21,13 @@
 
         {{-- Toast notifications --}}
         <div x-data="{ toasts: [] }"
+             x-init="
+                 @if(session('toast'))
+                     let ft = { id: Date.now(), type: '{{ session('toast.type') }}', message: '{{ session('toast.message') }}' };
+                     toasts.push(ft);
+                     setTimeout(() => toasts = toasts.filter(i => i.id !== ft.id), 5000);
+                 @endif
+             "
              x-on:toast.window="
                  let t = { id: Date.now(), ...$event.detail };
                  toasts.push(t);
@@ -49,6 +56,7 @@
         </main>
     </div>
 
+    @fluxScripts
     @livewireScripts
 </body>
 </html>

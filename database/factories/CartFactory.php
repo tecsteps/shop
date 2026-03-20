@@ -1,0 +1,47 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Enums\CartStatus;
+use App\Models\Cart;
+use App\Models\Customer;
+use App\Models\Store;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/** @extends Factory<Cart> */
+class CartFactory extends Factory
+{
+    protected $model = Cart::class;
+
+    public function definition(): array
+    {
+        return [
+            'store_id' => Store::factory(),
+            'customer_id' => null,
+            'currency' => 'USD',
+            'cart_version' => 1,
+            'status' => CartStatus::Active,
+        ];
+    }
+
+    public function forCustomer(?Customer $customer = null): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'customer_id' => $customer ?? Customer::factory()->state(['store_id' => $attributes['store_id']]),
+        ]);
+    }
+
+    public function converted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => CartStatus::Converted,
+        ]);
+    }
+
+    public function abandoned(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => CartStatus::Abandoned,
+        ]);
+    }
+}

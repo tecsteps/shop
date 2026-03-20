@@ -41,13 +41,19 @@ Route::prefix('admin')
         Route::get('orders/{orderId}', \App\Livewire\Admin\Orders\Show::class)->name('admin.orders.show');
 
         Route::get('collections', \App\Livewire\Admin\Collections\Index::class)->name('admin.collections.index');
+        Route::get('collections/create', \App\Livewire\Admin\Collections\Form::class)->name('admin.collections.create');
+        Route::get('collections/{collectionId}/edit', \App\Livewire\Admin\Collections\Form::class)->name('admin.collections.edit');
 
         Route::get('customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
         Route::get('customers/{customerId}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
 
         Route::get('discounts', \App\Livewire\Admin\Discounts\Index::class)->name('admin.discounts.index');
+        Route::get('discounts/create', \App\Livewire\Admin\Discounts\Form::class)->name('admin.discounts.create');
+        Route::get('discounts/{discountId}/edit', \App\Livewire\Admin\Discounts\Form::class)->name('admin.discounts.edit');
 
         Route::get('pages', \App\Livewire\Admin\Pages\Index::class)->name('admin.pages.index');
+        Route::get('pages/create', \App\Livewire\Admin\Pages\Form::class)->name('admin.pages.create');
+        Route::get('pages/{pageId}/edit', \App\Livewire\Admin\Pages\Form::class)->name('admin.pages.edit');
         Route::get('navigation', \App\Livewire\Admin\Navigation\Index::class)->name('admin.navigation.index');
         Route::get('themes', \App\Livewire\Admin\Themes\Index::class)->name('admin.themes.index');
 
@@ -63,6 +69,8 @@ Route::middleware('resolve.store:storefront')->group(function () {
     Route::get('/collections/{handle}', \App\Livewire\Storefront\Collections\Show::class)->name('storefront.collections.show');
     Route::get('/products/{handle}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
     Route::get('/cart', \App\Livewire\Storefront\Cart\Show::class)->name('storefront.cart');
+    Route::get('/checkout', \App\Livewire\Storefront\Checkout\Show::class)->name('storefront.checkout');
+    Route::get('/checkout/confirmation/{order}', \App\Livewire\Storefront\Checkout\Confirmation::class)->name('storefront.checkout.confirmation');
     Route::get('/search', \App\Livewire\Storefront\Search\Index::class)->name('storefront.search');
     Route::get('/pages/{handle}', \App\Livewire\Storefront\Pages\Show::class)->name('storefront.pages.show');
 

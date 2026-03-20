@@ -6,8 +6,8 @@
                 <flux:heading size="lg">{{ $theme->name }}</flux:heading>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Version {{ $theme->version ?? '1.0' }}</p>
                 <div class="mt-3">
-                    <flux:badge size="sm" :color="$theme->status === 'published' ? 'green' : 'yellow'">
-                        {{ ucfirst($theme->status) }}
+                    <flux:badge size="sm" :color="$theme->status === \App\Enums\ThemeStatus::Published ? 'green' : 'yellow'">
+                        {{ ucfirst($theme->status->value) }}
                     </flux:badge>
                 </div>
             </div>
