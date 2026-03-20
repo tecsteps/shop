@@ -26,12 +26,43 @@
             </button>
         </div>
 
-        {{-- Placeholder --}}
-        <div class="mt-8 text-center">
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">Your cart is empty.</p>
-            <a href="/collections" @click="show = false" class="mt-4 inline-block text-sm font-medium text-zinc-900 underline dark:text-white">
-                Continue Shopping
-            </a>
-        </div>
+        @if($lines->isEmpty())
+            <div class="mt-8 text-center">
+                <p class="text-sm text-zinc-600 dark:text-zinc-400">Your cart is empty.</p>
+                <a href="/collections" @click="show = false" class="mt-4 inline-block text-sm font-medium text-zinc-900 underline dark:text-white">
+                    Continue Shopping
+                </a>
+            </div>
+        @else
+            <div class="mt-6 space-y-4">
+                @foreach($lines as $line)
+                    <div class="flex items-start gap-3 border-b border-zinc-200 pb-4 dark:border-zinc-700" wire:key="drawer-line-{{ $line->id }}">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-zinc-900 dark:text-white">{{ $line->variant->product->title }}</p>
+                            <p class="text-xs text-zinc-500 dark:text-zinc-400">${{ number_format($line->unit_price_amount / 100, 2) }}</p>
+                            <div class="mt-2 flex items-center gap-2">
+                                <button wire:click="updateQuantity({{ $line->id }}, {{ $line->quantity - 1 }})" class="rounded border border-zinc-300 px-2 py-0.5 text-xs dark:border-zinc-600">-</button>
+                                <span class="text-sm text-zinc-900 dark:text-white">{{ $line->quantity }}</span>
+                                <button wire:click="updateQuantity({{ $line->id }}, {{ $line->quantity + 1 }})" class="rounded border border-zinc-300 px-2 py-0.5 text-xs dark:border-zinc-600">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-medium text-zinc-900 dark:text-white">${{ number_format($line->line_total_amount / 100, 2) }}</p>
+                            <button wire:click="removeLine({{ $line->id }})" class="mt-1 text-xs text-red-500 hover:text-red-700">Remove</button>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-6 border-t border-zinc-200 pt-4 dark:border-zinc-700">
+                <div class="flex justify-between text-sm font-medium text-zinc-900 dark:text-white">
+                    <span>Subtotal</span>
+                    <span>${{ number_format($subtotal / 100, 2) }}</span>
+                </div>
+                <a href="{{ route('storefront.cart') }}" @click="show = false" class="mt-4 block w-full rounded-md bg-zinc-900 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">
+                    View Cart
+                </a>
+            </div>
+        @endif
     </div>
 </div>

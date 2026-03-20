@@ -4,6 +4,7 @@ namespace App\Livewire\Storefront\Products;
 
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Livewire\Component;
 
 class Show extends Component
@@ -13,6 +14,8 @@ class Show extends Component
     public ?int $selectedVariantId = null;
 
     public int $quantity = 1;
+
+    public ?string $cartError = null;
 
     public function mount(string $handle): void
     {
@@ -46,8 +49,23 @@ class Show extends Component
 
     public function addToCart(): void
     {
-        // Placeholder - cart logic will be implemented in Phase 4
-        $this->dispatch('cart-updated');
+        $this->cartError = null;
+
+        if (! $this->selectedVariantId) {
+            return;
+        }
+
+        try {
+            $store = app('current_store');
+            $cartService = app(CartService::class);
+            $cart = $cartService->getOrCreateForSession($store);
+            $cartService->addLine($cart, $this->selectedVariantId, $this->quantity);
+            $this->dispatch('cart-updated');
+        } catch (\App\Exceptions\InsufficientInventoryException $e) {
+            $this->cartError = 'Not enough stock available.';
+        } catch (\App\Exceptions\InvalidCartException $e) {
+            $this->cartError = $e->getMessage();
+        }
     }
 
     public function render(): mixed
