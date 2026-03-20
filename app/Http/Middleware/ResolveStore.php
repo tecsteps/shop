@@ -36,24 +36,32 @@ class ResolveStore
 
     protected function resolveFromSession(Request $request, Closure $next): Response
     {
-        $storeId = $request->session()->get('current_store_id');
+        $user = $request->user();
 
-        if (! $storeId) {
+        if (! $user) {
             abort(403);
         }
 
-        $store = Store::find($storeId);
+        $storeId = $request->session()->get('current_store_id');
+
+        if ($storeId) {
+            $store = Store::find($storeId);
+
+            if ($store && $user->stores()->where('stores.id', $store->id)->exists()) {
+                $this->bindStore($store);
+
+                return $next($request);
+            }
+        }
+
+        // Fallback: pick the user's first store
+        $store = $user->stores()->first();
 
         if (! $store) {
             abort(403);
         }
 
-        $user = $request->user();
-
-        if (! $user || ! $user->stores()->where('stores.id', $store->id)->exists()) {
-            abort(403);
-        }
-
+        $request->session()->put('current_store_id', $store->id);
         $this->bindStore($store);
 
         return $next($request);

@@ -30,9 +30,48 @@ Route::prefix('admin')->group(function () {
         return redirect()->route('admin.login');
     })->name('admin.logout');
 
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->middleware(['auth'])->name('admin.dashboard');
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('/', \App\Livewire\Admin\Dashboard::class)->name('admin.dashboard');
+
+        // Products
+        Route::get('products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index');
+        Route::get('products/create', \App\Livewire\Admin\Products\Form::class)->name('admin.products.create');
+        Route::get('products/{product}/edit', \App\Livewire\Admin\Products\Form::class)->name('admin.products.edit');
+
+        // Collections
+        Route::get('collections', \App\Livewire\Admin\Collections\Index::class)->name('admin.collections.index');
+        Route::get('collections/create', \App\Livewire\Admin\Collections\Form::class)->name('admin.collections.create');
+        Route::get('collections/{collection}/edit', \App\Livewire\Admin\Collections\Form::class)->name('admin.collections.edit');
+
+        // Inventory
+        Route::get('inventory', \App\Livewire\Admin\Inventory\Index::class)->name('admin.inventory.index');
+
+        // Orders
+        Route::get('orders', \App\Livewire\Admin\Orders\Index::class)->name('admin.orders.index');
+        Route::get('orders/{order}', \App\Livewire\Admin\Orders\Show::class)->name('admin.orders.show');
+
+        // Customers
+        Route::get('customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
+        Route::get('customers/{customer}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
+
+        // Discounts
+        Route::get('discounts', \App\Livewire\Admin\Discounts\Index::class)->name('admin.discounts.index');
+        Route::get('discounts/create', \App\Livewire\Admin\Discounts\Form::class)->name('admin.discounts.create');
+        Route::get('discounts/{discount}/edit', \App\Livewire\Admin\Discounts\Form::class)->name('admin.discounts.edit');
+
+        // Content
+        Route::get('pages', \App\Livewire\Admin\Pages\Index::class)->name('admin.pages.index');
+        Route::get('pages/create', \App\Livewire\Admin\Pages\Form::class)->name('admin.pages.create');
+        Route::get('pages/{page}/edit', \App\Livewire\Admin\Pages\Form::class)->name('admin.pages.edit');
+        Route::get('navigation', \App\Livewire\Admin\Navigation\Index::class)->name('admin.navigation.index');
+        Route::get('themes', \App\Livewire\Admin\Themes\Index::class)->name('admin.themes.index');
+
+        // Analytics
+        Route::get('analytics', \App\Livewire\Admin\Analytics\Index::class)->name('admin.analytics.index');
+
+        // Settings
+        Route::get('settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index');
+    });
 });
 
 Route::prefix('account')->middleware(['storefront'])->group(function () {
