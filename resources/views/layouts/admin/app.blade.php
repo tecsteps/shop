@@ -11,6 +11,12 @@
 <body class="h-full bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300 antialiased"
       x-data="{ sidebarOpen: false }">
 
+    {{-- Skip to content --}}
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg focus:ring-2 focus:ring-blue-500 dark:focus:bg-gray-800 dark:focus:text-white">
+        Skip to main content
+    </a>
+
     {{-- Sidebar --}}
     @livewire('admin.layout.sidebar')
 
@@ -51,7 +57,7 @@
         </div>
 
         {{-- Main content --}}
-        <main class="p-4 sm:p-6 lg:p-8">
+        <main id="main-content" class="p-4 sm:p-6 lg:p-8">
             {{ $slot }}
         </main>
     </div>
