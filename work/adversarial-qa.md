@@ -54,6 +54,16 @@ Found **5 FAIL** results and **1 security concern**, against **12 PASS** results
 - **Severity:** HIGH - PCI compliance violation. Credit card numbers should never be stored in public DOM attributes.
 - **Recommended fix:** Use JavaScript to collect card data and send it directly to the payment provider (tokenization), or at minimum make this a non-public property that's only set during the form submission action.
 
+### FAIL-5: Search button in header non-functional (FIXED)
+
+- **Extends baseline:** Storefront header/navigation tests
+- **What was tried:** Clicked the search icon (magnifying glass) in the desktop header
+- **Expected behavior:** A search modal should open with an active search input
+- **Actual behavior:** Nothing happened. The `<button>` had no click handler, and the `<livewire:storefront.search.modal />` component was not included in the layout template.
+- **Severity:** MEDIUM - Core storefront functionality broken. Users cannot search from the header.
+- **Root cause:** Two issues: (1) The search button in `resources/views/layouts/storefront.blade.php` lacked an `@click` handler to dispatch the `open-search-modal` Livewire event. (2) The `Modal` Livewire component (`app/Livewire/Storefront/Search/Modal.php`) was missing the `#[On('open-search-modal')]` attribute on its `openModal()` method, so it would not respond to the dispatched event.
+- **Fix applied:** Added `@click="Livewire.dispatch('open-search-modal')"` to the search button, added `<livewire:storefront.search.modal />` to the layout, and added `#[On('open-search-modal')]` to `Modal::openModal()`. Verified working: modal opens, search input is focused, autocomplete and full search work correctly. All 17 search tests and 13 storefront tests pass.
+
 ---
 
 ## PASS Results
@@ -143,6 +153,7 @@ Found **5 FAIL** results and **1 security concern**, against **12 PASS** results
 - Admin panel XSS rendering
 - Log file inspection for unhandled exceptions
 - Public Livewire property exposure (card numbers)
+- UI functionality (header search button, navigation links)
 
 ### How Hard Did I Try
 Moderate to high. I found a critical financial vulnerability (negative quantities/totals) and confirmed it end-to-end through the entire checkout flow including database verification. I also found a PCI-relevant issue with card number exposure and an IDOR on checkout confirmations.
