@@ -30,7 +30,7 @@
     {{-- Order lines --}}
     <section class="mt-8">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Items') }}</h2>
-        <div class="mt-4 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="mt-4 overflow-x-auto overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-800">
                     <tr>

@@ -61,8 +61,9 @@
                 </div>
 
                 <div class="sm:col-span-2 flex gap-3">
-                    <flux:button type="submit" variant="primary">
-                        {{ $editingAddressId ? __('Update Address') : __('Save Address') }}
+                    <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="saveAddress">{{ $editingAddressId ? __('Update Address') : __('Save Address') }}</span>
+                        <span wire:loading wire:target="saveAddress">{{ __('Saving...') }}</span>
                     </flux:button>
                     <flux:button wire:click="cancelForm" variant="ghost">
                         {{ __('Cancel') }}

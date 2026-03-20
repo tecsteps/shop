@@ -13,13 +13,13 @@
                 @forelse($pages as $page)
                     <tr wire:key="page-{{ $page->id }}">
                         <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $page->title }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-500">{{ $page->handle }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $page->handle }}</td>
                         <td class="px-4 py-3">
                             <flux:badge size="sm" :color="$page->status === 'published' ? 'green' : 'yellow'">{{ ucfirst($page->status) }}</flux:badge>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="3" class="px-4 py-8 text-center text-sm text-gray-500">No pages found.</td></tr>
+                    <tr><td colspan="3" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">No pages found.</td></tr>
                 @endforelse
             </tbody>
         </table>

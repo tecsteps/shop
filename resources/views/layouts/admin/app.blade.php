@@ -29,14 +29,14 @@
              class="fixed right-4 top-16 z-50 flex flex-col gap-2">
             <template x-for="toast in toasts" :key="toast.id">
                 <div x-transition
-                     class="flex items-center gap-3 rounded-lg border bg-white px-4 py-3 shadow-lg dark:bg-gray-800"
+                     class="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-lg dark:border-gray-700 dark:bg-gray-800"
                      :class="{
                          'border-l-4 border-l-green-500': toast.type === 'success',
                          'border-l-4 border-l-red-500': toast.type === 'error',
                          'border-l-4 border-l-blue-500': toast.type === 'info',
                      }">
-                    <span class="text-sm" x-text="toast.message"></span>
-                    <button @click="toasts = toasts.filter(i => i.id !== toast.id)" class="text-gray-400 hover:text-gray-600">
+                    <span class="text-sm text-gray-900 dark:text-gray-100" x-text="toast.message"></span>
+                    <button @click="toasts = toasts.filter(i => i.id !== toast.id)" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>

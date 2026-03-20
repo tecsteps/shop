@@ -20,19 +20,19 @@
 
         <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                <p class="text-sm text-gray-500">Revenue</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Revenue</p>
                 <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">${{ number_format($totalRevenue / 100, 2) }}</p>
             </div>
             <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                <p class="text-sm text-gray-500">Orders</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Orders</p>
                 <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalOrders) }}</p>
             </div>
             <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                <p class="text-sm text-gray-500">AOV</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">AOV</p>
                 <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">${{ number_format($avgAov / 100, 2) }}</p>
             </div>
             <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                <p class="text-sm text-gray-500">Visits</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Visits</p>
                 <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalVisits) }}</p>
             </div>
         </div>
@@ -52,10 +52,10 @@
                     @foreach($data as $row)
                         <tr wire:key="analytics-{{ $row->date }}">
                             <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">{{ $row->date }}</td>
-                            <td class="px-4 py-3 text-right text-sm">${{ number_format($row->revenue_amount / 100, 2) }}</td>
-                            <td class="px-4 py-3 text-right text-sm">{{ $row->orders_count }}</td>
-                            <td class="px-4 py-3 text-right text-sm">{{ $row->visits_count }}</td>
-                            <td class="px-4 py-3 text-right text-sm">{{ $row->add_to_cart_count }}</td>
+                            <td class="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">${{ number_format($row->revenue_amount / 100, 2) }}</td>
+                            <td class="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">{{ $row->orders_count }}</td>
+                            <td class="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">{{ $row->visits_count }}</td>
+                            <td class="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">{{ $row->add_to_cart_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>

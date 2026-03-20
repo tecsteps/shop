@@ -5,10 +5,13 @@
         <flux:heading size="xl">Order {{ $order->order_number }}</flux:heading>
         <div class="flex gap-2">
             @if($order->status->value === 'pending' && $order->payment_method->value === 'bank_transfer' && $order->financial_status->value === 'pending')
-                <flux:button wire:click="confirmBankTransfer" variant="primary" size="sm">Confirm Payment</flux:button>
+                <flux:button wire:click="confirmBankTransfer" variant="primary" size="sm" wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="confirmBankTransfer">Confirm Payment</span>
+                    <span wire:loading wire:target="confirmBankTransfer">Confirming...</span>
+                </flux:button>
             @endif
             @if($order->fulfillment_status->value !== 'fulfilled' && $order->status->value !== 'cancelled')
-                <flux:button wire:click="cancelOrder" wire:confirm="Cancel this order?" variant="danger" size="sm">Cancel</flux:button>
+                <flux:button wire:click="cancelOrder" wire:confirm="Cancel this order?" variant="danger" size="sm" wire:loading.attr="disabled" wire:target="cancelOrder">Cancel</flux:button>
             @endif
         </div>
     </div>
@@ -43,11 +46,11 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                         @foreach($order->lines as $line)
-                            <tr>
+                            <tr wire:key="line-{{ $line->id }}">
                                 <td class="py-2 text-gray-900 dark:text-white">{{ $line->title_snapshot }}</td>
-                                <td class="py-2 text-gray-500">{{ $line->sku_snapshot ?? '-' }}</td>
-                                <td class="py-2 text-center">{{ $line->quantity }}</td>
-                                <td class="py-2 text-right">${{ number_format($line->unit_price / 100, 2) }}</td>
+                                <td class="py-2 text-gray-500 dark:text-gray-400">{{ $line->sku_snapshot ?? '-' }}</td>
+                                <td class="py-2 text-center text-gray-500 dark:text-gray-400">{{ $line->quantity }}</td>
+                                <td class="py-2 text-right text-gray-500 dark:text-gray-400">${{ number_format($line->unit_price / 100, 2) }}</td>
                                 <td class="py-2 text-right font-medium text-gray-900 dark:text-white">${{ number_format($line->total_amount / 100, 2) }}</td>
                             </tr>
                         @endforeach
@@ -56,13 +59,13 @@
 
                 <div class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
                     <dl class="space-y-1 text-sm">
-                        <div class="flex justify-between"><dt class="text-gray-500">Subtotal</dt><dd>${{ number_format($order->subtotal_amount / 100, 2) }}</dd></div>
+                        <div class="flex justify-between"><dt class="text-gray-500 dark:text-gray-400">Subtotal</dt><dd class="text-gray-900 dark:text-white">${{ number_format($order->subtotal_amount / 100, 2) }}</dd></div>
                         @if($order->discount_amount > 0)
-                            <div class="flex justify-between"><dt class="text-gray-500">Discount</dt><dd class="text-green-600">-${{ number_format($order->discount_amount / 100, 2) }}</dd></div>
+                            <div class="flex justify-between"><dt class="text-gray-500 dark:text-gray-400">Discount</dt><dd class="text-green-600 dark:text-green-400">-${{ number_format($order->discount_amount / 100, 2) }}</dd></div>
                         @endif
-                        <div class="flex justify-between"><dt class="text-gray-500">Shipping</dt><dd>${{ number_format($order->shipping_amount / 100, 2) }}</dd></div>
-                        <div class="flex justify-between"><dt class="text-gray-500">Tax</dt><dd>${{ number_format($order->tax_amount / 100, 2) }}</dd></div>
-                        <div class="flex justify-between border-t pt-1 font-semibold dark:border-gray-700"><dt>Total</dt><dd>${{ number_format($order->total_amount / 100, 2) }}</dd></div>
+                        <div class="flex justify-between"><dt class="text-gray-500 dark:text-gray-400">Shipping</dt><dd class="text-gray-900 dark:text-white">${{ number_format($order->shipping_amount / 100, 2) }}</dd></div>
+                        <div class="flex justify-between"><dt class="text-gray-500 dark:text-gray-400">Tax</dt><dd class="text-gray-900 dark:text-white">${{ number_format($order->tax_amount / 100, 2) }}</dd></div>
+                        <div class="flex justify-between border-t pt-1 font-semibold text-gray-900 dark:border-gray-700 dark:text-white"><dt>Total</dt><dd>${{ number_format($order->total_amount / 100, 2) }}</dd></div>
                     </dl>
                 </div>
             </div>
@@ -73,7 +76,7 @@
                 @if($order->fulfillments->isNotEmpty())
                     <div class="mt-4 space-y-3">
                         @foreach($order->fulfillments as $f)
-                            <div class="rounded border border-gray-100 p-3 dark:border-gray-700">
+                            <div wire:key="fulfillment-{{ $f->id }}" class="rounded border border-gray-100 p-3 dark:border-gray-700">
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm font-medium">Fulfillment #{{ $loop->iteration }}</span>
                                     <flux:badge size="sm" :color="match($f->status->value) { 'delivered' => 'green', 'shipped' => 'blue', default => 'zinc' }">
@@ -96,7 +99,10 @@
                             <flux:input wire:model="trackingUrl" placeholder="Tracking URL" size="sm" />
                             <flux:input wire:model="trackingCompany" placeholder="Carrier" size="sm" />
                         </div>
-                        <flux:button wire:click="createFulfillment" size="sm" variant="primary" class="mt-2">Fulfill remaining items</flux:button>
+                        <flux:button wire:click="createFulfillment" size="sm" variant="primary" class="mt-2" wire:loading.attr="disabled">
+                            <span wire:loading.remove wire:target="createFulfillment">Fulfill remaining items</span>
+                            <span wire:loading wire:target="createFulfillment">Fulfilling...</span>
+                        </flux:button>
                     </div>
                 @endif
             </div>
@@ -107,7 +113,7 @@
                     <flux:heading size="lg">Refunds</flux:heading>
                     <div class="mt-4 space-y-2">
                         @foreach($order->refunds as $refund)
-                            <div class="flex items-center justify-between rounded border border-gray-100 p-3 text-sm dark:border-gray-700">
+                            <div wire:key="refund-{{ $refund->id }}" class="flex items-center justify-between rounded border border-gray-100 p-3 text-sm dark:border-gray-700">
                                 <div>
                                     <span class="font-medium">${{ number_format($refund->amount / 100, 2) }}</span>
                                     @if($refund->reason)
@@ -141,9 +147,9 @@
             <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
                 <flux:heading size="lg">Payment</flux:heading>
                 <div class="mt-3 text-sm">
-                    <p>{{ ucfirst(str_replace('_', ' ', $order->payment_method->value)) }}</p>
+                    <p class="text-gray-900 dark:text-white">{{ ucfirst(str_replace('_', ' ', $order->payment_method->value)) }}</p>
                     @foreach($order->payments as $payment)
-                        <p class="text-gray-500">{{ ucfirst($payment->status->value) }} - ${{ number_format($payment->amount / 100, 2) }}</p>
+                        <p wire:key="payment-{{ $payment->id }}" class="text-gray-500 dark:text-gray-400">{{ ucfirst($payment->status->value) }} - ${{ number_format($payment->amount / 100, 2) }}</p>
                     @endforeach
                 </div>
 
@@ -154,7 +160,10 @@
                             <flux:input wire:model="refundAmount" type="number" placeholder="Amount (cents)" size="sm" />
                             <flux:input wire:model="refundReason" placeholder="Reason" size="sm" />
                             <flux:checkbox wire:model="refundRestock" label="Restock items" />
-                            <flux:button wire:click="processRefund" size="sm" variant="danger">Refund</flux:button>
+                            <flux:button wire:click="processRefund" size="sm" variant="danger" wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="processRefund">Refund</span>
+                                <span wire:loading wire:target="processRefund">Processing...</span>
+                            </flux:button>
                         </div>
                     </div>
                 @endif

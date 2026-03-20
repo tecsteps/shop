@@ -17,12 +17,12 @@
                 @forelse($customers as $customer)
                     <tr wire:key="customer-{{ $customer->id }}">
                         <td class="px-4 py-3 text-sm"><a href="{{ route('admin.customers.show', $customer) }}" class="font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400">{{ $customer->name }}</a></td>
-                        <td class="px-4 py-3 text-sm text-gray-500">{{ $customer->email }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-500">{{ $customer->orders_count }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-500">{{ $customer->created_at?->format('M d, Y') }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $customer->email }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $customer->orders_count }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $customer->created_at?->format('M d, Y') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="px-4 py-8 text-center text-sm text-gray-500">No customers found.</td></tr>
+                    <tr><td colspan="4" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">No customers found.</td></tr>
                 @endforelse
             </tbody>
         </table>

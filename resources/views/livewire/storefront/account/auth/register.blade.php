@@ -39,8 +39,9 @@
 
         <flux:checkbox wire:model="marketing_opt_in" :label="__('I agree to receive marketing emails')" />
 
-        <flux:button variant="primary" type="submit" class="w-full">
-            {{ __('Create Account') }}
+        <flux:button variant="primary" type="submit" class="w-full" wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="register">{{ __('Create Account') }}</span>
+            <span wire:loading wire:target="register">{{ __('Creating...') }}</span>
         </flux:button>
     </form>
 </div>

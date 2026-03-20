@@ -20,7 +20,7 @@
                 <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
                     <flux:heading size="lg">Variants</flux:heading>
                     @if($product->variants->isEmpty())
-                        <p class="mt-2 text-sm text-gray-500">No variants.</p>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No variants.</p>
                     @else
                         <table class="mt-4 w-full text-sm">
                             <thead>
@@ -32,9 +32,9 @@
                             </thead>
                             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                                 @foreach($product->variants as $variant)
-                                    <tr>
+                                    <tr wire:key="variant-{{ $variant->id }}">
                                         <td class="py-2 text-gray-900 dark:text-white">{{ $variant->title }}</td>
-                                        <td class="py-2 text-gray-500">{{ $variant->sku ?? '-' }}</td>
+                                        <td class="py-2 text-gray-500 dark:text-gray-400">{{ $variant->sku ?? '-' }}</td>
                                         <td class="py-2 text-right text-gray-900 dark:text-white">${{ number_format($variant->price / 100, 2) }}</td>
                                     </tr>
                                 @endforeach
@@ -65,8 +65,9 @@
                 </div>
             </div>
 
-            <flux:button type="submit" variant="primary" class="w-full">
-                {{ $isEdit ? 'Save changes' : 'Create product' }}
+            <flux:button type="submit" variant="primary" class="w-full" wire:loading.attr="disabled">
+                <span wire:loading.remove wire:target="save">{{ $isEdit ? 'Save changes' : 'Create product' }}</span>
+                <span wire:loading wire:target="save">Saving...</span>
             </flux:button>
         </div>
     </form>

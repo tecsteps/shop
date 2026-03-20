@@ -27,8 +27,8 @@
             ];
         @endphp
 
-        @foreach($tiles as $tile)
-            <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        @foreach($tiles as $index => $tile)
+            <div wire:key="tile-{{ $index }}" class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $tile['label'] }}</p>
                 <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{{ $tile['value'] }}</p>
                 <div class="mt-1">
@@ -55,8 +55,8 @@
                     $maxCount = max(array_column($chartData, 'count'));
                     $maxCount = $maxCount > 0 ? $maxCount : 1;
                 @endphp
-                @foreach($chartData as $point)
-                    <div class="flex flex-1 flex-col items-center gap-1">
+                @foreach($chartData as $index => $point)
+                    <div wire:key="chart-{{ $index }}" class="flex flex-1 flex-col items-center gap-1">
                         <div class="w-full rounded-t bg-blue-500 dark:bg-blue-400"
                              style="height: {{ ($point['count'] / $maxCount) * 100 }}%"
                              title="{{ $point['date'] }}: {{ $point['count'] }} orders"></div>
@@ -82,8 +82,8 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                        @foreach($topProducts as $product)
-                            <tr>
+                        @foreach($topProducts as $index => $product)
+                            <tr wire:key="top-product-{{ $index }}">
                                 <td class="py-2 text-gray-900 dark:text-white">{{ $product['title'] }}</td>
                                 <td class="py-2 text-right text-gray-500 dark:text-gray-400">{{ $product['units_sold'] }}</td>
                                 <td class="py-2 text-right text-gray-900 dark:text-white">${{ number_format($product['revenue'] / 100, 2) }}</td>
@@ -107,8 +107,8 @@
                 ];
             @endphp
             <div class="mt-4 space-y-3">
-                @foreach($steps as $step)
-                    <div class="flex items-center gap-3">
+                @foreach($steps as $index => $step)
+                    <div wire:key="funnel-{{ $index }}" class="flex items-center gap-3">
                         <span class="w-32 text-sm text-gray-600 dark:text-gray-400">{{ $step['label'] }}</span>
                         <div class="flex-1">
                             <div class="{{ $step['color'] }} h-6 rounded" style="width: {{ $maxFunnel > 0 ? ($step['value'] / $maxFunnel) * 100 : 0 }}%"></div>

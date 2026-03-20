@@ -11,7 +11,7 @@
                 </flux:button>
                 <flux:menu>
                     @foreach($stores as $store)
-                        <flux:menu.item wire:click="switchStore({{ $store->id }})">
+                        <flux:menu.item wire:key="store-{{ $store->id }}" wire:click="switchStore({{ $store->id }})">
                             {{ $store->name }}
                         </flux:menu.item>
                     @endforeach
@@ -31,7 +31,8 @@
                     </flux:menu.item>
                     <flux:separator />
                     <flux:menu.item wire:click="logout" icon="arrow-right-start-on-rectangle">
-                        Log out
+                        <span wire:loading.remove wire:target="logout">Log out</span>
+                        <span wire:loading wire:target="logout">Logging out...</span>
                     </flux:menu.item>
                 </flux:menu>
             </flux:dropdown>

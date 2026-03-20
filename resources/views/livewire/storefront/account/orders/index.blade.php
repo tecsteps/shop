@@ -20,7 +20,7 @@
     @if($orders->isEmpty())
         <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">{{ __('You have no orders yet.') }}</p>
     @else
-        <div class="mt-8 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="mt-8 overflow-x-auto overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-800">
                     <tr>

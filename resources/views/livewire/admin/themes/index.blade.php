@@ -4,7 +4,7 @@
         @forelse($themes as $theme)
             <div wire:key="theme-{{ $theme->id }}" class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
                 <flux:heading size="lg">{{ $theme->name }}</flux:heading>
-                <p class="mt-1 text-sm text-gray-500">Version {{ $theme->version ?? '1.0' }}</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Version {{ $theme->version ?? '1.0' }}</p>
                 <div class="mt-3">
                     <flux:badge size="sm" :color="$theme->status === 'published' ? 'green' : 'yellow'">
                         {{ ucfirst($theme->status) }}
@@ -12,7 +12,7 @@
                 </div>
             </div>
         @empty
-            <p class="text-sm text-gray-500">No themes.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">No themes.</p>
         @endforelse
     </div>
 </div>

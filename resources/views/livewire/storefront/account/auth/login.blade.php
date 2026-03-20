@@ -23,8 +23,9 @@
 
         <flux:checkbox wire:model="remember" :label="__('Remember me')" />
 
-        <flux:button variant="primary" type="submit" class="w-full">
-            {{ __('Log in') }}
+        <flux:button variant="primary" type="submit" class="w-full" wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="authenticate">{{ __('Log in') }}</span>
+            <span wire:loading wire:target="authenticate">{{ __('Logging in...') }}</span>
         </flux:button>
     </form>
 </div>

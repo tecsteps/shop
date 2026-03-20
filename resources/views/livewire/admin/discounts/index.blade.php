@@ -18,8 +18,8 @@
                 @forelse($discounts as $discount)
                     <tr wire:key="discount-{{ $discount->id }}">
                         <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $discount->code }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-500">{{ ucfirst(str_replace('_', ' ', $discount->type->value ?? $discount->type)) }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ ucfirst(str_replace('_', ' ', $discount->type->value ?? $discount->type)) }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
                             @if(($discount->value_type->value ?? $discount->value_type) === 'percent')
                                 {{ $discount->value }}%
                             @else
@@ -31,10 +31,10 @@
                                 {{ ucfirst($discount->status->value ?? $discount->status) }}
                             </flux:badge>
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-500">{{ $discount->times_used ?? 0 }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $discount->times_used ?? 0 }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="px-4 py-8 text-center text-sm text-gray-500">No discounts found.</td></tr>
+                    <tr><td colspan="5" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">No discounts found.</td></tr>
                 @endforelse
             </tbody>
         </table>
