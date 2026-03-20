@@ -72,4 +72,9 @@ class Store extends Model
     {
         return $this->hasMany(InventoryItem::class);
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }
