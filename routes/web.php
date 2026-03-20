@@ -27,6 +27,34 @@ Route::prefix('admin')->group(function () {
         ->name('admin.logout');
 });
 
+// Admin panel routes (authenticated + store-scoped)
+Route::prefix('admin')
+    ->middleware(['auth', 'resolve.store:admin'])
+    ->group(function () {
+        Route::get('/', \App\Livewire\Admin\Dashboard::class)->name('admin.dashboard');
+
+        Route::get('products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index');
+        Route::get('products/create', \App\Livewire\Admin\Products\Form::class)->name('admin.products.create');
+        Route::get('products/{productId}/edit', \App\Livewire\Admin\Products\Form::class)->name('admin.products.edit');
+
+        Route::get('orders', \App\Livewire\Admin\Orders\Index::class)->name('admin.orders.index');
+        Route::get('orders/{orderId}', \App\Livewire\Admin\Orders\Show::class)->name('admin.orders.show');
+
+        Route::get('collections', \App\Livewire\Admin\Collections\Index::class)->name('admin.collections.index');
+
+        Route::get('customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
+        Route::get('customers/{customerId}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
+
+        Route::get('discounts', \App\Livewire\Admin\Discounts\Index::class)->name('admin.discounts.index');
+
+        Route::get('pages', \App\Livewire\Admin\Pages\Index::class)->name('admin.pages.index');
+        Route::get('navigation', \App\Livewire\Admin\Navigation\Index::class)->name('admin.navigation.index');
+        Route::get('themes', \App\Livewire\Admin\Themes\Index::class)->name('admin.themes.index');
+
+        Route::get('analytics', \App\Livewire\Admin\Analytics\Index::class)->name('admin.analytics.index');
+        Route::get('settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index');
+    });
+
 // Storefront routes
 Route::middleware('resolve.store:storefront')->group(function () {
     // Public storefront pages
