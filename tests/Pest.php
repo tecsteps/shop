@@ -41,7 +41,21 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Creates a full store context for testing: Organization, Store, StoreDomain, User with Owner role.
+ * Binds 'current_store' in the container.
+ *
+ * @return array{store: \App\Models\Store, user: \App\Models\User, organization: \App\Models\Organization, domain: \App\Models\StoreDomain}
+ */
+function createStoreContext(): array
 {
-    // ..
+    $organization = \App\Models\Organization::factory()->create();
+    $store = \App\Models\Store::factory()->create(['organization_id' => $organization->id]);
+    $domain = \App\Models\StoreDomain::factory()->create(['store_id' => $store->id]);
+    $user = \App\Models\User::factory()->create();
+    $store->users()->attach($user, ['role' => 'owner']);
+
+    app()->instance('current_store', $store);
+
+    return compact('store', 'user', 'organization', 'domain');
 }
