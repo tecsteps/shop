@@ -8,6 +8,8 @@ use App\Http\Middleware\ResolveStore;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\User;
+use App\Services\NavigationService;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -29,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(ThemeSettingsService::class);
+        $this->app->singleton(NavigationService::class);
+
         $this->app->singleton('current_store', function () {
             $hostname = request()->getHost();
 
