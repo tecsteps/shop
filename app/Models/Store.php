@@ -97,4 +97,14 @@ class Store extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function searchSettings(): HasOne
+    {
+        return $this->hasOne(SearchSettings::class);
+    }
+
+    public function searchQueries(): HasMany
+    {
+        return $this->hasMany(SearchQuery::class);
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Storefront\Search;
 
+use App\Models\Store;
+use App\Services\SearchService;
 use Livewire\Component;
 
 class Modal extends Component
@@ -30,6 +32,17 @@ class Modal extends Component
 
     public function render(): mixed
     {
-        return view('livewire.storefront.search.modal');
+        $suggestions = collect();
+
+        if (mb_strlen($this->query) >= 2 && app()->bound('current_store')) {
+            $store = app('current_store');
+            if ($store instanceof Store) {
+                $suggestions = app(SearchService::class)->autocomplete($store, $this->query, 5);
+            }
+        }
+
+        return view('livewire.storefront.search.modal', [
+            'suggestions' => $suggestions,
+        ]);
     }
 }

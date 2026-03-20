@@ -6,9 +6,11 @@ use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
 use App\Enums\StoreUserRole;
 use App\Http\Middleware\ResolveStore;
+use App\Models\Product;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\User;
+use App\Observers\ProductObserver;
 use App\Services\NavigationService;
 use App\Services\Payment\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
@@ -70,6 +72,8 @@ class AppServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
         $this->configureGates();
         $this->configureLivewire();
+
+        Product::observe(ProductObserver::class);
     }
 
     /**
