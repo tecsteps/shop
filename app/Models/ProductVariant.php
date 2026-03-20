@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\VariantStatus;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,15 @@ class ProductVariant extends Model
             'requires_shipping' => 'boolean',
             'is_default' => 'boolean',
         ];
+    }
+
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->optionValues
+                ->pluck('value')
+                ->implode(' / ') ?: 'Default',
+        );
     }
 
     public function product(): BelongsTo

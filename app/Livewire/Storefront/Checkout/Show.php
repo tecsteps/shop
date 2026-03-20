@@ -100,7 +100,7 @@ class Show extends Component
             'address1' => 'required|string',
             'city' => 'required|string',
             'country' => 'required|string|size:2',
-            'postalCode' => 'required|string',
+            'postalCode' => ['required', 'string', 'regex:/^[a-zA-Z0-9\s\-]{3,10}$/'],
         ]);
 
         $this->error = null;

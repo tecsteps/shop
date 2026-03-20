@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Products;
 
+use App\Enums\InventoryPolicy;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CartService;
@@ -22,7 +23,7 @@ class Show extends Component
         $this->product = Product::query()
             ->where('handle', $handle)
             ->where('status', 'active')
-            ->with(['variants', 'options.values', 'media'])
+            ->with(['variants.optionValues', 'variants.inventoryItem', 'options.values', 'media'])
             ->firstOrFail();
 
         $defaultVariant = $this->product->variants->first();
@@ -45,6 +46,34 @@ class Show extends Component
     {
         $this->selectedVariantId = $variantId;
         $this->quantity = 1;
+    }
+
+    public function getIsSoldOutProperty(): bool
+    {
+        $variant = $this->selectedVariant;
+
+        if (! $variant || ! $variant->inventoryItem) {
+            return false;
+        }
+
+        $inventory = $variant->inventoryItem;
+        $available = $inventory->quantity_on_hand - $inventory->quantity_reserved;
+
+        return $available <= 0 && $inventory->policy === InventoryPolicy::Deny;
+    }
+
+    public function getIsBackorderProperty(): bool
+    {
+        $variant = $this->selectedVariant;
+
+        if (! $variant || ! $variant->inventoryItem) {
+            return false;
+        }
+
+        $inventory = $variant->inventoryItem;
+        $available = $inventory->quantity_on_hand - $inventory->quantity_reserved;
+
+        return $available <= 0 && $inventory->policy === InventoryPolicy::Continue;
     }
 
     public function addToCart(): void

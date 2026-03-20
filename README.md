@@ -124,6 +124,7 @@ Every phase follows this exact sequence:
 - All links, routes, and rendered pages must work. Route existence alone is insufficient.
 - All checks are tracked in a phase-specific markdown file.
 - Every check must PASS. No gaps, no compromises, no skipped cases.
+- Every page must be visually checked, to ensure there are no UI issues.
 - If bugs are found: developers fix them, then the QA Analyst re-verifies.
 
 ### 5. Controller Sign-Off
@@ -189,8 +190,9 @@ After all phases are complete:
 3. Verification is non-scripted (agent-driven, not pre-written test scripts).
 4. Every test case must be executed. No skipping.
 5. All results are tracked in `work/final-e2e-qa.md` with pass/fail per test case.
-6. If any test case fails: developers fix the issue, then the UAT Analyst re-verifies.
-7. The **Controller** reviews `work/final-e2e-qa.md` and applies these acceptance criteria:
+6. Every page must be screenshotted, visually checked and confirmed in `work/final-e2e-qa.md`  
+7. If any test case fails: developers fix the issue, then the UAT Analyst re-verifies.
+8The **Controller** reviews `work/final-e2e-qa.md` and applies these acceptance criteria:
     - [ ] The file contains exactly 143 test case entries (matching `specs/08-PLAYWRIGHT-E2E-PLAN.md`).
     - [ ] Every entry describes what was tested, how, expected vs. actual, and has an explicit PASS status.
     - [ ] No FAIL, UNKNOWN, SKIPPED, PARTIAL, N/A, or blank entries.
@@ -198,6 +200,7 @@ After all phases are complete:
     - [ ] No test case IDs from the E2E plan are missing.
     - [ ] The file contains a self-assessment section at the end.
     - [ ] Cross-reference: 143 unique IDs, 143 PASS results.
+    - [ ] Every page is visually checked and confirmed
 
 ---
 

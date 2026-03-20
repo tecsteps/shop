@@ -50,32 +50,58 @@
 
                 {{-- Variant Selection --}}
                 @if($product->variants->count() > 1)
-                    <div class="mt-6 space-y-4">
-                        @foreach($product->variants as $variant)
-                            <button wire:click="selectVariant({{ $variant->id }})"
-                                    @class([
-                                        'rounded-md border px-4 py-2 text-sm font-medium transition',
-                                        'border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-zinc-900' => $selectedVariantId === $variant->id,
-                                        'border-zinc-300 text-zinc-700 hover:border-zinc-400 dark:border-zinc-600 dark:text-zinc-300 dark:hover:border-zinc-500' => $selectedVariantId !== $variant->id,
-                                    ])>
-                                {{ $variant->title }}
-                            </button>
-                        @endforeach
+                    <fieldset class="mt-6 space-y-4" aria-label="Product variants">
+                        <legend class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Options</legend>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($product->variants as $variant)
+                                <button wire:click="selectVariant({{ $variant->id }})"
+                                        aria-label="{{ $variant->title }}"
+                                        @class([
+                                            'rounded-md border px-4 py-2 text-sm font-medium transition',
+                                            'border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-zinc-900' => $selectedVariantId === $variant->id,
+                                            'border-zinc-300 text-zinc-700 hover:border-zinc-400 dark:border-zinc-600 dark:text-zinc-300 dark:hover:border-zinc-500' => $selectedVariantId !== $variant->id,
+                                        ])>
+                                    {{ $variant->title }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </fieldset>
+                @endif
+
+                {{-- Stock Status --}}
+                @if($this->isSoldOut)
+                    <div class="mt-4 rounded-md bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:bg-red-900/20 dark:text-red-400">
+                        Sold out
+                    </div>
+                @elseif($this->isBackorder)
+                    <div class="mt-4 rounded-md bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
+                        Available on backorder
                     </div>
                 @endif
 
                 {{-- Quantity & Add to Cart --}}
                 <div class="mt-6 flex items-center gap-4">
-                    @include('storefront.components.quantity-selector', [
-                        'value' => $quantity,
-                        'min' => 1,
-                        'max' => 99,
-                        'wireModel' => 'quantity',
-                    ])
+                    @unless($this->isSoldOut)
+                        @include('storefront.components.quantity-selector', [
+                            'value' => $quantity,
+                            'min' => 1,
+                            'max' => 99,
+                            'wireModel' => 'quantity',
+                        ])
+                    @endunless
 
                     <button wire:click="addToCart"
-                            class="flex-1 rounded-md bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">
-                        Add to cart
+                            @if($this->isSoldOut) disabled @endif
+                            @class([
+                                'flex-1 rounded-md px-6 py-3 text-sm font-semibold transition',
+                                'bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-500' => $this->isSoldOut,
+                                'bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200' => !$this->isSoldOut,
+                            ])>
+                        @if($this->isSoldOut)
+                            Sold out
+                        @else
+                            Add to cart
+                        @endif
                     </button>
                 </div>
 

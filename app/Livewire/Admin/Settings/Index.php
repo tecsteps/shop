@@ -73,7 +73,7 @@ class Index extends Component
 
         $tax = TaxSettings::where('store_id', $store->id)->first();
         if ($tax) {
-            $this->taxMode = $tax->mode ?? 'manual';
+            $this->taxMode = $tax->mode instanceof \App\Enums\TaxMode ? $tax->mode->value : ($tax->mode ?? 'manual');
             $this->taxRate = $tax->rate ?? 0;
             $this->taxName = $tax->tax_name ?? 'Tax';
             $this->pricesIncludeTax = (bool) $tax->prices_include_tax;
