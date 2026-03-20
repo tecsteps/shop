@@ -120,7 +120,7 @@
                                 <span class="font-medium">{{ $this->formatCurrency($refund->amount) }}</span>
                                 @if($refund->reason) <span class="text-zinc-500"> - {{ $refund->reason }}</span> @endif
                             </div>
-                            <flux:badge size="sm" :color="$refund->status === 'processed' ? 'green' : 'red'">{{ ucfirst($refund->status) }}</flux:badge>
+                            <flux:badge size="sm" :color="$refund->status === \App\Enums\RefundStatus::Processed || $refund->status === 'processed' ? 'green' : 'red'">{{ ucfirst($refund->status instanceof \App\Enums\RefundStatus ? $refund->status->value : $refund->status) }}</flux:badge>
                         </div>
                     @endforeach
                 </div>

@@ -59,7 +59,7 @@ class MockPaymentProvider implements PaymentProvider
                 success: false,
                 status: 'failed',
                 errorCode: 'card_declined',
-                errorMessage: 'The card was declined.',
+                errorMessage: 'Your card was declined.',
                 rawResponse: ['provider' => 'mock', 'card_number' => $cardNumber],
             );
         }
@@ -69,7 +69,7 @@ class MockPaymentProvider implements PaymentProvider
                 success: false,
                 status: 'failed',
                 errorCode: 'insufficient_funds',
-                errorMessage: 'Insufficient funds on the card.',
+                errorMessage: 'Your card has insufficient funds.',
                 rawResponse: ['provider' => 'mock', 'card_number' => $cardNumber],
             );
         }

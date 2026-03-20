@@ -70,7 +70,7 @@
                     @foreach($this->domains as $domain)
                         <flux:table.row>
                             <flux:table.cell variant="strong">{{ $domain->hostname }}</flux:table.cell>
-                            <flux:table.cell>{{ ucfirst($domain->type) }}</flux:table.cell>
+                            <flux:table.cell>{{ ucfirst($domain->type instanceof \App\Enums\StoreDomainType ? $domain->type->value : $domain->type) }}</flux:table.cell>
                             <flux:table.cell>
                                 @if($domain->is_primary)
                                     <flux:badge size="sm" color="green">Primary</flux:badge>

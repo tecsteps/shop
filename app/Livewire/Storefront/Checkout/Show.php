@@ -101,6 +101,8 @@ class Show extends Component
             'city' => 'required|string',
             'country' => 'required|string|size:2',
             'postalCode' => ['required', 'string', 'regex:/^[a-zA-Z0-9\s\-]{3,10}$/'],
+        ], [
+            'postalCode.regex' => 'The postal code format is invalid. Use only letters, numbers, spaces, and hyphens (3-10 characters).',
         ]);
 
         $this->error = null;
@@ -165,6 +167,8 @@ class Show extends Component
             session()->forget('cart_id');
 
             $this->redirect(route('storefront.checkout.confirmation', $checkout));
+        } catch (\App\Exceptions\PaymentFailedException $e) {
+            $this->error = 'Payment declined: '.$e->getMessage();
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
         }
