@@ -10,20 +10,18 @@ class TaxSettingsSeeder extends Seeder
 {
     public function run(): void
     {
-        $store = Store::first();
+        $stores = Store::all();
 
-        if (! $store) {
-            return;
+        foreach ($stores as $store) {
+            TaxSettings::factory()->create([
+                'store_id' => $store->id,
+                'mode' => 'manual',
+                'provider' => 'none',
+                'rate' => 1900,
+                'prices_include_tax' => true,
+                'tax_name' => 'VAT',
+                'is_active' => true,
+            ]);
         }
-
-        TaxSettings::factory()->create([
-            'store_id' => $store->id,
-            'mode' => 'manual',
-            'provider' => 'none',
-            'rate' => 1900,
-            'prices_include_tax' => false,
-            'tax_name' => 'VAT',
-            'is_active' => true,
-        ]);
     }
 }

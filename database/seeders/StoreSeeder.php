@@ -4,44 +4,32 @@ namespace Database\Seeders;
 
 use App\Models\Organization;
 use App\Models\Store;
-use App\Models\StoreDomain;
-use App\Models\StoreSettings;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class StoreSeeder extends Seeder
 {
     public function run(): void
     {
-        $organization = Organization::first();
+        $org = Organization::where('name', 'Acme Corp')->first();
 
-        $store = Store::factory()->create([
-            'organization_id' => $organization->id,
+        Store::factory()->create([
+            'organization_id' => $org->id,
             'name' => 'Acme Fashion',
             'handle' => 'acme-fashion',
+            'status' => 'active',
+            'default_currency' => 'EUR',
+            'default_locale' => 'en',
+            'timezone' => 'Europe/Berlin',
         ]);
 
-        StoreDomain::factory()->create([
-            'store_id' => $store->id,
-            'hostname' => 'acme-fashion.test',
-            'type' => 'storefront',
-            'is_primary' => true,
+        Store::factory()->create([
+            'organization_id' => $org->id,
+            'name' => 'Acme Electronics',
+            'handle' => 'acme-electronics',
+            'status' => 'active',
+            'default_currency' => 'EUR',
+            'default_locale' => 'en',
+            'timezone' => 'Europe/Berlin',
         ]);
-
-        StoreDomain::factory()->create([
-            'store_id' => $store->id,
-            'hostname' => 'shop.test',
-            'type' => 'storefront',
-            'is_primary' => false,
-        ]);
-
-        StoreSettings::factory()->create([
-            'store_id' => $store->id,
-        ]);
-
-        $user = User::first();
-        if ($user) {
-            $store->users()->attach($user->id, ['role' => 'owner']);
-        }
     }
 }

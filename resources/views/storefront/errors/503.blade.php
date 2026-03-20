@@ -11,6 +11,9 @@
         <div class="text-4xl font-bold text-zinc-900 dark:text-white">{{ config('app.name') }}</div>
         <h1 class="mt-6 text-2xl font-bold text-zinc-900 dark:text-white">We'll be back soon</h1>
         <p class="mt-2 text-zinc-600 dark:text-zinc-400">We are performing scheduled maintenance. Please check back shortly.</p>
+        <a href="/" class="mt-6 inline-block rounded-md bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">
+            Go to home page
+        </a>
     </div>
 </body>
 </html>

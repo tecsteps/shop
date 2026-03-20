@@ -4,6 +4,12 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white antialiased dark:bg-zinc-800">
+        {{-- Skip to content --}}
+        <a href="#main-content"
+           class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-zinc-900 focus:px-4 focus:py-2 focus:text-white focus:outline-none dark:focus:bg-white dark:focus:text-zinc-900">
+            Skip to main content
+        </a>
+
         <flux:sidebar sticky collapsible="mobile" class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
                 <flux:sidebar.brand
@@ -130,7 +136,7 @@
             </flux:dropdown>
         </flux:header>
 
-        <flux:main>
+        <flux:main id="main-content">
             {{-- Breadcrumbs --}}
             @if(isset($breadcrumbs) && count($breadcrumbs) > 0)
                 <flux:breadcrumbs class="mb-6">

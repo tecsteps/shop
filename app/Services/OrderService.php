@@ -18,6 +18,7 @@ use App\Models\Payment;
 use App\Models\Store;
 use App\Services\Payment\PaymentResult;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -140,6 +141,14 @@ class OrderService
             }
 
             OrderCreated::dispatch($order);
+
+            Log::channel('structured')->info('Order created', [
+                'order_number' => $order->order_number,
+                'store_id' => $order->store_id,
+                'customer_email' => $order->email,
+                'total_amount' => $order->total_amount,
+                'payment_method' => $order->payment_method->value,
+            ]);
 
             return $order;
         });

@@ -7,6 +7,7 @@ use App\Jobs\DeliverWebhook;
 use App\Models\Store;
 use App\Models\WebhookDelivery;
 use App\Models\WebhookSubscription;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class WebhookService
@@ -28,6 +29,13 @@ class WebhookService
             ]);
 
             DeliverWebhook::dispatch($delivery, $eventType, $payload);
+
+            Log::channel('structured')->info('Webhook dispatched', [
+                'event_type' => $eventType,
+                'subscription_id' => $subscription->id,
+                'delivery_id' => $delivery->id,
+                'store_id' => $store->id,
+            ]);
         }
     }
 

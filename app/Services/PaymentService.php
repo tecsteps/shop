@@ -14,6 +14,7 @@ use App\Models\Fulfillment;
 use App\Models\FulfillmentLine;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 class PaymentService
@@ -57,6 +58,13 @@ class PaymentService
             $this->autoFulfillDigitalProducts($order);
 
             OrderPaid::dispatch($order);
+
+            Log::channel('structured')->info('Bank transfer payment confirmed', [
+                'order_number' => $order->order_number,
+                'payment_id' => $payment?->id,
+                'old_status' => 'pending',
+                'new_status' => 'captured',
+            ]);
         });
     }
 
