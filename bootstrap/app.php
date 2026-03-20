@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'resolve.store' => ResolveStore::class,
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\ResolveStoreFromHostname::class,
+        ]);
+
         $middleware->redirectGuestsTo(function ($request) {
             if ($request->is('account', 'account/*')) {
                 return route('customer.login');
