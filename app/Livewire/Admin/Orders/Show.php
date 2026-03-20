@@ -8,10 +8,13 @@ use App\Enums\PaymentStatus;
 use App\Models\Order;
 use App\Services\FulfillmentService;
 use App\Services\RefundService;
+use App\Support\CurrencyFormatter;
 use Livewire\Component;
 
 class Show extends Component
 {
+    use CurrencyFormatter;
+
     public Order $order;
 
     // Fulfillment modal
@@ -184,11 +187,6 @@ class Show extends Component
         } catch (\Exception $e) {
             $this->dispatch('toast', type: 'error', message: $e->getMessage());
         }
-    }
-
-    public function formatCurrency(int $amountInCents): string
-    {
-        return '$'.number_format($amountInCents / 100, 2);
     }
 
     public function render(): mixed

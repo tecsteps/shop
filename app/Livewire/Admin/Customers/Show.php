@@ -4,11 +4,14 @@ namespace App\Livewire\Admin\Customers;
 
 use App\Models\Customer;
 use App\Models\CustomerAddress;
+use App\Support\CurrencyFormatter;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Show extends Component
 {
+    use CurrencyFormatter;
+
     public Customer $customer;
 
     // Address modal
@@ -113,11 +116,6 @@ class Show extends Component
         $this->customer->refresh();
         $this->customer->load('addresses');
         $this->dispatch('toast', type: 'success', message: 'Default address updated.');
-    }
-
-    public function formatCurrency(int $amountInCents): string
-    {
-        return '$'.number_format($amountInCents / 100, 2);
     }
 
     #[Computed]

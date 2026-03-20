@@ -42,6 +42,6 @@ class Dashboard extends Component
         return view('livewire.storefront.account.dashboard', [
             'customer' => $customer,
             'recentOrders' => $recentOrders,
-        ])->layout('layouts.storefront');
+        ])->layout('layouts::storefront');
     }
 }

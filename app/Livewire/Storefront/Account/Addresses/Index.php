@@ -89,9 +89,13 @@ class Index extends Component
     public function deleteAddress(int $addressId): void
     {
         $customer = Auth::guard('customer')->user();
-        CustomerAddress::where('id', $addressId)
-            ->where('customer_id', $customer->id)
-            ->delete();
+        $address = CustomerAddress::find($addressId);
+
+        if (! $address || $address->customer_id !== $customer->id) {
+            abort(403);
+        }
+
+        $address->delete();
     }
 
     public function setDefault(int $addressId): void
@@ -132,6 +136,6 @@ class Index extends Component
 
         return view('livewire.storefront.account.addresses.index', [
             'addresses' => $addresses,
-        ])->layout('layouts.storefront');
+        ])->layout('layouts::storefront');
     }
 }

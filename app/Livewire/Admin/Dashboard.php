@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Order;
 use App\Models\OrderLine;
+use App\Support\CurrencyFormatter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
@@ -11,6 +12,8 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
+    use CurrencyFormatter;
+
     public string $dateRange = 'last_30_days';
 
     public ?string $customStartDate = null;
@@ -80,11 +83,6 @@ class Dashboard extends Component
             ->limit(5)
             ->get()
             ->toArray();
-    }
-
-    public function formatCurrency(int $amountInCents): string
-    {
-        return '$'.number_format($amountInCents / 100, 2);
     }
 
     public function render(): mixed

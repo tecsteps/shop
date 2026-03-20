@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Customers;
 
 use App\Models\Customer;
+use App\Support\CurrencyFormatter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -10,6 +11,7 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use CurrencyFormatter;
     use WithPagination;
 
     #[Url]
@@ -35,11 +37,6 @@ class Index extends Component
         }
 
         return $query->latest('created_at')->paginate(15);
-    }
-
-    public function formatCurrency(int $amountInCents): string
-    {
-        return '$'.number_format($amountInCents / 100, 2);
     }
 
     public function render(): mixed

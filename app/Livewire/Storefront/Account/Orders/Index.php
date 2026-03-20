@@ -19,6 +19,6 @@ class Index extends Component
 
         return view('livewire.storefront.account.orders.index', [
             'orders' => $orders,
-        ])->layout('layouts.storefront');
+        ])->layout('layouts::storefront');
     }
 }

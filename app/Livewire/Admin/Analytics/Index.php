@@ -3,12 +3,15 @@
 namespace App\Livewire\Admin\Analytics;
 
 use App\Models\AnalyticsDaily;
+use App\Support\CurrencyFormatter;
 use Carbon\Carbon;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Index extends Component
 {
+    use CurrencyFormatter;
+
     public string $dateRange = 'last_30_days';
 
     public ?string $customStartDate = null;
@@ -75,11 +78,6 @@ class Index extends Component
             'revenue' => $dailyData->pluck('revenue_amount')->toArray(),
             'orders' => $dailyData->pluck('orders_count')->toArray(),
         ];
-    }
-
-    public function formatCurrency(int $amountInCents): string
-    {
-        return '$'.number_format($amountInCents / 100, 2);
     }
 
     public function render(): mixed

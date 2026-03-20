@@ -30,6 +30,6 @@ class Show extends Component
 
         return view('livewire.storefront.account.orders.show', [
             'order' => $order,
-        ])->layout('layouts.storefront');
+        ])->layout('layouts::storefront');
     }
 }
