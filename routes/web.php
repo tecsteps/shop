@@ -42,9 +42,17 @@ Route::prefix('account')->middleware(['storefront'])->group(function () {
     Route::get('register', \App\Livewire\Storefront\Account\Auth\Register::class)
         ->name('storefront.register');
 
-    Route::get('/', function () {
-        return view('storefront.account.dashboard');
-    })->middleware(['auth.customer'])->name('storefront.account');
+    Route::get('/', \App\Livewire\Storefront\Account\Dashboard::class)
+        ->middleware(['auth.customer'])->name('storefront.account');
+
+    Route::get('orders', \App\Livewire\Storefront\Account\Orders\Index::class)
+        ->middleware(['auth.customer'])->name('storefront.account.orders');
+
+    Route::get('orders/{orderNumber}', \App\Livewire\Storefront\Account\Orders\Show::class)
+        ->middleware(['auth.customer'])->name('storefront.account.orders.show');
+
+    Route::get('addresses', \App\Livewire\Storefront\Account\Addresses\Index::class)
+        ->middleware(['auth.customer'])->name('storefront.account.addresses');
 
     Route::post('logout', function () {
         auth()->guard('customer')->logout();
