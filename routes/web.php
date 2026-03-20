@@ -69,6 +69,12 @@ Route::prefix('admin')->group(function () {
         // Analytics
         Route::get('analytics', \App\Livewire\Admin\Analytics\Index::class)->name('admin.analytics.index');
 
+        // Apps
+        Route::get('apps', \App\Livewire\Admin\Apps\Index::class)->name('admin.apps.index');
+
+        // Developers
+        Route::get('developers', \App\Livewire\Admin\Developers\Index::class)->name('admin.developers.index');
+
         // Settings
         Route::get('settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index');
     });

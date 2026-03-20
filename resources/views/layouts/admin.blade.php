@@ -71,6 +71,12 @@
                 <flux:sidebar.item icon="cog-6-tooth" href="{{ route('admin.settings.index') }}" :current="request()->routeIs('admin.settings.*')" wire:navigate>
                     Settings
                 </flux:sidebar.item>
+                <flux:sidebar.item icon="squares-2x2" href="{{ route('admin.apps.index') }}" :current="request()->routeIs('admin.apps.*')" wire:navigate>
+                    Apps
+                </flux:sidebar.item>
+                <flux:sidebar.item icon="code-bracket" href="{{ route('admin.developers.index') }}" :current="request()->routeIs('admin.developers.*')" wire:navigate>
+                    Developers
+                </flux:sidebar.item>
             </flux:sidebar.nav>
 
             <flux:dropdown position="top" align="start" class="max-lg:hidden">
