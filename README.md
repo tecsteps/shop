@@ -191,8 +191,9 @@ After all phases are complete:
 4. Every test case must be executed. No skipping.
 5. All results are tracked in `work/final-e2e-qa.md` with pass/fail per test case.
 6. Every page must be screenshotted, visually checked and confirmed in `work/final-e2e-qa.md`  
-7. If any test case fails: developers fix the issue, then the UAT Analyst re-verifies.
-8The **Controller** reviews `work/final-e2e-qa.md` and applies these acceptance criteria:
+7. All links (Storefront + Admin) must be checked, so there are no broken links
+8. If any test case fails: developers fix the issue, then the UAT Analyst re-verifies.
+9. The **Controller** reviews `work/final-e2e-qa.md` and applies these acceptance criteria:
     - [ ] The file contains exactly 143 test case entries (matching `specs/08-PLAYWRIGHT-E2E-PLAN.md`).
     - [ ] Every entry describes what was tested, how, expected vs. actual, and has an explicit PASS status.
     - [ ] No FAIL, UNKNOWN, SKIPPED, PARTIAL, N/A, or blank entries.
