@@ -2,13 +2,13 @@
 
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Auth\Logout as AdminLogout;
+use App\Livewire\Storefront\Account\Addresses\Index as AddressesIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Account\Dashboard as CustomerDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as OrdersIndex;
+use App\Livewire\Storefront\Account\Orders\Show as OrderShow;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -46,4 +46,13 @@ Route::middleware('resolve.store:storefront')->group(function () {
     Route::get('account/register', CustomerRegister::class)
         ->middleware('guest:customer')
         ->name('customer.register');
+
+    // Customer account routes (auth required)
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('account', CustomerDashboard::class)->name('customer.account');
+        Route::get('account/orders', OrdersIndex::class)->name('customer.orders');
+        Route::get('account/orders/{orderNumber}', OrderShow::class)->name('customer.orders.show');
+        Route::get('account/addresses', AddressesIndex::class)->name('customer.addresses');
+        Route::post('account/logout', [CustomerDashboard::class, 'logout'])->name('customer.logout');
+    });
 });
