@@ -81,7 +81,11 @@ it('completes full checkout happy path', function () {
     $this->variant->inventoryItem->refresh();
     expect($this->variant->inventoryItem->quantity_reserved)->toBe(2);
 
-    $checkout = $this->checkoutService->completeCheckout($checkout);
+    $order = $this->checkoutService->completeCheckout($checkout, ['card_number' => '4242424242424242']);
+    expect($order)->toBeInstanceOf(\App\Models\Order::class)
+        ->and($order->status)->toBe(\App\Enums\OrderStatus::Paid);
+
+    $checkout->refresh();
     expect($checkout->status)->toBe(CheckoutStatus::Completed);
 
     $this->cart->refresh();
@@ -97,8 +101,11 @@ it('completes checkout with bank transfer keeping inventory reserved', function 
     $checkout = $this->checkoutService->setAddress($checkout, $this->addressData);
     $checkout = $this->checkoutService->setShippingMethod($checkout, $this->rate->id);
     $checkout = $this->checkoutService->selectPaymentMethod($checkout, 'bank_transfer');
-    $checkout = $this->checkoutService->completeCheckout($checkout);
+    $order = $this->checkoutService->completeCheckout($checkout);
 
+    expect($order->status)->toBe(\App\Enums\OrderStatus::Pending);
+
+    $checkout->refresh();
     expect($checkout->status)->toBe(CheckoutStatus::Completed);
 
     $this->variant->inventoryItem->refresh();
@@ -112,10 +119,13 @@ it('prevents duplicate orders (idempotency)', function () {
     $checkout = $this->checkoutService->setAddress($checkout, $this->addressData);
     $checkout = $this->checkoutService->setShippingMethod($checkout, $this->rate->id);
     $checkout = $this->checkoutService->selectPaymentMethod($checkout, 'credit_card');
-    $result1 = $this->checkoutService->completeCheckout($checkout);
-    $result2 = $this->checkoutService->completeCheckout($result1);
+    $order1 = $this->checkoutService->completeCheckout($checkout, ['card_number' => '4242424242424242']);
 
-    expect($result2->id)->toBe($result1->id);
+    // Calling again on the now-completed checkout should return the same order
+    $checkout->refresh();
+    $order2 = $this->checkoutService->completeCheckout($checkout);
+
+    expect($order2->id)->toBe($order1->id);
 });
 
 it('applies discount in checkout flow', function () {

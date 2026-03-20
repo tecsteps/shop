@@ -127,14 +127,14 @@ it('archives orphaned variants with order references', function () {
         $q->where('value', 'L');
     })->first();
 
-    \Illuminate\Support\Facades\DB::table('order_lines')->insert([
-        'order_id' => 1,
+    $order = \App\Models\Order::factory()->create(['store_id' => $this->store->id]);
+    \App\Models\OrderLine::factory()->create([
+        'order_id' => $order->id,
         'variant_id' => $variantL->id,
         'product_id' => $product->id,
-        'title' => 'Test',
+        'title_snapshot' => 'Test',
         'quantity' => 1,
         'unit_price_amount' => 2999,
-        'subtotal_amount' => 2999,
         'total_amount' => 2999,
     ]);
 

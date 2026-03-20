@@ -6,7 +6,43 @@
             </svg>
             <h1 class="mt-4 text-3xl font-bold text-zinc-900 dark:text-white">Order Confirmed</h1>
             <p class="mt-2 text-zinc-600 dark:text-zinc-400">Thank you for your purchase!</p>
+            @if($order)
+                <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Order {{ $order->order_number }}</p>
+            @endif
         </div>
+
+        @if($bankTransferDetails)
+            <div class="mt-8 rounded-lg border border-yellow-300 bg-yellow-50 p-6 dark:border-yellow-600 dark:bg-yellow-900/20">
+                <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Bank Transfer Instructions</h2>
+                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Please transfer the total amount to the following bank account:</p>
+                <div class="mt-4 space-y-2 text-sm">
+                    @if(!empty($bankTransferDetails['bank_name']))
+                        <div class="flex justify-between text-zinc-600 dark:text-zinc-400">
+                            <span>Bank</span>
+                            <span class="font-medium text-zinc-900 dark:text-white">{{ $bankTransferDetails['bank_name'] }}</span>
+                        </div>
+                    @endif
+                    @if(!empty($bankTransferDetails['iban']))
+                        <div class="flex justify-between text-zinc-600 dark:text-zinc-400">
+                            <span>IBAN</span>
+                            <span class="font-medium text-zinc-900 dark:text-white">{{ $bankTransferDetails['iban'] }}</span>
+                        </div>
+                    @endif
+                    @if(!empty($bankTransferDetails['bic']))
+                        <div class="flex justify-between text-zinc-600 dark:text-zinc-400">
+                            <span>BIC</span>
+                            <span class="font-medium text-zinc-900 dark:text-white">{{ $bankTransferDetails['bic'] }}</span>
+                        </div>
+                    @endif
+                    @if($order)
+                        <div class="flex justify-between text-zinc-600 dark:text-zinc-400">
+                            <span>Reference</span>
+                            <span class="font-medium text-zinc-900 dark:text-white">{{ $order->order_number }}</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <div class="mt-8 rounded-lg border border-zinc-200 p-6 dark:border-zinc-700">
             <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Order Details</h2>

@@ -96,18 +96,26 @@
                         <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Payment Method</h2>
                         <div class="mt-4 space-y-3">
                             <label class="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-200 p-4 dark:border-zinc-700">
-                                <input type="radio" wire:model="paymentMethod" value="credit_card" class="text-zinc-900">
+                                <input type="radio" wire:model.live="paymentMethod" value="credit_card" class="text-zinc-900">
                                 <span class="text-sm font-medium text-zinc-900 dark:text-white">Credit Card</span>
                             </label>
                             <label class="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-200 p-4 dark:border-zinc-700">
-                                <input type="radio" wire:model="paymentMethod" value="paypal" class="text-zinc-900">
+                                <input type="radio" wire:model.live="paymentMethod" value="paypal" class="text-zinc-900">
                                 <span class="text-sm font-medium text-zinc-900 dark:text-white">PayPal</span>
                             </label>
                             <label class="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-200 p-4 dark:border-zinc-700">
-                                <input type="radio" wire:model="paymentMethod" value="bank_transfer" class="text-zinc-900">
+                                <input type="radio" wire:model.live="paymentMethod" value="bank_transfer" class="text-zinc-900">
                                 <span class="text-sm font-medium text-zinc-900 dark:text-white">Bank Transfer</span>
                             </label>
                         </div>
+
+                        @if($paymentMethod === 'credit_card')
+                            <div class="mt-4 rounded-md border border-zinc-200 p-4 dark:border-zinc-700">
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Card Number</label>
+                                <input type="text" wire:model="cardNumber" placeholder="4242 4242 4242 4242" class="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-white">
+                            </div>
+                        @endif
+
                         <button wire:click="submitPayment" class="mt-6 w-full rounded-md bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">
                             Complete Order
                         </button>

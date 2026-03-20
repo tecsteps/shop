@@ -40,6 +40,8 @@ class Show extends Component
     // Payment
     public string $paymentMethod = 'credit_card';
 
+    public string $cardNumber = '';
+
     // Discount
     public string $discountCode = '';
 
@@ -152,7 +154,13 @@ class Show extends Component
             $checkout = $this->getCheckout();
 
             $checkoutService->selectPaymentMethod($checkout, $this->paymentMethod);
-            $checkout = $checkoutService->completeCheckout($checkout->fresh());
+
+            $paymentMethodData = [];
+            if ($this->paymentMethod === 'credit_card') {
+                $paymentMethodData['card_number'] = $this->cardNumber;
+            }
+
+            $checkoutService->completeCheckout($checkout->fresh(), $paymentMethodData);
 
             session()->forget('cart_id');
 

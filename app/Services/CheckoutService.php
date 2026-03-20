@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
-use App\Enums\CartStatus;
+use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Exceptions\InvalidCartException;
 use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Models\Order;
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +21,8 @@ class CheckoutService
         private InventoryService $inventoryService,
         private ShippingCalculator $shippingCalculator,
         private DiscountService $discountService,
+        private PaymentProvider $paymentProvider,
+        private OrderService $orderService,
     ) {}
 
     public function createFromCart(Store $store, Cart $cart): Checkout
@@ -137,46 +141,46 @@ class CheckoutService
         });
     }
 
-    public function completeCheckout(Checkout $checkout): Checkout
+    /**
+     * @param  array<string, mixed>  $paymentMethodData
+     */
+    public function completeCheckout(Checkout $checkout, array $paymentMethodData = []): Order
     {
         if ($checkout->status === CheckoutStatus::Completed) {
-            return $checkout;
+            // Idempotency: return the existing order
+            $existingOrder = Order::withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->where('email', $checkout->email)
+                ->latest()
+                ->first();
+
+            if ($existingOrder) {
+                return $existingOrder;
+            }
         }
 
         $this->assertTransition($checkout, CheckoutStatus::Completed);
 
-        return DB::transaction(function () use ($checkout) {
-            // Commit inventory for credit_card/paypal, keep reserved for bank_transfer
+        // Process payment
+        $paymentResult = $this->paymentProvider->charge($checkout, $paymentMethodData);
+
+        if (! $paymentResult->success) {
+            // Release reserved inventory on payment failure
             $cart = $checkout->cart()->with('lines.variant.inventoryItem')->first();
-
-            if ($checkout->payment_method !== PaymentMethod::BankTransfer) {
-                foreach ($cart->lines as $line) {
-                    if ($line->variant->inventoryItem) {
-                        $this->inventoryService->commit($line->variant->inventoryItem, $line->quantity);
-                    }
+            foreach ($cart->lines as $line) {
+                if ($line->variant?->inventoryItem) {
+                    $this->inventoryService->release($line->variant->inventoryItem, $line->quantity);
                 }
             }
 
-            // Increment discount usage
-            if ($checkout->discount_code) {
-                $discount = \App\Models\Discount::withoutGlobalScopes()
-                    ->where('store_id', $checkout->store_id)
-                    ->whereRaw('LOWER(code) = ?', [strtolower($checkout->discount_code)])
-                    ->first();
+            throw new PaymentFailedException(
+                errorCode: $paymentResult->errorCode ?? 'unknown',
+                message: $paymentResult->errorMessage ?? 'Payment failed',
+            );
+        }
 
-                if ($discount) {
-                    $discount->increment('usage_count');
-                }
-            }
-
-            $cart->update(['status' => CartStatus::Converted]);
-
-            $checkout->update([
-                'status' => CheckoutStatus::Completed,
-            ]);
-
-            return $checkout->fresh();
-        });
+        // Create order (handles inventory commit, cart conversion, checkout completion, events)
+        return $this->orderService->createFromCheckout($checkout, $paymentResult);
     }
 
     public function expireCheckout(Checkout $checkout): Checkout

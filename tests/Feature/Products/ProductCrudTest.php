@@ -93,14 +93,14 @@ it('prevents active to draft when order lines exist', function () {
 
     if (\Illuminate\Support\Facades\Schema::hasTable('order_lines')) {
         $variant = $product->variants()->first();
-        \Illuminate\Support\Facades\DB::table('order_lines')->insert([
-            'order_id' => 1,
+        $order = \App\Models\Order::factory()->create(['store_id' => $this->store->id]);
+        \App\Models\OrderLine::factory()->create([
+            'order_id' => $order->id,
             'variant_id' => $variant->id,
             'product_id' => $product->id,
-            'title' => 'Test',
+            'title_snapshot' => 'Test',
             'quantity' => 1,
             'unit_price_amount' => 2999,
-            'subtotal_amount' => 2999,
             'total_amount' => 2999,
         ]);
 
@@ -130,14 +130,14 @@ it('prevents deletion of product with order references', function () {
 
     if (\Illuminate\Support\Facades\Schema::hasTable('order_lines')) {
         $variant = $product->variants()->first();
-        \Illuminate\Support\Facades\DB::table('order_lines')->insert([
-            'order_id' => 1,
+        $order = \App\Models\Order::factory()->create(['store_id' => $this->store->id]);
+        \App\Models\OrderLine::factory()->create([
+            'order_id' => $order->id,
             'variant_id' => $variant->id,
             'product_id' => $product->id,
-            'title' => 'Test',
+            'title_snapshot' => 'Test',
             'quantity' => 1,
             'unit_price_amount' => 2999,
-            'subtotal_amount' => 2999,
             'total_amount' => 2999,
         ]);
 
