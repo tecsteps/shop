@@ -43,7 +43,25 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * @return array{0: \App\Models\User, 1: \App\Models\Store}
+ */
+function loginAsAdmin(): array
 {
-    // ..
+    $org = \App\Models\Organization::factory()->create();
+    $store = \App\Models\Store::factory()->for($org)->create();
+    $user = \App\Models\User::factory()->create();
+
+    \Illuminate\Support\Facades\DB::table('store_users')->insert([
+        'store_id' => $store->id,
+        'user_id' => $user->id,
+        'role' => 'owner',
+        'created_at' => now(),
+    ]);
+
+    \Illuminate\Support\Facades\Auth::guard('web')->login($user);
+    session(['current_store_id' => $store->id]);
+    app()->instance('current_store', $store);
+
+    return [$user, $store];
 }

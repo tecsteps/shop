@@ -69,4 +69,29 @@ Route::post('/admin/logout', function (Request $request) {
     return redirect()->route('admin.login');
 })->middleware('auth')->name('admin.logout');
 
+Route::prefix('admin')
+    ->middleware(['auth', 'store.resolve:admin'])
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get('/', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
+
+        Route::get('/products', \App\Livewire\Admin\Products\Index::class)->name('products.index');
+        Route::get('/products/create', \App\Livewire\Admin\Products\Form::class)->name('products.create');
+        Route::get('/products/{product}/edit', \App\Livewire\Admin\Products\Form::class)->name('products.edit');
+
+        Route::get('/orders', \App\Livewire\Admin\Orders\Index::class)->name('orders.index');
+        Route::get('/orders/{order}', \App\Livewire\Admin\Orders\Show::class)->name('orders.show');
+
+        Route::get('/customers', \App\Livewire\Admin\Customers\Index::class)->name('customers.index');
+        Route::get('/customers/{customer}', \App\Livewire\Admin\Customers\Show::class)->name('customers.show');
+
+        Route::get('/collections', \App\Livewire\Admin\Collections\Index::class)->name('collections.index');
+        Route::get('/collections/create', \App\Livewire\Admin\Collections\Form::class)->name('collections.create');
+        Route::get('/collections/{collection}/edit', \App\Livewire\Admin\Collections\Form::class)->name('collections.edit');
+
+        Route::get('/discounts', \App\Livewire\Admin\Discounts\Index::class)->name('discounts.index');
+        Route::get('/discounts/create', \App\Livewire\Admin\Discounts\Form::class)->name('discounts.create');
+        Route::get('/discounts/{discount}/edit', \App\Livewire\Admin\Discounts\Form::class)->name('discounts.edit');
+    });
+
 require __DIR__.'/settings.php';
