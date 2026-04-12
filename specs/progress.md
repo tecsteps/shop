@@ -9,7 +9,7 @@ Tracking progress for the full shop system implementation (team: shop-v2).
 - [x] Phase 3: Themes, pages, navigation, storefront layout - 79 tests passing
 - [x] Phase 4: Cart, checkout, discounts, shipping, taxes - 138 tests passing
 - [x] Phase 5: Payments, orders, fulfillment - 167 tests passing
-- [ ] Phase 6: Customer accounts
+- [x] Phase 6: Customer accounts + storefront UI - 192 tests passing
 - [ ] Phase 7: Admin panel
 - [ ] Phase 8: Search
 - [ ] Phase 9: Analytics

@@ -14,6 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'store.resolve' => \App\Http\Middleware\ResolveStore::class,
         ]);
+
+        $middleware->redirectGuestsTo(function (\Illuminate\Http\Request $request): ?string {
+            if ($request->is('account*') || $request->routeIs('storefront.account.*')) {
+                return route('storefront.account.login');
+            }
+
+            return null;
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

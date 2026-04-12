@@ -33,8 +33,9 @@
 
         @include('storefront.partials.footer', ['footerText' => $footerText])
 
-        {{-- Cart drawer placeholder for Phase 4 --}}
-        <div id="cart-drawer-slot"></div>
+        <div class="fixed bottom-6 right-6 z-40">
+            <livewire:storefront.cart-drawer />
+        </div>
 
         @livewireScripts
         @fluxScripts
