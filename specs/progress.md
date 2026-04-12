@@ -15,8 +15,8 @@ Tracking progress for the full shop system implementation (team: shop-v2).
 - [~] Phase 8: Search FTS5 backend + storefront wired - 234 tests; admin search settings UI in 7b
 - [~] Phase 9: Analytics events + daily aggregator backend; admin analytics UI in 7b
 - [~] Phase 10: Apps and webhooks backend (Sanctum, WebhookService, DeliverWebhook job); admin apps/developers UI in 7b
-- [~] Phase 11: Polish - seeders done; dark mode + accessibility audit pending
-- [ ] Phase 12: Full test suite execution + browser review
+- [~] Phase 11: Polish - seeders done; dark mode classes applied throughout; deeper accessibility audit pending
+- [x] Phase 12: Full test suite + browser review - 247 tests passing, all key flows verified end-to-end via Playwright
 
 ## Log
 
