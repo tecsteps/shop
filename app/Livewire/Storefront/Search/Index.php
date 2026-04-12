@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Storefront\Search;
 
-use App\Enums\ProductStatus;
 use App\Livewire\Storefront\Concerns\EnsuresStore;
 use App\Models\Product;
+use App\Services\SearchService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
@@ -31,17 +31,11 @@ class Index extends Component
 
     public function render(): View
     {
-        $query = Product::query()
-            ->where('status', ProductStatus::Active->value)
-            ->with('variants');
+        $store = $this->ensureCurrentStore();
 
-        if (trim($this->q) !== '') {
-            $query->where('title', 'like', '%'.$this->q.'%');
-        } else {
-            $query->whereRaw('1 = 0');
-        }
-
-        $products = $query->orderBy('title')->paginate(12);
+        $products = trim($this->q) !== ''
+            ? app(SearchService::class)->search($store, $this->q, [], 12)
+            : Product::query()->whereRaw('1 = 0')->paginate(12);
 
         return view('livewire.storefront.search.index', [
             'products' => $products,

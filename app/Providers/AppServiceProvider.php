@@ -4,6 +4,12 @@ namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
+use App\Events\OrderCreated;
+use App\Events\OrderFulfilled;
+use App\Events\OrderPaid;
+use App\Listeners\DispatchOrderWebhooks;
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
@@ -12,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -35,6 +42,16 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureRateLimiters();
         $this->configureCustomerAuthProvider();
+        $this->configureWebhookListeners();
+
+        Product::observe(ProductObserver::class);
+    }
+
+    protected function configureWebhookListeners(): void
+    {
+        Event::listen(OrderCreated::class, [DispatchOrderWebhooks::class, 'handleCreated']);
+        Event::listen(OrderPaid::class, [DispatchOrderWebhooks::class, 'handlePaid']);
+        Event::listen(OrderFulfilled::class, [DispatchOrderWebhooks::class, 'handleFulfilled']);
     }
 
     protected function configureRateLimiters(): void
