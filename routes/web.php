@@ -53,9 +53,7 @@ Route::middleware('auth:customer')
         Route::get('/addresses', AccountAddressesIndex::class)->name('addresses.index');
     });
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::redirect('dashboard', '/admin')->name('dashboard');
 
 Route::get('/admin/login', AdminLogin::class)
     ->middleware('guest')

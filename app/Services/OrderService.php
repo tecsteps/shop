@@ -80,19 +80,15 @@ class OrderService
 
     public function generateOrderNumber(Store $store): string
     {
-        /** @var string|null $last */
-        $last = Order::withoutGlobalScopes()
+        $maxNumeric = (int) Order::withoutGlobalScopes()
             ->where('store_id', $store->id)
-            ->orderByDesc('id')
-            ->value('order_number');
+            ->where('order_number', 'like', '#%')
+            ->whereRaw('CAST(SUBSTR(order_number, 2) AS INTEGER) > 0')
+            ->max(DB::raw('CAST(SUBSTR(order_number, 2) AS INTEGER)'));
 
-        if ($last === null) {
-            return '#1001';
-        }
+        $next = max(1000, $maxNumeric) + 1;
 
-        $num = (int) ltrim($last, '#');
-
-        return '#'.($num + 1);
+        return '#'.$next;
     }
 
     public function cancel(Order $order, ?string $reason = null): void
