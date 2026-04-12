@@ -1,13 +1,13 @@
 <?php
 
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Storefront\Home as StorefrontHome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', StorefrontHome::class)->name('home');
+Route::get('/storefront', StorefrontHome::class)->name('storefront.home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
