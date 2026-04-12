@@ -11,6 +11,8 @@ use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\DiscountService;
 use App\Services\InventoryService;
+use App\Services\OrderService;
+use App\Services\Payments\MockPaymentProvider;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
 use App\Services\TaxCalculator;
@@ -31,6 +33,8 @@ beforeEach(function (): void {
             new TaxCalculator,
         ),
         $this->inventoryService,
+        new OrderService,
+        new MockPaymentProvider,
     );
 
     $product = Product::factory()->for($this->store)->create();

@@ -10,6 +10,8 @@ use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\DiscountService;
 use App\Services\InventoryService;
+use App\Services\OrderService;
+use App\Services\Payments\MockPaymentProvider;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
 use App\Services\TaxCalculator;
@@ -26,6 +28,8 @@ beforeEach(function (): void {
     $this->checkoutService = new CheckoutService(
         new PricingEngine(new DiscountService, new ShippingCalculator, new TaxCalculator),
         $this->inventoryService,
+        new OrderService,
+        new MockPaymentProvider,
     );
 });
 

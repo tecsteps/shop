@@ -2,9 +2,19 @@
 
 namespace App\Services;
 
+use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
+use App\Enums\FinancialStatus;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
+use App\Events\OrderPaid;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Models\InventoryItem;
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\ShippingRate;
 use DomainException;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +24,8 @@ class CheckoutService
     public function __construct(
         private readonly PricingEngine $pricingEngine,
         private readonly InventoryService $inventoryService,
+        private readonly OrderService $orderService,
+        private readonly PaymentProvider $paymentProvider,
     ) {}
 
     public function start(Cart $cart): Checkout
@@ -145,14 +157,84 @@ class CheckoutService
     /**
      * @param  array<string, mixed>  $details
      */
-    public function complete(Checkout $checkout, array $details): Checkout
+    public function complete(Checkout $checkout, array $details = []): Checkout
     {
         $this->assertTransitionAllowed($checkout, [CheckoutStatus::PaymentSelected]);
 
-        $checkout->status = CheckoutStatus::Completed->value;
-        $checkout->save();
+        $methodString = $checkout->payment_method;
+        if ($methodString === null) {
+            throw new DomainException('Checkout has no payment method selected.');
+        }
+        $method = PaymentMethod::from((string) $methodString);
 
-        return $checkout;
+        $result = $this->paymentProvider->charge($checkout, $method, $details);
+
+        if ($result->failed()) {
+            $this->releaseReservedInventory($checkout);
+            throw new PaymentFailedException($result->errorMessage ?? 'Payment failed.');
+        }
+
+        return DB::transaction(function () use ($checkout, $method, $result): Checkout {
+            $order = $this->orderService->createFromCheckout($checkout);
+
+            /** @var Payment $payment */
+            $payment = Payment::create([
+                'order_id' => $order->id,
+                'provider' => 'mock',
+                'method' => $method->value,
+                'provider_payment_id' => $result->providerPaymentId,
+                'status' => $result->status->value,
+                'amount' => $result->amount,
+                'currency' => $result->currency,
+                'raw_json_encrypted' => null,
+            ]);
+
+            if ($result->successful()) {
+                $order->update([
+                    'financial_status' => FinancialStatus::Paid->value,
+                    'status' => OrderStatus::Paid->value,
+                ]);
+
+                $this->commitReservedInventory($order);
+
+                OrderPaid::dispatch($order->fresh() ?? $order);
+            } elseif ($result->pending()) {
+                $payment->update(['status' => PaymentStatus::Pending->value]);
+            }
+
+            return $checkout->fresh() ?? $checkout;
+        });
+    }
+
+    private function releaseReservedInventory(Checkout $checkout): void
+    {
+        $cart = $checkout->cart()->with('lines.variant.inventoryItem')->first();
+        if ($cart === null) {
+            return;
+        }
+
+        foreach ($cart->lines as $line) {
+            $inventoryItem = $line->variant?->inventoryItem;
+            if ($inventoryItem !== null) {
+                $this->inventoryService->release($inventoryItem, (int) $line->quantity);
+            }
+        }
+    }
+
+    private function commitReservedInventory(Order $order): void
+    {
+        $order->loadMissing('lines');
+        foreach ($order->lines as $line) {
+            if ($line->variant_id === null) {
+                continue;
+            }
+            $item = InventoryItem::withoutGlobalScopes()
+                ->where('variant_id', $line->variant_id)
+                ->first();
+            if ($item !== null) {
+                $this->inventoryService->commit($item, (int) $line->quantity);
+            }
+        }
     }
 
     /**
