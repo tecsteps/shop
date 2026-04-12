@@ -10,12 +10,12 @@ Tracking progress for the full shop system implementation (team: shop-v2).
 - [x] Phase 4: Cart, checkout, discounts, shipping, taxes - 138 tests passing
 - [x] Phase 5: Payments, orders, fulfillment - 167 tests passing
 - [x] Phase 6: Customer accounts + storefront UI - 192 tests passing
-- [~] Phase 7a: Admin panel core (dashboard, products, orders, customers, collections, discounts) - 212 tests passing
-- [ ] Phase 7b: Admin panel (settings, themes, pages, navigation, analytics, search, apps, developers)
+- [x] Phase 7a: Admin panel core - 212 tests passing
+- [x] Phase 7b: Admin panel (settings, themes, pages, navigation, analytics, apps, developers) - 247 tests passing
 - [~] Phase 8: Search FTS5 backend + storefront wired - 234 tests; admin search settings UI in 7b
 - [~] Phase 9: Analytics events + daily aggregator backend; admin analytics UI in 7b
 - [~] Phase 10: Apps and webhooks backend (Sanctum, WebhookService, DeliverWebhook job); admin apps/developers UI in 7b
-- [ ] Phase 11: Polish
+- [~] Phase 11: Polish - seeders done; dark mode + accessibility audit pending
 - [ ] Phase 12: Full test suite execution + browser review
 
 ## Log

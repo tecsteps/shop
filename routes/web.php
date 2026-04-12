@@ -92,6 +92,22 @@ Route::prefix('admin')
         Route::get('/discounts', \App\Livewire\Admin\Discounts\Index::class)->name('discounts.index');
         Route::get('/discounts/create', \App\Livewire\Admin\Discounts\Form::class)->name('discounts.create');
         Route::get('/discounts/{discount}/edit', \App\Livewire\Admin\Discounts\Form::class)->name('discounts.edit');
+
+        Route::get('/pages', \App\Livewire\Admin\Pages\Index::class)->name('pages.index');
+        Route::get('/pages/create', \App\Livewire\Admin\Pages\Form::class)->name('pages.create');
+        Route::get('/pages/{page}/edit', \App\Livewire\Admin\Pages\Form::class)->name('pages.edit');
+
+        Route::get('/navigation', \App\Livewire\Admin\Navigation\Index::class)->name('navigation.index');
+        Route::get('/themes', \App\Livewire\Admin\Themes\Index::class)->name('themes.index');
+
+        Route::get('/analytics', \App\Livewire\Admin\Analytics\Index::class)->name('analytics.index');
+
+        Route::get('/settings', \App\Livewire\Admin\Settings\Index::class)->name('settings.index');
+        Route::get('/settings/shipping', \App\Livewire\Admin\Settings\Shipping::class)->name('settings.shipping');
+        Route::get('/settings/taxes', \App\Livewire\Admin\Settings\Taxes::class)->name('settings.taxes');
+
+        Route::get('/apps', \App\Livewire\Admin\Apps\Index::class)->name('apps.index');
+        Route::get('/developers', \App\Livewire\Admin\Developers\Index::class)->name('developers.index');
     });
 
 require __DIR__.'/settings.php';

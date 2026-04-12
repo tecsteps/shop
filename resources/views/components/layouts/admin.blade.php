@@ -55,6 +55,36 @@
                         Orders
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+
+                <flux:sidebar.group heading="Content" class="grid">
+                    <flux:sidebar.item icon="document-text" :href="route('admin.pages.index')" :current="request()->routeIs('admin.pages.*')" wire:navigate>
+                        Pages
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="bars-3" :href="route('admin.navigation.index')" :current="request()->routeIs('admin.navigation.*')" wire:navigate>
+                        Navigation
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="swatch" :href="route('admin.themes.index')" :current="request()->routeIs('admin.themes.*')" wire:navigate>
+                        Themes
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+
+                <flux:sidebar.group heading="Marketing" class="grid">
+                    <flux:sidebar.item icon="chart-bar" :href="route('admin.analytics.index')" :current="request()->routeIs('admin.analytics.*')" wire:navigate>
+                        Analytics
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+
+                <flux:sidebar.group heading="Configuration" class="grid">
+                    <flux:sidebar.item icon="cog-6-tooth" :href="route('admin.settings.index')" :current="request()->routeIs('admin.settings.*')" wire:navigate>
+                        Settings
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="squares-plus" :href="route('admin.apps.index')" :current="request()->routeIs('admin.apps.*')" wire:navigate>
+                        Apps
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="command-line" :href="route('admin.developers.index')" :current="request()->routeIs('admin.developers.*')" wire:navigate>
+                        Developers
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />
