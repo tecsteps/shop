@@ -1,0 +1,123 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e125]:
+      - generic [ref=e126]: Shipping
+      - generic [ref=e127]:
+        - link "Back" [ref=e128] [cursor=pointer]:
+          - /url: http://shop.test/admin/settings
+        - button "New zone" [ref=e129]:
+          - img [ref=e131]
+          - img [ref=e134]
+          - generic [ref=e136]: New zone
+    - generic [ref=e138]:
+      - generic [ref=e139]:
+        - generic [ref=e140]:
+          - generic [ref=e141]: Europe
+          - generic [ref=e142]:
+            - generic [ref=e143]: DE
+            - generic [ref=e144]: AT
+            - generic [ref=e145]: CH
+        - generic [ref=e146]:
+          - button "Add rate" [ref=e147]:
+            - img [ref=e149]
+            - img [ref=e152]
+            - generic [ref=e154]: Add rate
+          - button "Delete" [ref=e155]:
+            - img [ref=e157]
+            - generic [ref=e160]: Delete
+      - table [ref=e164]:
+        - rowgroup [ref=e165]:
+          - row "Name Type Amount" [ref=e166]:
+            - columnheader "Name" [ref=e167]:
+              - generic [ref=e168]: Name
+            - columnheader "Type" [ref=e169]:
+              - generic [ref=e170]: Type
+            - columnheader "Amount" [ref=e171]:
+              - generic [ref=e172]: Amount
+            - columnheader [ref=e173]
+        - rowgroup [ref=e174]:
+          - row "Standard flat 5.99 Remove" [ref=e175]:
+            - cell "Standard" [ref=e176]
+            - cell "flat" [ref=e177]
+            - cell "5.99" [ref=e178]
+            - cell "Remove" [ref=e179]:
+              - button "Remove" [ref=e180]:
+                - img [ref=e182]
+                - generic [ref=e185]: Remove

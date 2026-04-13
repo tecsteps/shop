@@ -1,0 +1,46 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - link "Search" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test/search
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/account
+          - img [ref=e10]
+        - link "Cart" [ref=e12] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - link "Back to account" [ref=e18] [cursor=pointer]:
+          - /url: http://shop.test/account
+        - heading "Orders" [level=1] [ref=e19]
+      - table [ref=e21]:
+        - rowgroup [ref=e22]:
+          - row "Order Date Total Status" [ref=e23]:
+            - columnheader "Order" [ref=e24]
+            - columnheader "Date" [ref=e25]
+            - columnheader "Total" [ref=e26]
+            - columnheader "Status" [ref=e27]
+            - columnheader [ref=e28]
+        - rowgroup [ref=e29]:
+          - row "D-1001 Apr 11, 2026 EUR 30.98 pending View" [ref=e30]:
+            - cell "D-1001" [ref=e31]
+            - cell "Apr 11, 2026" [ref=e32]
+            - cell "EUR 30.98" [ref=e33]
+            - cell "pending" [ref=e34]
+            - cell "View" [ref=e35]:
+              - link "View" [ref=e36] [cursor=pointer]:
+                - /url: http://shop.test/account/orders/D-1001
+  - contentinfo [ref=e37]:
+    - generic [ref=e39]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e40]: (c) Shop
+  - button "Open cart" [ref=e43]:
+    - img [ref=e44]
+    - generic [ref=e46]: Cart
+    - generic [ref=e47]: "0"

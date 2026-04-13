@@ -1,0 +1,80 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Nolan Inc Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - heading "Checkout" [level=1] [ref=e18]
+      - list [ref=e19]:
+        - listitem [ref=e20]:
+          - generic [ref=e21]: "1"
+          - generic [ref=e22]: Address
+        - listitem [ref=e24]:
+          - generic [ref=e25]: "2"
+          - generic [ref=e26]: Shipping
+        - listitem [ref=e28]:
+          - generic [ref=e29]: "3"
+          - generic [ref=e30]: Payment
+      - generic [ref=e31]:
+        - generic [ref=e33]:
+          - heading "Payment" [level=2] [ref=e106]
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - radio "Credit card" [checked] [ref=e109]
+              - generic [ref=e110]: Credit card
+            - generic [ref=e111]:
+              - radio "PayPal" [ref=e112]
+              - generic [ref=e113]: PayPal
+            - generic [ref=e114]:
+              - radio "Bank transfer" [ref=e115]
+              - generic [ref=e116]: Bank transfer
+          - generic [ref=e117]: "Magic test card: 4242 4242 4242 4242, expiry 12/30, CVC 123."
+          - generic [ref=e118]:
+            - generic [ref=e119]: Card number
+            - textbox "Card number" [ref=e120]: "4242424242424242"
+          - generic [ref=e121]:
+            - generic [ref=e122]:
+              - generic [ref=e123]: Expiry (MM/YY)
+              - textbox "Expiry (MM/YY)" [ref=e124]: 12/30
+            - generic [ref=e125]:
+              - generic [ref=e126]: CVC
+              - textbox "CVC" [ref=e127]: "123"
+          - generic [ref=e128]:
+            - button "Back" [ref=e129]
+            - button "Place order" [ref=e130]:
+              - generic [ref=e131]: Place order
+        - complementary [ref=e66]:
+          - heading "Order summary" [level=2] [ref=e67]
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - generic [ref=e71]:
+                - paragraph [ref=e72]: Demo Shirt
+                - paragraph [ref=e73]: Qty 1
+              - paragraph [ref=e74]: EUR 29.99
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: Subtotal
+              - generic [ref=e78]: EUR 29.99
+            - generic [ref=e79]:
+              - generic [ref=e80]: Shipping
+              - generic [ref=e81]: EUR 5.99
+            - generic [ref=e82]:
+              - generic [ref=e83]: Total
+              - generic [ref=e84]: EUR 35.98
+  - contentinfo [ref=e85]:
+    - generic [ref=e87]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e88]: (c) Shop
+  - button "Open cart" [ref=e91]:
+    - img [ref=e92]
+    - generic [ref=e94]: Cart
+    - generic [ref=e95]: "1"

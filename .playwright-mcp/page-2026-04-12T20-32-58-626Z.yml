@@ -1,0 +1,44 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - link "Search" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test/search
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/account
+          - img [ref=e10]
+        - link "Cart" [ref=e12] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Demo Brand
+        - heading "Sneakers" [level=1] [ref=e23]
+        - paragraph [ref=e24]: EUR 79.99
+      - group "Variant" [ref=e25]:
+        - generic [ref=e26]: Variant
+        - generic [ref=e27]:
+          - button "SNK-43" [ref=e28]
+          - button "SNK-44" [ref=e29]
+          - button "SNK-42" [ref=e30]
+      - generic [ref=e31]:
+        - generic [ref=e32]: Quantity
+        - generic [ref=e33]:
+          - button "Decrease quantity" [ref=e34]: "-"
+          - generic [ref=e35]: "1"
+          - button "Increase quantity" [ref=e36]: +
+      - button "Add to cart" [ref=e37]:
+        - generic [ref=e38]: Add to cart
+      - paragraph [ref=e40]: Sneakers description.
+  - contentinfo [ref=e41]:
+    - generic [ref=e43]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e44]: (c) Shop
+  - button "Open cart" [ref=e47]:
+    - img [ref=e48]
+    - generic [ref=e50]: Cart
+    - generic [ref=e51]: "0"

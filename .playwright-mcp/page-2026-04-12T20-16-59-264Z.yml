@@ -1,0 +1,106 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e125]: Settings
+    - generic [ref=e126]:
+      - button "General" [ref=e127]
+      - link "Shipping" [ref=e128] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings/shipping
+      - link "Taxes" [ref=e129] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings/taxes
+    - generic [ref=e130]:
+      - generic [ref=e131]:
+        - generic [ref=e132]: Store name
+        - textbox "Store name" [ref=e134]: Demo Store
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - generic [ref=e137]: Currency
+          - textbox "Currency" [ref=e139]: EUR
+        - generic [ref=e140]:
+          - generic [ref=e141]: Locale
+          - textbox "Locale" [ref=e143]: en
+        - generic [ref=e144]:
+          - generic [ref=e145]: Timezone
+          - textbox "Timezone" [ref=e147]: Europe/Berlin
+      - button "Save settings" [ref=e149]:
+        - img [ref=e151]
+        - generic [ref=e154]: Save settings
+    - generic [ref=e155]:
+      - generic [ref=e156]: Notifications
+      - paragraph [ref=e157]: Notification channel configuration is coming soon.

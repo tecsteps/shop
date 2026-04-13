@@ -1,0 +1,55 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - link "Search" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test/search
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/account
+          - img [ref=e10]
+        - link "Cart" [ref=e12] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - paragraph [ref=e19]: Account
+          - heading "Hi, Alice Example" [level=1] [ref=e20]
+          - paragraph [ref=e21]: alice@shop.test
+        - button "Sign out" [ref=e23]
+      - navigation "Account sections" [ref=e24]:
+        - link "Orders Review your order history." [ref=e25] [cursor=pointer]:
+          - /url: http://shop.test/account/orders
+          - heading "Orders" [level=2] [ref=e26]
+          - paragraph [ref=e27]: Review your order history.
+        - link "Addresses Manage saved shipping addresses." [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/addresses
+          - heading "Addresses" [level=2] [ref=e29]
+          - paragraph [ref=e30]: Manage saved shipping addresses.
+        - link "Continue shopping Browse the latest arrivals." [ref=e31] [cursor=pointer]:
+          - /url: http://shop.test/storefront
+          - heading "Continue shopping" [level=2] [ref=e32]
+          - paragraph [ref=e33]: Browse the latest arrivals.
+      - generic [ref=e34]:
+        - heading "Recent orders" [level=2] [ref=e35]
+        - list [ref=e36]:
+          - listitem [ref=e37]:
+            - generic [ref=e38]:
+              - paragraph [ref=e39]: D-1001
+              - paragraph [ref=e40]: Apr 11, 2026
+            - generic [ref=e41]:
+              - generic [ref=e42]: EUR 30.98
+              - link "View" [ref=e43] [cursor=pointer]:
+                - /url: http://shop.test/account/orders/D-1001
+  - contentinfo [ref=e44]:
+    - generic [ref=e46]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e47]: (c) Shop
+  - button "Open cart" [ref=e50]:
+    - img [ref=e51]
+    - generic [ref=e53]: Cart
+    - generic [ref=e54]: "0"

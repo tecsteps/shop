@@ -1,0 +1,156 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e125]: Orders
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic:
+          - img
+        - textbox "Search orders..." [ref=e128]
+      - combobox [ref=e130]:
+        - option "All payments" [selected]
+        - option "Pending"
+        - option "Paid"
+        - option "Refunded"
+        - option "Partially refunded"
+      - combobox [ref=e131]:
+        - option "All fulfillment" [selected]
+        - option "Unfulfilled"
+        - option "Partial"
+        - option "Fulfilled"
+    - table [ref=e135]:
+      - rowgroup [ref=e136]:
+        - row "Order Customer Total Payment Fulfillment Date" [ref=e137]:
+          - columnheader "Order" [ref=e138]:
+            - generic [ref=e139]: Order
+          - columnheader "Customer" [ref=e140]:
+            - generic [ref=e141]: Customer
+          - columnheader "Total" [ref=e142]:
+            - generic [ref=e143]: Total
+          - columnheader "Payment" [ref=e144]:
+            - generic [ref=e145]: Payment
+          - columnheader "Fulfillment" [ref=e146]:
+            - generic [ref=e147]: Fulfillment
+          - columnheader "Date" [ref=e148]:
+            - generic [ref=e149]: Date
+      - rowgroup [ref=e150]:
+        - row "#1001 final@shop.test 15.98 EUR paid unfulfilled Apr 12, 2026" [ref=e151]:
+          - cell "#1001" [ref=e152]:
+            - link "#1001" [ref=e153] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders/4
+          - cell "final@shop.test" [ref=e154]
+          - cell "15.98 EUR" [ref=e155]
+          - cell "paid" [ref=e156]:
+            - generic [ref=e157]: paid
+          - cell "unfulfilled" [ref=e158]:
+            - generic [ref=e159]: unfulfilled
+          - cell "Apr 12, 2026" [ref=e160]
+        - row "D-1001 alice@shop.test 30.98 EUR pending unfulfilled Apr 11, 2026" [ref=e161]:
+          - cell "D-1001" [ref=e162]:
+            - link "D-1001" [ref=e163] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders/1
+          - cell "alice@shop.test" [ref=e164]
+          - cell "30.98 EUR" [ref=e165]
+          - cell "pending" [ref=e166]:
+            - generic [ref=e167]: pending
+          - cell "unfulfilled" [ref=e168]:
+            - generic [ref=e169]: unfulfilled
+          - cell "Apr 11, 2026" [ref=e170]
+        - row "D-1002 bob@shop.test 20.98 EUR paid fulfilled Apr 10, 2026" [ref=e171]:
+          - cell "D-1002" [ref=e172]:
+            - link "D-1002" [ref=e173] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders/2
+          - cell "bob@shop.test" [ref=e174]
+          - cell "20.98 EUR" [ref=e175]
+          - cell "paid" [ref=e176]:
+            - generic [ref=e177]: paid
+          - cell "fulfilled" [ref=e178]:
+            - generic [ref=e179]: fulfilled
+          - cell "Apr 10, 2026" [ref=e180]
+        - row "D-1003 carol@shop.test 25.98 EUR refunded fulfilled Apr 09, 2026" [ref=e181]:
+          - cell "D-1003" [ref=e182]:
+            - link "D-1003" [ref=e183] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders/3
+          - cell "carol@shop.test" [ref=e184]
+          - cell "25.98 EUR" [ref=e185]
+          - cell "refunded" [ref=e186]:
+            - generic [ref=e187]: refunded
+          - cell "fulfilled" [ref=e188]:
+            - generic [ref=e189]: fulfilled
+          - cell "Apr 09, 2026" [ref=e190]

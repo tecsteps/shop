@@ -1,0 +1,87 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Nolan Inc Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Nolan Inc Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+    - button "TU Test User" [ref=e59]:
+      - generic [ref=e62]: TU
+      - generic [ref=e63]: Test User
+      - img [ref=e65]
+  - generic [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]: Dashboard
+      - combobox [ref=e72]:
+        - option "Last 7 days"
+        - option "Last 30 days" [selected]
+        - option "Last 90 days"
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - generic [ref=e75]: Total sales
+        - generic [ref=e76]: "35.98"
+      - generic [ref=e77]:
+        - generic [ref=e78]: Orders
+        - generic [ref=e79]: "1"
+      - generic [ref=e80]:
+        - generic [ref=e81]: Average order value
+        - generic [ref=e82]: "35.98"
+      - generic [ref=e83]:
+        - generic [ref=e84]: Conversion rate
+        - generic [ref=e85]: N/A
+    - generic [ref=e86]:
+      - generic [ref=e87]: Sales over time
+      - generic [ref=e88]: Charts coming soon
+    - generic [ref=e89]:
+      - generic [ref=e90]: Recent orders
+      - table [ref=e94]:
+        - rowgroup [ref=e95]:
+          - row "Order Customer Total Status" [ref=e96]:
+            - columnheader "Order" [ref=e97]:
+              - generic [ref=e98]: Order
+            - columnheader "Customer" [ref=e99]:
+              - generic [ref=e100]: Customer
+            - columnheader "Total" [ref=e101]:
+              - generic [ref=e102]: Total
+            - columnheader "Status" [ref=e103]:
+              - generic [ref=e104]: Status
+        - rowgroup [ref=e105]:
+          - row "#1001 buyer@example.com 35.98 EUR paid" [ref=e106]:
+            - cell "#1001" [ref=e107]:
+              - link "#1001" [ref=e108] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/1
+            - cell "buyer@example.com" [ref=e109]
+            - cell "35.98 EUR" [ref=e110]
+            - cell "paid" [ref=e111]:
+              - generic [ref=e112]: paid

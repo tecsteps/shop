@@ -1,0 +1,8 @@
+[      58ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/checkout:50
+[   13042ms] [LOG] 0   @ http://shop.test/checkout:109
+[   13044ms] [LOG] 1   @ http://shop.test/checkout:109
+[   13044ms] [LOG] 2   @ http://shop.test/checkout:109
+[   13044ms] [LOG] 3   @ http://shop.test/checkout:109
+[   13044ms] [LOG] 4   @ http://shop.test/checkout:109
+[   13044ms] [LOG] 5   @ http://shop.test/checkout:109
+[   48604ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/checkout/confirmation/1001:50

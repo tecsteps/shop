@@ -1,0 +1,147 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e125]:
+      - generic [ref=e126]: Dashboard
+      - combobox [ref=e127]:
+        - option "Last 7 days"
+        - option "Last 30 days" [selected]
+        - option "Last 90 days"
+    - generic [ref=e128]:
+      - generic [ref=e129]:
+        - generic [ref=e130]: Total sales
+        - generic [ref=e131]: "103.92"
+      - generic [ref=e132]:
+        - generic [ref=e133]: Orders
+        - generic [ref=e134]: "4"
+      - generic [ref=e135]:
+        - generic [ref=e136]: Average order value
+        - generic [ref=e137]: "25.98"
+      - generic [ref=e138]:
+        - generic [ref=e139]: Conversion rate
+        - generic [ref=e140]: N/A
+    - generic [ref=e141]:
+      - generic [ref=e142]: Sales over time
+      - generic [ref=e143]: Charts coming soon
+    - generic [ref=e144]:
+      - generic [ref=e145]: Recent orders
+      - table [ref=e149]:
+        - rowgroup [ref=e150]:
+          - row "Order Customer Total Status" [ref=e151]:
+            - columnheader "Order" [ref=e152]:
+              - generic [ref=e153]: Order
+            - columnheader "Customer" [ref=e154]:
+              - generic [ref=e155]: Customer
+            - columnheader "Total" [ref=e156]:
+              - generic [ref=e157]: Total
+            - columnheader "Status" [ref=e158]:
+              - generic [ref=e159]: Status
+        - rowgroup [ref=e160]:
+          - row "#1 review@shop.test 25.98 EUR paid" [ref=e161]:
+            - cell "#1" [ref=e162]:
+              - link "#1" [ref=e163] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/4
+            - cell "review@shop.test" [ref=e164]
+            - cell "25.98 EUR" [ref=e165]
+            - cell "paid" [ref=e166]:
+              - generic [ref=e167]: paid
+          - row "D-1001 alice@shop.test 30.98 EUR pending" [ref=e168]:
+            - cell "D-1001" [ref=e169]:
+              - link "D-1001" [ref=e170] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/1
+            - cell "alice@shop.test" [ref=e171]
+            - cell "30.98 EUR" [ref=e172]
+            - cell "pending" [ref=e173]:
+              - generic [ref=e174]: pending
+          - row "D-1002 bob@shop.test 20.98 EUR paid" [ref=e175]:
+            - cell "D-1002" [ref=e176]:
+              - link "D-1002" [ref=e177] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/2
+            - cell "bob@shop.test" [ref=e178]
+            - cell "20.98 EUR" [ref=e179]
+            - cell "paid" [ref=e180]:
+              - generic [ref=e181]: paid
+          - row "D-1003 carol@shop.test 25.98 EUR refunded" [ref=e182]:
+            - cell "D-1003" [ref=e183]:
+              - link "D-1003" [ref=e184] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/3
+            - cell "carol@shop.test" [ref=e185]
+            - cell "25.98 EUR" [ref=e186]
+            - cell "refunded" [ref=e187]:
+              - generic [ref=e188]: refunded

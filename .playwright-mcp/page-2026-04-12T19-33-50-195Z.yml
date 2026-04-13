@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Laravel" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - paragraph [ref=e18]: New season
+        - heading "Thoughtfully made, honestly priced." [level=1] [ref=e19]
+        - paragraph [ref=e20]: A curated collection of timeless goods designed to last. Explore our latest arrivals and find something you will love.
+        - generic [ref=e21]:
+          - link "Shop the collection" [ref=e22] [cursor=pointer]:
+            - /url: "#featured"
+          - link "What is new" [ref=e23] [cursor=pointer]:
+            - /url: "#recent"
+      - generic [ref=e24]:
+        - generic [ref=e26]:
+          - heading "New arrivals" [level=2] [ref=e27]
+          - paragraph [ref=e28]: Fresh goods, just in.
+        - paragraph [ref=e30]: No products yet. Check back soon.
+  - contentinfo [ref=e31]:
+    - generic [ref=e33]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e34]: (c) Shop
+  - button "Open cart" [ref=e37]:
+    - img [ref=e38]
+    - generic [ref=e40]: Cart
+    - generic [ref=e41]: "0"

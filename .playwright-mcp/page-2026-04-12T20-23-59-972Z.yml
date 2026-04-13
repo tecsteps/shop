@@ -1,0 +1,147 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e125]:
+      - generic [ref=e126]: Pages
+      - link "New page" [ref=e127] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages/create
+        - img [ref=e128]
+        - generic [ref=e130]: New page
+    - generic [ref=e131]:
+      - generic:
+        - img
+      - textbox "Search pages..." [ref=e132]
+    - table [ref=e137]:
+      - rowgroup [ref=e138]:
+        - row "Title Handle Status Updated" [ref=e139]:
+          - columnheader "Title" [ref=e140]:
+            - generic [ref=e141]: Title
+          - columnheader "Handle" [ref=e142]:
+            - generic [ref=e143]: Handle
+          - columnheader "Status" [ref=e144]:
+            - generic [ref=e145]: Status
+          - columnheader "Updated" [ref=e146]:
+            - generic [ref=e147]: Updated
+          - columnheader [ref=e148]
+      - rowgroup [ref=e149]:
+        - row "About Us about-us published 4 minutes ago Edit Delete" [ref=e150]:
+          - cell "About Us" [ref=e151]:
+            - link "About Us" [ref=e152] [cursor=pointer]:
+              - /url: http://shop.test/admin/pages/1/edit
+          - cell "about-us" [ref=e153]
+          - cell "published" [ref=e154]:
+            - generic [ref=e155]: published
+          - cell "4 minutes ago" [ref=e156]
+          - cell "Edit Delete" [ref=e157]:
+            - generic [ref=e158]:
+              - link "Edit" [ref=e159] [cursor=pointer]:
+                - /url: http://shop.test/admin/pages/1/edit
+              - button "Delete" [ref=e160]:
+                - img [ref=e162]
+                - generic [ref=e165]: Delete
+        - row "Contact contact published 4 minutes ago Edit Delete" [ref=e166]:
+          - cell "Contact" [ref=e167]:
+            - link "Contact" [ref=e168] [cursor=pointer]:
+              - /url: http://shop.test/admin/pages/2/edit
+          - cell "contact" [ref=e169]
+          - cell "published" [ref=e170]:
+            - generic [ref=e171]: published
+          - cell "4 minutes ago" [ref=e172]
+          - cell "Edit Delete" [ref=e173]:
+            - generic [ref=e174]:
+              - link "Edit" [ref=e175] [cursor=pointer]:
+                - /url: http://shop.test/admin/pages/2/edit
+              - button "Delete" [ref=e176]:
+                - img [ref=e178]
+                - generic [ref=e181]: Delete
+        - row "FAQ faq published 4 minutes ago Edit Delete" [ref=e182]:
+          - cell "FAQ" [ref=e183]:
+            - link "FAQ" [ref=e184] [cursor=pointer]:
+              - /url: http://shop.test/admin/pages/3/edit
+          - cell "faq" [ref=e185]
+          - cell "published" [ref=e186]:
+            - generic [ref=e187]: published
+          - cell "4 minutes ago" [ref=e188]
+          - cell "Edit Delete" [ref=e189]:
+            - generic [ref=e190]:
+              - link "Edit" [ref=e191] [cursor=pointer]:
+                - /url: http://shop.test/admin/pages/3/edit
+              - button "Delete" [ref=e192]:
+                - img [ref=e194]
+                - generic [ref=e197]: Delete

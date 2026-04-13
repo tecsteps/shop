@@ -1,0 +1,101 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Nolan Inc Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Nolan Inc Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+    - button "TU Test User" [ref=e59]:
+      - generic [ref=e62]: TU
+      - generic [ref=e63]: Test User
+      - img [ref=e65]
+  - generic [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]: New discount
+      - link "Back" [ref=e72] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]: Details
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - generic [ref=e79]: Type
+              - combobox "Type" [ref=e80]:
+                - option "Code" [selected]
+                - option "Automatic"
+            - generic [ref=e81]:
+              - generic [ref=e82]: Code
+              - textbox "Code" [ref=e84]:
+                - /placeholder: SAVE20
+            - generic [ref=e85]:
+              - generic [ref=e86]: Value type
+              - combobox "Value type" [ref=e87]:
+                - option "Percentage" [selected]
+                - option "Fixed amount"
+                - option "Free shipping"
+            - generic [ref=e88]:
+              - generic [ref=e89]: Value (%)
+              - spinbutton "Value (%)" [ref=e91]: "0"
+            - generic [ref=e92]:
+              - generic [ref=e93]: Minimum purchase (cents)
+              - spinbutton "Minimum purchase (cents)" [ref=e95]
+        - generic [ref=e96]:
+          - generic [ref=e97]: Active dates
+          - generic [ref=e98]:
+            - generic [ref=e99]:
+              - generic [ref=e100]: Starts at
+              - textbox "Starts at" [ref=e102]
+            - generic [ref=e103]:
+              - generic [ref=e104]: Ends at
+              - textbox "Ends at" [ref=e106]
+      - generic [ref=e108]:
+        - generic [ref=e109]: Status
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - generic [ref=e112]: Status
+            - combobox "Status" [ref=e113]:
+              - option "Draft" [selected]
+              - option "Active"
+              - option "Disabled"
+              - option "Expired"
+          - generic [ref=e114]:
+            - generic [ref=e115]: Usage limit
+            - spinbutton "Usage limit" [ref=e117]
+      - generic [ref=e118]:
+        - link "Cancel" [ref=e119] [cursor=pointer]:
+          - /url: http://shop.test/admin/discounts
+        - button "Save discount" [ref=e120]:
+          - img [ref=e122]
+          - generic [ref=e125]: Save discount

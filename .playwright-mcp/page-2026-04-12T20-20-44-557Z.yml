@@ -1,0 +1,82 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - paragraph [ref=e18]: New season
+        - heading "Thoughtfully made, honestly priced." [level=1] [ref=e19]
+        - paragraph [ref=e20]: A curated collection of timeless goods designed to last. Explore our latest arrivals and find something you will love.
+        - generic [ref=e21]:
+          - link "Shop the collection" [ref=e22] [cursor=pointer]:
+            - /url: "#featured"
+          - link "What is new" [ref=e23] [cursor=pointer]:
+            - /url: "#recent"
+      - generic [ref=e24]:
+        - generic [ref=e26]:
+          - heading "Featured collections" [level=2] [ref=e27]
+          - paragraph [ref=e28]: Hand-picked edits for every occasion.
+        - generic [ref=e29]:
+          - link "Featured Shop now" [ref=e30] [cursor=pointer]:
+            - /url: /collections/featured
+            - generic [ref=e31]:
+              - heading "Featured" [level=3] [ref=e32]
+              - generic [ref=e33]: Shop now
+          - link "Sale Shop now" [ref=e34] [cursor=pointer]:
+            - /url: /collections/sale
+            - generic [ref=e35]:
+              - heading "Sale" [level=3] [ref=e36]
+              - generic [ref=e37]: Shop now
+      - generic [ref=e38]:
+        - generic [ref=e40]:
+          - heading "New arrivals" [level=2] [ref=e41]
+          - paragraph [ref=e42]: Fresh goods, just in.
+        - generic [ref=e43]:
+          - link "Cap EUR 24.99" [ref=e44] [cursor=pointer]:
+            - /url: /products/cap
+            - generic [ref=e46]:
+              - heading "Cap" [level=3] [ref=e47]
+              - paragraph [ref=e48]: EUR 24.99
+          - link "Tote Bag EUR 14.99" [ref=e49] [cursor=pointer]:
+            - /url: /products/tote-bag
+            - generic [ref=e51]:
+              - heading "Tote Bag" [level=3] [ref=e52]
+              - paragraph [ref=e53]: EUR 14.99
+          - link "Classic Tee EUR 19.99" [ref=e54] [cursor=pointer]:
+            - /url: /products/classic-tee
+            - generic [ref=e56]:
+              - heading "Classic Tee" [level=3] [ref=e57]
+              - paragraph [ref=e58]: EUR 19.99
+          - link "Hoodie EUR 49.99" [ref=e59] [cursor=pointer]:
+            - /url: /products/hoodie
+            - generic [ref=e61]:
+              - heading "Hoodie" [level=3] [ref=e62]
+              - paragraph [ref=e63]: EUR 49.99
+          - link "Sneakers EUR 79.99" [ref=e64] [cursor=pointer]:
+            - /url: /products/sneakers
+            - generic [ref=e66]:
+              - heading "Sneakers" [level=3] [ref=e67]
+              - paragraph [ref=e68]: EUR 79.99
+          - link "Mug EUR 9.99" [ref=e69] [cursor=pointer]:
+            - /url: /products/mug
+            - generic [ref=e71]:
+              - heading "Mug" [level=3] [ref=e72]
+              - paragraph [ref=e73]: EUR 9.99
+  - contentinfo [ref=e74]:
+    - generic [ref=e76]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e77]: (c) Shop
+  - button "Open cart" [ref=e80]:
+    - img [ref=e81]
+    - generic [ref=e83]: Cart
+    - generic [ref=e84]: "0"
