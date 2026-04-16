@@ -29,7 +29,7 @@ class Show extends Component
     {
         $products = $this->collection->products()
             ->published()
-            ->with('defaultVariant', 'media')
+            ->with('variants', 'media')
             ->when($this->sort === 'newest', fn ($q) => $q->orderByDesc('products.published_at'))
             ->when($this->sort === 'price_asc', fn ($q) => $q->orderBy('products.title'))
             ->when($this->sort === 'price_desc', fn ($q) => $q->orderByDesc('products.title'))

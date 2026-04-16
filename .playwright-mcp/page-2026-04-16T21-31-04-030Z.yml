@@ -1,0 +1,151 @@
+- generic [active] [ref=e37]:
+  - generic [ref=e38]:
+    - link "S Demo Store Admin" [ref=e39] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - generic [ref=e41]: S
+      - generic [ref=e42]:
+        - generic [ref=e43]: Demo Store
+        - generic [ref=e44]: Admin
+    - navigation [ref=e45]:
+      - link "Dashboard" [ref=e46] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e48]
+        - generic [ref=e50]: Dashboard
+      - generic [ref=e51]:
+        - generic [ref=e53]: Orders
+        - generic [ref=e54]:
+          - link "Orders" [ref=e55] [cursor=pointer]:
+            - /url: http://shop.test/admin/orders
+            - img [ref=e57]
+            - generic [ref=e59]: Orders
+          - link "Customers" [ref=e60] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e62]
+            - generic [ref=e64]: Customers
+      - generic [ref=e65]:
+        - generic [ref=e67]: Catalog
+        - generic [ref=e68]:
+          - link "Products" [ref=e69] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e71]
+            - generic [ref=e73]: Products
+          - link "Collections" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e76]
+            - generic [ref=e78]: Collections
+          - link "Inventory" [ref=e79] [cursor=pointer]:
+            - /url: http://shop.test/admin/inventory
+            - img [ref=e81]
+            - generic [ref=e83]: Inventory
+      - generic [ref=e84]:
+        - generic [ref=e86]: Marketing
+        - link "Discounts" [ref=e88] [cursor=pointer]:
+          - /url: http://shop.test/admin/discounts
+          - img [ref=e90]
+          - generic [ref=e92]: Discounts
+      - generic [ref=e93]:
+        - generic [ref=e95]: Online store
+        - generic [ref=e96]:
+          - link "Pages" [ref=e97] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e99]
+            - generic [ref=e101]: Pages
+          - link "Navigation" [ref=e102] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e104]
+            - generic [ref=e106]: Navigation
+      - generic [ref=e107]:
+        - generic [ref=e109]: Settings
+        - generic [ref=e110]:
+          - link "Shipping" [ref=e111] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings/shipping
+            - img [ref=e113]
+            - generic [ref=e115]: Shipping
+          - link "Taxes" [ref=e116] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings/taxes
+            - img [ref=e118]
+            - generic [ref=e120]: Taxes
+          - link "General" [ref=e121] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e123]
+            - generic [ref=e126]: General
+    - button "OU Owner User" [ref=e129]:
+      - generic [ref=e132]: OU
+      - generic [ref=e133]: Owner User
+      - img [ref=e135]
+  - generic [ref=e140]:
+    - generic [ref=e141]: Dashboard
+    - generic [ref=e142]: Welcome back to Demo Store.
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - generic [ref=e145]: Orders today
+        - generic [ref=e146]: "2"
+      - generic [ref=e147]:
+        - generic [ref=e148]: Revenue (30d)
+        - generic [ref=e149]: EUR 615.90
+      - generic [ref=e150]:
+        - generic [ref=e151]: Active products
+        - generic [ref=e152]: "10"
+      - generic [ref=e153]:
+        - generic [ref=e154]: Customers
+        - generic [ref=e155]: "5"
+    - generic [ref=e156]:
+      - generic [ref=e157]: Recent orders
+      - table [ref=e160]:
+        - rowgroup [ref=e161]:
+          - row "Order Date Status Total" [ref=e162]:
+            - columnheader "Order" [ref=e163]:
+              - generic [ref=e164]: Order
+            - columnheader "Date" [ref=e165]:
+              - generic [ref=e166]: Date
+            - columnheader "Status" [ref=e167]:
+              - generic [ref=e168]: Status
+            - columnheader "Total" [ref=e169]:
+              - generic [ref=e170]: Total
+            - columnheader [ref=e171]
+        - rowgroup [ref=e172]:
+          - row "#1006 2026-04-16 21:30 paid EUR 31.75 View" [ref=e173]:
+            - cell "#1006" [ref=e174]
+            - cell "2026-04-16 21:30" [ref=e175]
+            - cell "paid" [ref=e176]:
+              - generic [ref=e177]: paid
+            - cell "EUR 31.75" [ref=e178]
+            - cell "View" [ref=e179]:
+              - link "View" [ref=e180] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/6
+          - row "#1001 2026-04-16 21:25 paid EUR 64.47 View" [ref=e181]:
+            - cell "#1001" [ref=e182]
+            - cell "2026-04-16 21:25" [ref=e183]
+            - cell "paid" [ref=e184]:
+              - generic [ref=e185]: paid
+            - cell "EUR 64.47" [ref=e186]
+            - cell "View" [ref=e187]:
+              - link "View" [ref=e188] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/1
+          - row "#1002 2026-04-15 21:25 paid EUR 147.77 View" [ref=e189]:
+            - cell "#1002" [ref=e190]
+            - cell "2026-04-15 21:25" [ref=e191]
+            - cell "paid" [ref=e192]:
+              - generic [ref=e193]: paid
+            - cell "EUR 147.77" [ref=e194]
+            - cell "View" [ref=e195]:
+              - link "View" [ref=e196] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/2
+          - row "#1003 2026-04-14 21:25 paid EUR 171.57 View" [ref=e197]:
+            - cell "#1003" [ref=e198]
+            - cell "2026-04-14 21:25" [ref=e199]
+            - cell "paid" [ref=e200]:
+              - generic [ref=e201]: paid
+            - cell "EUR 171.57" [ref=e202]
+            - cell "View" [ref=e203]:
+              - link "View" [ref=e204] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/3
+          - row "#1004 2026-04-13 21:25 paid EUR 123.97 View" [ref=e205]:
+            - cell "#1004" [ref=e206]
+            - cell "2026-04-13 21:25" [ref=e207]
+            - cell "paid" [ref=e208]:
+              - generic [ref=e209]: paid
+            - cell "EUR 123.97" [ref=e210]
+            - cell "View" [ref=e211]:
+              - link "View" [ref=e212] [cursor=pointer]:
+                - /url: http://shop.test/admin/orders/4

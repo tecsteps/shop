@@ -1,0 +1,57 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test
+        - link "Shop" [ref=e7] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/search
+      - generic [ref=e9]:
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart 1" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - text: Cart
+          - generic [ref=e12]: "1"
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]: Your cart
+      - generic [ref=e16]:
+        - generic [ref=e18]:
+          - generic [ref=e20]:
+            - generic [ref=e21]: Classic Crew Tee
+            - generic [ref=e22]: S
+            - generic [ref=e23]: EUR 24.99
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - button "−" [ref=e26]
+              - generic [ref=e27]: "1"
+              - button "+" [ref=e28]
+            - button "Remove" [ref=e29]
+        - complementary [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - generic [ref=e33]: Subtotal
+              - generic [ref=e34]: EUR 24.99
+            - generic [ref=e35]:
+              - generic [ref=e36]: Shipping
+              - generic [ref=e37]: Calculated at checkout
+            - generic [ref=e38]:
+              - generic [ref=e39]: Tax
+              - generic [ref=e40]: EUR 4.75
+          - generic [ref=e41]:
+            - generic [ref=e42]: Total
+            - generic [ref=e43]: EUR 29.74
+          - generic [ref=e44]:
+            - generic [ref=e45]: Discount code
+            - generic [ref=e46]:
+              - textbox "SAVE10" [ref=e47]
+              - button "Apply" [ref=e48]
+          - link "Checkout" [ref=e49] [cursor=pointer]:
+            - /url: http://shop.test/checkout
+  - contentinfo [ref=e50]:
+    - generic [ref=e51]: © 2026 Demo Store. Powered by Shop.

@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test
+        - link "Shop" [ref=e7] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/search
+      - generic [ref=e9]:
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart 0" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - text: Cart
+          - generic [ref=e12]: "0"
+  - main [ref=e13]:
+    - generic [ref=e15]:
+      - img [ref=e17]
+      - heading "Thank you!" [level=1] [ref=e19]
+      - paragraph [ref=e20]:
+        - text: Your order
+        - strong [ref=e21]: "#1006"
+        - text: has been placed.
+      - generic [ref=e22]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: Classic Crew Tee - S × 1
+          - generic [ref=e26]: EUR 24.99
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: Subtotal
+            - generic [ref=e30]: EUR 24.99
+          - generic [ref=e31]:
+            - generic [ref=e32]: Discount
+            - generic [ref=e33]: −EUR 2.50
+          - generic [ref=e34]:
+            - generic [ref=e35]: Shipping
+            - generic [ref=e36]: EUR 4.99
+          - generic [ref=e37]:
+            - generic [ref=e38]: Tax
+            - generic [ref=e39]: EUR 4.27
+          - generic [ref=e40]:
+            - generic [ref=e41]: Total
+            - generic [ref=e42]: EUR 31.75
+      - link "Continue shopping" [ref=e43] [cursor=pointer]:
+        - /url: http://shop.test
+  - contentinfo [ref=e44]:
+    - generic [ref=e45]: © 2026 Demo Store. Powered by Shop.

@@ -37,7 +37,7 @@ class Index extends Component
                         ->orWhere('product_type', 'like', $like);
                 });
             })
-            ->with('defaultVariant', 'media')
+            ->with('variants', 'media')
             ->paginate(12);
 
         if ($q !== '') {

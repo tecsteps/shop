@@ -13,7 +13,7 @@ class Home extends Component
 {
     public function render()
     {
-        $featured = Product::query()->published()->with('defaultVariant', 'media')->limit(8)->get();
+        $featured = Product::query()->published()->with('variants', 'media')->limit(8)->get();
         $collections = Collection::query()
             ->where('status', CollectionStatus::Active->value)
             ->limit(4)

@@ -1,0 +1,123 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test
+        - link "Shop" [ref=e7] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/search
+      - generic [ref=e9]:
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart 1" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - text: Cart
+          - generic [ref=e12]: "1"
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Contact
+          - generic [ref=e18]:
+            - generic [ref=e19]: Email
+            - textbox "Email" [ref=e21]: jane.buyer@demo.test
+        - generic [ref=e22]:
+          - generic [ref=e23]: Shipping address
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - generic [ref=e26]: First name
+              - textbox "First name" [ref=e28]: Jane
+            - generic [ref=e29]:
+              - generic [ref=e30]: Last name
+              - textbox "Last name" [ref=e32]: Buyer
+            - generic [ref=e34]:
+              - generic [ref=e35]: Street address
+              - textbox "Street address" [ref=e37]: Friedrichstraße 1
+            - generic [ref=e38]:
+              - generic [ref=e39]: City
+              - textbox "City" [ref=e41]: Berlin
+            - generic [ref=e42]:
+              - generic [ref=e43]: Postal code
+              - textbox "Postal code" [ref=e45]: "10117"
+            - generic [ref=e47]:
+              - generic [ref=e48]: Country
+              - combobox "Country" [ref=e49]:
+                - option "Germany" [selected]
+                - option "Austria"
+                - option "Switzerland"
+                - option "France"
+                - option "Netherlands"
+                - option "United States"
+        - generic [ref=e50]:
+          - generic [ref=e51]: Shipping method
+          - generic [ref=e52]:
+            - generic [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]:
+                - radio "Standard (3-5 days) EUR 4.99" [checked] [active] [ref=e55]
+                - generic [ref=e56]: Standard (3-5 days)
+              - generic [ref=e57]: EUR 4.99
+            - generic [ref=e58] [cursor=pointer]:
+              - generic [ref=e59]:
+                - radio "Express (1-2 days) EUR 12.99" [ref=e60]
+                - generic [ref=e61]: Express (1-2 days)
+              - generic [ref=e62]: EUR 12.99
+        - generic [ref=e63]:
+          - generic [ref=e64]: Payment
+          - generic [ref=e65]:
+            - generic [ref=e66] [cursor=pointer]:
+              - radio "Credit card" [checked] [ref=e67]
+              - generic [ref=e68]: Credit card
+            - generic [ref=e69] [cursor=pointer]:
+              - radio "PayPal" [ref=e70]
+              - generic [ref=e71]: PayPal
+            - generic [ref=e72] [cursor=pointer]:
+              - radio "Bank transfer" [ref=e73]
+              - generic [ref=e74]: Bank transfer
+          - generic [ref=e75]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: Card number
+              - textbox "Card number" [ref=e80]:
+                - /placeholder: 4242 4242 4242 4242
+                - text: "4242424242424242"
+            - generic [ref=e82]:
+              - generic [ref=e83]: Cardholder name
+              - textbox "Cardholder name" [ref=e85]: Jane Buyer
+            - generic [ref=e86]:
+              - generic [ref=e87]: Expiry (MM/YY)
+              - textbox "Expiry (MM/YY)" [ref=e89]: 12/29
+            - generic [ref=e90]:
+              - generic [ref=e91]: CVC
+              - textbox "CVC" [ref=e93]: "123"
+          - generic [ref=e94]: Use 4242 4242 4242 4242 for success, 4000 0000 0000 0002 for decline.
+        - button "Place order" [ref=e95]:
+          - img [ref=e97]
+          - generic [ref=e100]: Place order
+      - complementary [ref=e101]:
+        - generic [ref=e102]: Order summary
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - generic [ref=e106]: Classic Crew Tee
+            - generic [ref=e107]: × 1
+          - generic [ref=e108]: EUR 24.99
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]: Subtotal
+            - generic [ref=e112]: EUR 24.99
+          - generic [ref=e113]:
+            - generic [ref=e114]: Discount
+            - generic [ref=e115]: −EUR 2.50
+          - generic [ref=e116]:
+            - generic [ref=e117]: Shipping
+            - generic [ref=e118]: EUR 4.99
+          - generic [ref=e119]:
+            - generic [ref=e120]: Tax
+            - generic [ref=e121]: EUR 4.27
+          - generic [ref=e122]:
+            - generic [ref=e123]: Total
+            - generic [ref=e124]: EUR 31.75
+  - contentinfo [ref=e125]:
+    - generic [ref=e126]: © 2026 Demo Store. Powered by Shop.

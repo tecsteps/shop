@@ -1,0 +1,244 @@
+- generic [active] [ref=e102]:
+  - dialog [ref=e147]:
+    - iframe [ref=e148]:
+      - generic [ref=f1e2]:
+        - generic [ref=f1e4]:
+          - generic [ref=f1e5]:
+            - img [ref=f1e7]
+            - generic [ref=f1e10]: Internal Server Error
+          - button "Copy as Markdown" [ref=f1e11] [cursor=pointer]:
+            - img [ref=f1e12]
+            - generic [ref=f1e15]: Copy as Markdown
+        - generic [ref=f1e18]:
+          - generic [ref=f1e19]:
+            - heading "Illuminate\\Contracts\\Container\\BindingResolutionException" [level=1] [ref=f1e20]
+            - generic [ref=f1e22]: vendor/laravel/framework/src/Illuminate/Container/Container.php:1124
+            - paragraph [ref=f1e23]: Target class [current_store] does not exist.
+          - generic [ref=f1e24]:
+            - generic [ref=f1e25]:
+              - generic [ref=f1e26]:
+                - generic [ref=f1e27]: LARAVEL
+                - generic [ref=f1e28]: 12.51.0
+              - generic [ref=f1e29]:
+                - generic [ref=f1e30]: PHP
+                - generic [ref=f1e31]: 8.4.17
+            - generic [ref=f1e32]:
+              - img [ref=f1e33]
+              - text: UNHANDLED
+            - generic [ref=f1e36]: CODE 0
+          - generic [ref=f1e38]:
+            - generic [ref=f1e39]:
+              - img [ref=f1e40]
+              - text: "500"
+            - generic [ref=f1e43]:
+              - img [ref=f1e44]
+              - text: POST
+            - generic [ref=f1e47]: http://shop.test/livewire-6701cc17/update
+            - button [ref=f1e48] [cursor=pointer]:
+              - img [ref=f1e49]
+        - generic [ref=f1e53]:
+          - generic [ref=f1e54]:
+            - generic [ref=f1e55]:
+              - img [ref=f1e57]
+              - heading "Exception trace" [level=3] [ref=f1e60]
+            - generic [ref=f1e61]:
+              - generic [ref=f1e63] [cursor=pointer]:
+                - img [ref=f1e64]
+                - generic [ref=f1e68]: 6 vendor frames
+                - button [ref=f1e69]:
+                  - img [ref=f1e70]
+              - generic [ref=f1e74]:
+                - generic [ref=f1e75] [cursor=pointer]:
+                  - generic [ref=f1e78]:
+                    - code [ref=f1e82]:
+                      - generic [ref=f1e83]: app/Services/Cart/CartSession.php
+                    - generic [ref=f1e85]: app/Services/Cart/CartSession.php:40
+                  - button [ref=f1e87]:
+                    - img [ref=f1e88]
+                - code [ref=f1e96]:
+                  - generic [ref=f1e97]: 35 $existing = $this->current();
+                  - generic [ref=f1e98]: "36 if ($existing) {"
+                  - generic [ref=f1e99]: 37 return $existing;
+                  - generic [ref=f1e100]: "38 }"
+                  - generic [ref=f1e101]: "39"
+                  - generic [ref=f1e102]: 40 $store = app('current_store');
+                  - generic [ref=f1e103]: 41 $customer = auth('customer')->user();
+                  - generic [ref=f1e104]: 42 $cart = $this->cartService->createForStore($store, $customer);
+                  - generic [ref=f1e105]: 43 $this->session->put(self::SESSION_KEY, $cart->id);
+                  - generic [ref=f1e106]: "44"
+                  - generic [ref=f1e107]: 45 return $cart->fresh(['lines']);
+                  - generic [ref=f1e108]: "46 }"
+                  - generic [ref=f1e109]: "47"
+                  - generic [ref=f1e110]: "48 public function forget(): void"
+                  - generic [ref=f1e111]: "49 {"
+                  - generic [ref=f1e112]: 50 $this->session->forget(self::SESSION_KEY);
+                  - generic [ref=f1e113]: "51 }"
+                  - generic [ref=f1e114]: "52"
+              - generic [ref=f1e116] [cursor=pointer]:
+                - generic [ref=f1e119]:
+                  - code [ref=f1e123]:
+                    - generic [ref=f1e124]: app/Livewire/Storefront/Products/Show.php
+                  - generic [ref=f1e126]: app/Livewire/Storefront/Products/Show.php:56
+                - button [ref=f1e128]:
+                  - img [ref=f1e129]
+              - generic [ref=f1e134] [cursor=pointer]:
+                - img [ref=f1e135]
+                - generic [ref=f1e139]: 58 vendor frames
+                - button [ref=f1e140]:
+                  - img [ref=f1e141]
+              - generic [ref=f1e146] [cursor=pointer]:
+                - generic [ref=f1e149]:
+                  - code [ref=f1e153]:
+                    - generic [ref=f1e154]: public/index.php
+                  - generic [ref=f1e156]: public/index.php:20
+                - button [ref=f1e158]:
+                  - img [ref=f1e159]
+              - generic [ref=f1e164] [cursor=pointer]:
+                - img [ref=f1e165]
+                - generic [ref=f1e169]: 1 vendor frame
+                - button [ref=f1e170]:
+                  - img [ref=f1e171]
+          - generic [ref=f1e175]:
+            - generic [ref=f1e176]:
+              - generic [ref=f1e177]:
+                - img [ref=f1e179]
+                - heading "Queries" [level=3] [ref=f1e181]
+              - generic [ref=f1e183]: 1-2 of 2
+            - generic [ref=f1e184]:
+              - generic [ref=f1e185]:
+                - generic [ref=f1e186]:
+                  - generic [ref=f1e187]:
+                    - img [ref=f1e188]
+                    - generic [ref=f1e190]: sqlite
+                  - code [ref=f1e194]:
+                    - generic [ref=f1e195]: select * from "products" where "products"."id" = 1 limit 1
+                - generic [ref=f1e196]: 1.07ms
+              - generic [ref=f1e197]:
+                - generic [ref=f1e198]:
+                  - generic [ref=f1e199]:
+                    - img [ref=f1e200]
+                    - generic [ref=f1e202]: sqlite
+                  - code [ref=f1e206]:
+                    - generic [ref=f1e207]: select * from "product_variants" where "product_variants"."product_id" = 1 and "product_variants"."product_id" is not null order by "position" asc
+                - generic [ref=f1e208]: 0.07ms
+        - generic [ref=f1e210]:
+          - generic [ref=f1e211]:
+            - heading "Headers" [level=2] [ref=f1e212]
+            - generic [ref=f1e213]:
+              - generic [ref=f1e214]:
+                - generic [ref=f1e215]: cookie
+                - generic [ref=f1e217]: XSRF-TOKEN=eyJpdiI6IlcxeGdqeWZhWkRnanFrUDB4M0M3R2c9PSIsInZhbHVlIjoiN280bTZ4Z1F6Q3BqVC9mbjcrejB0cDVYVThMMWFYV1JHTkFiSnVlMHNBWFFVbXo4L1Nob0Jkb2I2WGdkTHluaEpCUVRIeDNYcEpiYVdEczFGTDhKWnRLZFRjU0p3aG8rZjhVVTRTa3N1Y1o2WHZhMlhkbjdNVDNKQnRZQUxrdjUiLCJtYWMiOiI0MjE1ZmI0OWQyOTBlYmU3NDM0NDI4OWM3NTdhMzVjODk3NTEzOTkyOTZhODI1MDQ0NTMzOGFkZTg5MjEzOTEzIiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6Ikk5R2ljN1dOUEtZbGhkWkRpTVQ0TkE9PSIsInZhbHVlIjoiVlJqaVZZVzJOTUhIelJPNkgzSWxDNDNpQm9UTk5ucEJPbTcvdXhZdFJTRjlYZFdHaTJRVmgya042dVl3OHNpelh6L21oQ09IU0lUekpqbit0dCt1VTBaTHhaK0dVeC9mSXd1MUxMQlBiRk4rNmNhUkdYVFYvZ2RCeVlJa0NHbDgiLCJtYWMiOiI0YzY2ZjJhMmFkMTBmZjAyMmVkMmIxNWQ0MzcwZjA3MjY0MjgzOWY4YzI0ZTMxZDQ3NGQzYTc0MjdiYTIwMjNiIiwidGFnIjoiIn0%3D
+              - generic [ref=f1e218]:
+                - generic [ref=f1e219]: accept-language
+                - generic [ref=f1e221]: en-GB,en-US;q=0.9,en;q=0.8
+              - generic [ref=f1e222]:
+                - generic [ref=f1e223]: accept-encoding
+                - generic [ref=f1e225]: gzip, deflate
+              - generic [ref=f1e226]:
+                - generic [ref=f1e227]: referer
+                - generic [ref=f1e229]: http://shop.test/products/classic-crew-tee
+              - generic [ref=f1e230]:
+                - generic [ref=f1e231]: origin
+                - generic [ref=f1e233]: http://shop.test
+              - generic [ref=f1e234]:
+                - generic [ref=f1e235]: accept
+                - generic [ref=f1e237]: "*/*"
+              - generic [ref=f1e238]:
+                - generic [ref=f1e239]: x-livewire
+                - generic [ref=f1e241]: "1"
+              - generic [ref=f1e242]:
+                - generic [ref=f1e243]: content-type
+                - generic [ref=f1e245]: application/json
+              - generic [ref=f1e246]:
+                - generic [ref=f1e247]: user-agent
+                - generic [ref=f1e249]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+              - generic [ref=f1e250]:
+                - generic [ref=f1e251]: content-length
+                - generic [ref=f1e253]: "620"
+              - generic [ref=f1e254]:
+                - generic [ref=f1e255]: connection
+                - generic [ref=f1e257]: keep-alive
+              - generic [ref=f1e258]:
+                - generic [ref=f1e259]: host
+                - generic [ref=f1e261]: shop.test
+          - generic [ref=f1e262]:
+            - heading "Body" [level=2] [ref=f1e263]
+            - code [ref=f1e268]:
+              - generic [ref=f1e269]: "{"
+              - generic [ref=f1e270]: "\"_token\": \"U5UqWVOQGmROHaxS2xub0cowI0Q7XH2r0CtFpLty\","
+              - generic [ref=f1e271]: "\"components\": ["
+              - generic [ref=f1e272]: "{"
+              - generic [ref=f1e273]: "\"snapshot\": \"{\"data\":{\"product\":[null,{\"class\":\"AppModelsProduct\",\"key\":1,\"s\":\"mdl\"}],\"variantId\":2,\"quantity\":1},\"memo\":{\"id\":\"kuUQbtb5dwnXLTW0GKag\",\"name\":\"storefront.products.show\",\"path\":\"products/classic-crew-tee\",\"method\":\"GET\",\"release\":\"a-a-a\",\"children\":[],\"scripts\":[],\"assets\":[],\"errors\":[],\"locale\":\"en\",\"islands\":[]},\"checksum\":\"63a48253aeae3ff080491baa489f69dd09d9c21e76c5c2ad364b69c2ade3ec05\"}\","
+              - generic [ref=f1e274]: "\"updates\": [],"
+              - generic [ref=f1e275]: "\"calls\": ["
+              - generic [ref=f1e276]: "{"
+              - generic [ref=f1e277]: "\"method\": \"addToCart\","
+              - generic [ref=f1e278]: "\"params\": [],"
+              - generic [ref=f1e279]: "\"metadata\": []"
+              - generic [ref=f1e280]: "}"
+              - generic [ref=f1e281]: "]"
+              - generic [ref=f1e282]: "}"
+              - generic [ref=f1e283]: "]"
+              - generic [ref=f1e284]: "}"
+          - generic [ref=f1e285]:
+            - heading "Routing" [level=2] [ref=f1e286]
+            - generic [ref=f1e287]:
+              - generic [ref=f1e288]:
+                - generic [ref=f1e289]: controller
+                - generic [ref=f1e291]: Livewire\Mechanisms\HandleRequests\HandleRequests@handleUpdate
+              - generic [ref=f1e292]:
+                - generic [ref=f1e293]: route name
+                - generic [ref=f1e295]: default-livewire.update
+              - generic [ref=f1e296]:
+                - generic [ref=f1e297]: middleware
+                - generic [ref=f1e299]: web
+          - generic [ref=f1e300]:
+            - heading "Routing parameters" [level=2] [ref=f1e301]
+            - generic [ref=f1e302]: // No routing parameters
+        - generic [ref=f1e305]:
+          - img [ref=f1e307]
+          - img [ref=f1e3345]
+  - banner [ref=e103]:
+    - generic [ref=e104]:
+      - link "Demo Store" [ref=e105] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e106]:
+        - link "Home" [ref=e107] [cursor=pointer]:
+          - /url: http://shop.test
+        - link "Shop" [ref=e108] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e109] [cursor=pointer]:
+          - /url: http://shop.test/search
+      - generic [ref=e110]:
+        - link "Sign in" [ref=e111] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart 0" [ref=e112] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - text: Cart
+          - generic [ref=e113]: "0"
+  - main [ref=e114]:
+    - generic [ref=e115]:
+      - generic [ref=e118]: No image
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]: DemoBrand
+          - heading "Classic Crew Tee" [level=1] [ref=e122]
+          - generic [ref=e123]: EUR 24.99
+        - generic [ref=e125]:
+          - generic [ref=e126]: Size
+          - generic [ref=e127]:
+            - button "S" [ref=e128]
+            - button "M" [ref=e129]
+            - button "L" [ref=e130]
+            - button "XL" [ref=e131]
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - button "−" [ref=e134]
+            - generic [ref=e135]: "1"
+            - button "+" [ref=e136]
+          - button "Add to cart" [ref=e137]:
+            - img [ref=e139]
+            - generic [ref=e142]: Add to cart
+        - paragraph [ref=e144]: A soft, breathable cotton tee that goes with everything.
+  - contentinfo [ref=e145]:
+    - generic [ref=e146]: © 2026 Demo Store. Powered by Shop.

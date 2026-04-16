@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test
+        - link "Shop" [ref=e7] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/search
+      - generic [ref=e9]:
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart 0" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - text: Cart
+          - generic [ref=e12]: "0"
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e17]: No image
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: DemoBrand
+          - heading "Classic Crew Tee" [level=1] [ref=e21]
+          - generic [ref=e22]: EUR 24.99
+        - generic [ref=e24]:
+          - generic [ref=e25]: Size
+          - generic [ref=e26]:
+            - button "S" [ref=e27]
+            - button "M" [ref=e28]
+            - button "L" [ref=e29]
+            - button "XL" [ref=e30]
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - button "−" [ref=e33]
+            - generic [ref=e34]: "1"
+            - button "+" [ref=e35]
+          - button "Add to cart" [ref=e36]:
+            - img [ref=e38]
+            - generic [ref=e41]: Add to cart
+        - paragraph [ref=e43]: A soft, breathable cotton tee that goes with everything.
+  - contentinfo [ref=e44]:
+    - generic [ref=e45]: © 2026 Demo Store. Powered by Shop.

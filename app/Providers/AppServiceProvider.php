@@ -3,19 +3,22 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Http\Middleware\ResolveStore;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\Payments\PaymentProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +32,15 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->registerCustomerAuthProvider();
         $this->registerRateLimiters();
+        $this->configureLivewireUpdateRoute();
+    }
+
+    protected function configureLivewireUpdateRoute(): void
+    {
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)
+                ->middleware(['web', ResolveStore::class.':storefront']);
+        });
     }
 
     protected function configureDefaults(): void
@@ -54,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Auth::provider('customer', function ($app, array $config) {
             return new CustomerUserProvider(
-                $app->make(Hash::class),
+                $app->make(Hasher::class),
                 $config['model'],
             );
         });

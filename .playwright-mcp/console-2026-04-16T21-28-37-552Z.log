@@ -1,0 +1,4 @@
+[     164ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/:44
+[     234ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/favicon.ico:0
+[   20403ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[   20419ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ :6
