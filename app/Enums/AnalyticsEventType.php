@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Enums;
+
+enum AnalyticsEventType: string
+{
+    case PageView = 'page_view';
+    case ProductView = 'product_view';
+    case AddToCart = 'add_to_cart';
+    case CheckoutStarted = 'checkout_started';
+    case CheckoutCompleted = 'checkout_completed';
+    case Search = 'search';
+}
