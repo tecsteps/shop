@@ -11,10 +11,20 @@ class Drawer extends Component
 {
     public bool $open = false;
 
+    public function toggle(): void
+    {
+        $this->open = ! $this->open;
+    }
+
+    public function close(): void
+    {
+        $this->open = false;
+    }
+
     #[On('cart-updated')]
     public function refreshDrawer(): void
     {
-        // Livewire re-renders on event
+        // Livewire re-renders when the event fires.
     }
 
     public function render(): View

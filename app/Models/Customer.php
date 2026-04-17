@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Customer extends Authenticatable implements CanResetPasswordContract
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use BelongsToStore, CanResetPassword, HasFactory, Notifiable;
+    use BelongsToStore, CanResetPassword, HasApiTokens, HasFactory, Notifiable;
 
     /**
      * @var list<string>

@@ -42,6 +42,17 @@ class DefaultStoreSeeder extends Seeder
             ],
         );
 
+        StoreDomain::query()->firstOrCreate(
+            ['hostname' => 'admin.shop.test'],
+            [
+                'store_id' => $store->getKey(),
+                'type' => StoreDomainType::Admin->value,
+                'is_primary' => 0,
+                'tls_mode' => 'managed',
+                'created_at' => now(),
+            ],
+        );
+
         StoreSettings::query()->updateOrCreate(
             ['store_id' => $store->getKey()],
             ['settings_json' => '{}'],

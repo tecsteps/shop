@@ -41,11 +41,11 @@
 
                 <div class="space-y-1">
                     <p class="px-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">Catalog</p>
-                    <a href="{{ url('/admin/products') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/products*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/products') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/products*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="cube" variant="mini" />
                         Products
                     </a>
-                    <a href="{{ url('/admin/collections') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/collections*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/collections') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/collections*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="rectangle-stack" variant="mini" />
                         Collections
                     </a>
@@ -53,15 +53,15 @@
 
                 <div class="space-y-1">
                     <p class="px-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">Sales</p>
-                    <a href="{{ url('/admin/orders') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/orders*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/orders') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/orders*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="shopping-bag" variant="mini" />
                         Orders
                     </a>
-                    <a href="{{ url('/admin/customers') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/customers*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/customers') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/customers*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="users" variant="mini" />
                         Customers
                     </a>
-                    <a href="{{ url('/admin/discounts') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/discounts*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/discounts') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/discounts*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="tag" variant="mini" />
                         Discounts
                     </a>
@@ -69,11 +69,11 @@
 
                 <div class="space-y-1">
                     <p class="px-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">Content</p>
-                    <a href="{{ url('/admin/pages') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/pages*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/pages') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/pages*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="document-text" variant="mini" />
                         Pages
                     </a>
-                    <a href="{{ url('/admin/themes') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/themes*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/themes') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/themes*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="paint-brush" variant="mini" />
                         Themes
                     </a>
@@ -81,9 +81,13 @@
 
                 <div class="space-y-1">
                     <p class="px-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">System</p>
-                    <a href="{{ url('/admin/settings') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/settings*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                    <a href="{{ url('/admin/settings') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/settings') || request()->is('admin/settings/shipping*') || request()->is('admin/settings/taxes*') || request()->is('admin/settings/staff*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
                         <flux:icon name="cog-6-tooth" variant="mini" />
                         Settings
+                    </a>
+                    <a href="{{ url('/admin/settings/webhooks') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-200 dark:hover:bg-neutral-800 {{ request()->is('admin/settings/webhooks*') ? 'bg-neutral-100 font-medium dark:bg-neutral-800' : '' }}">
+                        <flux:icon name="bolt" variant="mini" />
+                        Webhooks
                     </a>
                 </div>
             </nav>
@@ -134,16 +138,47 @@
             </header>
 
             <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-                @if (session('status'))
-                    <flux:callout variant="success" class="mb-4">{{ session('status') }}</flux:callout>
-                @endif
-                @if (session('error'))
-                    <flux:callout variant="danger" class="mb-4">{{ session('error') }}</flux:callout>
-                @endif
-
                 {{ $slot }}
             </main>
+
+            @if (session('status'))
+                <script>
+                    window.addEventListener('DOMContentLoaded', () => {
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: @json(session('status')) } }));
+                    });
+                </script>
+            @endif
+            @if (session('error'))
+                <script>
+                    window.addEventListener('DOMContentLoaded', () => {
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: @json(session('error')) } }));
+                    });
+                </script>
+            @endif
         </div>
+    </div>
+
+    <div
+        x-data="{ toasts: [] }"
+        x-on:toast.window="
+            const id = Date.now() + Math.random();
+            toasts.push({ id, type: $event.detail?.type || 'info', message: $event.detail?.message || '' });
+            setTimeout(() => toasts = toasts.filter(t => t.id !== id), 5000);
+        "
+        class="pointer-events-none fixed top-4 right-4 z-50 flex w-80 flex-col gap-2"
+        aria-live="polite"
+    >
+        <template x-for="toast in toasts" :key="toast.id">
+            <div
+                class="pointer-events-auto rounded-lg border bg-white px-4 py-3 text-sm shadow-lg dark:bg-neutral-900"
+                :class="{
+                    'border-l-4 border-green-500 text-neutral-900 dark:text-neutral-100': toast.type === 'success',
+                    'border-l-4 border-red-500 text-neutral-900 dark:text-neutral-100': toast.type === 'error',
+                    'border-l-4 border-blue-500 text-neutral-900 dark:text-neutral-100': toast.type === 'info',
+                }"
+                x-text="toast.message"
+            ></div>
+        </template>
     </div>
 
     @fluxScripts

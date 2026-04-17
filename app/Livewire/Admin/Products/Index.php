@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Products;
 
 use App\Enums\ProductStatus;
 use App\Models\Product;
+use App\Services\SearchService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
@@ -37,9 +38,12 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function render(): View
+    public function render(SearchService $search): View
     {
         $this->authorize('viewAny', Product::class);
+
+        $term = trim($this->search);
+        $store = app('current_store');
 
         $query = Product::query()->with(['variants.inventoryItem', 'media']);
 
@@ -47,13 +51,15 @@ class Index extends Component
             $query->where('status', $this->statusFilter);
         }
 
-        if (trim($this->search) !== '') {
-            $term = '%'.trim($this->search).'%';
-            $query->where(function ($q) use ($term): void {
-                $q->where('title', 'like', $term)
-                    ->orWhere('vendor', 'like', $term)
-                    ->orWhere('handle', 'like', $term);
-            });
+        if (mb_strlen($term) >= 2) {
+            $matched = $search->search($store, $term, log: false);
+            $ids = $matched->pluck('id')->all();
+
+            if ($ids === []) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereIn('id', $ids);
+            }
         }
 
         /** @var LengthAwarePaginator<Product> $products */
