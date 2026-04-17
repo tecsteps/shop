@@ -1,0 +1,8 @@
+[     114ms] Uncaught TypeError: Cannot read properties of null (reading 'save')
+    at Ie (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:12:18298)
+    at _drawDataset (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:12:98844)
+    at _drawDatasets (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:12:98648)
+    at draw (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:12:98179)
+    at <anonymous> (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:6:7335)
+    at _update (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:6:7114)
+    at <anonymous> (https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js:6:7007)

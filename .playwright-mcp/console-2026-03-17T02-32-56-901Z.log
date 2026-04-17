@@ -1,0 +1,68 @@
+[   15959ms] [WARNING] Alpine Expression Error: Chart is not defined
+
+Expression: "init() {
+                    this.renderChart();
+                }"
+
+ JSHandle@node @ http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1325
+[   15969ms] [WARNING] Alpine Expression Error: Chart is not defined
+
+Expression: "init()"
+
+ JSHandle@node @ http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1325
+[   16116ms] ReferenceError: Chart is not defined
+    at Proxy.renderChart (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:12:38)
+    at Proxy.init (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:6:26)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1371:25
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3897:29)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)
+    at deferHandlingDirectives (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1535:5)
+    at Object.initTree (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1732:5)
+[   16117ms] ReferenceError: Chart is not defined
+    at Proxy.renderChart (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:12:38)
+    at Proxy.init (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:6:26)
+    at [Alpine] init() (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:3:32)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1410:28
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3815:37
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:2162:58)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)
+[   44956ms] [WARNING] Alpine Expression Error: Chart is not defined
+
+Expression: "init() {
+                    this.renderChart();
+                }"
+
+ JSHandle@node @ http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1325
+[   44957ms] [WARNING] Alpine Expression Error: Chart is not defined
+
+Expression: "init()"
+
+ JSHandle@node @ http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1325
+[   45053ms] ReferenceError: Chart is not defined
+    at Proxy.renderChart (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:12:38)
+    at Proxy.init (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:6:26)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1371:25
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3897:29)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)
+    at deferHandlingDirectives (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1535:5)
+    at Object.initTree (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1732:5)
+[   45053ms] ReferenceError: Chart is not defined
+    at Proxy.renderChart (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:12:38)
+    at Proxy.init (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:6:26)
+    at [Alpine] init() (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:3:32)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1410:28
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3815:37
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:2162:58)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)

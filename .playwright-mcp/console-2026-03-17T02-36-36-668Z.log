@@ -1,0 +1,42 @@
+[     101ms] [WARNING] Alpine Expression Error: Chart is not defined
+
+Expression: "init() {
+                    const ctx = this.$refs.canvas.getContext('2d');
+                    const data = JSON.parse('[{\u0022date\u0022:\u00222026-02-15\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-16\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-17\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-18\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-19\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-20\u0022,\u0022revenue\u0022:3298,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-02-21\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-22\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-23\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-24\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-25\u0022,\u0022revenue\u0022:10496,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-02-26\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-27\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-02-28\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-01\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-02\u0022,\u0022revenue\u0022:2998,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-03\u0022,\u0022revenue\u0022:5000,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-04\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-05\u0022,\u0022revenue\u0022:8997,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-06\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-07\u0022,\u0022revenue\u0022:8997,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-08\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-09\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-10\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-11\u0022,\u0022revenue\u0022:0,\u0022count\u0022:0},{\u0022date\u0022:\u00222026-03-12\u0022,\u0022revenue\u0022:11997,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-13\u0022,\u0022revenue\u0022:8497,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-14\u0022,\u0022revenue\u0022:4997,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-15\u0022,\u0022revenue\u0022:5497,\u0022count\u0022:1},{\u0022date\u0022:\u00222026-03-16\u0022,\u0022revenue\u0022:71493,\u0022count\u0022:3},{\u0022date\u0022:\u00222026-03-17\u0022,\u0022revenue\u0022:9445,\u0022count\u0022:2}]');
+                    this.chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.map(d => d.date),
+                            datasets: [{
+                                label: 'Revenue',
+                                data: data.map(d => d.revenue / 100),
+                                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                                borderColor: 'rgb(59, 130, 246)',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { beginAtZero: true },
+                                x: { display: true, ticks: { maxTicksLimit: 10 } },
+                            }
+                        }
+                    });
+                }"
+
+ JSHandle@node @ http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1325
+[     109ms] ReferenceError: Chart is not defined
+    at Proxy.init (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:8:38)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1371:25
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Function.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:3897:29)
+    at flushHandlers (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1532:7)
+    at deferHandlingDirectives (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1535:5)
+    at initTree (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1732:5)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1678:7
