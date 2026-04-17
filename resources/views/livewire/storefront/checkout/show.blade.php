@@ -7,42 +7,42 @@
                 <h2 class="text-xl font-semibold">Contact and shipping address</h2>
                 <form wire:submit.prevent="saveAddress" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-sm font-medium">Email</label>
-                        <input type="email" wire:model="email" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-email" class="mb-1 block text-sm font-medium">Email</label>
+                        <input id="checkout-email" name="email" type="email" wire:model="email" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('email') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium">First name</label>
-                        <input type="text" wire:model="first_name" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-first-name" class="mb-1 block text-sm font-medium">First name</label>
+                        <input id="checkout-first-name" name="first_name" type="text" wire:model="first_name" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('first_name') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium">Last name</label>
-                        <input type="text" wire:model="last_name" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-last-name" class="mb-1 block text-sm font-medium">Last name</label>
+                        <input id="checkout-last-name" name="last_name" type="text" wire:model="last_name" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('last_name') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-sm font-medium">Address</label>
-                        <input type="text" wire:model="address1" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-address1" class="mb-1 block text-sm font-medium">Address</label>
+                        <input id="checkout-address1" name="address1" type="text" wire:model="address1" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('address1') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium">City</label>
-                        <input type="text" wire:model="city" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-city" class="mb-1 block text-sm font-medium">City</label>
+                        <input id="checkout-city" name="city" type="text" wire:model="city" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('city') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium">State/province code</label>
-                        <input type="text" wire:model="province_code" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-province-code" class="mb-1 block text-sm font-medium">State/province code</label>
+                        <input id="checkout-province-code" name="province_code" type="text" wire:model="province_code" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium">Country (2-letter)</label>
-                        <input type="text" wire:model="country_code" maxlength="2" class="w-full rounded border border-neutral-300 px-3 py-2 uppercase dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-country-code" class="mb-1 block text-sm font-medium">Country (2-letter)</label>
+                        <input id="checkout-country-code" name="country_code" type="text" wire:model="country_code" maxlength="2" class="w-full rounded border border-neutral-300 px-3 py-2 uppercase dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('country_code') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium">Postal code</label>
-                        <input type="text" wire:model="postal_code" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
+                        <label for="checkout-postal-code" class="mb-1 block text-sm font-medium">Postal code</label>
+                        <input id="checkout-postal-code" name="postal_code" type="text" wire:model="postal_code" class="w-full rounded border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900" />
                         @error('postal_code') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
                     </div>
                     <div class="sm:col-span-2">
@@ -82,8 +82,8 @@
                     @endforeach
                     @if ($payment_method === 'credit_card')
                         <div>
-                            <label class="mb-1 block text-sm font-medium">Card number</label>
-                            <input type="text" wire:model="card_number" maxlength="19" placeholder="4242 4242 4242 4242" class="w-full rounded border border-neutral-300 px-3 py-2 tracking-widest dark:border-neutral-700 dark:bg-neutral-900" />
+                            <label for="checkout-card-number" class="mb-1 block text-sm font-medium">Card number</label>
+                            <input id="checkout-card-number" name="card_number" type="text" wire:model="card_number" maxlength="19" placeholder="4242 4242 4242 4242" class="w-full rounded border border-neutral-300 px-3 py-2 tracking-widest dark:border-neutral-700 dark:bg-neutral-900" />
                         </div>
                     @endif
                     @error('payment_method') <div class="text-xs text-red-600">{{ $message }}</div> @enderror

@@ -53,6 +53,30 @@ class DefaultStoreSeeder extends Seeder
             ],
         );
 
+        if (app()->environment('testing')) {
+            StoreDomain::query()->firstOrCreate(
+                ['hostname' => '127.0.0.1'],
+                [
+                    'store_id' => $store->getKey(),
+                    'type' => StoreDomainType::Storefront->value,
+                    'is_primary' => 0,
+                    'tls_mode' => 'managed',
+                    'created_at' => now(),
+                ],
+            );
+
+            StoreDomain::query()->firstOrCreate(
+                ['hostname' => 'localhost'],
+                [
+                    'store_id' => $store->getKey(),
+                    'type' => StoreDomainType::Storefront->value,
+                    'is_primary' => 0,
+                    'tls_mode' => 'managed',
+                    'created_at' => now(),
+                ],
+            );
+        }
+
         StoreSettings::query()->updateOrCreate(
             ['store_id' => $store->getKey()],
             ['settings_json' => '{}'],

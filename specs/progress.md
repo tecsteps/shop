@@ -24,6 +24,9 @@ Shop URL: http://shop.test/
 ### Phase 2: Catalog
 - [x] Products / Variants / Options / Inventory / Collections / Media
 
+### Phase 12: Full Pest Test Suite
+- [x] 12: Installed pestphp/pest-plugin-browser; added tests/Browser/ with SmokeTest + Admin/AdminLoginTest + Storefront/{StorefrontBrowseTest, StorefrontProductTest, CheckoutSuccessTest, CheckoutDeclineTest, CustomerAccountTest} (13 browser tests). Seeder seeds 127.0.0.1 and localhost as extra storefront domains in testing env so Pest's built-in test server resolves to the Shop store. Added missing storefront Add to Cart UI on product detail (Show livewire component + blade) plus name/id attributes on checkout form fields so browser locators work. Renamed login button text to "Log in" to avoid collision with the "Sign in" heading when using text-based click selectors. Added supplemental feature tests (AdminProductCreateTest, AdminOrderCaptureTest, AdminOrderFulfillTest, AdminOrderRefundTest, PoliciesTest, Api/ValidationRulesTest dataset-driven). Final green total: 255 tests, 575 assertions (242 feature + unit, 13 browser).
+
 ### Phase 3: Themes / Pages / Navigation / Storefront Layout
 - [x] Themes + CMS + Storefront Blade layouts
 
