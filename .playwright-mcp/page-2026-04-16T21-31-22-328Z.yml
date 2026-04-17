@@ -1,0 +1,142 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "S Demo Store Admin" [ref=e3] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - generic [ref=e5]: S
+      - generic [ref=e6]:
+        - generic [ref=e7]: Demo Store
+        - generic [ref=e8]: Admin
+    - navigation [ref=e9]:
+      - link "Dashboard" [ref=e10] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e12]
+        - generic [ref=e14]: Dashboard
+      - generic [ref=e15]:
+        - generic [ref=e17]: Orders
+        - generic [ref=e18]:
+          - link "Orders" [ref=e19] [cursor=pointer]:
+            - /url: http://shop.test/admin/orders
+            - img [ref=e21]
+            - generic [ref=e23]: Orders
+          - link "Customers" [ref=e24] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e26]
+            - generic [ref=e28]: Customers
+      - generic [ref=e29]:
+        - generic [ref=e31]: Catalog
+        - generic [ref=e32]:
+          - link "Products" [ref=e33] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e35]
+            - generic [ref=e37]: Products
+          - link "Collections" [ref=e38] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e40]
+            - generic [ref=e42]: Collections
+          - link "Inventory" [ref=e43] [cursor=pointer]:
+            - /url: http://shop.test/admin/inventory
+            - img [ref=e45]
+            - generic [ref=e47]: Inventory
+      - generic [ref=e48]:
+        - generic [ref=e50]: Marketing
+        - link "Discounts" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/discounts
+          - img [ref=e54]
+          - generic [ref=e56]: Discounts
+      - generic [ref=e57]:
+        - generic [ref=e59]: Online store
+        - generic [ref=e60]:
+          - link "Pages" [ref=e61] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e63]
+            - generic [ref=e65]: Pages
+          - link "Navigation" [ref=e66] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e68]
+            - generic [ref=e70]: Navigation
+      - generic [ref=e71]:
+        - generic [ref=e73]: Settings
+        - generic [ref=e74]:
+          - link "Shipping" [ref=e75] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings/shipping
+            - img [ref=e77]
+            - generic [ref=e79]: Shipping
+          - link "Taxes" [ref=e80] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings/taxes
+            - img [ref=e82]
+            - generic [ref=e84]: Taxes
+          - link "General" [ref=e85] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e87]
+            - generic [ref=e90]: General
+    - button "OU Owner User" [ref=e93]:
+      - generic [ref=e96]: OU
+      - generic [ref=e97]: Owner User
+      - img [ref=e99]
+  - generic [ref=e104]:
+    - generic [ref=e105]:
+      - generic [ref=e106]: "#1006"
+      - generic [ref=e107]:
+        - generic [ref=e108]: paid
+        - generic [ref=e109]: unfulfilled
+    - generic [ref=e110]:
+      - generic [ref=e112]:
+        - generic [ref=e113]: Items
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - generic [ref=e117]: Classic Crew Tee - S
+            - generic [ref=e118]: "SKU: SKU-FMVMUQ · qty 1"
+          - generic [ref=e119]: EUR 24.99
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - generic [ref=e122]: Subtotal
+            - generic [ref=e123]: EUR 24.99
+          - generic [ref=e124]:
+            - generic [ref=e125]: Discount
+            - generic [ref=e126]: −EUR 2.50
+          - generic [ref=e127]:
+            - generic [ref=e128]: Shipping
+            - generic [ref=e129]: EUR 4.99
+          - generic [ref=e130]:
+            - generic [ref=e131]: Tax
+            - generic [ref=e132]: EUR 4.27
+          - generic [ref=e133]:
+            - generic [ref=e134]: Total
+            - generic [ref=e135]: EUR 31.75
+      - complementary [ref=e136]:
+        - generic [ref=e137]:
+          - generic [ref=e138]: Customer
+          - generic [ref=e139]:
+            - generic [ref=e140]: Guest
+            - generic [ref=e141]: jane.buyer@demo.test
+        - generic [ref=e142]:
+          - generic [ref=e143]: Addresses
+          - generic [ref=e144]:
+            - generic [ref=e145]: Shipping
+            - generic [ref=e146]: Jane Buyer
+            - generic [ref=e147]: Friedrichstraße 1
+            - generic [ref=e148]: 10117 Berlin
+            - generic [ref=e149]: DE
+        - generic [ref=e150]:
+          - generic [ref=e151]: Actions
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: Tracking company
+                - textbox "Tracking company" [ref=e157]: DHL
+              - generic [ref=e158]:
+                - generic [ref=e159]: Tracking number
+                - textbox "Tracking number" [ref=e161]
+              - button "Mark fulfilled" [ref=e162]:
+                - img [ref=e164]
+                - generic [ref=e167]: Mark fulfilled
+            - generic [ref=e168]:
+              - generic [ref=e169]:
+                - generic [ref=e170]: Refund amount (cents)
+                - spinbutton "Refund amount (cents)" [ref=e172]
+              - button "Refund" [ref=e173]:
+                - img [ref=e175]
+                - generic [ref=e178]: Refund
+            - button "Cancel order" [ref=e179]:
+              - img [ref=e181]
+              - generic [ref=e184]: Cancel order

@@ -1,0 +1,97 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: http://shop.test
+        - link "Shop" [ref=e7] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/search
+      - generic [ref=e9]:
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart 0" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+          - text: Cart
+          - generic [ref=e12]: "0"
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - heading "Welcome to Demo Store" [level=1] [ref=e16]
+        - paragraph [ref=e17]: Browse our curated selection of products and find something you love.
+        - link "Shop now" [ref=e18] [cursor=pointer]:
+          - /url: http://shop.test/collections
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - heading "Collections" [level=2] [ref=e21]
+          - link "View all" [ref=e22] [cursor=pointer]:
+            - /url: http://shop.test/collections
+        - generic [ref=e23]:
+          - link "Apparel Explore →" [ref=e24] [cursor=pointer]:
+            - /url: http://shop.test/collections/apparel
+            - generic [ref=e25]: Apparel
+            - generic [ref=e26]: Explore →
+          - link "Accessories Explore →" [ref=e27] [cursor=pointer]:
+            - /url: http://shop.test/collections/accessories
+            - generic [ref=e28]: Accessories
+            - generic [ref=e29]: Explore →
+          - link "Home & Living Explore →" [ref=e30] [cursor=pointer]:
+            - /url: http://shop.test/collections/home
+            - generic [ref=e31]: Home & Living
+            - generic [ref=e32]: Explore →
+      - generic [ref=e33]:
+        - heading "Featured products" [level=2] [ref=e34]
+        - generic [ref=e35]:
+          - link "Classic Crew Tee EUR 24.99" [ref=e36] [cursor=pointer]:
+            - /url: http://shop.test/products/classic-crew-tee
+            - img [ref=e39]
+            - generic [ref=e41]:
+              - generic [ref=e42]: Classic Crew Tee
+              - generic [ref=e43]: EUR 24.99
+          - link "Hooded Sweatshirt EUR 59.99" [ref=e44] [cursor=pointer]:
+            - /url: http://shop.test/products/hooded-sweatshirt
+            - img [ref=e47]
+            - generic [ref=e49]:
+              - generic [ref=e50]: Hooded Sweatshirt
+              - generic [ref=e51]: EUR 59.99
+          - link "Everyday Chino EUR 69.99" [ref=e52] [cursor=pointer]:
+            - /url: http://shop.test/products/everyday-chino
+            - img [ref=e55]
+            - generic [ref=e57]:
+              - generic [ref=e58]: Everyday Chino
+              - generic [ref=e59]: EUR 69.99
+          - link "Minimal Leather Wallet EUR 49.99" [ref=e60] [cursor=pointer]:
+            - /url: http://shop.test/products/minimal-leather-wallet
+            - img [ref=e63]
+            - generic [ref=e65]:
+              - generic [ref=e66]: Minimal Leather Wallet
+              - generic [ref=e67]: EUR 49.99
+          - link "Canvas Tote Bag EUR 29.99" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/products/canvas-tote-bag
+            - img [ref=e71]
+            - generic [ref=e73]:
+              - generic [ref=e74]: Canvas Tote Bag
+              - generic [ref=e75]: EUR 29.99
+          - link "Steel Water Bottle EUR 19.99" [ref=e76] [cursor=pointer]:
+            - /url: http://shop.test/products/steel-water-bottle
+            - img [ref=e79]
+            - generic [ref=e81]:
+              - generic [ref=e82]: Steel Water Bottle
+              - generic [ref=e83]: EUR 19.99
+          - link "Ceramic Coffee Mug EUR 14.99" [ref=e84] [cursor=pointer]:
+            - /url: http://shop.test/products/ceramic-coffee-mug
+            - img [ref=e87]
+            - generic [ref=e89]:
+              - generic [ref=e90]: Ceramic Coffee Mug
+              - generic [ref=e91]: EUR 14.99
+          - link "Linen Throw Blanket EUR 79.99" [ref=e92] [cursor=pointer]:
+            - /url: http://shop.test/products/linen-throw-blanket
+            - img [ref=e95]
+            - generic [ref=e97]:
+              - generic [ref=e98]: Linen Throw Blanket
+              - generic [ref=e99]: EUR 79.99
+  - contentinfo [ref=e100]:
+    - generic [ref=e101]: © 2026 Demo Store. Powered by Shop.

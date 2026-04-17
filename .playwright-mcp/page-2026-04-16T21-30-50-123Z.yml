@@ -1,0 +1,28 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: Sign in to the admin
+      - generic [ref=e7]: Manage products, orders, and customers.
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]: Email
+        - textbox "Email" [active] [ref=e12]:
+          - /placeholder: you@store.com
+      - generic [ref=e13]:
+        - generic [ref=e14]: Password
+        - generic [ref=e15]:
+          - textbox "Password" [ref=e16]:
+            - /placeholder: Your password
+          - button "Toggle password visibility" [ref=e18]:
+            - img [ref=e19]
+      - generic [ref=e23]:
+        - checkbox "Remember me" [ref=e24]
+        - generic [ref=e26]: Remember me
+      - button "Sign in" [ref=e27]:
+        - img [ref=e29]
+        - generic [ref=e32]: Sign in
+    - paragraph [ref=e34]:
+      - text: "Demo:"
+      - strong [ref=e35]: owner@demo.test
+      - text: /
+      - strong [ref=e36]: password
