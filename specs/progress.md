@@ -58,7 +58,12 @@ Shop URL: http://shop.test/
 - [x] analytics_events + analytics_daily tables, AnalyticsService with client_event_id idempotency, DashboardMetricsService helper, analytics:rollup command (scheduled daily 01:00), storefront page_view/product_view hooks, OrderPaid -> checkout_completed listener
 
 ### Phase 10: Apps & Webhooks
-- [ ]
+- [x] apps, app_installations, webhook_subscriptions, webhook_deliveries migrations + models + factories (encrypted signing_secret)
+- [x] WebhookTopic enum (order.created/paid/fulfilled/cancelled/refunded, fulfillment.created/shipped, customer.created, product.created/updated/deleted, checkout.completed)
+- [x] WebhookDispatcher service scoped by store + event_type + active status
+- [x] DeliverWebhook queued job (tries=8, backoff 30/60/120/300/900/3600/7200s) with HMAC-SHA256 signature, X-Shop-* headers, WebhookDelivery row per attempt, circuit breaker pausing subscription after 5 consecutive failures
+- [x] CustomerCreated event + Customer observer; DispatchWebhooks listener mapping Order/Fulfillment/Customer events to topics via EventServiceProvider
+- [x] Admin Livewire: Settings\Webhooks\Index, Edit, Deliveries + routes under /admin/settings/webhooks
 
 ### Phase 11: Polish
 - [ ]

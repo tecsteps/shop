@@ -3,8 +3,21 @@
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
 use App\Livewire\Admin\Orders\Show as AdminOrdersShow;
+use App\Livewire\Admin\Settings\Webhooks\Deliveries as AdminWebhookDeliveries;
+use App\Livewire\Admin\Settings\Webhooks\Edit as AdminWebhookEdit;
+use App\Livewire\Admin\Settings\Webhooks\Index as AdminWebhooksIndex;
+use App\Livewire\Storefront\Account\Addresses as StorefrontAccountAddresses;
+use App\Livewire\Storefront\Account\Auth\EmailVerify as StorefrontEmailVerify;
+use App\Livewire\Storefront\Account\Auth\ForgotPassword as StorefrontForgotPassword;
 use App\Livewire\Storefront\Account\Auth\Login as StorefrontLogin;
+use App\Livewire\Storefront\Account\Auth\Logout as StorefrontLogout;
 use App\Livewire\Storefront\Account\Auth\Register as StorefrontRegister;
+use App\Livewire\Storefront\Account\Auth\ResetPassword as StorefrontResetPassword;
+use App\Livewire\Storefront\Account\Auth\SetPassword as StorefrontSetPassword;
+use App\Livewire\Storefront\Account\Dashboard as StorefrontAccountDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as StorefrontAccountOrdersIndex;
+use App\Livewire\Storefront\Account\Orders\Show as StorefrontAccountOrdersShow;
+use App\Livewire\Storefront\Account\Profile as StorefrontAccountProfile;
 use App\Livewire\Storefront\Cart\Show as StorefrontCartShow;
 use App\Livewire\Storefront\Checkout\Show as StorefrontCheckoutShow;
 use App\Livewire\Storefront\Checkout\Success as StorefrontCheckoutSuccess;
@@ -32,6 +45,11 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::view('/', 'admin.dashboard')->name('dashboard');
         Route::livewire('orders', AdminOrdersIndex::class)->name('orders.index');
         Route::livewire('orders/{order}', AdminOrdersShow::class)->name('orders.show');
+
+        Route::livewire('settings/webhooks', AdminWebhooksIndex::class)->name('settings.webhooks.index');
+        Route::livewire('settings/webhooks/create', AdminWebhookEdit::class)->name('settings.webhooks.create');
+        Route::livewire('settings/webhooks/{subscription}/edit', AdminWebhookEdit::class)->name('settings.webhooks.edit');
+        Route::livewire('settings/webhooks/{subscription}/deliveries', AdminWebhookDeliveries::class)->name('settings.webhooks.deliveries');
     });
 });
 
@@ -39,6 +57,19 @@ Route::middleware('store.resolve:storefront')->group(function (): void {
     Route::prefix('account')->name('account.')->group(function (): void {
         Route::livewire('login', StorefrontLogin::class)->name('login');
         Route::livewire('register', StorefrontRegister::class)->name('register');
+        Route::livewire('forgot-password', StorefrontForgotPassword::class)->name('password.request');
+        Route::livewire('reset-password/{token}', StorefrontResetPassword::class)->name('password.reset');
+        Route::livewire('set-password', StorefrontSetPassword::class)->name('password.set');
+        Route::get('email/verify/{id}/{hash}', StorefrontEmailVerify::class)->name('verification.verify');
+        Route::match(['get', 'post'], 'logout', StorefrontLogout::class)->name('logout');
+
+        Route::middleware('auth:customer')->group(function (): void {
+            Route::livewire('/', StorefrontAccountDashboard::class)->name('dashboard');
+            Route::livewire('orders', StorefrontAccountOrdersIndex::class)->name('orders.index');
+            Route::livewire('orders/{orderNumber}', StorefrontAccountOrdersShow::class)->name('orders.show');
+            Route::livewire('addresses', StorefrontAccountAddresses::class)->name('addresses');
+            Route::livewire('profile', StorefrontAccountProfile::class)->name('profile');
+        });
     });
 
     Route::livewire('/', StorefrontHome::class)->name('home');
