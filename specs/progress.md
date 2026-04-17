@@ -55,7 +55,7 @@ Shop URL: http://shop.test/
 - [x] SQLite FTS5 + SearchService + storefront /search + search_queries logging
 
 ### Phase 9: Analytics
-- [ ]
+- [x] analytics_events + analytics_daily tables, AnalyticsService with client_event_id idempotency, DashboardMetricsService helper, analytics:rollup command (scheduled daily 01:00), storefront page_view/product_view hooks, OrderPaid -> checkout_completed listener
 
 ### Phase 10: Apps & Webhooks
 - [ ]
