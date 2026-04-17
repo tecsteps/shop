@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -62,6 +63,15 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureAuth();
         $this->configureRateLimiters();
+        $this->configureLivewire();
+    }
+
+    protected function configureLivewire(): void
+    {
+        Livewire::setUpdateRoute(function ($handle) {
+            return \Illuminate\Support\Facades\Route::post(config('livewire.update_path', '/livewire/update'), $handle)
+                ->middleware('web', 'store.resolve:storefront');
+        });
     }
 
     protected function configureDefaults(): void

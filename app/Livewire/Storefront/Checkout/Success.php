@@ -10,25 +10,25 @@ use Livewire\Component;
 #[Layout('components.layouts.storefront')]
 class Success extends Component
 {
-    public ?string $order = null;
+    public ?string $orderNumber = null;
 
     public function mount(): void
     {
-        $this->order = request()->query('order');
+        $this->orderNumber = request()->query('order');
     }
 
     public function render(): View
     {
         $order = null;
 
-        if ($this->order !== null) {
+        if ($this->orderNumber !== null && $this->orderNumber !== '') {
             $query = Order::query();
 
             if (app()->bound('current_store')) {
                 $query->where('store_id', app('current_store')->getKey());
             }
 
-            $order = $query->where('order_number', $this->order)->first();
+            $order = $query->where('order_number', $this->orderNumber)->first();
         }
 
         return view('livewire.storefront.checkout.success', [

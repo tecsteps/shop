@@ -9,7 +9,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('components.layouts.admin')]
 class Edit extends Component
 {
     public ?int $subscriptionId = null;

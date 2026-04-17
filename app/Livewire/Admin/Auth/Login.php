@@ -48,6 +48,15 @@ class Login extends Component
         RateLimiter::clear($throttleKey);
         request()->session()->regenerate();
 
+        $user = Auth::guard('web')->user();
+        $firstStoreId = $user?->stores()->value('stores.id');
+
+        if ($firstStoreId !== null) {
+            request()->session()->put('current_store_id', $firstStoreId);
+        }
+
+        $user?->forceFill(['last_login_at' => now()])->saveQuietly();
+
         return redirect()->intended('/admin');
     }
 

@@ -19,11 +19,21 @@ class ResolveStore
      */
     public function handle(Request $request, Closure $next, string $mode = 'storefront'): Response
     {
+        $isLivewireUpdate = $request->is('livewire/update');
+
         $store = $mode === 'admin'
             ? $this->resolveForAdmin($request)
             : $this->resolveForStorefront($request);
 
+        if ($store === null && $mode === 'admin' && $isLivewireUpdate) {
+            $store = $this->resolveForStorefront($request);
+        }
+
         if ($store === null) {
+            if ($isLivewireUpdate) {
+                return $next($request);
+            }
+
             abort($mode === 'admin' ? 403 : 404, 'Store not found.');
         }
 
@@ -32,7 +42,7 @@ class ResolveStore
                 abort(403, 'This store is currently unavailable.');
             }
 
-            if ($mode === 'storefront') {
+            if ($mode === 'storefront' && ! $isLivewireUpdate) {
                 abort(503, 'This store is currently unavailable.');
             }
         }

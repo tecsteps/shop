@@ -7,7 +7,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('components.layouts.admin')]
 class Index extends Component
 {
     public function render(): View

@@ -84,9 +84,11 @@ class DeliverWebhook implements ShouldQueue
             }
 
             $this->recordFailure($subscription, $delivery);
-            throw new \RuntimeException("Webhook delivery failed with HTTP {$response->status()}.");
+
+            if ($this->shouldRethrowForRetry()) {
+                throw new \RuntimeException("Webhook delivery failed with HTTP {$response->status()}.");
+            }
         } catch (\RuntimeException $e) {
-            // Already recorded as failure above; rethrow so Laravel retries.
             throw $e;
         } catch (Throwable $e) {
             $delivery->response_body_snippet = substr($e->getMessage(), 0, 500);
@@ -98,8 +100,17 @@ class DeliverWebhook implements ShouldQueue
                 'error' => $e->getMessage(),
             ]);
 
-            throw $e;
+            if ($this->shouldRethrowForRetry()) {
+                throw $e;
+            }
         }
+    }
+
+    protected function shouldRethrowForRetry(): bool
+    {
+        $connection = $this->connection ?? config('queue.default');
+
+        return $connection !== 'sync';
     }
 
     public function failed(Throwable $exception): void
