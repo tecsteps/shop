@@ -1,0 +1,3 @@
+[   13748ms] [WARNING] The resource http://shop.test/build/assets/app-4S3Q_fSl.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://shop.test/account/register:0
+[   26296ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[   29711ms] [WARNING] The resource http://shop.test/build/assets/app-4S3Q_fSl.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://shop.test/account/register:0

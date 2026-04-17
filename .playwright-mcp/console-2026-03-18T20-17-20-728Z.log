@@ -1,0 +1,32 @@
+[   19928ms] [WARNING] Alpine Expression Error: $call is not defined
+
+Expression: "argumentsToArray('selectedZoneId', 1); $call('addRate')"
+
+ JSHandle@node @ http://shop.test/admin/orders/3:111
+[   19929ms] [WARNING] Alpine Expression Error: $call is not defined
+
+Expression: "argumentsToArray('selectedZoneId', 2); $call('addRate')"
+
+ JSHandle@node @ http://shop.test/admin/orders/3:111
+[   19964ms] ReferenceError: $call is not defined
+    at [Alpine] argumentsToArray('selectedZoneId', 1); $call('addRate') (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:3:71)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1410:28
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at Object.evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Directive.parseOutMethodsAndParams (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5783:29)
+    at get methods (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5764:19)
+    at getTargets (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:14665:18)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:14515:33
+    at Array.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5702:9)
+    at trigger2 (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:4294:34)
+[   19964ms] ReferenceError: $call is not defined
+    at [Alpine] argumentsToArray('selectedZoneId', 2); $call('addRate') (eval at safeAsyncFunction (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1385:21), <anonymous>:3:71)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1410:28
+    at tryCatch (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1309:14)
+    at Object.evaluate (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:1343:34)
+    at Directive.parseOutMethodsAndParams (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5783:29)
+    at get methods (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5764:19)
+    at getTargets (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:14665:18)
+    at http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:14515:33
+    at Array.<anonymous> (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:5702:9)
+    at trigger2 (http://shop.test/livewire-6701cc17/livewire.js?id=cfc5c1ae:4294:34)

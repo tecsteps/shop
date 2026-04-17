@@ -1,0 +1,3 @@
+[     118ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/products/products/classic-cotton-t-shirt.jpg:0
+[    8484ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[    8931ms] Object
