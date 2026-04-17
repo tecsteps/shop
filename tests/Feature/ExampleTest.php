@@ -1,7 +1,10 @@
 <?php
 
-it('returns a successful response', function () {
-    $response = $this->get('/');
+it('returns a successful response for the storefront home', function () {
+    $context = createStoreContext();
+    $hostname = $context['domain']->hostname;
 
-    $response->assertStatus(200);
+    $response = $this->get("http://{$hostname}/");
+
+    $response->assertSuccessful();
 });
