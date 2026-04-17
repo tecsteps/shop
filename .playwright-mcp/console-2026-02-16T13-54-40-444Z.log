@@ -1,0 +1,11 @@
+[   42377ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-6701cc17/update:0
+[   42731ms] Object
+[   42731ms] Object
+[   42731ms] Object
+[   42731ms] Object
+[   42731ms] Object
+[   42731ms] Object
+[   42731ms] Object
+[   42731ms] Object
+[   42732ms] Object
+[   43233ms] [ERROR] Failed to load resource: the server responded with a status of 413 (Request Entity Too Large) @ http://shop.test/_boost/browser-logs:0

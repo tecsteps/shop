@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Concerns\ProfileValidationRules;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -22,8 +23,10 @@ class Profile extends Component
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = $this->authenticatedUser();
+
+        $this->name = $user->name;
+        $this->email = $user->email;
     }
 
     /**
@@ -31,8 +34,9 @@ class Profile extends Component
      */
     public function updateProfileInformation(): void
     {
-        $user = Auth::user();
+        $user = $this->authenticatedUser();
 
+        /** @var array<string, mixed> $validated */
         $validated = $this->validate($this->profileRules($user->id));
 
         $user->fill($validated);
@@ -51,7 +55,7 @@ class Profile extends Component
      */
     public function resendVerificationNotification(): void
     {
-        $user = Auth::user();
+        $user = $this->authenticatedUser();
 
         if ($user->hasVerifiedEmail()) {
             $this->redirectIntended(default: route('dashboard', absolute: false));
@@ -67,13 +71,25 @@ class Profile extends Component
     #[Computed]
     public function hasUnverifiedEmail(): bool
     {
-        return Auth::user() instanceof MustVerifyEmail && ! Auth::user()->hasVerifiedEmail();
+        $user = $this->authenticatedUser();
+
+        return $user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail();
     }
 
     #[Computed]
     public function showDeleteUser(): bool
     {
-        return ! Auth::user() instanceof MustVerifyEmail
-            || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
+        $user = $this->authenticatedUser();
+
+        return ! $user instanceof MustVerifyEmail || $user->hasVerifiedEmail();
+    }
+
+    /**
+     * Get the authenticated user as the User model.
+     */
+    private function authenticatedUser(): User
+    {
+        /** @var User */
+        return Auth::user();
     }
 }

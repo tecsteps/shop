@@ -1,17 +1,40 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(php artisan:*)",
+      "Bash(vendor/bin/phpstan:*)",
+      "Bash(vendor/bin/deptrac:*)",
+      "Bash(vendor/bin/pint:*)",
+      "Bash(vendor/bin/pest:*)",
+      "Bash(npm run build:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "WebFetch(domain:example.com)",
+      "WebFetch(domain:sonarcloud.io)"
+    ]
+  },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "laravel-boost",
     "herd"
   ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat specs/progress.md 2>/dev/null || echo 'No progress yet - read README.md to begin'"
+          }
+        ]
+      }
+    ]
+  },
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true
-  },
-  "permissions": {
-    "allow": [
-      "Bash(git add:*)",
-      "Bash(git commit:*)"
-    ]
   }
 }

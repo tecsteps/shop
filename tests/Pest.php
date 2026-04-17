@@ -1,47 +1,60 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
-|
-*/
+use App\Enums\StoreUserRole;
+use App\Models\Customer;
+use App\Models\Organization;
+use App\Models\Store;
+use App\Models\StoreDomain;
+use App\Models\StoreSettings;
+use App\Models\User;
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
 
 /*
 |--------------------------------------------------------------------------
 | Functions
 |--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
 */
 
-function something()
+/**
+ * Create a full store context: Organization, Store, StoreDomain, User with Owner role, and bind current_store.
+ *
+ * @return array{organization: Organization, store: Store, domain: StoreDomain, user: User, settings: StoreSettings}
+ */
+function createStoreContext(string $hostname = 'test-store.test'): array
 {
-    // ..
+    $organization = Organization::factory()->create();
+    $store = Store::factory()->create(['organization_id' => $organization->id]);
+    $domain = StoreDomain::factory()->create([
+        'store_id' => $store->id,
+        'hostname' => $hostname,
+    ]);
+    $settings = StoreSettings::factory()->create(['store_id' => $store->id]);
+    $user = User::factory()->create();
+    $store->users()->attach($user, ['role' => StoreUserRole::Owner]);
+
+    app()->instance('current_store', $store);
+
+    return compact('organization', 'store', 'domain', 'user', 'settings');
+}
+
+/**
+ * Authenticate as admin and set store in session.
+ */
+function actingAsAdmin(User $user, ?Store $store = null): mixed
+{
+    $store = $store ?? app('current_store');
+
+    return test()->actingAs($user, 'web')
+        ->withSession(['current_store_id' => $store->id]);
+}
+
+/**
+ * Authenticate as customer with customer guard.
+ */
+function actingAsCustomer(Customer $customer): mixed
+{
+    return test()->actingAs($customer, 'customer');
 }
