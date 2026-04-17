@@ -1,0 +1,39 @@
+<?php
+
+use App\Enums\StoreStatus;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('stores', function (Blueprint $table): void {
+            $table->id();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
+            $table->string('name');
+            $table->string('handle')->unique('idx_stores_handle');
+            $table->string('status')->default(StoreStatus::Active->value);
+            $table->string('default_currency', 3)->default('USD');
+            $table->string('default_locale', 10)->default('en');
+            $table->string('timezone')->default('UTC');
+            $table->timestamps();
+
+            $table->index('organization_id', 'idx_stores_organization_id');
+            $table->index('status', 'idx_stores_status');
+        });
+
+        $allowed = collect(StoreStatus::values())->map(fn (string $v): string => "'".$v."'")->implode(',');
+        DB::statement("CREATE TRIGGER stores_status_check_insert BEFORE INSERT ON stores FOR EACH ROW WHEN NEW.status NOT IN ({$allowed}) BEGIN SELECT RAISE(ABORT, 'invalid status'); END");
+        DB::statement("CREATE TRIGGER stores_status_check_update BEFORE UPDATE ON stores FOR EACH ROW WHEN NEW.status NOT IN ({$allowed}) BEGIN SELECT RAISE(ABORT, 'invalid status'); END");
+    }
+
+    public function down(): void
+    {
+        DB::statement('DROP TRIGGER IF EXISTS stores_status_check_insert');
+        DB::statement('DROP TRIGGER IF EXISTS stores_status_check_update');
+        Schema::dropIfExists('stores');
+    }
+};
