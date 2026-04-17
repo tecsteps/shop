@@ -28,7 +28,12 @@ Shop URL: http://shop.test/
 - [x] Themes + CMS + Storefront Blade layouts
 
 ### Phase 4: Cart / Checkout / Discounts / Shipping / Taxes
-- [ ]
+- [x] customers, customer_addresses, carts, cart_lines, checkouts, shipping_zones, shipping_rates, tax_settings, discounts migrations + models + factories
+- [x] Customer model (Authenticatable), CustomerUserProvider wired to the real model
+- [x] CartService, DiscountService, ShippingCalculator, TaxCalculator, PricingEngine, CheckoutService
+- [x] PricingResult / TaxLine / DiscountResult value objects
+- [x] Storefront Livewire: Cart\Show, Cart\Drawer, Checkout\Show, Checkout\Success + routes /cart /checkout /checkout/success
+- [x] Pest feature tests for cart/discount/shipping/tax/pricing/checkout services + cart Livewire page
 
 ### Phase 5: Payments / Orders / Fulfillment
 - [ ]
@@ -58,3 +63,4 @@ Shop URL: http://shop.test/
 - 2026-04-17: Starting implementation with team mode.
 - 2026-04-17: Phase 1 complete. Kept users.password column name (not renamed to password_hash) to preserve Fortify starter-kit tests; override not required. Added /admin and /account route groups alongside existing Fortify routes. Customer guard registered via CustomerUserProvider which falls back to User model until Phase 6 introduces Customer.
 - 2026-04-17: Phase 3 complete. Added themes/theme_files/theme_settings/pages/navigation_menus/navigation_items migrations (CHECK triggers on status/type enums), Eloquent models with BelongsToStore trait where applicable, factories, DefaultStoreSeeder creating shop.test hostname, ThemeSeeder/PageSeeder/NavigationSeeder seeding default theme plus about/contact pages and main-menu. Added storefront Blade layout component at resources/views/components/layouts/storefront.blade.php with announcement bar, header (logo, navigation, cart, account links), main slot, footer. Created class-based Livewire components under App\Livewire\Storefront (Home, Collections\Show, Products\Show, Pages\Show, Navigation partial). Routes wired inside the storefront middleware group. Pages show renders 404 for non-published. Full test suite green (62 passed).
+- 2026-04-17: Phase 4 complete. Added 9 migrations and enums (CartStatus, CheckoutStatus, PaymentMethod, DiscountType, DiscountValueType, DiscountStatus, ShippingRateType, TaxMode, TaxProviderType). Customer model now extends Authenticatable, implements BelongsToStore, overrides getAuthPassword() to return password_hash; CustomerUserProvider references the real model. New services: CartService (optimistic cart_version locking, inventory-aware addLine/updateLineQuantity/removeLine/mergeOnLogin), DiscountService (case-insensitive code lookup, allocation with largest-remainder, status/usage/rules validation throwing InvalidDiscountException with reason codes), ShippingCalculator (zone matching by country + region with specificity tiebreak, flat/weight/price rate calculators, skip-for-digital-only cart), TaxCalculator (manual provider with inclusive extraction via intdiv and exclusive additive rates, shipping_taxable flag), PricingEngine (pipeline: subtotal -> discount -> shipping -> tax -> total, snapshots to totals_json), CheckoutService (state transitions with inventory reservation on payment selection). Added storefront cart page, cart drawer stub, checkout multi-section view, success page + routes. CommerceSeeder wired additively into DatabaseSeeder. 46 new Pest tests covering happy and failure paths; full suite 120 passing.

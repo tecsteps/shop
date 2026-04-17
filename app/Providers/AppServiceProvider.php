@@ -50,11 +50,7 @@ class AppServiceProvider extends ServiceProvider
     protected function configureAuth(): void
     {
         Auth::provider('customer', function (mixed $app, array $config): CustomerUserProvider {
-            $model = class_exists(\App\Models\Customer::class)
-                ? \App\Models\Customer::class
-                : \App\Models\User::class;
-
-            return new CustomerUserProvider(Hash::driver(), $model);
+            return new CustomerUserProvider(Hash::driver(), \App\Models\Customer::class);
         });
     }
 
