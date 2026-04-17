@@ -1,0 +1,215 @@
+deptrac:
+  paths:
+    - ./app
+  exclude_files:
+    - '#.*test.*#'
+
+  layers:
+    # Foundation layers - no upstream dependencies
+    - name: Enums
+      collectors:
+        - type: directory
+          value: app/Enums/.*
+
+    - name: ValueObjects
+      collectors:
+        - type: directory
+          value: app/ValueObjects/.*
+
+    - name: Contracts
+      collectors:
+        - type: directory
+          value: app/Contracts/.*
+
+    - name: Exceptions
+      collectors:
+        - type: directory
+          value: app/Exceptions/.*
+
+    - name: Support
+      collectors:
+        - type: directory
+          value: app/Support/.*
+
+    - name: Events
+      collectors:
+        - type: directory
+          value: app/Events/.*
+
+    - name: Concerns
+      collectors:
+        - type: directory
+          value: app/Concerns/.*
+
+    - name: Traits
+      collectors:
+        - type: directory
+          value: app/Traits/.*
+
+    # Domain layer
+    - name: Models
+      collectors:
+        - type: directory
+          value: app/Models/.*
+
+    # Business logic layer
+    - name: Services
+      collectors:
+        - type: directory
+          value: app/Services/.*
+
+    # Authorization layer
+    - name: Policies
+      collectors:
+        - type: directory
+          value: app/Policies/.*
+
+    # Observer layer
+    - name: Observers
+      collectors:
+        - type: directory
+          value: app/Observers/.*
+
+    # Background processing layer
+    - name: Jobs
+      collectors:
+        - type: directory
+          value: app/Jobs/.*
+
+    # HTTP layer
+    - name: Controllers
+      collectors:
+        - type: directory
+          value: app/Http/Controllers/.*
+
+    - name: Middleware
+      collectors:
+        - type: directory
+          value: app/Http/Middleware/.*
+
+    # UI layer
+    - name: Livewire
+      collectors:
+        - type: directory
+          value: app/Livewire/.*
+
+    # Actions layer (Fortify etc.)
+    - name: Actions
+      collectors:
+        - type: directory
+          value: app/Actions/.*
+
+    # Infrastructure layer
+    - name: Providers
+      collectors:
+        - type: directory
+          value: app/Providers/.*
+
+  ruleset:
+    # Foundation layers - minimal dependencies
+    Enums: ~
+    ValueObjects:
+      - Enums
+    Contracts:
+      - Enums
+      - ValueObjects
+      - Models
+    Exceptions:
+      - Enums
+    Support: ~
+    Events:
+      - Enums
+      - Models
+    Concerns:
+      - Enums
+      - Models
+    Traits:
+      - Models
+      - Enums
+
+    # Domain layer - depends on foundation
+    Models:
+      - Enums
+      - ValueObjects
+      - Concerns
+      - Traits
+      - Events
+      - Exceptions
+      - Support
+
+    # Business logic - depends on domain + foundation
+    Services:
+      - Models
+      - Enums
+      - ValueObjects
+      - Contracts
+      - Events
+      - Exceptions
+      - Support
+      - Jobs
+      - Services
+
+    # Authorization - depends on domain
+    Policies:
+      - Models
+      - Enums
+      - Traits
+
+    # Observers - depends on services + domain
+    Observers:
+      - Models
+      - Services
+      - Enums
+
+    # Jobs - depends on services + domain
+    Jobs:
+      - Models
+      - Services
+      - Enums
+      - Events
+      - Exceptions
+
+    # HTTP layer - depends on services + domain
+    Controllers:
+      - Models
+      - Services
+      - Enums
+      - ValueObjects
+
+    Middleware:
+      - Models
+      - Enums
+      - Exceptions
+
+    # UI layer - depends on services + domain
+    Livewire:
+      - Models
+      - Services
+      - Enums
+      - ValueObjects
+      - Contracts
+      - Exceptions
+      - Concerns
+      - Traits
+      - Events
+      - Support
+
+    # Actions - depends on domain
+    Actions:
+      - Models
+      - Enums
+      - Exceptions
+      - Support
+      - Concerns
+
+    # Providers - infrastructure, can wire everything
+    Providers:
+      - Models
+      - Services
+      - Enums
+      - Contracts
+      - Middleware
+      - Observers
+      - Actions
+      - Support
+      - Events

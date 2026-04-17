@@ -33,7 +33,10 @@ class Password extends Component
             throw $e;
         }
 
-        Auth::user()->update([
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        /** @var array{current_password: string, password: string} $validated */
+        $user->update([
             'password' => $validated['password'],
         ]);
 
