@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Livewire\Admin\Orders;
+namespace App\Livewire\Admin\Products;
 
-use App\Models\Order;
+use App\Enums\ProductStatus;
+use App\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
@@ -22,7 +24,7 @@ class Index extends Component
 
     public function mount(): void
     {
-        $this->authorize('viewAny', Order::class);
+        $this->authorize('viewAny', Product::class);
     }
 
     public function updatedSearch(): void
@@ -37,24 +39,29 @@ class Index extends Component
 
     public function render(): View
     {
-        $this->authorize('viewAny', Order::class);
+        $this->authorize('viewAny', Product::class);
 
-        $query = Order::query();
+        $query = Product::query()->with(['variants.inventoryItem', 'media']);
 
         if ($this->statusFilter !== 'all') {
-            $query->where('financial_status', $this->statusFilter);
+            $query->where('status', $this->statusFilter);
         }
 
         if (trim($this->search) !== '') {
             $term = '%'.trim($this->search).'%';
             $query->where(function ($q) use ($term): void {
-                $q->where('order_number', 'like', $term)
-                    ->orWhere('email', 'like', $term);
+                $q->where('title', 'like', $term)
+                    ->orWhere('vendor', 'like', $term)
+                    ->orWhere('handle', 'like', $term);
             });
         }
 
-        return view('livewire.admin.orders.index', [
-            'orders' => $query->orderByDesc('placed_at')->paginate(20),
+        /** @var LengthAwarePaginator<Product> $products */
+        $products = $query->orderByDesc('updated_at')->paginate(20);
+
+        return view('livewire.admin.products.index', [
+            'products' => $products,
+            'statuses' => array_merge(['all'], ProductStatus::values()),
         ]);
     }
 }

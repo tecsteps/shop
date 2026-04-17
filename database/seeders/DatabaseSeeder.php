@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(DefaultStoreSeeder::class);
+        $this->call(OwnerUserSeeder::class);
         $this->call(ThemeSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(NavigationSeeder::class);
