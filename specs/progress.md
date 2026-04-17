@@ -40,7 +40,7 @@ Shop URL: http://shop.test/
 - [ ]
 
 ### Phase 8: Search
-- [ ]
+- [x] SQLite FTS5 + SearchService + storefront /search + search_queries logging
 
 ### Phase 9: Analytics
 - [ ]

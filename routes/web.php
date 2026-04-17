@@ -7,6 +7,7 @@ use App\Livewire\Storefront\Collections\Show as StorefrontCollectionShow;
 use App\Livewire\Storefront\Home as StorefrontHome;
 use App\Livewire\Storefront\Pages\Show as StorefrontPageShow;
 use App\Livewire\Storefront\Products\Show as StorefrontProductShow;
+use App\Livewire\Storefront\Search\Index as StorefrontSearch;
 use Illuminate\Support\Facades\Route;
 
 Route::view('welcome', 'welcome')->name('welcome');
@@ -34,6 +35,7 @@ Route::middleware('store.resolve:storefront')->group(function (): void {
     });
 
     Route::livewire('/', StorefrontHome::class)->name('home');
+    Route::livewire('/search', StorefrontSearch::class)->name('storefront.search');
     Route::livewire('/collections/{handle}', StorefrontCollectionShow::class)->name('storefront.collections.show');
     Route::livewire('/products/{handle}', StorefrontProductShow::class)->name('storefront.products.show');
     Route::livewire('/pages/{handle}', StorefrontPageShow::class)->name('storefront.pages.show');
