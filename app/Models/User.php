@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -23,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
+        'last_login_at',
     ];
 
     /**
@@ -46,12 +49,39 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
     /**
-     * Get the user's initials
+     * @return BelongsToMany<Store, $this>
+     */
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')
+            ->using(StoreUser::class)
+            ->withPivot('role');
+    }
+
+    /**
+     * Get the user's role for a specific store.
+     */
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        $pivot = $this->stores()->where('stores.id', $store->id)->first();
+
+        if (! $pivot) {
+            return null;
+        }
+
+        $role = $pivot->pivot->role;
+
+        return $role instanceof StoreUserRole ? $role : StoreUserRole::from($role);
+    }
+
+    /**
+     * Get the user's initials.
      */
     public function initials(): string
     {
