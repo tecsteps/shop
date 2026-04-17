@@ -95,7 +95,7 @@ Shop URL: http://shop.test/
 - [x] 11c: Announcement bar driven by StoreSettings.settings_json['announcement'] with seeded fallback and explicit enabled flag
 - [x] 11c: Storefront header swapped to use <livewire:storefront.cart.drawer />; Drawer expanded to an aria-modal dialog with items + subtotal + checkout CTA + wire:loading states
 - [x] 11c: Skip-to-content link, role=main/contentinfo landmarks, aria-label on nav regions, aria-current on active home link, aria-live flash region
-- [ ]
+- [x] 11b: DatabaseSeeder consolidated per specs/07 - 1 org + store with shop.test (storefront) + admin.shop.test (admin) domains, 4 admin users (owner/admin/staff/support@shop.test, pw=password) with matching StoreUser roles, 18 products + 5 collections + ProductMedia, 8 customers + addresses, 12 orders spanning paid/unfulfilled + paid/partial + fulfilled (paypal + ups) + pending bank transfer + cancelled + refunded + partially refunded, 5 discounts (WELCOME10/FREESHIP/SALE20/expired SPRING23/exhausted LIMITED50), shipping zones Domestic + International with 3 rates, tax settings row, 14 days of analytics_events (~7500 rows) plus matching analytics_daily rollups, 2 webhook subscriptions pointed at example.com. Dropped unused StoreSeeder/OrganizationSeeder/OwnerUserSeeder.
 
 ## Log
 - 2026-04-17: Starting implementation with team mode.
