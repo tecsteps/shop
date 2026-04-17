@@ -2,9 +2,8 @@
 
 namespace App\Livewire\Admin;
 
-use App\Enums\FinancialStatus;
 use App\Models\Order;
-use Illuminate\Support\Facades\Schema;
+use App\Services\DashboardMetricsService;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -12,27 +11,10 @@ use Livewire\Component;
 #[Layout('components.layouts.admin')]
 class Dashboard extends Component
 {
-    public function render(): View
+    public function render(DashboardMetricsService $metrics): View
     {
-        $today = now()->startOfDay();
-
-        $ordersToday = Order::query()
-            ->whereNotNull('placed_at')
-            ->where('placed_at', '>=', $today)
-            ->get();
-
-        $revenueToday = (int) $ordersToday
-            ->whereIn('financial_status', [FinancialStatus::Paid, FinancialStatus::PartiallyRefunded])
-            ->sum('total_amount');
-
-        $ordersCount = $ordersToday->count();
-        $aov = $ordersCount > 0 ? (int) round($revenueToday / $ordersCount) : 0;
-
-        $visitsToday = Schema::hasTable('analytics_events')
-            ? (int) \DB::table('analytics_events')
-                ->where('created_at', '>=', $today)
-                ->count()
-            : 0;
+        $store = app('current_store');
+        $today = $metrics->forDay($store);
 
         $recentOrders = Order::query()
             ->orderByDesc('placed_at')
@@ -40,10 +22,13 @@ class Dashboard extends Component
             ->get();
 
         return view('livewire.admin.dashboard', [
-            'revenueToday' => $revenueToday,
-            'ordersCount' => $ordersCount,
-            'aov' => $aov,
-            'visitsToday' => $visitsToday,
+            'revenueToday' => $today['revenue_amount'],
+            'ordersCount' => $today['orders_count'],
+            'aov' => $today['aov_amount'],
+            'visitsToday' => $today['visits_count'],
+            'addToCartToday' => $today['add_to_cart_count'],
+            'checkoutStartedToday' => $today['checkout_started_count'],
+            'checkoutCompletedToday' => $today['checkout_completed_count'],
             'recentOrders' => $recentOrders,
         ]);
     }

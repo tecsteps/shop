@@ -22,6 +22,16 @@
         </div>
     </div>
 
+    <div class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+        <flux:heading size="lg">Conversion funnel (today)</flux:heading>
+        <dl class="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+            <div><dt class="text-neutral-500">Visits</dt><dd class="text-lg font-semibold">{{ $visitsToday }}</dd></div>
+            <div><dt class="text-neutral-500">Add to cart</dt><dd class="text-lg font-semibold">{{ $addToCartToday }}</dd></div>
+            <div><dt class="text-neutral-500">Checkout started</dt><dd class="text-lg font-semibold">{{ $checkoutStartedToday }}</dd></div>
+            <div><dt class="text-neutral-500">Checkout completed</dt><dd class="text-lg font-semibold">{{ $checkoutCompletedToday }}</dd></div>
+        </dl>
+    </div>
+
     <div class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
         <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <flux:heading size="lg">Recent orders</flux:heading>
