@@ -22,7 +22,7 @@ Shop URL: http://shop.test/
 - [x] 1.8 Authorization policies
 
 ### Phase 2: Catalog
-- [ ] Products / Variants / Options / Inventory / Collections / Media
+- [x] Products / Variants / Options / Inventory / Collections / Media
 
 ### Phase 3: Themes / Pages / Navigation / Storefront Layout
 - [ ] Themes + CMS + Storefront Blade layouts
