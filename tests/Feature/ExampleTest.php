@@ -1,7 +1,11 @@
 <?php
 
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
 it('returns a successful response', function () {
-    $response = $this->get('/');
+    $context = createStoreContext();
+
+    $response = $this->get('http://'.$context['domain']->hostname.'/');
 
     $response->assertStatus(200);
 });

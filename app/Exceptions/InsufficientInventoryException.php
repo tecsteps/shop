@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Exceptions;
+
+use RuntimeException;
+
+class InsufficientInventoryException extends RuntimeException
+{
+    public function __construct(
+        public readonly int $variantId,
+        public readonly int $requestedQuantity,
+        public readonly int $availableQuantity,
+        string $message = '',
+    ) {
+        parent::__construct($message ?: "Insufficient inventory for variant {$variantId}: requested {$requestedQuantity}, available {$availableQuantity}.");
+    }
+}

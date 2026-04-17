@@ -2,9 +2,18 @@
 
 namespace App\Providers;
 
+use App\Auth\CustomerUserProvider;
+use App\Contracts\PaymentProvider;
+use App\Models\Product;
+use App\Observers\ProductObserver;
+use App\Services\Payments\MockPaymentProvider;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -15,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ThemeSettingsService::class);
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
     }
 
     /**
@@ -24,6 +34,32 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureRateLimiting();
+        $this->configureAuthProviders();
+
+        Product::observe(ProductObserver::class);
+    }
+
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('login', function ($request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        RateLimiter::for('api.storefront', function ($request) {
+            return Limit::perMinute(120)->by($request->ip());
+        });
+
+        RateLimiter::for('api.admin', function ($request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+    }
+
+    protected function configureAuthProviders(): void
+    {
+        Auth::provider('customer_eloquent', function ($app, array $config) {
+            return new CustomerUserProvider($app['hash']);
+        });
     }
 
     /**

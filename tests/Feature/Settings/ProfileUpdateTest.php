@@ -7,9 +7,11 @@ use Livewire\Livewire;
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('profile page is displayed', function () {
-    $this->actingAs($user = User::factory()->create());
+    $user = User::factory()->create();
 
-    $this->get('/settings/profile')->assertOk();
+    Livewire::actingAs($user)
+        ->test(Profile::class)
+        ->assertOk();
 });
 
 test('profile information can be updated', function () {
