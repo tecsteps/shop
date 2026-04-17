@@ -1,0 +1,26 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('theme_settings', function (Blueprint $table): void {
+            $table->foreignId('theme_id')
+                ->primary()
+                ->constrained('themes')
+                ->cascadeOnDelete();
+            $table->json('settings_json')->default(DB::raw("('{}')"));
+            $table->timestamp('updated_at')->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('theme_settings');
+    }
+};

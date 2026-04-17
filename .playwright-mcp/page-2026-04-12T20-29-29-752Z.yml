@@ -1,0 +1,133 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e126]:
+      - generic [ref=e127]: Order D-1001
+      - generic [ref=e128]:
+        - generic [ref=e129]: pending
+        - generic [ref=e130]: unfulfilled
+        - generic [ref=e131]: Apr 11, 2026 20:19
+    - generic [ref=e132]:
+      - generic [ref=e133]:
+        - generic [ref=e134]:
+          - generic [ref=e135]: Items
+          - table [ref=e138]:
+            - rowgroup [ref=e139]:
+              - row "Product SKU Qty Total" [ref=e140]:
+                - columnheader "Product" [ref=e141]:
+                  - generic [ref=e142]: Product
+                - columnheader "SKU" [ref=e143]:
+                  - generic [ref=e144]: SKU
+                - columnheader "Qty" [ref=e145]:
+                  - generic [ref=e146]: Qty
+                - columnheader "Total" [ref=e147]:
+                  - generic [ref=e148]: Total
+            - rowgroup [ref=e149]:
+              - row "Cap CAP-001 1 24.99 EUR" [ref=e150]:
+                - cell "Cap" [ref=e151]
+                - cell "CAP-001" [ref=e152]
+                - cell "1" [ref=e153]
+                - cell "24.99 EUR" [ref=e154]
+          - generic [ref=e155]:
+            - generic [ref=e156]:
+              - generic [ref=e157]: Subtotal
+              - generic [ref=e158]: "24.99"
+            - generic [ref=e159]:
+              - generic [ref=e160]: Shipping
+              - generic [ref=e161]: "5.99"
+            - generic [ref=e162]:
+              - generic [ref=e163]: Tax
+              - generic [ref=e164]: "0.00"
+            - generic [ref=e165]:
+              - generic [ref=e166]: Total
+              - generic [ref=e167]: "30.98"
+        - generic [ref=e168]:
+          - generic [ref=e169]: Fulfillments
+          - paragraph [ref=e170]: No fulfillments yet.
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - generic [ref=e173]: Customer
+          - generic [ref=e174]:
+            - generic [ref=e175]: Alice Example
+            - generic [ref=e176]: alice@shop.test
+        - generic [ref=e177]:
+          - generic [ref=e178]: Payment
+          - generic [ref=e179]:
+            - generic [ref=e180]: "Method: credit_card"
+            - generic [ref=e181]: "Status: pending"

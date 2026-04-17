@@ -1,0 +1,63 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - img [ref=e19]
+        - heading "Thank you for your order" [level=1] [ref=e21]
+        - paragraph [ref=e22]: "Order #1 is confirmed. A receipt has been sent to review@shop.test."
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "Order details" [level=2] [ref=e25]
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - generic [ref=e30]:
+                - paragraph [ref=e31]: Classic Tee
+                - paragraph [ref=e32]: Qty 1
+              - paragraph [ref=e33]: EUR 19.99
+          - generic [ref=e34]:
+            - generic [ref=e35]:
+              - generic [ref=e36]: Subtotal
+              - generic [ref=e37]: EUR 19.99
+            - generic [ref=e38]:
+              - generic [ref=e39]: Shipping
+              - generic [ref=e40]: EUR 5.99
+            - generic [ref=e41]:
+              - generic [ref=e42]: Tax
+              - generic [ref=e43]: EUR 4.15
+            - generic [ref=e44]:
+              - generic [ref=e45]: Total
+              - generic [ref=e46]: EUR 25.98
+        - complementary [ref=e47]:
+          - generic [ref=e48]:
+            - heading "Shipping address" [level=3] [ref=e49]
+            - generic [ref=e50]:
+              - text: Review Tester
+              - text: Demo Strasse 1
+              - text: Berlin 10115
+              - text: DE
+          - generic [ref=e51]:
+            - heading "Status" [level=3] [ref=e52]
+            - paragraph [ref=e53]: "Payment: paid"
+            - paragraph [ref=e54]: "Fulfillment: unfulfilled"
+          - link "Continue shopping" [ref=e55] [cursor=pointer]:
+            - /url: http://shop.test/storefront
+  - contentinfo [ref=e56]:
+    - generic [ref=e58]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e59]: (c) Shop
+  - button "Open cart" [ref=e62]:
+    - img [ref=e63]
+    - generic [ref=e65]: Cart
+    - generic [ref=e66]: "0"

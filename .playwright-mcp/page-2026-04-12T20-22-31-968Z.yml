@@ -1,0 +1,32 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Laravel Starter Kit" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/dashboard
+      - img [ref=e6]
+      - generic [ref=e8]: Laravel Starter Kit
+    - navigation [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e12]: Platform
+        - link "Dashboard" [ref=e15] [cursor=pointer]:
+          - /url: http://shop.test/dashboard
+          - img [ref=e17]
+          - generic [ref=e19]: Dashboard
+    - navigation [ref=e21]:
+      - link "Repository" [ref=e23] [cursor=pointer]:
+        - /url: https://github.com/laravel/livewire-starter-kit
+        - img [ref=e25]
+        - generic [ref=e30]: Repository
+      - link "Documentation" [ref=e32] [cursor=pointer]:
+        - /url: https://laravel.com/docs/starter-kits#livewire
+        - img [ref=e34]
+        - generic [ref=e36]: Documentation
+    - button "SA Shop Admin" [ref=e38]:
+      - generic [ref=e41]: SA
+      - generic [ref=e42]: Shop Admin
+      - img [ref=e44]
+  - generic [ref=e48]:
+    - generic [ref=e49]:
+      - img [ref=e51]
+      - img [ref=e54]
+      - img [ref=e57]
+    - img [ref=e60]

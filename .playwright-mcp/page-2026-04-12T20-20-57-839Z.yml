@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Demo Brand
+        - heading "Classic Tee" [level=1] [ref=e23]
+        - paragraph [ref=e24]: EUR 19.99
+      - group "Variant" [ref=e25]:
+        - generic [ref=e26]: Variant
+        - generic [ref=e27]:
+          - button "TEE-M" [ref=e28]
+          - button "TEE-L" [ref=e29]
+          - button "TEE-S" [ref=e30]
+      - generic [ref=e31]:
+        - generic [ref=e32]: Quantity
+        - generic [ref=e33]:
+          - button "Decrease quantity" [ref=e34]: "-"
+          - generic [ref=e35]: "1"
+          - button "Increase quantity" [ref=e36]: +
+      - button "Add to cart" [ref=e37]:
+        - generic [ref=e38]: Add to cart
+      - paragraph [ref=e40]: Classic Tee description.
+  - contentinfo [ref=e41]:
+    - generic [ref=e43]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e44]: (c) Shop
+  - button "Open cart" [ref=e47]:
+    - img [ref=e48]
+    - generic [ref=e50]: Cart
+    - generic [ref=e51]: "0"

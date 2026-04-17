@@ -1,0 +1,105 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Nolan Inc Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Nolan Inc Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+    - button "TU Test User" [ref=e59]:
+      - generic [ref=e62]: TU
+      - generic [ref=e63]: Test User
+      - img [ref=e65]
+  - generic [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - generic [ref=e72]: "Order #1001"
+        - generic [ref=e73]:
+          - generic [ref=e74]: paid
+          - generic [ref=e75]: unfulfilled
+          - generic [ref=e76]: Apr 12, 2026 19:35
+      - generic [ref=e77]:
+        - button "Fulfill items" [ref=e78]:
+          - img [ref=e80]
+          - generic [ref=e83]: Fulfill items
+        - button "Refund" [ref=e84]:
+          - img [ref=e86]
+          - generic [ref=e89]: Refund
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e93]: Items
+          - table [ref=e96]:
+            - rowgroup [ref=e97]:
+              - row "Product SKU Qty Total" [ref=e98]:
+                - columnheader "Product" [ref=e99]:
+                  - generic [ref=e100]: Product
+                - columnheader "SKU" [ref=e101]:
+                  - generic [ref=e102]: SKU
+                - columnheader "Qty" [ref=e103]:
+                  - generic [ref=e104]: Qty
+                - columnheader "Total" [ref=e105]:
+                  - generic [ref=e106]: Total
+            - rowgroup [ref=e107]:
+              - row "Demo Shirt DEMO-001 1 29.99 EUR" [ref=e108]:
+                - cell "Demo Shirt" [ref=e109]
+                - cell "DEMO-001" [ref=e110]
+                - cell "1" [ref=e111]
+                - cell "29.99 EUR" [ref=e112]
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - generic [ref=e115]: Subtotal
+              - generic [ref=e116]: "29.99"
+            - generic [ref=e117]:
+              - generic [ref=e118]: Shipping
+              - generic [ref=e119]: "5.99"
+            - generic [ref=e120]:
+              - generic [ref=e121]: Tax
+              - generic [ref=e122]: "0.00"
+            - generic [ref=e123]:
+              - generic [ref=e124]: Total
+              - generic [ref=e125]: "35.98"
+        - generic [ref=e126]:
+          - generic [ref=e127]: Fulfillments
+          - paragraph [ref=e128]: No fulfillments yet.
+      - generic [ref=e129]:
+        - generic [ref=e130]:
+          - generic [ref=e131]: Customer
+          - generic [ref=e132]:
+            - generic [ref=e133]: buyer@example.com
+            - generic [ref=e134]: buyer@example.com
+        - generic [ref=e135]:
+          - generic [ref=e136]: Payment
+          - generic [ref=e137]:
+            - generic [ref=e138]: "Method: credit_card"
+            - generic [ref=e139]: "Status: paid"

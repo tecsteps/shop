@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\CartStatus;
+use App\Models\Concerns\BelongsToStore;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Cart extends Model
+{
+    /** @use HasFactory<\Database\Factories\CartFactory> */
+    use BelongsToStore, HasFactory;
+
+    protected $fillable = [
+        'store_id',
+        'customer_id',
+        'session_id',
+        'currency',
+        'cart_version',
+        'status',
+    ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => CartStatus::class,
+        ];
+    }
+
+    /**
+     * @return HasMany<CartLine, $this>
+     */
+    public function lines(): HasMany
+    {
+        return $this->hasMany(CartLine::class);
+    }
+
+    /**
+     * @return HasMany<Checkout, $this>
+     */
+    public function checkouts(): HasMany
+    {
+        return $this->hasMany(Checkout::class);
+    }
+
+    public function incrementVersion(): void
+    {
+        $this->cart_version = (int) $this->cart_version + 1;
+    }
+}

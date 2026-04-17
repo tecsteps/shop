@@ -1,0 +1,83 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Nolan Inc Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Nolan Inc Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+    - button "TU Test User" [ref=e59]:
+      - generic [ref=e62]: TU
+      - generic [ref=e63]: Test User
+      - img [ref=e65]
+  - generic [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]: Products
+      - link "New product" [ref=e72] [cursor=pointer]:
+        - /url: http://shop.test/admin/products/create
+        - img [ref=e73]
+        - generic [ref=e75]: New product
+    - generic [ref=e76]:
+      - generic [ref=e77]:
+        - generic:
+          - img
+        - textbox "Search products..." [ref=e78]
+      - combobox [ref=e80]:
+        - option "All statuses" [selected]
+        - option "Draft"
+        - option "Active"
+        - option "Archived"
+    - table [ref=e84]:
+      - rowgroup [ref=e85]:
+        - row "Title Status Vendor Variants" [ref=e86]:
+          - columnheader "Title" [ref=e87]:
+            - generic [ref=e88]: Title
+          - columnheader "Status" [ref=e89]:
+            - generic [ref=e90]: Status
+          - columnheader "Vendor" [ref=e91]:
+            - generic [ref=e92]: Vendor
+          - columnheader "Variants" [ref=e93]:
+            - generic [ref=e94]: Variants
+          - columnheader [ref=e95]
+      - rowgroup [ref=e96]:
+        - row "Demo Shirt active Demo Co 1 Edit" [ref=e97]:
+          - cell "Demo Shirt" [ref=e98]:
+            - link "Demo Shirt" [ref=e99] [cursor=pointer]:
+              - /url: http://shop.test/admin/products/1/edit
+          - cell "active" [ref=e100]:
+            - generic [ref=e101]: active
+          - cell "Demo Co" [ref=e102]
+          - cell "1" [ref=e103]
+          - cell "Edit" [ref=e104]:
+            - link "Edit" [ref=e105] [cursor=pointer]:
+              - /url: http://shop.test/admin/products/1/edit

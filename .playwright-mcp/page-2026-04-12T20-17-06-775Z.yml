@@ -1,0 +1,153 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Shop Admin Demo Store" [ref=e4] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e6]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Shop Admin
+        - generic [ref=e10]: Demo Store
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e14]: Catalog
+        - generic [ref=e15]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: http://shop.test/admin
+            - img [ref=e19]
+            - generic [ref=e21]: Dashboard
+          - link "Products" [ref=e23] [cursor=pointer]:
+            - /url: http://shop.test/admin/products
+            - img [ref=e25]
+            - generic [ref=e27]: Products
+          - link "Collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/admin/collections
+            - img [ref=e31]
+            - generic [ref=e33]: Collections
+          - link "Customers" [ref=e35] [cursor=pointer]:
+            - /url: http://shop.test/admin/customers
+            - img [ref=e37]
+            - generic [ref=e39]: Customers
+          - link "Discounts" [ref=e41] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts
+            - img [ref=e43]
+            - generic [ref=e46]: Discounts
+      - generic [ref=e47]:
+        - generic [ref=e49]: Orders
+        - link "Orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/admin/orders
+          - img [ref=e54]
+          - generic [ref=e56]: Orders
+      - generic [ref=e57]:
+        - generic [ref=e59]: Content
+        - generic [ref=e60]:
+          - link "Pages" [ref=e62] [cursor=pointer]:
+            - /url: http://shop.test/admin/pages
+            - img [ref=e64]
+            - generic [ref=e66]: Pages
+          - link "Navigation" [ref=e68] [cursor=pointer]:
+            - /url: http://shop.test/admin/navigation
+            - img [ref=e70]
+            - generic [ref=e72]: Navigation
+          - link "Themes" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e76]
+            - generic [ref=e78]: Themes
+      - generic [ref=e79]:
+        - generic [ref=e81]: Marketing
+        - link "Analytics" [ref=e84] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+          - img [ref=e86]
+          - generic [ref=e88]: Analytics
+      - generic [ref=e89]:
+        - generic [ref=e91]: Configuration
+        - generic [ref=e92]:
+          - link "Settings" [ref=e94] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+            - img [ref=e96]
+            - generic [ref=e99]: Settings
+          - link "Apps" [ref=e101] [cursor=pointer]:
+            - /url: http://shop.test/admin/apps
+            - img [ref=e103]
+            - generic [ref=e105]: Apps
+          - link "Developers" [ref=e107] [cursor=pointer]:
+            - /url: http://shop.test/admin/developers
+            - img [ref=e109]
+            - generic [ref=e111]: Developers
+    - button "SA Shop Admin" [ref=e114]:
+      - generic [ref=e117]: SA
+      - generic [ref=e118]: Shop Admin
+      - img [ref=e120]
+  - generic [ref=e124]:
+    - generic [ref=e126]: Navigation
+    - generic [ref=e127]:
+      - generic [ref=e128]: Create menu
+      - generic [ref=e129]:
+        - generic [ref=e130]:
+          - generic [ref=e131]: Title
+          - textbox "Title" [ref=e133]:
+            - /placeholder: Main menu
+        - button "Add menu" [ref=e134]:
+          - img [ref=e136]
+          - img [ref=e139]
+          - generic [ref=e141]: Add menu
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - generic [ref=e146]: Main Menu
+          - paragraph [ref=e147]: main-menu
+        - generic [ref=e148]:
+          - button "Add item" [ref=e149]:
+            - img [ref=e151]
+            - img [ref=e154]
+            - generic [ref=e156]: Add item
+          - button "Delete" [ref=e157]:
+            - img [ref=e159]
+            - generic [ref=e162]: Delete
+      - list [ref=e164]:
+        - listitem [ref=e165]:
+          - generic [ref=e166]: Home (link)
+          - generic [ref=e167]:
+            - button [ref=e168]:
+              - img [ref=e170]
+              - img [ref=e173]
+            - button [ref=e175]:
+              - img [ref=e177]
+              - img [ref=e180]
+            - button "Remove" [ref=e182]:
+              - img [ref=e184]
+              - generic [ref=e187]: Remove
+        - listitem [ref=e188]:
+          - generic [ref=e189]: Collections (link)
+          - generic [ref=e190]:
+            - button [ref=e191]:
+              - img [ref=e193]
+              - img [ref=e196]
+            - button [ref=e198]:
+              - img [ref=e200]
+              - img [ref=e203]
+            - button "Remove" [ref=e205]:
+              - img [ref=e207]
+              - generic [ref=e210]: Remove
+        - listitem [ref=e211]:
+          - generic [ref=e212]: About (link)
+          - generic [ref=e213]:
+            - button [ref=e214]:
+              - img [ref=e216]
+              - img [ref=e219]
+            - button [ref=e221]:
+              - img [ref=e223]
+              - img [ref=e226]
+            - button "Remove" [ref=e228]:
+              - img [ref=e230]
+              - generic [ref=e233]: Remove
+        - listitem [ref=e234]:
+          - generic [ref=e235]: Contact (link)
+          - generic [ref=e236]:
+            - button [ref=e237]:
+              - img [ref=e239]
+              - img [ref=e242]
+            - button [ref=e244]:
+              - img [ref=e246]
+              - img [ref=e249]
+            - button "Remove" [ref=e251]:
+              - img [ref=e253]
+              - generic [ref=e256]: Remove

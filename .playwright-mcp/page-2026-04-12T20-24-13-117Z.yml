@@ -1,0 +1,58 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - navigation "Breadcrumb" [ref=e18]:
+          - link "Collections" [ref=e19] [cursor=pointer]:
+            - /url: http://shop.test/collections
+          - text: / Featured
+        - heading "Featured" [level=1] [ref=e20]
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: 4 products
+        - generic [ref=e23]:
+          - generic [ref=e24]: Sort
+          - combobox "Sort" [ref=e25]:
+            - option "Newest" [selected]
+            - option "Title, A to Z"
+            - option "Featured"
+      - generic [ref=e26]:
+        - link "Tote Bag EUR 14.99" [ref=e27] [cursor=pointer]:
+          - /url: /products/tote-bag
+          - generic [ref=e29]:
+            - heading "Tote Bag" [level=3] [ref=e30]
+            - paragraph [ref=e31]: EUR 14.99
+        - link "Cap EUR 24.99" [ref=e32] [cursor=pointer]:
+          - /url: /products/cap
+          - generic [ref=e34]:
+            - heading "Cap" [level=3] [ref=e35]
+            - paragraph [ref=e36]: EUR 24.99
+        - link "Hoodie EUR 49.99" [ref=e37] [cursor=pointer]:
+          - /url: /products/hoodie
+          - generic [ref=e39]:
+            - heading "Hoodie" [level=3] [ref=e40]
+            - paragraph [ref=e41]: EUR 49.99
+        - link "Classic Tee EUR 19.99" [ref=e42] [cursor=pointer]:
+          - /url: /products/classic-tee
+          - generic [ref=e44]:
+            - heading "Classic Tee" [level=3] [ref=e45]
+            - paragraph [ref=e46]: EUR 19.99
+  - contentinfo [ref=e47]:
+    - generic [ref=e49]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e50]: (c) Shop
+  - button "Open cart" [ref=e53]:
+    - img [ref=e54]
+    - generic [ref=e56]: Cart
+    - generic [ref=e57]: "0"

@@ -1,0 +1,64 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Demo Brand
+        - heading "Classic Tee" [level=1] [ref=e23]
+        - paragraph [ref=e24]: EUR 19.99
+      - group "Variant" [ref=e25]:
+        - generic [ref=e26]: Variant
+        - generic [ref=e27]:
+          - button "TEE-M" [ref=e28]
+          - button "TEE-L" [ref=e29]
+          - button "TEE-S" [ref=e30]
+      - generic [ref=e31]:
+        - generic [ref=e32]: Quantity
+        - generic [ref=e33]:
+          - button "Decrease quantity" [ref=e34]: "-"
+          - generic [ref=e35]: "1"
+          - button "Increase quantity" [ref=e36]: +
+      - generic [ref=e52]: Added to cart
+      - button "Add to cart" [ref=e37]:
+        - generic [ref=e38]: Add to cart
+      - paragraph [ref=e40]: Classic Tee description.
+  - contentinfo [ref=e41]:
+    - generic [ref=e43]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e44]: (c) Shop
+  - generic [ref=e46]:
+    - button "Open cart" [ref=e47]:
+      - img [ref=e48]
+      - generic [ref=e50]: Cart
+      - generic [ref=e51]: "1"
+    - dialog "Shopping cart" [ref=e54]:
+      - banner [ref=e55]:
+        - heading "Your cart" [level=2] [ref=e56]
+        - button "Close cart" [ref=e57]:
+          - img [ref=e58]
+      - list [ref=e61]:
+        - listitem [ref=e62]:
+          - generic [ref=e64]:
+            - paragraph [ref=e65]: Classic Tee
+            - paragraph [ref=e66]: Qty 1
+            - paragraph [ref=e67]: EUR 19.99
+      - contentinfo [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]: Subtotal
+          - generic [ref=e71]: EUR 19.99
+        - generic [ref=e72]:
+          - link "View cart" [ref=e73] [cursor=pointer]:
+            - /url: http://shop.test/cart
+          - link "Checkout" [ref=e74] [cursor=pointer]:
+            - /url: http://shop.test/checkout

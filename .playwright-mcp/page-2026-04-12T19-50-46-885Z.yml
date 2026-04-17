@@ -1,0 +1,112 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - generic [ref=e10]: Method Not Allowed
+    - button "Copy as Markdown" [ref=e11] [cursor=pointer]:
+      - img [ref=e12]
+      - generic [ref=e15]: Copy as Markdown
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - heading "Symfony\\Component\\HttpKernel\\Exception\\MethodNotAllowedHttpException" [level=1] [ref=e20]
+      - generic [ref=e22]: vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php:131
+      - paragraph [ref=e23]: "The GET method is not supported for route logout. Supported methods: POST."
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: LARAVEL
+          - generic [ref=e28]: 12.51.0
+        - generic [ref=e29]:
+          - generic [ref=e30]: PHP
+          - generic [ref=e31]: 8.4.17
+      - generic [ref=e32]:
+        - img [ref=e33]
+        - text: UNHANDLED
+      - generic [ref=e36]: CODE 0
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - img [ref=e40]
+        - text: "405"
+      - generic [ref=e43]:
+        - img [ref=e44]
+        - text: GET
+      - generic [ref=e47]: http://shop.test/logout
+      - button [ref=e48] [cursor=pointer]:
+        - img [ref=e49]
+  - generic [ref=e53]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - img [ref=e57]
+        - heading "Exception trace" [level=3] [ref=e60]
+      - generic [ref=e61]:
+        - generic [ref=e63] [cursor=pointer]:
+          - img [ref=e64]
+          - generic [ref=e68]: 33 vendor frames
+          - button [ref=e69]:
+            - img [ref=e70]
+        - generic [ref=e74]:
+          - generic [ref=e75] [cursor=pointer]:
+            - generic [ref=e78]:
+              - code [ref=e82]:
+                - generic [ref=e83]: public/index.php
+              - generic [ref=e85]: public/index.php:20
+            - button [ref=e87]:
+              - img [ref=e88]
+          - code [ref=e96]:
+            - generic [ref=e97]: "15"
+            - generic [ref=e98]: 16// Bootstrap Laravel and handle the request...
+            - generic [ref=e99]: 17/** @var Application $app */
+            - generic [ref=e100]: 18$app = require_once __DIR__.'/../bootstrap/app.php';
+            - generic [ref=e101]: "19"
+            - generic [ref=e102]: 20$app->handleRequest(Request::capture());
+            - generic [ref=e103]: "21"
+        - generic [ref=e105] [cursor=pointer]:
+          - img [ref=e106]
+          - generic [ref=e110]: 1 vendor frame
+          - button [ref=e111]:
+            - img [ref=e112]
+    - generic [ref=e116]:
+      - generic [ref=e118]:
+        - img [ref=e120]
+        - heading "Queries" [level=3] [ref=e122]
+      - generic [ref=e124]: // No queries executed
+  - generic [ref=e126]:
+    - generic [ref=e127]:
+      - heading "Headers" [level=2] [ref=e128]
+      - generic [ref=e129]:
+        - generic [ref=e130]:
+          - generic [ref=e131]: cookie
+          - generic [ref=e133]: XSRF-TOKEN=eyJpdiI6IjhjMENyZVlaMmtCa1paZ3FoS0pYOFE9PSIsInZhbHVlIjoiTWJNTHJoK0xmVHlISHlMUmdPTllwcWd3ZC83VXdtQ3BsQ0g1cVoxZnczTndDUXVxNjdiZTgzMnJDLzgxOFJVcmowb3dtVkc5UWVmSVpIL2V3VVU4NkJCazl5ZXVTUEk4bXR6SHo5T3Q3Z3RiczN3M2FoanNJODVCdHFjWjhmY0oiLCJtYWMiOiJiZjUyNmI4MTVhY2Q2ODVkYzQ5ZmZkYTk3NDBjYTk3NDE1MGRlZDFmYTcyYzcxZTA4MjI2OGE1OWJmZjk4NDJjIiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6IjFGOWxRdlVkWEJMbkRuc0FoeUdYOFE9PSIsInZhbHVlIjoiSWREbzZaOWdLV0lIVjVWeGFTV2FzYjl3UmoraVo4Q1JrQjdicGMxaEJRRUxEbnVGQnp4aW5pQmRoRXMvSDRaMTFsbDhFQ2NlYzNKemgxM2lFeGJFcXZERmt0YjZTS2NlUkxJUG9uOHJUYm9nWUlkWUk3aG1mR3JrVitRSlNkYkQiLCJtYWMiOiIxMzdlYWI3YmZlYmM2NmE4Y2Q5NjBhOTNjOTJiZThhMWU2OWYyYmI1NDk5YTE2NDk5NTZhY2Y4NzRlM2U5YjdlIiwidGFnIjoiIn0%3D
+        - generic [ref=e134]:
+          - generic [ref=e135]: accept-language
+          - generic [ref=e137]: en-GB,en-US;q=0.9,en;q=0.8
+        - generic [ref=e138]:
+          - generic [ref=e139]: accept-encoding
+          - generic [ref=e141]: gzip, deflate
+        - generic [ref=e142]:
+          - generic [ref=e143]: accept
+          - generic [ref=e145]: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        - generic [ref=e146]:
+          - generic [ref=e147]: user-agent
+          - generic [ref=e149]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
+        - generic [ref=e150]:
+          - generic [ref=e151]: upgrade-insecure-requests
+          - generic [ref=e153]: "1"
+        - generic [ref=e154]:
+          - generic [ref=e155]: connection
+          - generic [ref=e157]: keep-alive
+        - generic [ref=e158]:
+          - generic [ref=e159]: host
+          - generic [ref=e161]: shop.test
+    - generic [ref=e162]:
+      - heading "Body" [level=2] [ref=e163]
+      - generic [ref=e164]: // No request body
+    - generic [ref=e165]:
+      - heading "Routing" [level=2] [ref=e166]
+      - generic [ref=e168]: // No routing context
+    - generic [ref=e169]:
+      - heading "Routing parameters" [level=2] [ref=e170]
+      - generic [ref=e171]: // No routing parameters
+  - generic [ref=e174]:
+    - img [ref=e176]
+    - img [ref=e3214]

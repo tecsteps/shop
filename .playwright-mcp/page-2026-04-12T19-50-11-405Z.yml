@@ -1,0 +1,17 @@
+- generic [ref=e6]:
+  - generic [ref=e7]:
+    - heading "Admin sign in" [level=1] [ref=e8]
+    - paragraph [ref=e9]: Enter your email and password to access the admin panel
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]: Email address
+      - textbox "Email address" [active] [ref=e14]
+    - generic [ref=e15]:
+      - generic [ref=e16]: Password
+      - textbox "Password" [ref=e18]
+    - generic [ref=e19]:
+      - checkbox "Remember me" [ref=e20]
+      - generic [ref=e22]: Remember me
+    - button "Log in" [ref=e23]:
+      - img [ref=e25]
+      - generic [ref=e28]: Log in

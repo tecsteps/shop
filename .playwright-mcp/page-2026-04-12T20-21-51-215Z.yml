@@ -1,0 +1,63 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Demo Store" [ref=e4] [cursor=pointer]:
+        - /url: http://shop.test/storefront
+      - generic [ref=e5]:
+        - button "Search" [ref=e6]:
+          - img [ref=e7]
+        - link "Account" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e10]
+        - button "Cart" [ref=e12]:
+          - img [ref=e13]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - heading "Checkout" [level=1] [ref=e18]
+      - list [ref=e19]:
+        - listitem [ref=e20]:
+          - generic [ref=e21]: "1"
+          - generic [ref=e22]: Address
+        - listitem [ref=e24]:
+          - generic [ref=e25]: "2"
+          - generic [ref=e26]: Shipping
+        - listitem [ref=e28]:
+          - generic [ref=e29]: "3"
+          - generic [ref=e30]: Payment
+      - generic [ref=e31]:
+        - generic [ref=e33]:
+          - heading "Shipping method" [level=2] [ref=e96]
+          - generic [ref=e98] [cursor=pointer]:
+            - generic [ref=e99]:
+              - radio "Standard EUR 5.99" [checked] [active] [ref=e100]
+              - generic [ref=e101]: Standard
+            - generic [ref=e102]: EUR 5.99
+          - generic [ref=e103]:
+            - button "Back" [ref=e104]
+            - button "Continue to payment" [ref=e105]
+        - complementary [ref=e66]:
+          - heading "Order summary" [level=2] [ref=e67]
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - generic [ref=e71]:
+                - paragraph [ref=e72]: Classic Tee
+                - paragraph [ref=e73]: Qty 1
+              - paragraph [ref=e74]: EUR 19.99
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: Subtotal
+              - generic [ref=e78]: EUR 19.99
+            - generic [ref=e79]:
+              - generic [ref=e80]: Shipping
+              - generic [ref=e81]: EUR 0.00
+            - generic [ref=e82]:
+              - generic [ref=e83]: Total
+              - generic [ref=e84]: EUR 19.99
+  - contentinfo [ref=e85]:
+    - generic [ref=e87]:
+      - navigation "Footer navigation"
+      - paragraph [ref=e88]: (c) Shop
+  - button "Open cart" [ref=e91]:
+    - img [ref=e92]
+    - generic [ref=e94]: Cart
+    - generic [ref=e95]: "1"
