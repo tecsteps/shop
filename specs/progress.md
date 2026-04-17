@@ -25,7 +25,7 @@ Shop URL: http://shop.test/
 - [x] Products / Variants / Options / Inventory / Collections / Media
 
 ### Phase 3: Themes / Pages / Navigation / Storefront Layout
-- [ ] Themes + CMS + Storefront Blade layouts
+- [x] Themes + CMS + Storefront Blade layouts
 
 ### Phase 4: Cart / Checkout / Discounts / Shipping / Taxes
 - [ ]
@@ -57,3 +57,4 @@ Shop URL: http://shop.test/
 ## Log
 - 2026-04-17: Starting implementation with team mode.
 - 2026-04-17: Phase 1 complete. Kept users.password column name (not renamed to password_hash) to preserve Fortify starter-kit tests; override not required. Added /admin and /account route groups alongside existing Fortify routes. Customer guard registered via CustomerUserProvider which falls back to User model until Phase 6 introduces Customer.
+- 2026-04-17: Phase 3 complete. Added themes/theme_files/theme_settings/pages/navigation_menus/navigation_items migrations (CHECK triggers on status/type enums), Eloquent models with BelongsToStore trait where applicable, factories, DefaultStoreSeeder creating shop.test hostname, ThemeSeeder/PageSeeder/NavigationSeeder seeding default theme plus about/contact pages and main-menu. Added storefront Blade layout component at resources/views/components/layouts/storefront.blade.php with announcement bar, header (logo, navigation, cart, account links), main slot, footer. Created class-based Livewire components under App\Livewire\Storefront (Home, Collections\Show, Products\Show, Pages\Show, Navigation partial). Routes wired inside the storefront middleware group. Pages show renders 404 for non-published. Full test suite green (62 passed).
