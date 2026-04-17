@@ -6,10 +6,13 @@ use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Exceptions\InvalidCheckoutStateException;
 use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart as CartModel;
 use App\Models\Checkout;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\OrderService;
+use App\Services\PaymentService;
 use App\Services\ShippingCalculator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -44,6 +47,10 @@ class Show extends Component
     public string $discount_error = '';
 
     public string $payment_method = PaymentMethod::CreditCard->value;
+
+    public string $card_number = '';
+
+    public string $payment_error = '';
 
     public function mount(): void
     {
@@ -153,6 +160,39 @@ class Show extends Component
         } catch (InvalidCheckoutStateException $e) {
             $this->addError('payment_method', $e->getMessage());
         }
+    }
+
+    public function place(): mixed
+    {
+        $this->payment_error = '';
+
+        $checkout = $this->loadCheckout();
+        $method = PaymentMethod::tryFrom($this->payment_method) ?? PaymentMethod::CreditCard;
+
+        try {
+            app(CheckoutService::class)->selectPaymentMethod($checkout, $method);
+        } catch (InvalidCheckoutStateException $e) {
+            $this->payment_error = $e->getMessage();
+
+            return null;
+        }
+
+        $details = $method === PaymentMethod::CreditCard ? ['card_number' => $this->card_number] : [];
+
+        try {
+            $paymentResult = app(PaymentService::class)->authorize($checkout, $method, $details);
+        } catch (PaymentFailedException $e) {
+            $this->payment_error = $e->errorCode;
+
+            return null;
+        }
+
+        $order = app(OrderService::class)->createFromCheckout($checkout);
+        app(PaymentService::class)->recordPayment($order, $method, $paymentResult);
+
+        session()->forget('cart_id');
+
+        return redirect('/checkout/success?order='.urlencode($order->order_number));
     }
 
     public function render(): View

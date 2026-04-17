@@ -36,7 +36,14 @@ Shop URL: http://shop.test/
 - [x] Pest feature tests for cart/discount/shipping/tax/pricing/checkout services + cart Livewire page
 
 ### Phase 5: Payments / Orders / Fulfillment
-- [ ]
+- [x] orders, order_lines, payments, refunds, fulfillments, fulfillment_lines migrations + models + factories
+- [x] Enums: OrderStatus, FinancialStatus, FulfillmentStatus, PaymentStatus, RefundStatus, FulfillmentShipmentStatus
+- [x] PaymentProvider contract + MockPaymentProvider (magic cards: 4242... success, 4000...0002 decline, 4000...9995 insufficient_funds, 5555...4444 success)
+- [x] OrderService, PaymentService, RefundService, FulfillmentService
+- [x] Events: OrderCreated, OrderPaid, OrderCancelled, OrderRefunded, OrderFulfilled, FulfillmentCreated, FulfillmentShipped, FulfillmentDelivered
+- [x] Checkout Livewire `place()` wires authorize -> createFromCheckout -> recordPayment -> redirect /checkout/success?order={order_number}
+- [x] Admin orders list + detail placeholder Livewire pages at /admin/orders and /admin/orders/{order}
+- [x] Pest tests: card success/decline/insufficient_funds, bank_transfer pending order, digital auto-fulfill, idempotent authorize, refund partial/full/restock/reject, fulfillment state machine and guard
 
 ### Phase 6: Customer Accounts
 - [ ]

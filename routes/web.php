@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
+use App\Livewire\Admin\Orders\Show as AdminOrdersShow;
 use App\Livewire\Storefront\Account\Auth\Login as StorefrontLogin;
 use App\Livewire\Storefront\Account\Auth\Register as StorefrontRegister;
 use App\Livewire\Storefront\Cart\Show as StorefrontCartShow;
@@ -28,6 +30,8 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
     Route::middleware(['auth', 'verified', 'store.resolve:admin'])->group(function (): void {
         Route::view('/', 'admin.dashboard')->name('dashboard');
+        Route::livewire('orders', AdminOrdersIndex::class)->name('orders.index');
+        Route::livewire('orders/{order}', AdminOrdersShow::class)->name('orders.show');
     });
 });
 

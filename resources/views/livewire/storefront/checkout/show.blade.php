@@ -73,15 +73,24 @@
 
             <section class="rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
                 <h2 class="text-xl font-semibold">Payment</h2>
-                <form wire:submit.prevent="selectPayment" class="mt-4 flex flex-col gap-4">
+                <form wire:submit.prevent="place" class="mt-4 flex flex-col gap-4">
                     @foreach ($paymentMethods as $method)
                         <label class="flex items-center gap-3 rounded border border-neutral-200 p-3 dark:border-neutral-700">
-                            <input type="radio" wire:model="payment_method" value="{{ $method->value }}" />
+                            <input type="radio" wire:model.live="payment_method" value="{{ $method->value }}" />
                             <span class="capitalize">{{ str_replace('_', ' ', $method->value) }}</span>
                         </label>
                     @endforeach
+                    @if ($payment_method === 'credit_card')
+                        <div>
+                            <label class="mb-1 block text-sm font-medium">Card number</label>
+                            <input type="text" wire:model="card_number" maxlength="19" placeholder="4242 4242 4242 4242" class="w-full rounded border border-neutral-300 px-3 py-2 tracking-widest dark:border-neutral-700 dark:bg-neutral-900" />
+                        </div>
+                    @endif
                     @error('payment_method') <div class="text-xs text-red-600">{{ $message }}</div> @enderror
-                    <button type="submit" class="rounded-full bg-neutral-900 px-6 py-2 text-sm font-semibold text-white hover:bg-neutral-700">Confirm payment method</button>
+                    @if ($payment_error !== '')
+                        <div class="text-xs text-red-600">{{ $payment_error }}</div>
+                    @endif
+                    <button type="submit" class="rounded-full bg-neutral-900 px-6 py-2 text-sm font-semibold text-white hover:bg-neutral-700">Place order</button>
                 </form>
             </section>
         </div>
