@@ -14,11 +14,13 @@ use App\Events\OrderCreated;
 use App\Events\OrderFulfilled;
 use App\Events\OrderPaid;
 use App\Models\Checkout;
+use App\Models\Customer;
 use App\Models\Fulfillment;
 use App\Models\FulfillmentLine;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Models\Store;
+use App\Notifications\CustomerWelcomeNotification;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -49,6 +51,10 @@ class OrderService
             $inventoryAction = $method === PaymentMethod::BankTransfer ? 'keep_reserved' : 'commit';
             $financial = $method === PaymentMethod::BankTransfer ? FinancialStatus::Pending : FinancialStatus::Paid;
             $status = $method === PaymentMethod::BankTransfer ? OrderStatus::Pending : OrderStatus::Paid;
+
+            $customerResult = $this->attachOrCreateCustomer($checkout);
+            $checkout->customer_id = $customerResult['customer']->getKey();
+            $checkout->save();
 
             $order = Order::query()->create([
                 'store_id' => $checkout->store_id,
@@ -109,8 +115,53 @@ class OrderService
                 OrderPaid::dispatch($order);
             }
 
+            if ($customerResult['created_guest']) {
+                $customerResult['customer']->notify(new CustomerWelcomeNotification($order->store_id));
+            }
+
             return $order->refresh();
         });
+    }
+
+    /**
+     * @return array{customer: Customer, created_guest: bool}
+     */
+    protected function attachOrCreateCustomer(Checkout $checkout): array
+    {
+        if ($checkout->customer_id !== null) {
+            $customer = Customer::query()
+                ->withoutGlobalScopes()
+                ->find($checkout->customer_id);
+
+            if ($customer !== null) {
+                return ['customer' => $customer, 'created_guest' => false];
+            }
+        }
+
+        $email = (string) $checkout->email;
+
+        $customer = Customer::query()
+            ->withoutGlobalScopes()
+            ->where('store_id', $checkout->store_id)
+            ->where('email', $email)
+            ->first();
+
+        if ($customer !== null) {
+            return ['customer' => $customer, 'created_guest' => false];
+        }
+
+        $shipping = (array) ($checkout->shipping_address_json ?? []);
+        $name = trim(((string) ($shipping['first_name'] ?? '')).' '.((string) ($shipping['last_name'] ?? '')));
+
+        $customer = new Customer;
+        $customer->store_id = $checkout->store_id;
+        $customer->email = $email;
+        $customer->password_hash = null;
+        $customer->name = $name !== '' ? $name : null;
+        $customer->marketing_opt_in = 0;
+        $customer->save();
+
+        return ['customer' => $customer, 'created_guest' => true];
     }
 
     public function generateOrderNumber(Store $store): string

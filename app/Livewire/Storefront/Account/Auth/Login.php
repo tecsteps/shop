@@ -24,7 +24,7 @@ class Login extends Component
             'password' => 'required|string',
         ]);
 
-        $throttleKey = 'login:'.request()->ip();
+        $throttleKey = 'customer-login:'.request()->ip().':'.strtolower($this->email);
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
@@ -46,7 +46,10 @@ class Login extends Component
         }
 
         RateLimiter::clear($throttleKey);
-        request()->session()->regenerate();
+
+        if (request()->hasSession()) {
+            request()->session()->regenerate();
+        }
 
         return redirect()->intended('/account');
     }
