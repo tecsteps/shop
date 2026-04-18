@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
 use App\Http\Middleware\ResolveStore;
+use App\Listeners\DispatchWebhooks;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -47,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Livewire::addPersistentMiddleware([ResolveStore::class]);
+
+        Event::subscribe(DispatchWebhooks::class);
 
         RateLimiter::for('login', function (Request $request): Limit {
             return Limit::perMinute(5)->by($request->ip());
