@@ -2,12 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::middleware('admin')->prefix('admin')->name('admin.')->group(function (): void {
+    require __DIR__.'/admin.php';
+});
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-require __DIR__.'/settings.php';
+Route::middleware('storefront')->group(function (): void {
+    require __DIR__.'/storefront.php';
+});
