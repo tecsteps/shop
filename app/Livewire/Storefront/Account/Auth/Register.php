@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Storefront\Account\Auth;
 
+use App\Models\Cart;
 use App\Models\Customer;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
@@ -52,7 +54,32 @@ class Register extends Component
             request()->session()->regenerate();
         }
 
+        $this->mergeGuestCart($customer);
+
         return redirect()->route('account.dashboard');
+    }
+
+    protected function mergeGuestCart(Customer $customer): void
+    {
+        if (! app()->bound('current_store')) {
+            return;
+        }
+
+        $store = app('current_store');
+        $cartService = app(CartService::class);
+        $session = session();
+        $guestCartId = $session->get(CartService::SESSION_KEY);
+
+        $guest = $guestCartId
+            ? Cart::query()->where('store_id', $store->id)->find($guestCartId)
+            : null;
+
+        $customerCart = $cartService->getOrCreateForSession($store, $customer);
+
+        if ($guest && $guest->id !== $customerCart->id) {
+            $cartService->mergeOnLogin($guest, $customerCart);
+            $session->put(CartService::SESSION_KEY, $customerCart->id);
+        }
     }
 
     public function render()

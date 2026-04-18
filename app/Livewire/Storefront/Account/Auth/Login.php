@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Storefront\Account\Auth;
 
+use App\Models\Cart;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
@@ -48,7 +50,38 @@ class Login extends Component
             request()->session()->regenerate();
         }
 
+        $this->mergeGuestCart();
+
         return redirect()->intended(route('account.dashboard'));
+    }
+
+    protected function mergeGuestCart(): void
+    {
+        if (! app()->bound('current_store')) {
+            return;
+        }
+
+        $customer = Auth::guard('customer')->user();
+
+        if (! $customer) {
+            return;
+        }
+
+        $store = app('current_store');
+        $cartService = app(CartService::class);
+        $session = session();
+        $guestCartId = $session->get(CartService::SESSION_KEY);
+
+        $guest = $guestCartId
+            ? Cart::query()->where('store_id', $store->id)->find($guestCartId)
+            : null;
+
+        $customerCart = $cartService->getOrCreateForSession($store, $customer);
+
+        if ($guest && $guest->id !== $customerCart->id) {
+            $cartService->mergeOnLogin($guest, $customerCart);
+            $session->put(CartService::SESSION_KEY, $customerCart->id);
+        }
     }
 
     public function render()
