@@ -3,9 +3,11 @@
 namespace App\Livewire\Storefront\Checkout;
 
 use App\Enums\CheckoutStatus;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Checkout;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\OrderService;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
 use Livewire\Attributes\Layout;
@@ -76,6 +78,13 @@ class Show extends Component
         }
     }
 
+    public array $card = [
+        'card_number' => '',
+        'cardholder_name' => '',
+        'expiry' => '',
+        'cvc' => '',
+    ];
+
     public function placeOrder()
     {
         $checkout = $this->checkout();
@@ -88,9 +97,17 @@ class Show extends Component
             return null;
         }
 
-        $this->dispatch('checkout:payment-pending', checkoutId: $checkout->id);
+        try {
+            $order = app(OrderService::class)->createFromCheckout($checkout->fresh(), $this->card);
+        } catch (PaymentFailedException $e) {
+            $this->errorMessages = ['Payment declined: '.$e->errorCode];
 
-        return null;
+            return null;
+        }
+
+        session()->forget(['checkout_id', CartService::SESSION_KEY]);
+
+        return redirect()->route('storefront.checkout.confirmation', ['number' => $order->order_number]);
     }
 
     public function render()

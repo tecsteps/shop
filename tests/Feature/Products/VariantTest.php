@@ -95,19 +95,14 @@ it('archives orphaned variants with order references', function (): void {
     ]);
     $variantM->optionValues()->sync([$md->id]);
 
-    \Schema::create('order_lines', function ($table): void {
-        $table->id();
-        $table->foreignId('variant_id');
-    });
-    \DB::table('order_lines')->insert(['variant_id' => $variantS->id]);
+    $order = \App\Models\Order::factory()->create(['store_id' => $this->store->id]);
+    \App\Models\OrderLine::factory()->create(['order_id' => $order->id, 'variant_id' => $variantS->id]);
 
     $sm->delete();
 
     $this->matrix->rebuildMatrix($product->fresh());
 
     expect(ProductVariant::query()->find($variantS->id)->status)->toBe(VariantStatus::Archived);
-
-    \Schema::drop('order_lines');
 });
 
 it('deletes orphaned variants without order references', function (): void {

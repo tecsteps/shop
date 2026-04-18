@@ -102,18 +102,14 @@ it('prevents active to draft when order lines exist', function (): void {
     ]);
     $this->service->transitionStatus($product, ProductStatus::Active);
 
-    \Schema::create('order_lines', function ($table): void {
-        $table->id();
-        $table->foreignId('variant_id');
-    });
-
-    $variantId = $product->variants()->first()->id;
-    \DB::table('order_lines')->insert(['variant_id' => $variantId]);
+    $order = \App\Models\Order::factory()->create(['store_id' => $this->store->id]);
+    \App\Models\OrderLine::factory()->create([
+        'order_id' => $order->id,
+        'variant_id' => $product->variants()->first()->id,
+    ]);
 
     expect(fn () => $this->service->transitionStatus($product, ProductStatus::Draft))
         ->toThrow(InvalidProductTransitionException::class);
-
-    \Schema::drop('order_lines');
 });
 
 it('hard deletes a draft product with no order references', function (): void {
