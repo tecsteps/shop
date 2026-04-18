@@ -1,8 +1,11 @@
 <?php
 
+use App\Livewire\Storefront\Account\Addresses\Index as AccountAddresses;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
 use App\Livewire\Storefront\Account\Dashboard as AccountDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as AccountOrdersIndex;
+use App\Livewire\Storefront\Account\Orders\Show as AccountOrderShow;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
@@ -31,6 +34,9 @@ Route::prefix('account')->name('account.')->group(function (): void {
 
     Route::middleware('auth:customer')->group(function (): void {
         Route::get('/', AccountDashboard::class)->name('dashboard');
+        Route::get('/orders', AccountOrdersIndex::class)->name('orders.index');
+        Route::get('/orders/{number}', AccountOrderShow::class)->name('orders.show');
+        Route::get('/addresses', AccountAddresses::class)->name('addresses.index');
         Route::post('/logout', function () {
             auth()->guard('customer')->logout();
             request()->session()->invalidate();
