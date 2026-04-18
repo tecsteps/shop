@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Storefront\Search;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use App\Services\SearchService;
 use Livewire\Component;
 
 class Modal extends Component
@@ -42,21 +41,16 @@ class Modal extends Component
      */
     protected function searchProducts(): array
     {
-        if (! Schema::hasTable('products') || ! app()->bound('current_store') || trim($this->query) === '') {
+        if (! app()->bound('current_store') || trim($this->query) === '') {
             return [];
         }
 
-        return DB::table('products')
-            ->where('store_id', app('current_store')->id)
-            ->where('status', 'active')
-            ->where('title', 'like', '%'.$this->query.'%')
-            ->orderBy('title')
-            ->limit(8)
-            ->get(['id', 'title', 'handle'])
-            ->map(fn ($row): array => [
-                'id' => (int) $row->id,
-                'title' => $row->title,
-                'handle' => $row->handle,
+        return app(SearchService::class)
+            ->autocomplete(app('current_store'), $this->query, 8)
+            ->map(fn ($p): array => [
+                'id' => (int) $p->id,
+                'title' => $p->title,
+                'handle' => $p->handle,
             ])
             ->all();
     }

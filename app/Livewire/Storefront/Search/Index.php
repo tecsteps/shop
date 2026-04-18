@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Storefront\Search;
 
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use App\Services\SearchService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -32,15 +32,16 @@ class Index extends Component
 
     protected function searchProducts(): LengthAwarePaginator
     {
-        if (! Schema::hasTable('products') || ! app()->bound('current_store') || trim($this->query) === '') {
-            return new LengthAwarePaginator([], 0, 12, 1);
+        if (! app()->bound('current_store') || trim($this->query) === '') {
+            return new Paginator([], 0, 12, 1);
         }
 
-        return DB::table('products')
-            ->where('store_id', app('current_store')->id)
-            ->where('status', 'active')
-            ->where('title', 'like', '%'.$this->query.'%')
-            ->orderBy('title')
-            ->paginate(12, ['id', 'title', 'handle']);
+        return app(SearchService::class)->search(
+            app('current_store'),
+            $this->query,
+            [],
+            12,
+            $this->getPage()
+        );
     }
 }

@@ -15,7 +15,7 @@ Mode: Agent Team (lead + parallel teammates)
 | 5 | Payments, Orders, Fulfillment | pending | commerce-engineer | |
 | 6 | Customer Accounts | pending | storefront-engineer | |
 | 7 | Admin Panel | pending | admin-engineer | |
-| 8 | Search (FTS5) | pending | catalog-engineer | |
+| 8 | Search (FTS5) | done | catalog-engineer | SearchService + ProductObserver + FTS5 virtual table; 11 search tests green; Search\Index + Search\Modal rewired to SearchService |
 | 9 | Analytics | pending | admin-engineer | |
 | 10 | Apps and Webhooks | pending | admin-engineer | |
 | 11 | Polish (a11y, dark mode, error pages, seed data) | pending | lead | |
@@ -26,3 +26,4 @@ Mode: Agent Team (lead + parallel teammates)
 - Phase 1 foundation: migrations, models, enums, ResolveStore middleware, StoreScope/BelongsToStore trait, Livewire auth (admin + customer), Sanctum, policies, tenancy + auth tests passing.
 - Phase 2 catalog: products/options/variants/inventory/collections/media migrations + models + factories, enums (ProductStatus, VariantStatus, CollectionStatus, CollectionType, MediaType, MediaStatus, InventoryPolicy), services (ProductService, VariantMatrixService, InventoryService), HandleGenerator, ProcessMediaUpload stub, InsufficientInventoryException + InvalidProductTransitionException, DemoSeeder catalog data. 47 catalog tests passing, 64/64 total tests green.
 - Phase 3 storefront: themes/theme_files/theme_settings/pages/navigation_menus/navigation_items migrations + models + factories, enums (ThemeStatus, PageStatus, NavigationItemType), NavigationService (cached buildTree/resolveUrl), ThemeSettingsService singleton, storefront Blade components (product-card, price, badge, quantity-selector, address-form, order-summary, breadcrumbs, pagination), Livewire pages (Home enhanced, Collections Index/Show, Products Show with variant + add-to-cart dispatch stub, Cart Show placeholder, Search Index/Modal, Pages Show), 404/503 error views, DemoSeeder theming data. 73/73 tests green.
+- Phase 8 search: search_settings + search_queries + products_fts (FTS5 virtual) migrations, App\Services\SearchService (search/autocomplete/syncProduct/removeProduct; query logging; order preservation via CASE), App\Observers\ProductObserver wired via #[ObservedBy] on Product, storefront Search\Index + Search\Modal Livewire rewired to SearchService, 11 search tests green, 84/84 total tests green, /search?q=cotton verified via HTTP.
