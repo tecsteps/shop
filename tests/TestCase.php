@@ -56,6 +56,21 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
+    /**
+     * Wire an additional storefront domain using the APP_URL host so HTTP/API tests resolve.
+     */
+    protected function bindStoreToAppHost(Store $store): StoreDomain
+    {
+        $host = parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'localhost';
+
+        return StoreDomain::factory()->create([
+            'store_id' => $store->id,
+            'hostname' => $host,
+            'type' => StoreDomainType::Storefront,
+            'is_primary' => false,
+        ]);
+    }
+
     protected function actingAsAdmin(User $user, ?Store $store = null): static
     {
         $this->actingAs($user);
