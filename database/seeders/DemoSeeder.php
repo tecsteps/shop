@@ -7,15 +7,21 @@ use App\Enums\CollectionType;
 use App\Enums\InventoryPolicy;
 use App\Enums\MediaStatus;
 use App\Enums\MediaType;
+use App\Enums\NavigationItemType;
+use App\Enums\PageStatus;
 use App\Enums\ProductStatus;
 use App\Enums\StoreDomainType;
 use App\Enums\StoreStatus;
 use App\Enums\StoreUserRole;
+use App\Enums\ThemeStatus;
 use App\Enums\VariantStatus;
 use App\Models\Collection;
 use App\Models\Customer;
 use App\Models\InventoryItem;
+use App\Models\NavigationItem;
+use App\Models\NavigationMenu;
 use App\Models\Organization;
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductMedia;
 use App\Models\ProductOption;
@@ -24,6 +30,8 @@ use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\StoreSettings;
+use App\Models\Theme;
+use App\Models\ThemeSettings;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -91,9 +99,72 @@ class DemoSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
+        $this->seedTheming($store);
         $this->seedCatalog($store);
 
         app()->forgetInstance('current_store');
+    }
+
+    protected function seedTheming(Store $store): void
+    {
+        $theme = Theme::query()->create([
+            'store_id' => $store->id,
+            'name' => 'Default',
+            'version' => '1.0.0',
+            'status' => ThemeStatus::Published,
+            'published_at' => now(),
+        ]);
+
+        ThemeSettings::query()->create([
+            'theme_id' => $theme->id,
+            'settings_json' => [
+                'hero' => [
+                    'heading' => 'Elevated essentials',
+                    'subheading' => 'Timeless pieces for modern wardrobes.',
+                    'cta_label' => 'Shop the collection',
+                    'cta_url' => '/collections',
+                ],
+                'featured_collection_handles' => ['featured'],
+                'featured_product_handles' => [],
+                'colors' => [
+                    'primary' => '#111827',
+                    'accent' => '#4f46e5',
+                ],
+                'dark_mode' => 'system',
+            ],
+            'updated_at' => now(),
+        ]);
+
+        Page::query()->create([
+            'store_id' => $store->id,
+            'title' => 'About Us',
+            'handle' => 'about',
+            'body_html' => '<p>Acme Fashion is a demo store created to showcase the platform.</p>',
+            'status' => PageStatus::Published,
+            'published_at' => now(),
+        ]);
+
+        $menu = NavigationMenu::query()->create([
+            'store_id' => $store->id,
+            'handle' => 'main-menu',
+            'title' => 'Main menu',
+        ]);
+
+        $mainItems = [
+            ['label' => 'Home', 'url' => '/'],
+            ['label' => 'Collections', 'url' => '/collections'],
+            ['label' => 'About', 'url' => '/pages/about'],
+        ];
+
+        foreach ($mainItems as $position => $item) {
+            NavigationItem::query()->create([
+                'menu_id' => $menu->id,
+                'type' => NavigationItemType::Link,
+                'label' => $item['label'],
+                'url' => $item['url'],
+                'position' => $position,
+            ]);
+        }
     }
 
     protected function seedCatalog(Store $store): void
