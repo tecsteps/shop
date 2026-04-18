@@ -101,8 +101,58 @@ class DemoSeeder extends Seeder
 
         $this->seedTheming($store);
         $this->seedCatalog($store);
+        $this->seedShippingAndTaxes($store);
 
         app()->forgetInstance('current_store');
+    }
+
+    protected function seedShippingAndTaxes(Store $store): void
+    {
+        $zone = \App\Models\ShippingZone::query()->create([
+            'store_id' => $store->id,
+            'name' => 'Germany',
+            'countries_json' => ['DE'],
+            'regions_json' => [],
+        ]);
+
+        \App\Models\ShippingRate::query()->create([
+            'zone_id' => $zone->id,
+            'name' => 'Standard',
+            'type' => 'flat',
+            'config_json' => ['amount' => 499],
+            'is_active' => true,
+        ]);
+
+        $rowZone = \App\Models\ShippingZone::query()->create([
+            'store_id' => $store->id,
+            'name' => 'Rest of World',
+            'countries_json' => ['US', 'GB', 'FR', 'AT', 'CH', 'IT', 'ES', 'NL'],
+            'regions_json' => [],
+        ]);
+
+        \App\Models\ShippingRate::query()->create([
+            'zone_id' => $rowZone->id,
+            'name' => 'International',
+            'type' => 'flat',
+            'config_json' => ['amount' => 1499],
+            'is_active' => true,
+        ]);
+
+        $existing = \App\Models\TaxSettings::query()->where('store_id', $store->id)->first();
+        if (! $existing) {
+            $settings = new \App\Models\TaxSettings([
+                'store_id' => $store->id,
+                'mode' => 'manual',
+                'provider' => 'manual',
+                'prices_include_tax' => false,
+                'config_json' => [
+                    'default_rate_bps' => 1900,
+                    'default_rate_name' => 'VAT',
+                ],
+            ]);
+            $settings->setAttribute('store_id', $store->id);
+            $settings->save();
+        }
     }
 
     protected function seedTheming(Store $store): void
