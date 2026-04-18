@@ -9,7 +9,7 @@ Mode: Agent Team (lead + parallel teammates)
 | Phase | Title | Status | Owner | Notes |
 |-------|-------|--------|-------|-------|
 | 1 | Foundation (config, tenancy, auth, policies) | done | lead | Tenancy + Auth tests green |
-| 2 | Catalog (products, variants, inventory, collections, media) | pending | catalog-engineer | |
+| 2 | Catalog (products, variants, inventory, collections, media) | done | catalog-engineer | Migrations, models, services (Product, VariantMatrix, Inventory), HandleGenerator, ProcessMediaUpload stub; 47 catalog tests green |
 | 3 | Themes, Pages, Navigation, Storefront layout | pending | storefront-engineer | |
 | 4 | Cart, Checkout, Discounts, Shipping, Taxes | pending | commerce-engineer | |
 | 5 | Payments, Orders, Fulfillment | pending | commerce-engineer | |
@@ -24,3 +24,4 @@ Mode: Agent Team (lead + parallel teammates)
 ## Commit Log
 
 - Phase 1 foundation: migrations, models, enums, ResolveStore middleware, StoreScope/BelongsToStore trait, Livewire auth (admin + customer), Sanctum, policies, tenancy + auth tests passing.
+- Phase 2 catalog: products/options/variants/inventory/collections/media migrations + models + factories, enums (ProductStatus, VariantStatus, CollectionStatus, CollectionType, MediaType, MediaStatus, InventoryPolicy), services (ProductService, VariantMatrixService, InventoryService), HandleGenerator, ProcessMediaUpload stub, InsufficientInventoryException + InvalidProductTransitionException, DemoSeeder catalog data. 47 catalog tests passing, 64/64 total tests green.
