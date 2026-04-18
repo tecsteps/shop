@@ -1,0 +1,27 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Store;
+use App\Models\StoreSettings;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<StoreSettings>
+ */
+class StoreSettingsFactory extends Factory
+{
+    protected $model = StoreSettings::class;
+
+    public function definition(): array
+    {
+        return [
+            'store_id' => Store::factory(),
+            'settings_json' => [
+                'announcement_bar' => 'Free shipping on orders over $50',
+                'support_email' => 'support@example.com',
+            ],
+            'updated_at' => now(),
+        ];
+    }
+}
