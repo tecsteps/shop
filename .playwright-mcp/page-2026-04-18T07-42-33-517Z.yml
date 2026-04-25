@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping on orders over 50
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - navigation "Breadcrumb" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Home" [ref=e17] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e18]
+          - listitem [ref=e20]:
+            - link "Collections" [ref=e21] [cursor=pointer]:
+              - /url: http://shop.test/collections
+            - img [ref=e22]
+          - listitem [ref=e24]:
+            - generic [ref=e25]: Featured
+      - generic [ref=e26]: Featured
+      - paragraph [ref=e28]: Our picks for the season.
+      - generic [ref=e29]:
+        - textbox "Search products..." [ref=e31]
+        - combobox [ref=e33]:
+          - 'option "Sort: default" [selected]'
+          - option "Title A-Z"
+          - option "Title Z-A"
+          - option "Newest"
+      - generic [ref=e34]:
+        - link "Organic Cotton T-Shirt" [ref=e36] [cursor=pointer]:
+          - /url: http://shop.test/products/organic-cotton-t-shirt
+          - img [ref=e39]
+          - generic [ref=e42]: Organic Cotton T-Shirt
+        - link "Classic Pullover Hoodie" [ref=e44] [cursor=pointer]:
+          - /url: http://shop.test/products/classic-pullover-hoodie
+          - img [ref=e47]
+          - generic [ref=e50]: Classic Pullover Hoodie
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]: © 2026 Acme Fashion. All rights reserved.

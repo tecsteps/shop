@@ -1,0 +1,75 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping on orders over 50
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Account" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account
+        - link "Cart" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - img [ref=e15]
+        - generic [ref=e17]: Thank you for your order
+        - paragraph [ref=e18]: "Order number: #1001"
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Order summary
+          - generic [ref=e22]: pending
+        - table [ref=e23]:
+          - rowgroup [ref=e24]:
+            - row "Item Qty Total" [ref=e25]:
+              - columnheader "Item" [ref=e26]
+              - columnheader "Qty" [ref=e27]
+              - columnheader "Total" [ref=e28]
+          - rowgroup [ref=e29]:
+            - row "Organic Cotton T-Shirt TSH-S-BLA 1 0.00 EUR" [ref=e30]:
+              - cell "Organic Cotton T-Shirt TSH-S-BLA" [ref=e31]:
+                - generic [ref=e32]: Organic Cotton T-Shirt
+                - paragraph [ref=e33]: TSH-S-BLA
+              - cell "1" [ref=e34]
+              - cell "0.00 EUR" [ref=e35]
+          - rowgroup [ref=e36]:
+            - row "Subtotal 25.00 EUR" [ref=e37]:
+              - cell "Subtotal" [ref=e38]
+              - cell "25.00 EUR" [ref=e39]
+            - row "Shipping 4.99 EUR" [ref=e40]:
+              - cell "Shipping" [ref=e41]
+              - cell "4.99 EUR" [ref=e42]
+            - row "Tax 5.70 EUR" [ref=e43]:
+              - cell "Tax" [ref=e44]
+              - cell "5.70 EUR" [ref=e45]
+            - row "Total 35.69 EUR" [ref=e46]:
+              - cell "Total" [ref=e47]
+              - cell "35.69 EUR" [ref=e48]
+        - generic [ref=e51]: Your bank transfer is awaiting payment. We'll update you once it has been confirmed.
+      - link "Continue shopping" [ref=e53] [cursor=pointer]:
+        - /url: http://shop.test
+  - contentinfo [ref=e54]:
+    - generic [ref=e55]: © 2026 Acme Fashion. All rights reserved.
+  - generic:
+    - generic:
+      - dialog "Shopping cart":
+        - banner:
+          - generic: Your Cart (0)
+          - button "Close cart":
+            - generic:
+              - img
+            - img
+        - generic:
+          - generic:
+            - img
+            - paragraph: Your cart is empty
+            - button "Continue shopping":
+              - generic:
+                - img
+              - generic: Continue shopping

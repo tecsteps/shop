@@ -1,0 +1,104 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]: Acme Fashion
+    - navigation [ref=e5]:
+      - link "Dashboard" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test/admin
+      - link "Orders" [ref=e7] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+      - link "Products" [ref=e8] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+      - link "Collections" [ref=e9] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+      - link "Customers" [ref=e10] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+      - link "Discounts" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+      - link "Analytics" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+      - generic [ref=e13]: Content
+      - link "Pages" [ref=e14] [cursor=pointer]:
+        - /url: http://shop.test/admin/content/pages
+      - link "Navigation" [ref=e15] [cursor=pointer]:
+        - /url: http://shop.test/admin/content/navigation
+      - link "Themes" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/content/themes
+      - generic [ref=e17]: System
+      - link "Settings" [ref=e18] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+      - link "Search" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/search/settings
+      - link "Apps" [ref=e20] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+      - link "Developers" [ref=e21] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+  - generic [ref=e22]:
+    - banner [ref=e23]:
+      - generic [ref=e25]: Admin
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: owner@acme.test
+        - button "Sign out" [ref=e29]:
+          - img [ref=e31]
+          - generic [ref=e34]: Sign out
+    - main [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Shipping
+          - link "Back" [ref=e39] [cursor=pointer]:
+            - /url: http://shop.test/admin/settings
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]: Zone name
+            - textbox "Zone name" [ref=e44]
+          - generic [ref=e45]:
+            - generic [ref=e46]: Countries (comma ISO-2)
+            - textbox "Countries (comma ISO-2)" [ref=e48]
+          - button "Add zone" [ref=e49]:
+            - img [ref=e51]
+            - generic [ref=e54]: Add zone
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: Germany DE
+            - button "Remove zone" [ref=e58]:
+              - img [ref=e60]
+              - generic [ref=e63]: Remove zone
+          - list [ref=e64]:
+            - listitem [ref=e65]:
+              - generic [ref=e66]: Standard (flat) - 499 cents
+              - button "Remove" [ref=e67]:
+                - img [ref=e69]
+                - generic [ref=e72]: Remove
+          - generic [ref=e73]:
+            - textbox "Rate name" [ref=e75]
+            - combobox [ref=e76]:
+              - option "flat" [selected]
+              - option "weight"
+              - option "price"
+              - option "carrier"
+            - spinbutton [ref=e78]
+            - button "Add rate" [ref=e79]:
+              - img [ref=e81]
+              - generic [ref=e84]: Add rate
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]: Rest of World US, GB, FR, AT, CH, IT, ES, NL
+            - button "Remove zone" [ref=e88]:
+              - img [ref=e90]
+              - generic [ref=e93]: Remove zone
+          - list [ref=e94]:
+            - listitem [ref=e95]:
+              - generic [ref=e96]: International (flat) - 1499 cents
+              - button "Remove" [ref=e97]:
+                - img [ref=e99]
+                - generic [ref=e102]: Remove
+          - generic [ref=e103]:
+            - textbox "Rate name" [ref=e105]
+            - combobox [ref=e106]:
+              - option "flat" [selected]
+              - option "weight"
+              - option "price"
+              - option "carrier"
+            - spinbutton [ref=e108]
+            - button "Add rate" [ref=e109]:
+              - img [ref=e111]
+              - generic [ref=e114]: Add rate

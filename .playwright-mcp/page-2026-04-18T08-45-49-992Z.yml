@@ -1,0 +1,16 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: Admin Login
+  - paragraph [ref=e5]: Sign in to manage your store
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: Email
+      - textbox "Email" [active] [ref=e10]
+    - generic [ref=e11]:
+      - generic [ref=e12]: Password
+      - textbox "Password" [ref=e14]
+    - generic [ref=e15]:
+      - checkbox "Remember me" [ref=e16]
+      - generic [ref=e18]: Remember me
+    - button "Sign in" [ref=e19]:
+      - img [ref=e21]
+      - generic [ref=e24]: Sign in

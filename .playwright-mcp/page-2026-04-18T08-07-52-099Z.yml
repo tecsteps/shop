@@ -1,0 +1,117 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping on orders over 50
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - navigation "Breadcrumb" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Home" [ref=e17] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e18]
+          - listitem [ref=e20]:
+            - generic [ref=e21]: Cart
+      - generic [ref=e22]: Your cart
+      - generic [ref=e23]:
+        - list [ref=e25]:
+          - listitem [ref=e26]:
+            - generic [ref=e28]:
+              - paragraph [ref=e29]: Organic Cotton T-Shirt
+              - paragraph [ref=e30]: TSH-S-BLA
+              - paragraph [ref=e31]: 25.00 EUR
+              - generic [ref=e32]:
+                - button "-" [ref=e33]:
+                  - img [ref=e35]
+                  - generic [ref=e38]: "-"
+                - generic [ref=e39]: "1"
+                - button "+" [ref=e40]:
+                  - img [ref=e42]
+                  - generic [ref=e45]: +
+                - button "Remove" [ref=e46]:
+                  - img [ref=e48]
+                  - generic [ref=e51]: Remove
+            - paragraph [ref=e53]: 25.00 EUR
+        - complementary [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e56]: Discount code
+            - generic [ref=e57]:
+              - textbox "Discount code" [ref=e59]
+              - button "Apply" [ref=e60]:
+                - img [ref=e62]
+                - generic [ref=e65]: Apply
+          - generic [ref=e66]:
+            - generic [ref=e67]: Summary
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - term [ref=e70]: Subtotal
+                - definition [ref=e71]: 25.00 EUR
+              - generic [ref=e72]:
+                - term [ref=e73]: Estimated total
+                - definition [ref=e74]: 25.00 EUR
+            - button "Checkout" [ref=e75]:
+              - img [ref=e77]
+              - generic [ref=e80]: Checkout
+            - link "Continue shopping" [ref=e81] [cursor=pointer]:
+              - /url: http://shop.test/collections
+  - contentinfo [ref=e82]:
+    - generic [ref=e83]: © 2026 Acme Fashion. All rights reserved.
+  - generic:
+    - generic:
+      - dialog "Shopping cart":
+        - banner:
+          - generic: Your Cart (1)
+          - button "Close cart":
+            - generic:
+              - img
+            - img
+        - generic:
+          - list:
+            - listitem:
+              - generic:
+                - paragraph: Organic Cotton T-Shirt
+                - paragraph: TSH-S-BLA
+                - generic:
+                  - button "Decrease quantity":
+                    - generic:
+                      - img
+                    - generic: "-"
+                  - generic: "1"
+                  - button "Increase quantity":
+                    - generic:
+                      - img
+                    - generic: +
+              - generic:
+                - paragraph: 25.00 EUR
+                - button "Remove Organic Cotton T-Shirt from cart":
+                  - generic:
+                    - img
+                  - img
+        - contentinfo:
+          - generic:
+            - generic:
+              - term: Subtotal
+              - definition: 25.00 EUR
+            - generic:
+              - term: Estimated total
+              - definition: 25.00 EUR
+          - paragraph: Shipping and taxes calculated at checkout
+          - link "Checkout":
+            - /url: http://shop.test/checkout
+          - button "Continue shopping":
+            - generic:
+              - img
+            - generic: Continue shopping
