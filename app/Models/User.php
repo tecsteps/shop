@@ -3,9 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -23,6 +26,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'password_hash',
+        'status',
+        'last_login_at',
     ];
 
     /**
@@ -31,7 +37,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
@@ -46,8 +52,43 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password_hash' => 'hashed',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    public function getAuthPassword(): string
+    {
+        return $this->password_hash;
+    }
+
+    public function setPasswordAttribute(string $value): void
+    {
+        $this->attributes['password_hash'] = Hash::needsRehash($value) ? Hash::make($value) : $value;
+    }
+
+    public function getPasswordAttribute(): string
+    {
+        return $this->password_hash;
+    }
+
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')
+            ->using(StoreUser::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        $role = $this->stores()
+            ->whereKey($store->id)
+            ->first()
+            ?->pivot
+            ?->role;
+
+        return $role instanceof StoreUserRole ? $role : StoreUserRole::tryFrom((string) $role);
     }
 
     /**

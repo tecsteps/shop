@@ -1,0 +1,94 @@
+- generic [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping on orders over 50
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Account" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account
+        - link "Cart" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - navigation "Breadcrumb" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Home" [ref=e17] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e18]
+          - listitem [ref=e20]:
+            - generic [ref=e21]: Products
+            - img [ref=e22]
+          - listitem [ref=e24]:
+            - generic [ref=e25]: Organic Cotton T-Shirt
+      - generic [ref=e26]:
+        - img "Organic Cotton T-Shirt front" [ref=e29]
+        - generic [ref=e30]:
+          - generic [ref=e31]: Organic Cotton T-Shirt
+          - generic [ref=e33]: 25.00 EUR
+          - generic [ref=e34]:
+            - generic [ref=e35]: Variant
+            - combobox "Variant" [ref=e36]:
+              - option "TSH-S-BLA" [selected]
+              - option "TSH-S-WHI"
+              - option "TSH-M-BLA"
+              - option "TSH-M-WHI"
+              - option "TSH-L-BLA"
+              - option "TSH-L-WHI"
+          - generic [ref=e37]:
+            - generic [ref=e38]: Quantity
+            - spinbutton "Quantity" [ref=e39]: "1"
+          - button "Add to cart" [active] [ref=e40]:
+            - img [ref=e42]
+            - generic [ref=e45]: Add to cart
+          - paragraph [ref=e47]: Soft, breathable, sustainably sourced.
+          - generic [ref=e48]:
+            - generic [ref=e49]: summer
+            - generic [ref=e50]: bestseller
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]: © 2026 Acme Fashion. All rights reserved.
+  - dialog "Shopping cart" [ref=e55]:
+    - banner [ref=e56]:
+      - generic [ref=e57]: Your Cart (1)
+      - button "Close cart" [ref=e58]:
+        - img [ref=e60]
+        - img [ref=e63]
+    - list [ref=e66]:
+      - listitem [ref=e67]:
+        - generic [ref=e69]:
+          - paragraph [ref=e70]: Organic Cotton T-Shirt
+          - paragraph [ref=e71]: TSH-S-BLA
+          - generic [ref=e72]:
+            - button "Decrease quantity" [ref=e73]:
+              - img [ref=e75]
+              - generic [ref=e78]: "-"
+            - generic [ref=e79]: "1"
+            - button "Increase quantity" [ref=e80]:
+              - img [ref=e82]
+              - generic [ref=e85]: +
+        - generic [ref=e86]:
+          - paragraph [ref=e87]: 25.00 EUR
+          - button "Remove Organic Cotton T-Shirt from cart" [ref=e88]:
+            - img [ref=e90]
+            - img [ref=e93]
+    - contentinfo [ref=e95]:
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - term [ref=e98]: Subtotal
+          - definition [ref=e99]: 25.00 EUR
+        - generic [ref=e100]:
+          - term [ref=e101]: Estimated total
+          - definition [ref=e102]: 25.00 EUR
+      - paragraph [ref=e103]: Shipping and taxes calculated at checkout
+      - link "Checkout" [ref=e104] [cursor=pointer]:
+        - /url: http://shop.test/checkout
+      - button "Continue shopping" [ref=e105]:
+        - img [ref=e107]
+        - generic [ref=e110]: Continue shopping
