@@ -27,4 +27,20 @@
   - `php artisan test --compact` passed: 45 tests, 177 assertions.
   - `npm run build` passed.
   - `vendor/bin/pint --dirty --format agent` was run and formatting was applied.
+- Commit: `133052fe` - Implement shop storefront admin and tests
+
+### Iteration 3 - Browser Review and Final Verification
+
+- Status: completed
+- Scope: Verified customer-side and admin-side acceptance flows in Chrome through Playwright MCP, fixed favicon console noise, captured storefront/admin screenshots, and reran full automated verification.
+- Playwright coverage:
+  - Storefront home, collection, product variant/stock states, cart discount, checkout with credit card, search results/no-results.
+  - Customer register/login/logout, order history/detail, address creation.
+  - Admin login, dashboard, product creation, orders list/detail, bank-transfer guard/confirmation, fulfillment creation, customers, discounts, settings/domains/shipping.
+  - Mobile viewport smoke for storefront home, product, cart, and admin login.
+  - Browser console check reported no errors or warnings after favicon fix.
+- Verification:
+  - `vendor/bin/pint --dirty --format agent` passed.
+  - `php artisan test --compact` passed: 45 tests, 177 assertions.
+  - `npm run build` passed.
 - Commit: pending

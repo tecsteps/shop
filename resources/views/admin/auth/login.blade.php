@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin login</title>
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="grid min-h-screen place-items-center bg-zinc-100 px-4 font-sans dark:bg-zinc-950">
@@ -21,4 +22,3 @@
     </form>
 </body>
 </html>
-

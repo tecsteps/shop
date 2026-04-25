@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? app('current_store')->name }} - {{ app('current_store')->name }}</title>
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
@@ -66,4 +67,3 @@
     </footer>
 </body>
 </html>
-
