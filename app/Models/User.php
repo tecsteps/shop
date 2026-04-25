@@ -4,10 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\StoreUserRole;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -63,7 +64,12 @@ class User extends Authenticatable
 
     public function setPasswordAttribute(string $value): void
     {
-        $this->attributes['password_hash'] = $value;
+        $this->attributes['password_hash'] = Hash::needsRehash($value) ? Hash::make($value) : $value;
+    }
+
+    public function getPasswordAttribute(): string
+    {
+        return $this->password_hash;
     }
 
     public function stores(): BelongsToMany

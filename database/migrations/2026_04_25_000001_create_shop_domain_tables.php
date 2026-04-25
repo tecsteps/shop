@@ -200,6 +200,7 @@ return new class extends Migration
             $table->string('password_hash')->nullable();
             $table->boolean('accepts_marketing')->default(false);
             $table->timestamp('last_login_at')->nullable();
+            $table->rememberToken();
             $table->timestamps();
             $table->unique(['store_id', 'email']);
         });
@@ -498,4 +499,3 @@ return new class extends Migration
         }
     }
 };
-

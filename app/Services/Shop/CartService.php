@@ -88,9 +88,18 @@ class CartService
     public function applyDiscount(string $code): Cart
     {
         $cart = $this->current();
-        $cart->update(['discount_code' => strtoupper($code)]);
+        $previousCode = $cart->discount_code;
+        $cart->forceFill(['discount_code' => strtoupper($code)]);
 
-        $this->pricing->cartTotals($cart);
+        try {
+            $this->pricing->cartTotals($cart);
+        } catch (\Throwable $exception) {
+            $cart->forceFill(['discount_code' => $previousCode]);
+
+            throw $exception;
+        }
+
+        $cart->save();
         $cart->increment('cart_version');
 
         return $cart->refresh()->load('lines.variant.product.media');
@@ -105,4 +114,3 @@ class CartService
         return $cart->refresh()->load('lines.variant.product.media');
     }
 }
-
