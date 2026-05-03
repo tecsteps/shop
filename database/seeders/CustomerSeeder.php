@@ -15,25 +15,36 @@ class CustomerSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+        $fashion = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+        $electronics = Store::query()->where('handle', 'acme-electronics')->firstOrFail();
 
         foreach ([
-            ['email' => 'jane@example.com', 'name' => 'Jane Doe'],
-            ['email' => 'john@example.com', 'name' => 'John Doe'],
-        ] as $index => $data) {
+            [$fashion, 'jane@example.com', 'Jane Doe', true],
+            [$fashion, 'john@example.com', 'John Doe', false],
+            [$fashion, 'customer@acme.test', 'John Customer', true],
+            [$fashion, 'maria@example.com', 'Maria Meyer', false],
+            [$fashion, 'sam@example.com', 'Sam Taylor', false],
+            [$fashion, 'li@example.com', 'Li Wei', false],
+            [$fashion, 'fatima@example.com', 'Fatima Khan', false],
+            [$fashion, 'noah@example.com', 'Noah Smith', false],
+            [$fashion, 'emma@example.com', 'Emma Brown', false],
+            [$fashion, 'olivia@example.com', 'Olivia Davis', false],
+            [$electronics, 'techfan@example.com', 'Tech Fan', true],
+            [$electronics, 'buyer@electronics.test', 'Electronics Buyer', false],
+        ] as [$store, $email, $name, $canLogin]) {
             $customer = Customer::query()->updateOrCreate(
                 [
                     'store_id' => $store->id,
-                    'email' => $data['email'],
+                    'email' => $email,
                 ],
                 [
-                    'name' => $data['name'],
-                    'password_hash' => $index === 0 ? Hash::make('password') : null,
-                    'marketing_opt_in' => $index === 0,
+                    'name' => $name,
+                    'password_hash' => $canLogin ? Hash::make('password') : null,
+                    'marketing_opt_in' => $canLogin,
                 ],
             );
 
-            [$firstName, $lastName] = explode(' ', $data['name']);
+            [$firstName, $lastName] = explode(' ', $name, 2);
 
             CustomerAddress::query()->updateOrCreate(
                 [

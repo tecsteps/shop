@@ -15,18 +15,22 @@ class StoreUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
-        $user = User::query()->where('email', 'admin@example.com')->firstOrFail();
+        $stores = Store::query()->whereIn('handle', ['acme-fashion', 'acme-electronics'])->get();
+        $users = User::query()->whereIn('email', ['admin@example.com', 'admin@acme.test'])->get();
 
-        DB::table('store_users')->updateOrInsert(
-            [
-                'store_id' => $store->id,
-                'user_id' => $user->id,
-            ],
-            [
-                'role' => StoreUserRole::Owner->value,
-                'created_at' => now(),
-            ],
-        );
+        foreach ($stores as $store) {
+            foreach ($users as $user) {
+                DB::table('store_users')->updateOrInsert(
+                    [
+                        'store_id' => $store->id,
+                        'user_id' => $user->id,
+                    ],
+                    [
+                        'role' => StoreUserRole::Owner->value,
+                        'created_at' => now(),
+                    ],
+                );
+            }
+        }
     }
 }

@@ -19,6 +19,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - SQLite FTS5 search is implemented and verified: search settings/query tables, product FTS indexing, product observer sync, storefront search page, header search modal, search API, seeded synonyms/stop words, and admin reindex action.
 - Analytics ingestion and aggregation are implemented and verified: storefront batch event API, client event deduplication, seeded daily/event analytics, daily aggregation job, admin analytics summary API, and admin analytics dashboard.
 - Apps, API tokens, and webhooks are implemented and verified: apps/installations/OAuth metadata, developer API token generation/revocation, store-scoped token middleware, webhook subscriptions, signed delivery jobs, retry/failure tracking, and app admin screens.
+- Demo seed data now covers the browser-plan fixture contract while preserving `shop.test`: two stores/domains, admin aliases, 20 fashion products, 5 electronics products, sold-out/backorder/draft product edges, five discount codes, 10+2 customers, and 15+3 orders.
 
 ## Execution Plan
 
@@ -146,3 +147,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan route:list --path=api/storefront/v1/orders --except-vendor` passed and showed the signed storefront order-status route.
 - 2026-05-03: `php artisan test --compact` passed, 102 tests / 452 assertions.
 - 2026-05-03: `npm run build` passed after adding styled error pages.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with expanded deterministic browser-plan seed data.
+- 2026-05-03: `php artisan test --compact tests/Feature/Seeders/SeedDataContractTest.php` passed, 3 tests / 23 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Seeders/SeedDataContractTest.php tests/Feature/Search/SearchTest.php tests/Feature/Admin/AdminPanelTest.php tests/Feature/Storefront/StorefrontRenderTest.php tests/Feature/Api/StorefrontCheckoutPaymentApiTest.php tests/Feature/Storefront/CustomerAccountTest.php` passed, 25 tests / 181 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after expanded seeder changes.
+- 2026-05-03: `php artisan test --compact` passed, 105 tests / 475 assertions.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed again after the final seeder adjustment.

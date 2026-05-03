@@ -14,16 +14,23 @@ class StoreDomainSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+        $fashion = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+        $electronics = Store::query()->where('handle', 'acme-electronics')->firstOrFail();
 
-        StoreDomain::query()->updateOrCreate(
-            ['hostname' => 'shop.test'],
-            [
-                'store_id' => $store->id,
-                'type' => StoreDomainType::Storefront,
-                'is_primary' => true,
-                'tls_mode' => 'managed',
-            ],
-        );
+        foreach ([
+            ['hostname' => 'shop.test', 'store' => $fashion, 'primary' => true],
+            ['hostname' => 'acme-fashion.test', 'store' => $fashion, 'primary' => false],
+            ['hostname' => 'acme-electronics.test', 'store' => $electronics, 'primary' => true],
+        ] as $domain) {
+            StoreDomain::query()->updateOrCreate(
+                ['hostname' => $domain['hostname']],
+                [
+                    'store_id' => $domain['store']->id,
+                    'type' => StoreDomainType::Storefront,
+                    'is_primary' => $domain['primary'],
+                    'tls_mode' => 'managed',
+                ],
+            );
+        }
     }
 }

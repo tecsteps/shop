@@ -16,16 +16,21 @@ class StoreSeeder extends Seeder
     {
         $organization = Organization::query()->where('billing_email', 'billing@acme.test')->firstOrFail();
 
-        Store::query()->updateOrCreate(
-            ['handle' => 'acme-fashion'],
-            [
-                'organization_id' => $organization->id,
-                'name' => 'Acme Fashion',
-                'status' => StoreStatus::Active,
-                'default_currency' => 'EUR',
-                'default_locale' => 'en',
-                'timezone' => 'Europe/Berlin',
-            ],
-        );
+        foreach ([
+            ['handle' => 'acme-fashion', 'name' => 'Acme Fashion', 'currency' => 'EUR'],
+            ['handle' => 'acme-electronics', 'name' => 'Acme Electronics', 'currency' => 'EUR'],
+        ] as $store) {
+            Store::query()->updateOrCreate(
+                ['handle' => $store['handle']],
+                [
+                    'organization_id' => $organization->id,
+                    'name' => $store['name'],
+                    'status' => StoreStatus::Active,
+                    'default_currency' => $store['currency'],
+                    'default_locale' => 'en',
+                    'timezone' => 'Europe/Berlin',
+                ],
+            );
+        }
     }
 }

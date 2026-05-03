@@ -45,6 +45,8 @@ class OrderSeeder extends Seeder
         $this->createPaidOrder($store, $jane, $variant);
         $this->createPendingBankTransferOrder($store, $john, $variant);
         $this->createFulfilledOrder($store, $jane, $variant);
+        $this->createAdditionalFashionOrders($store);
+        $this->createElectronicsOrders();
     }
 
     private function createPaidOrder(Store $store, Customer $customer, ProductVariant $variant): void
@@ -154,5 +156,108 @@ class OrderSeeder extends Seeder
             'currency' => $order->currency,
             'raw_json_encrypted' => ['provider' => 'mock', 'reference' => $reference],
         ]);
+    }
+
+    private function createAdditionalFashionOrders(Store $store): void
+    {
+        $customers = Customer::query()
+            ->where('store_id', $store->id)
+            ->orderBy('id')
+            ->get();
+        $variants = ProductVariant::query()
+            ->whereHas('product', fn ($query) => $query->where('store_id', $store->id)->where('status', 'active'))
+            ->with('product')
+            ->orderBy('id')
+            ->get();
+
+        $rows = [
+            ['#1004', 'customer@acme.test', PaymentMethod::CreditCard, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured, 2],
+            ['#1005', 'customer@acme.test', PaymentMethod::BankTransfer, OrderStatus::Pending, FinancialStatus::Pending, FulfillmentStatus::Unfulfilled, PaymentStatus::Pending, 1],
+            ['#1006', 'maria@example.com', PaymentMethod::Paypal, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured, 4],
+            ['#1007', 'sam@example.com', PaymentMethod::CreditCard, OrderStatus::Fulfilled, FinancialStatus::Paid, FulfillmentStatus::Fulfilled, PaymentStatus::Captured, 5],
+            ['#1008', 'li@example.com', PaymentMethod::CreditCard, OrderStatus::Refunded, FinancialStatus::Refunded, FulfillmentStatus::Unfulfilled, PaymentStatus::Refunded, 6],
+            ['#1009', 'fatima@example.com', PaymentMethod::Paypal, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured, 7],
+            ['#1010', 'noah@example.com', PaymentMethod::CreditCard, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured, 8],
+            ['#1011', 'emma@example.com', PaymentMethod::BankTransfer, OrderStatus::Pending, FinancialStatus::Pending, FulfillmentStatus::Unfulfilled, PaymentStatus::Pending, 9],
+            ['#1012', 'olivia@example.com', PaymentMethod::Paypal, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured, 10],
+            ['#1013', 'jane@example.com', PaymentMethod::CreditCard, OrderStatus::Paid, FinancialStatus::PartiallyRefunded, FulfillmentStatus::Partial, PaymentStatus::Captured, 11],
+            ['#1014', 'john@example.com', PaymentMethod::CreditCard, OrderStatus::Cancelled, FinancialStatus::Voided, FulfillmentStatus::Unfulfilled, PaymentStatus::Failed, 12],
+            ['#1015', 'customer@acme.test', PaymentMethod::Paypal, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured, 13],
+        ];
+
+        foreach ($rows as [$orderNumber, $email, $method, $status, $financialStatus, $fulfillmentStatus, $paymentStatus, $variantIndex]) {
+            $customer = $customers->firstWhere('email', $email) ?? $customers->first();
+            $variant = $variants->get($variantIndex) ?? $variants->first();
+
+            if ($customer instanceof Customer && $variant instanceof ProductVariant) {
+                $this->createSeedOrder($store, $customer, $variant, $orderNumber, $method, $status, $financialStatus, $fulfillmentStatus, $paymentStatus);
+            }
+        }
+    }
+
+    private function createElectronicsOrders(): void
+    {
+        $store = Store::query()->where('handle', 'acme-electronics')->firstOrFail();
+        $customers = Customer::query()->where('store_id', $store->id)->orderBy('id')->get();
+        $variants = ProductVariant::query()
+            ->whereHas('product', fn ($query) => $query->where('store_id', $store->id))
+            ->with('product')
+            ->orderBy('id')
+            ->get();
+
+        foreach ([
+            ['#5001', 0, 0, PaymentMethod::CreditCard, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Unfulfilled, PaymentStatus::Captured],
+            ['#5002', 1, 1, PaymentMethod::Paypal, OrderStatus::Paid, FinancialStatus::Paid, FulfillmentStatus::Fulfilled, PaymentStatus::Captured],
+            ['#5003', 0, 2, PaymentMethod::BankTransfer, OrderStatus::Pending, FinancialStatus::Pending, FulfillmentStatus::Unfulfilled, PaymentStatus::Pending],
+        ] as [$orderNumber, $customerIndex, $variantIndex, $method, $status, $financialStatus, $fulfillmentStatus, $paymentStatus]) {
+            $customer = $customers->get($customerIndex) ?? $customers->first();
+            $variant = $variants->get($variantIndex) ?? $variants->first();
+
+            if ($customer instanceof Customer && $variant instanceof ProductVariant) {
+                $this->createSeedOrder($store, $customer, $variant, $orderNumber, $method, $status, $financialStatus, $fulfillmentStatus, $paymentStatus);
+            }
+        }
+    }
+
+    private function createSeedOrder(
+        Store $store,
+        Customer $customer,
+        ProductVariant $variant,
+        string $orderNumber,
+        PaymentMethod $method,
+        OrderStatus $status,
+        FinancialStatus $financialStatus,
+        FulfillmentStatus $fulfillmentStatus,
+        PaymentStatus $paymentStatus,
+    ): void {
+        if (Order::withoutGlobalScopes()->where('store_id', $store->id)->where('order_number', $orderNumber)->exists()) {
+            return;
+        }
+
+        $order = $this->createBaseOrder($store, $customer, $variant, $orderNumber, $method, $status, $financialStatus, $fulfillmentStatus, now()->subDays(fake()->numberBetween(1, 20)));
+        $this->createPayment($order, $method, $paymentStatus, 'mock_seed_'.trim($orderNumber, '#'));
+
+        if ($financialStatus === FinancialStatus::Pending) {
+            $variant->inventoryItem()->withoutGlobalScopes()->increment('quantity_reserved');
+        } elseif ($financialStatus === FinancialStatus::Paid || $financialStatus === FinancialStatus::PartiallyRefunded || $financialStatus === FinancialStatus::Refunded) {
+            $variant->inventoryItem()->withoutGlobalScopes()->decrement('quantity_on_hand');
+        }
+
+        if ($fulfillmentStatus === FulfillmentStatus::Fulfilled) {
+            $line = $order->lines()->firstOrFail();
+            $fulfillment = $order->fulfillments()->create([
+                'status' => FulfillmentShipmentStatus::Delivered,
+                'tracking_company' => 'DHL',
+                'tracking_number' => 'DHL'.trim($orderNumber, '#'),
+                'tracking_url' => 'https://example.test/tracking/DHL'.trim($orderNumber, '#'),
+                'shipped_at' => now()->subDays(2),
+                'delivered_at' => now()->subDay(),
+            ]);
+
+            $fulfillment->lines()->create([
+                'order_line_id' => $line->id,
+                'quantity' => 1,
+            ]);
+        }
     }
 }
