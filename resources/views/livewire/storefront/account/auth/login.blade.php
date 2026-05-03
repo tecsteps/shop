@@ -2,6 +2,12 @@
     <h1 class="text-center text-3xl font-semibold tracking-normal">Log in</h1>
 
     <form wire:submit="login" class="mt-8 flex flex-col gap-4 rounded-lg border border-zinc-200 p-6 dark:border-zinc-800">
+        @if (session('status'))
+            <p class="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200">
+                {{ session('status') }}
+            </p>
+        @endif
+
         <div>
             <label for="customer-email" class="text-sm font-medium">Email</label>
             <input id="customer-email" wire:model="email" type="email" autocomplete="email" class="mt-2 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900">
@@ -9,7 +15,10 @@
         </div>
 
         <div>
-            <label for="customer-password" class="text-sm font-medium">Password</label>
+            <div class="flex items-center justify-between gap-4">
+                <label for="customer-password" class="text-sm font-medium">Password</label>
+                <a href="{{ route('storefront.account.password.request') }}" class="text-sm font-semibold text-zinc-950 underline underline-offset-4 dark:text-white">Forgot password?</a>
+            </div>
             <input id="customer-password" wire:model="password" type="password" autocomplete="current-password" class="mt-2 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900">
             @error('password') <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
         </div>

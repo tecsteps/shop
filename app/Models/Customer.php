@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
+use App\Notifications\CustomerResetPasswordNotification;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -40,7 +41,9 @@ class Customer extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'password',
         'password_hash',
+        'remember_token',
     ];
 
     /**
@@ -89,5 +92,10 @@ class Customer extends Authenticatable
     public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
+    {
+        $this->notify(new CustomerResetPasswordNotification($token));
     }
 }

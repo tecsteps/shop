@@ -1,8 +1,10 @@
 <?php
 
 use App\Livewire\Storefront\Account\Addresses\Index as AccountAddressesIndex;
+use App\Livewire\Storefront\Account\Auth\ForgotPassword as AccountForgotPassword;
 use App\Livewire\Storefront\Account\Auth\Login as AccountLogin;
 use App\Livewire\Storefront\Account\Auth\Register as AccountRegister;
+use App\Livewire\Storefront\Account\Auth\ResetPassword as AccountResetPassword;
 use App\Livewire\Storefront\Account\Dashboard as AccountDashboard;
 use App\Livewire\Storefront\Account\Orders\Index as AccountOrdersIndex;
 use App\Livewire\Storefront\Account\Orders\Show as AccountOrdersShow;
@@ -30,6 +32,8 @@ Route::middleware('storefront')->group(function () {
 
     Route::get('/account/login', AccountLogin::class)->name('storefront.account.login');
     Route::get('/account/register', AccountRegister::class)->name('storefront.account.register');
+    Route::get('/forgot-password', AccountForgotPassword::class)->name('storefront.account.password.request');
+    Route::get('/reset-password/{token}', AccountResetPassword::class)->name('storefront.account.password.reset');
 
     Route::middleware('customer.auth')->group(function (): void {
         Route::get('/account', AccountDashboard::class)->name('storefront.account.dashboard');

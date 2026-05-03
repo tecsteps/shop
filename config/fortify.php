@@ -90,6 +90,15 @@ return [
 
     'domain' => null,
 
+    'paths' => [
+        'password' => [
+            'request' => '/admin/forgot-password',
+            'reset' => '/admin/reset-password/{token}',
+            'email' => '/admin/forgot-password',
+            'update' => '/admin/reset-password',
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Fortify Routes Middleware

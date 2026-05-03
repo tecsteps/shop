@@ -14,7 +14,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
-- Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
+- Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, customer password reset links/emails, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
 - Phase 7 admin panel is implemented and verified: admin login, admin shell/store switcher, dashboard, product/order/customer/discount/inventory/settings/theme/page/navigation surfaces, analytics, apps, developer, and search-settings pages.
 - SQLite FTS5 search is implemented and verified: search settings/query tables, product FTS indexing, product observer sync, storefront search page, header search modal, search API, seeded synonyms/stop words, and admin reindex action.
 - Analytics ingestion and aggregation are implemented and verified: storefront batch event API, client event deduplication, seeded daily/event analytics, daily aggregation job, admin analytics summary API, and admin analytics dashboard.
@@ -79,6 +79,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Admin authentication uses a dedicated Livewire `/admin/login` screen on the existing `web` guard while leaving the starter-kit Fortify `/login` flow intact for existing auth/settings tests.
 - API token requirements mention Sanctum, but Sanctum is not installed and dependencies cannot be changed without approval. The developers/API slice uses a first-party hashed-token table and route middleware to satisfy store-scoped token generation, revocation, and ability checks without adding dependencies.
 - Storefront order-status API access uses an HMAC token derived from store, order id, and order number because confirmation/status URLs are public and should not require customer login.
+- Customer password resets use the `customers` password broker with a store-scoped token repository so `customer_password_reset_tokens` keeps the spec-required `(store_id, email)` key. Fortify user password reset paths are mapped to `/admin/forgot-password` and `/admin/reset-password/{token}` to avoid route conflicts with storefront customer reset URLs.
 
 ## Open Gaps
 
@@ -88,7 +89,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 4 has a functional cart page, accessible cart count, slide-out cart drawer, and guided checkout step flow. Discount-code entry remains on the cart/checkout flow; the drawer links customers into checkout rather than applying discounts inline.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
-- Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
 
 ## Verification Log
@@ -224,3 +224,12 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminPlatformApiTest.php` passed, 4 tests / 29 assertions.
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminPlatformApiTest.php tests/Feature/Api/AdminExportApiTest.php tests/Feature/Api/AdminThemeApiTest.php tests/Feature/Api/AdminContentSearchApiTest.php tests/Feature/Api/AdminSettingsApiTest.php tests/Feature/Api/AdminCollectionDiscountApiTest.php tests/Feature/Api/AdminProductApiTest.php tests/Feature/Api/AdminOrderApiTest.php tests/Feature/Analytics/AnalyticsTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php` passed, 34 tests / 329 assertions.
 - 2026-05-03: `php artisan test --compact` passed, 141 tests / 819 assertions.
+- 2026-05-03: `php artisan route:list --name=password` passed and showed Fortify admin reset routes plus storefront customer reset routes.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after customer password reset changes.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront/CustomerPasswordResetTest.php` passed, 4 tests / 20 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Auth/PasswordResetTest.php` passed, 4 tests / 8 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront/CustomerAccountTest.php` passed, 6 tests / 26 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront tests/Feature/Auth/PasswordResetTest.php` passed, 23 tests / 106 assertions.
+- 2026-05-03: `php artisan test --compact` passed, 145 tests / 839 assertions.
+- 2026-05-03: `npm run build` passed for the updated customer account reset UI assets.
+- 2026-05-03: Playwright smoke verified `/forgot-password`, customer reset-link success, `/reset-password/{token}` with email prefill, successful reset redirect to `/account/login`, post-reset customer login to `/account`, token deletion, and no current browser console warnings or errors at `http://shop.test`.
