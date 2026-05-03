@@ -247,6 +247,24 @@ class CartService
         );
     }
 
+    public function findActiveForSession(Store $store): ?Cart
+    {
+        return $this->cartFromSession($store);
+    }
+
+    public function forgetSessionCart(?Cart $cart = null): void
+    {
+        $cartId = session()->get(self::SESSION_KEY);
+
+        if (! $cartId) {
+            return;
+        }
+
+        if ($cart === null || (int) $cart->getKey() === (int) $cartId) {
+            session()->forget(self::SESSION_KEY);
+        }
+    }
+
     private function cartFromSession(Store $store): ?Cart
     {
         $cartId = session()->get(self::SESSION_KEY);
@@ -255,11 +273,19 @@ class CartService
             return null;
         }
 
-        return Cart::withoutGlobalScopes()
+        $cart = Cart::withoutGlobalScopes()
             ->where('store_id', $store->id)
             ->where('status', CartStatus::Active)
             ->whereKey($cartId)
             ->first();
+
+        if (! $cart instanceof Cart) {
+            session()->forget(self::SESSION_KEY);
+
+            return null;
+        }
+
+        return $cart;
     }
 
     private function lockCart(Cart $cart): Cart

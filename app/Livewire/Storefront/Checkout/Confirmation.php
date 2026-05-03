@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Checkout;
 
 use App\Models\Checkout;
+use App\Services\CartService;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -13,6 +14,16 @@ class Confirmation extends Component
     public function mount(int $checkoutId): void
     {
         $this->checkoutId = $checkoutId;
+
+        $checkout = Checkout::withoutGlobalScopes()
+            ->with('cart', 'order')
+            ->where('store_id', app('current_store')->id)
+            ->whereKey($this->checkoutId)
+            ->firstOrFail();
+
+        if ($checkout->order !== null) {
+            app(CartService::class)->forgetSessionCart($checkout->cart);
+        }
     }
 
     public function render(): View

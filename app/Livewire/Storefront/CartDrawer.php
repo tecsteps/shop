@@ -135,16 +135,11 @@ class CartDrawer extends Component
 
     private function cart(): ?Cart
     {
-        $cartId = session(CartService::SESSION_KEY);
-
-        if (! $cartId || ! app()->bound('current_store')) {
+        if (! app()->bound('current_store')) {
             return null;
         }
 
-        $cart = Cart::withoutGlobalScopes()
-            ->where('store_id', app('current_store')->id)
-            ->whereKey($cartId)
-            ->first();
+        $cart = app(CartService::class)->findActiveForSession(app('current_store'));
 
         return $cart instanceof Cart ? app(CartService::class)->loadForDisplay($cart) : null;
     }

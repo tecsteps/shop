@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CartStatus;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Models\Product;
 use App\Models\ShippingRate;
@@ -24,6 +25,7 @@ test('checkout advances through address shipping and payment steps', function ()
     $cart = app(CartService::class)->create($this->store);
     app(CartService::class)->addLine($cart, $variant->id, 1);
     $checkout = app(CheckoutService::class)->createFromCart($cart->refresh(), 'buyer@example.com');
+    session([CartService::SESSION_KEY => $cart->id]);
     $rate = ShippingRate::query()
         ->whereHas('zone', fn ($query) => $query->where('store_id', $this->store->id))
         ->firstOrFail();
@@ -49,5 +51,12 @@ test('checkout advances through address shipping and payment steps', function ()
         ->assertSet('activeStep', 'payment')
         ->assertSee('Card number')
         ->call('showStep', 'address')
-        ->assertSet('activeStep', 'address');
+        ->assertSet('activeStep', 'address')
+        ->call('showStep', 'payment')
+        ->call('pay')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('storefront.checkout.confirmation', $checkout));
+
+    expect($cart->refresh()->status)->toBe(CartStatus::Converted)
+        ->and(session(CartService::SESSION_KEY))->toBeNull();
 });

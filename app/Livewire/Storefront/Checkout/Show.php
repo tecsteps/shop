@@ -9,6 +9,7 @@ use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\PaymentFailedException;
 use App\Exceptions\UnavailableShippingRateException;
 use App\Models\Checkout;
+use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\OrderService;
 use App\Services\ShippingCalculator;
@@ -168,6 +169,8 @@ class Show extends Component
         $checkout = $this->checkout();
 
         if ($checkout->order !== null) {
+            app(CartService::class)->forgetSessionCart($checkout->cart);
+
             return $this->redirect(route('storefront.checkout.confirmation', $checkout), navigate: true);
         }
 
@@ -185,6 +188,7 @@ class Show extends Component
                 'card_cvc' => $this->cardCvc,
                 'card_holder' => $this->cardHolder,
             ]);
+            app(CartService::class)->forgetSessionCart($checkout->cart);
 
             return $this->redirect(route('storefront.checkout.confirmation', $checkout), navigate: true);
         } catch (PaymentFailedException $exception) {

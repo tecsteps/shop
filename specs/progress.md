@@ -24,6 +24,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Storefront product stock states and the slide-out cart drawer are implemented and verified: sold-out `deny` variants disable add-to-cart, backorder `continue` variants add successfully, the cart drawer opens from add-to-cart events, quantity mutations reuse the versioned cart service, discount codes apply/remove inline, and the mobile storefront header fits small viewports.
 - Admin order fulfillment/refund workflow now supports selected line quantities, line-derived refund amounts, selected restocking, fulfillment creation, shipped/delivered shipment transitions, tracking links, shipment events, and verified desktop/mobile order-detail behavior.
 - Storefront checkout now uses a verified address, shipping, and payment step flow with locked future steps, editable completed steps, compact step summaries, and responsive order summary behavior.
+- Completed checkout now clears/invalidates the active session cart, and active cart surfaces ignore stale converted carts so the confirmation page and cart page do not show already-ordered lines.
 - Admin Product REST API endpoints are implemented and verified: token-scoped list/show/create/update/archive routes, product JSON resources, store-scoped validation, variant inventory mutation, collection assignment, and ability/store isolation tests.
 - Admin Order REST API endpoints are implemented and verified: token-scoped list/show routes, shipped fulfillment creation, captured-payment refunds, nested order JSON resources, validation, and ability/store isolation tests.
 - Product lifecycle order-reference guards are now verified against real `order_lines`: draft reversion/deletion is blocked for referenced products, unreferenced draft products hard-delete, and orphan variants with order references are archived.
@@ -61,9 +62,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 8. **Search, analytics, apps, webhooks** - Implemented and verified
    - SQLite FTS5 search is implemented and verified.
    - Analytics ingestion/aggregation, API token support, app installs, webhook dispatch/signing/delivery are implemented and verified.
-9. **Polish and completion audit** - Pending
-   - Run full Pest suite, style formatting, fresh migration/seeding, Playwright customer/admin flows, responsive and browser log review.
-   - Update this file with final evidence and close all gaps.
+9. **Polish and completion audit** - Implemented and verified
+   - Full Pest suite, style formatting, frontend build, fresh migration/seeding, Playwright storefront/customer/admin flows, responsive checks, and browser log review passed.
+   - Final evidence is recorded below; no self-contained implementation gaps remain.
 
 ## Decisions
 
@@ -83,9 +84,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Storefront order-status API access uses an HMAC token derived from store, order id, and order number because confirmation/status URLs are public and should not require customer login.
 - Customer password resets use the `customers` password broker with a store-scoped token repository so `customer_password_reset_tokens` keeps the spec-required `(store_id, email)` key. Fortify user password reset paths are mapped to `/admin/forgot-password` and `/admin/reset-password/{token}` to avoid route conflicts with storefront customer reset URLs.
 
-## Open Gaps
+## Intentional Boundaries
 
-- Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
+- Discounts, shipping, and tax are implemented for the specified local/manual flows; external provider/carrier integrations remain stubs by design for the self-contained benchmark.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
 
 ## Verification Log
@@ -261,3 +262,10 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `npm run build` passed for the updated admin order-detail UI.
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed before and after the admin order-detail browser smoke, leaving the local database in the seeded demo state.
 - 2026-05-03: Playwright smoke verified `/admin/orders/1` selected line fulfillment quantity, tracking fields, computed selected-line refund amount, selected restock refund processing, and no current Playwright console warnings or errors. Boost browser logs only contained old 13:59 entries.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront/StorefrontCartLivewireTest.php tests/Feature/Storefront/CheckoutStepFlowTest.php` passed, 8 tests / 58 assertions, covering converted session-cart invalidation and checkout session-cart clearing.
+- 2026-05-03: `php artisan test --compact tests/Feature/Cart tests/Feature/Checkout tests/Feature/Storefront/StorefrontCartLivewireTest.php tests/Feature/Storefront/CheckoutStepFlowTest.php tests/Feature/Api/StorefrontCheckoutPaymentApiTest.php` passed, 17 tests / 113 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after converted session-cart handling changes.
+- 2026-05-03: `php artisan test --compact` passed, 165 tests / 987 assertions.
+- 2026-05-03: `npm run build` passed for the final completion audit.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed before final browser audit and again after browser mutation checks, leaving the local database in the seeded demo state.
+- 2026-05-03: Playwright MCP final audit verified product add-to-cart, cart checkout, address/shipping/payment, paid confirmation, post-checkout empty cart, customer dashboard/order history/order detail/address book, admin dashboard/products/order detail/theme editor/analytics, and mobile storefront/admin order pages with no body-level horizontal overflow. Current Playwright console check reported no warnings or errors; Boost browser logs only contained old 13:59 entries.

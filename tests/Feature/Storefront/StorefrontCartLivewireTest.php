@@ -1,11 +1,13 @@
 <?php
 
+use App\Enums\CartStatus;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\CartDrawer;
 use App\Livewire\Storefront\Products\Show as ProductShow;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Store;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
 
@@ -141,4 +143,29 @@ test('cart page applies discounts before checkout starts', function (): void {
 
     expect($checkout->discount_code)->toBe('WELCOME10')
         ->and($checkout->totals_json['discount'])->toBe(500);
+});
+
+test('converted session carts are ignored by active cart surfaces', function (): void {
+    $product = Product::query()->where('handle', 'linen-shirt')->firstOrFail();
+
+    Livewire::test(ProductShow::class, ['handle' => $product->handle])
+        ->set('quantity', 1)
+        ->call('addToCart')
+        ->assertHasNoErrors();
+
+    $cart = Cart::withoutGlobalScopes()->findOrFail(session(CartService::SESSION_KEY));
+    $cart->forceFill(['status' => CartStatus::Converted])->save();
+
+    Livewire::test(CartShow::class)
+        ->assertSee('Your cart is empty.');
+
+    expect(session(CartService::SESSION_KEY))->toBeNull();
+
+    session([CartService::SESSION_KEY => $cart->id]);
+
+    Livewire::test(CartDrawer::class)
+        ->dispatch('open-cart')
+        ->assertSee('Your cart is empty');
+
+    expect(session(CartService::SESSION_KEY))->toBeNull();
 });
