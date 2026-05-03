@@ -15,6 +15,43 @@ class ApiToken extends Model
     /**
      * @var list<string>
      */
+    public const StoreAbilities = [
+        'read-products',
+        'write-products',
+        'read-orders',
+        'write-orders',
+        'read-customers',
+        'write-customers',
+        'read-collections',
+        'write-collections',
+        'read-discounts',
+        'write-discounts',
+        'read-analytics',
+        'read-settings',
+        'write-settings',
+        'read-themes',
+        'write-themes',
+        'read-content',
+        'write-content',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    public const PlatformAbilities = [
+        'manage-platform',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    public const DefaultAbilities = [
+        'read-analytics',
+    ];
+
+    /**
+     * @var list<string>
+     */
     protected $fillable = [
         'store_id',
         'user_id',
@@ -56,6 +93,16 @@ class ApiToken extends Model
     {
         return in_array('*', $this->abilities_json ?? [], true)
             || in_array($ability, $this->abilities_json ?? [], true);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function availableAbilities(bool $includePlatform = false): array
+    {
+        return array_values($includePlatform
+            ? [...self::StoreAbilities, ...self::PlatformAbilities]
+            : self::StoreAbilities);
     }
 
     public function isRevoked(): bool

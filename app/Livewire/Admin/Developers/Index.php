@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Developers;
 
+use App\Enums\StoreUserRole;
 use App\Livewire\Admin\Concerns\UsesAdminStore;
 use App\Models\ApiToken;
 use App\Models\WebhookSubscription;
@@ -27,17 +28,12 @@ class Index extends Component
     /**
      * @var list<string>
      */
-    public array $tokenAbilities = ['read-analytics'];
+    public array $tokenAbilities = ApiToken::DefaultAbilities;
 
     /**
      * @var list<string>
      */
-    public array $availableAbilities = [
-        'read-products',
-        'read-orders',
-        'read-customers',
-        'read-analytics',
-    ];
+    public array $availableAbilities = ApiToken::StoreAbilities;
 
     /**
      * @var list<string>
@@ -52,6 +48,13 @@ class Index extends Component
         'product.deleted',
         'checkout.completed',
     ];
+
+    public function mount(): void
+    {
+        $this->availableAbilities = ApiToken::availableAbilities(
+            $this->currentUser()->roleForStore($this->currentStore()) === StoreUserRole::Owner
+        );
+    }
 
     public function generateToken(ApiTokenService $tokens): void
     {
@@ -70,7 +73,7 @@ class Index extends Component
 
         $this->generatedToken = $result['plain_text_token'];
         $this->reset('newTokenName');
-        $this->tokenAbilities = ['read-analytics'];
+        $this->tokenAbilities = ApiToken::DefaultAbilities;
         $this->notify('API token generated.');
     }
 

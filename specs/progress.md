@@ -18,7 +18,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 7 admin panel is implemented and verified: admin login, admin shell/store switcher, dashboard, product/order/customer/discount/inventory/settings/theme/page/navigation surfaces, analytics, apps, developer, and search-settings pages.
 - SQLite FTS5 search is implemented and verified: search settings/query tables, product FTS indexing, product observer sync, storefront search page, header search modal, search API, seeded synonyms/stop words, and admin reindex action.
 - Analytics ingestion and aggregation are implemented and verified: storefront batch event API, client event deduplication, seeded daily/event analytics, daily aggregation job, admin analytics summary API, and admin analytics dashboard.
-- Apps, API tokens, and webhooks are implemented and verified: apps/installations/OAuth metadata, developer API token generation/revocation, store-scoped token middleware, webhook subscriptions, signed delivery jobs, retry/failure tracking, and app admin screens.
+- Apps, API tokens, and webhooks are implemented and verified: apps/installations/OAuth metadata, developer API token generation/revocation, spec-backed token ability selection, store-scoped token middleware, webhook subscriptions, signed delivery jobs, retry/failure tracking, and app admin screens.
 - Demo seed data now covers the browser-plan fixture contract while preserving `shop.test`: two stores/domains, admin aliases, 20 fashion products, 5 electronics products, sold-out/backorder/draft product edges, five discount codes, 10+2 customers, and 15+3 orders.
 - Storefront product stock states and the slide-out cart drawer are implemented and verified: sold-out `deny` variants disable add-to-cart, backorder `continue` variants add successfully, the cart drawer opens from cart events, quantity mutations reuse the versioned cart service, and the mobile storefront header fits small viewports.
 - Admin order fulfillment workflow now supports fulfillment creation, shipped/delivered shipment transitions, tracking links, shipment events, and verified desktop/mobile order-detail behavior.
@@ -86,7 +86,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
-- Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
+- Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
 - Admin REST API product catalog, order, collection, discount, shipping, tax, page content, and search maintenance endpoints are implemented; themes, exports, and platform management endpoints still need REST coverage.
 
 ## Verification Log
@@ -203,3 +203,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminContentSearchApiTest.php` passed, 3 tests / 47 assertions.
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminProductApiTest.php tests/Feature/Api/AdminOrderApiTest.php tests/Feature/Api/AdminCollectionDiscountApiTest.php tests/Feature/Api/AdminSettingsApiTest.php tests/Feature/Api/AdminContentSearchApiTest.php tests/Feature/Search/SearchTest.php` passed, 24 tests / 230 assertions.
 - 2026-05-03: `php artisan test --compact` passed, 130 tests / 728 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after expanding developer API token abilities.
+- 2026-05-03: `php artisan test --compact tests/Feature/Developers/DeveloperIntegrationsTest.php` passed, 3 tests / 34 assertions.
+- 2026-05-03: `php artisan test --compact` passed, 131 tests / 744 assertions.
