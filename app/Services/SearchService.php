@@ -163,6 +163,32 @@ class SearchService
     }
 
     /**
+     * @return array{store_id: int, index_status: string, last_reindex_at: string|null, last_reindex_duration_seconds: int|null, documents_count: int, pending_updates: int}
+     */
+    public function indexStatus(Store $store): array
+    {
+        $settings = SearchSettings::query()
+            ->where('store_id', $store->id)
+            ->first();
+        $documentsCount = (int) DB::table('products_fts')
+            ->where('store_id', $store->id)
+            ->count();
+        $productsCount = Product::withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->count();
+        $pendingUpdates = max(0, $productsCount - $documentsCount);
+
+        return [
+            'store_id' => $store->id,
+            'index_status' => $pendingUpdates === 0 ? 'ready' : 'pending',
+            'last_reindex_at' => $settings?->updated_at?->toISOString(),
+            'last_reindex_duration_seconds' => $settings?->updated_at === null ? null : 0,
+            'documents_count' => $documentsCount,
+            'pending_updates' => $pendingUpdates,
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function facets(Store $store, string $query = ''): array

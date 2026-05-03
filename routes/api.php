@@ -4,7 +4,9 @@ use App\Http\Controllers\Api\Admin\AnalyticsSummaryController;
 use App\Http\Controllers\Api\Admin\CollectionController as AdminCollectionController;
 use App\Http\Controllers\Api\Admin\DiscountController as AdminDiscountController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Admin\SearchMaintenanceController as AdminSearchMaintenanceController;
 use App\Http\Controllers\Api\Admin\ShippingController as AdminShippingController;
 use App\Http\Controllers\Api\Admin\TaxSettingsController as AdminTaxSettingsController;
 use App\Http\Controllers\Api\Storefront\AnalyticsController;
@@ -128,5 +130,25 @@ Route::prefix('admin/v1')
             Route::put('/tax/settings', [AdminTaxSettingsController::class, 'update'])
                 ->middleware('api.token:write-settings')
                 ->name('api.admin.tax.settings.update');
+
+            Route::get('/pages', [AdminPageController::class, 'index'])
+                ->middleware('api.token:read-content')
+                ->name('api.admin.pages.index');
+            Route::post('/pages', [AdminPageController::class, 'store'])
+                ->middleware('api.token:write-content')
+                ->name('api.admin.pages.store');
+            Route::put('/pages/{page}', [AdminPageController::class, 'update'])
+                ->middleware('api.token:write-content')
+                ->name('api.admin.pages.update');
+            Route::delete('/pages/{page}', [AdminPageController::class, 'destroy'])
+                ->middleware('api.token:write-content')
+                ->name('api.admin.pages.destroy');
+
+            Route::post('/search/reindex', [AdminSearchMaintenanceController::class, 'reindex'])
+                ->middleware('api.token:write-settings')
+                ->name('api.admin.search.reindex');
+            Route::get('/search/status', [AdminSearchMaintenanceController::class, 'status'])
+                ->middleware('api.token:read-settings')
+                ->name('api.admin.search.status');
         });
     });
