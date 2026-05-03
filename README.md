@@ -1,7 +1,105 @@
-Your mission is to implement an entire shop system based on the specifications im specs/*. You must use sub-agents for role play (e.g. frontend-, backend-deveoper, QA Analyst, QA Engineer, etc). You must do in one go without stopping. You must test everything via Pest (unit, and functional tests). You must also additional simulate user behaviour using the Playwright MPC and confirm that all acceptance criterias are met. If you find bugs, you must fix them. The result is a perfect shop system. All requirements are perfectly implemented. All acceptance criterias are met, tested and confirmed by you.
+/goal Build the complete shop system from specs/* until all acceptance criteria are satisfied and verified.
 
-Continuously keep track of the progress in specs/progress.md Commit your progress after every relevant iteration with a meaningful message.
+You are operating in persistent goal mode. Continue working until the goal is achieved, or a real external blocker prevents progress.
 
-When implementation is fully done, then make a full review meeting with Playwright in Chrome and showcase all features (customer- and admin-side) to me. In case bugs appear, you must fix them all and restart the review meeting. Shop is running at http://shop.test/.
+---
 
-Don't re-use any existing implementation in another branch. Build it from scratch.
+GOAL
+Deliver a fully working shop system based on specs/* with verified functionality.
+
+---
+
+CONTEXT
+- All requirements are in specs/*
+- Progress and decisions must be tracked in specs/progress.md
+- System runs at http://shop.test/
+
+---
+
+CONSTRAINTS
+- Follow existing architecture and conventions
+- Implement in vertical slices (no isolated scaffolding)
+- Do not skip verification steps
+- Do not stop at partial implementations
+- Do not ask for next steps while acceptance criteria remain unmet
+
+---
+
+DONE WHEN
+- All specs/* requirements are implemented
+- All acceptance criteria are satisfied
+- Pest tests pass
+- Playwright MCP verifies customer + admin flows
+- No critical bugs remain after browser review
+- specs/progress.md reflects full implementation and verification
+
+---
+
+PROCESS (MANDATORY LOOP)
+
+0. PLANNING
+- Read specs/*
+- Create a phased execution plan in specs/progress.md
+- Identify dependencies and risks
+- Only proceed once plan is coherent
+
+1. IMPLEMENT
+- Build next vertical slice
+
+2. VERIFY
+- Run tests (Pest)
+- Run browser flows (Playwright MCP)
+
+3. EVALUATE
+- Compare results against DONE WHEN criteria
+- Identify gaps and failures
+
+4. FIX
+- Resolve issues before continuing
+
+5. TRACK
+- Update specs/progress.md (status, decisions, open gaps)
+
+6. COMMIT
+- Commit meaningful progress
+
+7. REPEAT until DONE WHEN is satisfied
+
+---
+
+FAILURE HANDLING
+
+If stuck or looping:
+- Re-evaluate plan
+- Simplify approach
+- Try alternative implementation strategy
+
+If context becomes too large:
+- Compress state into specs/progress.md
+- Continue from compressed state
+
+---
+
+AGENT STRATEGY
+
+Use sub-agents where useful:
+- backend
+- frontend
+- QA analyst
+- QA engineer
+
+Sub-agents may analyze and propose.
+You own integration, correctness, and final quality.
+
+---
+
+PRIORITY ORDER
+
+1. Passing verification (tests + browser)
+2. Functional correctness
+3. Completeness vs specs
+4. Code quality
+
+---
+
+Never stop while DONE WHEN is not satisfied.

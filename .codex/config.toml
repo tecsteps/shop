@@ -2,3 +2,6 @@
 command = "php"
 args = ["artisan", "boost:mcp"]
 cwd = "/Users/fabianwesner/Herd/shop"
+
+[features]
+goals = true
