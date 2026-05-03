@@ -37,7 +37,11 @@ class ApiTokenService
             ->where('token_hash', $this->hash($plainTextToken))
             ->first();
 
-        if (! $token instanceof ApiToken || $token->isRevoked() || ! $token->hasAbility($ability)) {
+        if (! $token instanceof ApiToken || $token->isRevoked()) {
+            return null;
+        }
+
+        if ($ability !== 'any' && ! $token->hasAbility($ability)) {
             return null;
         }
 

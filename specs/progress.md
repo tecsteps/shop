@@ -30,6 +30,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Admin Content and Search Maintenance REST API endpoints are implemented and verified: token-scoped page CRUD with sanitized HTML/generated handles, store-scoped validation, search index status reporting, synchronous FTS reindex behind the spec's accepted-job response, and ability/store isolation tests.
 - Admin Theme REST API endpoints are implemented and verified: ZIP theme archive import with `theme.json` manifest validation, persisted theme files, settings updates, publish transitions, cache invalidation, and token/store isolation tests.
 - Admin Export REST API endpoints are implemented and verified: queued-style order export creation, sync-capable CSV generation, persisted export records/files, status/download metadata, filter validation, and token/store isolation tests.
+- Admin Platform REST API endpoints are implemented and verified: manage-platform organization/store creation, owner-scoped platform token authorization, store invites, current token membership metadata, validation, duplicate membership conflicts, and store isolation tests.
 
 ## Execution Plan
 
@@ -89,7 +90,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
-- Admin REST API product catalog, order, collection, discount, shipping, tax, theme, page content, search maintenance, and order export endpoints are implemented; platform management endpoints still need REST coverage.
 
 ## Verification Log
 
@@ -219,3 +219,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminExportApiTest.php` passed, 3 tests / 22 assertions.
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminExportApiTest.php tests/Feature/Api/AdminOrderApiTest.php tests/Feature/Api/AdminThemeApiTest.php tests/Feature/Api/AdminContentSearchApiTest.php tests/Feature/Api/AdminSettingsApiTest.php tests/Feature/Api/AdminCollectionDiscountApiTest.php tests/Feature/Api/AdminProductApiTest.php tests/Feature/Orders/OrderServiceTest.php` passed, 31 tests / 291 assertions.
 - 2026-05-03: `php artisan test --compact` passed, 137 tests / 790 assertions.
+- 2026-05-03: `php artisan route:list --path=api/admin/v1 --except-vendor` passed and showed 39 admin API routes, including platform organizations/stores, store invites, and current membership.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Admin Platform API changes.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminPlatformApiTest.php` passed, 4 tests / 29 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminPlatformApiTest.php tests/Feature/Api/AdminExportApiTest.php tests/Feature/Api/AdminThemeApiTest.php tests/Feature/Api/AdminContentSearchApiTest.php tests/Feature/Api/AdminSettingsApiTest.php tests/Feature/Api/AdminCollectionDiscountApiTest.php tests/Feature/Api/AdminProductApiTest.php tests/Feature/Api/AdminOrderApiTest.php tests/Feature/Analytics/AnalyticsTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php` passed, 34 tests / 329 assertions.
+- 2026-05-03: `php artisan test --compact` passed, 141 tests / 819 assertions.

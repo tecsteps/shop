@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\DiscountController as AdminDiscountController
 use App\Http\Controllers\Api\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
+use App\Http\Controllers\Api\Admin\PlatformController as AdminPlatformController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\SearchMaintenanceController as AdminSearchMaintenanceController;
 use App\Http\Controllers\Api\Admin\ShippingController as AdminShippingController;
@@ -53,7 +54,21 @@ Route::prefix('storefront/v1')
 Route::prefix('admin/v1')
     ->middleware('throttle:api.admin')
     ->group(function (): void {
+        Route::post('/platform/organizations', [AdminPlatformController::class, 'storeOrganization'])
+            ->middleware('api.token:manage-platform')
+            ->name('api.admin.platform.organizations.store');
+        Route::post('/platform/stores', [AdminPlatformController::class, 'storeStore'])
+            ->middleware('api.token:manage-platform')
+            ->name('api.admin.platform.stores.store');
+
         Route::prefix('stores/{store}')->group(function (): void {
+            Route::post('/invites', [AdminPlatformController::class, 'invite'])
+                ->middleware('api.token:manage-platform')
+                ->name('api.admin.stores.invites.store');
+            Route::get('/me', [AdminPlatformController::class, 'me'])
+                ->middleware('api.token:any')
+                ->name('api.admin.stores.me');
+
             Route::get('/analytics/summary', [AnalyticsSummaryController::class, 'show'])
                 ->middleware('api.token:read-analytics')
                 ->name('api.admin.analytics.summary');
