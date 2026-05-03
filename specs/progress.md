@@ -11,6 +11,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Repository started from the Laravel Livewire starter kit with Fortify authentication.
 - Phase 1 foundation is implemented and committed: configuration defaults, core tenancy schema, models, factories, seeders, tenant middleware, customer guard provider registration, store role helper, and password_hash compatibility.
 - Phase 2 catalog backend is implemented and committed: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, inventory service, handle generator, and product/collection policies.
+- Product media processing now generates resized image variants (`thumbnail`, `small`, `medium`, `large`) plus WebP sidecars when supported, records original metadata, fails invalid/missing originals, retries up to three times, and cleans up original/generated files when media is deleted.
 - Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
@@ -84,7 +85,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 
 ## Open Gaps
 
-- Phase 2 still needs full media resizing variants and the richer multi-option variant builder. Admin product create/edit currently covers core product fields, default variant price/SKU, and stock.
+- Phase 2 still needs the richer admin multi-option variant builder. Admin product create/edit currently covers core product fields, default variant price/SKU, and stock; backend variant matrix generation and media resizing are implemented and verified.
 - Phase 3 still needs richer error templates and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel; search modal autocomplete landed with the search slice.
 - Phase 5 backend bank-transfer confirmation, refunds, fulfillment creation, and shipped/delivered shipment transitions now have admin order-detail actions. More granular partial-fulfillment and line-level refund UI can still be expanded during polish.
 - Phase 4 has a functional cart page, accessible cart count, slide-out cart drawer, and guided checkout step flow. Discount-code entry remains on the cart/checkout flow; the drawer links customers into checkout rather than applying discounts inline.
@@ -237,3 +238,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after product lifecycle guard regression tests.
 - 2026-05-03: `php artisan test --compact tests/Feature/Products` passed, 12 tests / 35 assertions.
 - 2026-05-03: `php artisan test --compact` passed, 148 tests / 844 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Products/MediaProcessingTest.php` passed, 4 tests / 59 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after media processing changes.
+- 2026-05-03: `php artisan test --compact tests/Feature/Products` passed, 16 tests / 94 assertions.
+- 2026-05-03: `php artisan test --compact` passed, 152 tests / 903 assertions.
