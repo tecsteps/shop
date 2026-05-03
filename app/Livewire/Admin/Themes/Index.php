@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Themes;
 use App\Enums\ThemeStatus;
 use App\Livewire\Admin\Concerns\UsesAdminStore;
 use App\Models\Theme;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -19,6 +20,8 @@ class Index extends Component
             'status' => ThemeStatus::Published,
             'published_at' => now(),
         ])->save();
+
+        Cache::forget("theme_settings:{$this->currentStore()->id}");
 
         $this->notify('Theme published.');
     }

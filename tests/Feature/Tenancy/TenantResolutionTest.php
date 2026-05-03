@@ -44,7 +44,9 @@ test('storefront routes reject suspended stores', function () {
     StoreDomain::factory()->for($store)->create(['hostname' => 'suspended.test']);
 
     $this->get('http://suspended.test/tenant-probe')
-        ->assertStatus(503);
+        ->assertStatus(503)
+        ->assertSee("We'll be back soon", false)
+        ->assertSee($store->name);
 });
 
 test('admin routes resolve the current store from the authenticated session', function () {

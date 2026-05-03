@@ -6,6 +6,7 @@ use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Orders\Show as OrderShow;
 use App\Livewire\Admin\Products\Form as ProductForm;
 use App\Livewire\Admin\Settings\Index as SettingsIndex;
+use App\Livewire\Admin\Themes\Editor as ThemeEditor;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
@@ -72,7 +73,7 @@ test('admin shell pages render with seeded store data', function (): void {
         '/admin/settings/shipping' => 'Shipping',
         '/admin/settings/taxes' => 'Manual rate',
         '/admin/themes' => 'Default',
-        "/admin/themes/{$theme->id}/editor" => 'Theme settings JSON',
+        "/admin/themes/{$theme->id}/editor" => 'Storefront theme editor',
         '/admin/pages' => 'Pages',
         '/admin/pages/create' => 'Create page',
         '/admin/navigation' => 'Main menu',
@@ -150,6 +151,36 @@ test('admin can create a product with multi option variants', function (): void 
         ->and($whiteMedium->sku)->toBe('HD-M-WHT')
         ->and($whiteMedium->price_amount)->toBe(6200)
         ->and($whiteMedium->inventoryItem->quantity_on_hand)->toBe(7);
+});
+
+test('admin can configure storefront home section order and visibility', function (): void {
+    actAsAdmin($this);
+
+    $theme = Theme::query()->where('status', 'published')->firstOrFail();
+
+    Livewire::test(ThemeEditor::class, ['theme' => $theme])
+        ->call('moveSectionUp', 'featured_products')
+        ->set('homeSections.2.enabled', false)
+        ->call('selectSection', 'hero')
+        ->set('settings.home.hero_heading', 'Editorial Launch')
+        ->call('selectSection', 'rich_text')
+        ->set('settings.home.rich_text_heading', 'Material notes')
+        ->set('settings.home.rich_text_html', '<p>Breathable cotton<script>alert(1)</script></p>')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $settings = $theme->fresh()->settings->settings_json;
+
+    expect(data_get($settings, 'home.sections.1.key'))->toBe('featured_products')
+        ->and(data_get($settings, 'home.sections.2.key'))->toBe('featured_collections')
+        ->and(data_get($settings, 'home.sections.2.enabled'))->toBeFalse()
+        ->and(data_get($settings, 'home.hero_heading'))->toBe('Editorial Launch')
+        ->and(data_get($settings, 'home.rich_text_html'))->toBe('<p>Breathable cotton</p>');
+
+    $this->get('http://shop.test/')
+        ->assertOk()
+        ->assertSeeInOrder(['Editorial Launch', 'Featured Products', 'Material notes'])
+        ->assertDontSee('Featured Collections');
 });
 
 test('admin can confirm a pending bank transfer order', function (): void {

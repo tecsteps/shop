@@ -39,3 +39,11 @@ test('collection product page static page cart and search render', function () {
         ->assertOk()
         ->assertSee('Linen Shirt');
 });
+
+test('storefront not found page includes search and home actions', function (): void {
+    $this->get('http://shop.test/products/missing-product')
+        ->assertNotFound()
+        ->assertSee('Page not found')
+        ->assertSee('Search products')
+        ->assertSee('Return home');
+});

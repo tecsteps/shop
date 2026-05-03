@@ -10,6 +10,7 @@ use App\Http\Resources\Admin\ThemeResource;
 use App\Models\Store;
 use App\Models\Theme;
 use App\Services\ThemeArchiveImporter;
+use App\Services\ThemeSettingsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 
@@ -49,13 +50,13 @@ class ThemeController extends Controller
         return new ThemeResource($existingTheme->refresh()->load('settings')->loadCount('files'));
     }
 
-    public function updateSettings(UpdateThemeSettingsRequest $request, Store $store, int $theme): ThemeResource
+    public function updateSettings(UpdateThemeSettingsRequest $request, Store $store, int $theme, ThemeSettingsService $themeSettings): ThemeResource
     {
         $existingTheme = $this->findTheme($store, $theme);
 
         $existingTheme->settings()->updateOrCreate(
             ['theme_id' => $existingTheme->id],
-            ['settings_json' => $request->validated('settings_json')],
+            ['settings_json' => $themeSettings->prepareForStorage($store, $request->validated('settings_json'))],
         );
 
         Cache::forget("theme_settings:{$store->id}");

@@ -51,6 +51,8 @@ class ResolveStore
         }
 
         if ($store->status === StoreStatus::Suspended) {
+            app()->instance('current_store', $store);
+
             abort(503);
         }
 

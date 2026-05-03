@@ -12,7 +12,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 1 foundation is implemented and committed: configuration defaults, core tenancy schema, models, factories, seeders, tenant middleware, customer guard provider registration, store role helper, and password_hash compatibility.
 - Phase 2 catalog backend is implemented and committed: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, admin multi-option variant builder, inventory service, handle generator, and product/collection policies.
 - Product media processing now generates resized image variants (`thumbnail`, `small`, `medium`, `large`) plus WebP sidecars when supported, records original metadata, fails invalid/missing originals, retries up to three times, and cleans up original/generated files when media is deleted.
-- Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
+- Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, configurable storefront homepage section ordering/visibility, navigation service, storefront layout, product cards, price rendering, richer 404/503 error templates, and Livewire storefront pages.
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, persisted cart discount codes with line allocations, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
 - Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, customer password reset links/emails, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
@@ -85,7 +85,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 
 ## Open Gaps
 
-- Phase 3 still needs richer error templates and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel; search modal autocomplete landed with the search slice.
 - Phase 5 backend bank-transfer confirmation, refunds, fulfillment creation, and shipped/delivered shipment transitions now have admin order-detail actions. More granular partial-fulfillment and line-level refund UI can still be expanded during polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
@@ -252,3 +251,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact` passed, 158 tests / 945 assertions.
 - 2026-05-03: `npm run build` passed for the updated admin product variant-builder UI.
 - 2026-05-03: Playwright smoke verified `/admin/products/create` option/value rows, generated 2x2 variant table, per-variant SKU/price/stock edits, save redirect to `/admin/products/{id}/edit`, and no current Playwright console warnings or errors.
+- 2026-05-03: `php artisan test --compact tests/Feature/Admin/AdminPanelTest.php tests/Feature/Storefront/ThemeNavigationTest.php tests/Feature/Storefront/StorefrontRenderTest.php tests/Feature/Tenancy/TenantResolutionTest.php tests/Feature/Api/AdminThemeApiTest.php` passed, 23 tests / 155 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after storefront section ordering, theme editor, and error template changes.
+- 2026-05-03: `php artisan test --compact` passed, 161 tests / 964 assertions.
+- 2026-05-03: `npm run build` passed for the updated storefront sections, error templates, and admin theme editor UI.
+- 2026-05-03: Playwright smoke verified `http://shop.test/` homepage section rendering, `/products/missing-product` 404 search/home actions, suspended-store 503 identity/copy after temporary store status restoration, and `/admin/themes/1/editor` typed section editor with preview and rich-text settings. Current admin editor console check reported no warnings or errors; Boost browser logs only contained old 13:59 entries.
