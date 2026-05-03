@@ -19,6 +19,8 @@ class Show extends Component
 {
     public int $checkoutId;
 
+    public string $activeStep = 'address';
+
     /**
      * @var array<string, string|null>
      */
@@ -62,6 +64,19 @@ class Show extends Component
         $this->selectedShippingRateId = $checkout->shipping_method_id;
         $this->paymentMethod = $checkout->payment_method?->value ?? PaymentMethod::CreditCard->value;
         $this->discountCode = $checkout->discount_code ?? '';
+        $this->activeStep = $this->initialStep($checkout);
+    }
+
+    public function showStep(string $step): void
+    {
+        $checkout = $this->checkout();
+        $steps = $this->steps($checkout);
+
+        if (! isset($steps[$step]) || ! $steps[$step]['enabled']) {
+            return;
+        }
+
+        $this->activeStep = $step;
     }
 
     public function saveAddress(): void
@@ -80,6 +95,7 @@ class Show extends Component
                 'shipping_address' => $this->shippingAddress,
                 'use_shipping_as_billing' => true,
             ]);
+            $this->activeStep = 'shipping';
         } catch (CheckoutStateException $exception) {
             $this->addError('checkout', $exception->getMessage());
         }
@@ -93,6 +109,7 @@ class Show extends Component
 
         try {
             app(CheckoutService::class)->setShippingMethod($this->checkout(), (int) $this->selectedShippingRateId);
+            $this->activeStep = 'payment';
         } catch (CheckoutStateException|UnavailableShippingRateException $exception) {
             $this->addError('checkout', $exception->getMessage());
         }
@@ -189,6 +206,7 @@ class Show extends Component
         return view('livewire.storefront.checkout.show', [
             'checkout' => $checkout,
             'shippingMethods' => $shippingMethods,
+            'steps' => $this->steps($checkout),
             'totals' => $checkout->totals_json ?? [],
         ])->layout('storefront.layouts.app', [
             'title' => 'Checkout',
@@ -202,5 +220,51 @@ class Show extends Component
             ->where('store_id', app('current_store')->id)
             ->whereKey($this->checkoutId)
             ->firstOrFail();
+    }
+
+    private function initialStep(Checkout $checkout): string
+    {
+        return match ($checkout->status) {
+            CheckoutStatus::Started => 'address',
+            CheckoutStatus::Addressed => 'shipping',
+            default => 'payment',
+        };
+    }
+
+    /**
+     * @return array<string, array{number: int, title: string, enabled: bool, completed: bool, summary: ?string}>
+     */
+    private function steps(Checkout $checkout): array
+    {
+        $address = $checkout->shipping_address_json;
+        $hasAddress = is_array($address) && filled($address['address1'] ?? null);
+        $hasShipping = in_array($checkout->status, [CheckoutStatus::ShippingSelected, CheckoutStatus::PaymentSelected, CheckoutStatus::Completed], true);
+        $hasPayment = in_array($checkout->status, [CheckoutStatus::PaymentSelected, CheckoutStatus::Completed], true);
+
+        return [
+            'address' => [
+                'number' => 1,
+                'title' => 'Contact and address',
+                'enabled' => true,
+                'completed' => $hasAddress,
+                'summary' => $hasAddress
+                    ? trim(($address['first_name'] ?? '').' '.($address['last_name'] ?? '')).' · '.($address['address1'] ?? '').', '.($address['postal_code'] ?? '').' '.($address['city'] ?? '')
+                    : $checkout->email,
+            ],
+            'shipping' => [
+                'number' => 2,
+                'title' => 'Shipping method',
+                'enabled' => $hasAddress,
+                'completed' => $hasShipping,
+                'summary' => $checkout->shippingRate?->name,
+            ],
+            'payment' => [
+                'number' => 3,
+                'title' => 'Payment method',
+                'enabled' => $hasShipping,
+                'completed' => $hasPayment,
+                'summary' => $checkout->payment_method?->value ? str($checkout->payment_method->value)->replace('_', ' ')->title()->toString() : null,
+            ],
+        ];
     }
 }

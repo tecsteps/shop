@@ -22,6 +22,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Demo seed data now covers the browser-plan fixture contract while preserving `shop.test`: two stores/domains, admin aliases, 20 fashion products, 5 electronics products, sold-out/backorder/draft product edges, five discount codes, 10+2 customers, and 15+3 orders.
 - Storefront product stock states and the slide-out cart drawer are implemented and verified: sold-out `deny` variants disable add-to-cart, backorder `continue` variants add successfully, the cart drawer opens from cart events, quantity mutations reuse the versioned cart service, and the mobile storefront header fits small viewports.
 - Admin order fulfillment workflow now supports fulfillment creation, shipped/delivered shipment transitions, tracking links, shipment events, and verified desktop/mobile order-detail behavior.
+- Storefront checkout now uses a verified address, shipping, and payment step flow with locked future steps, editable completed steps, compact step summaries, and responsive order summary behavior.
 
 ## Execution Plan
 
@@ -76,7 +77,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 2 still needs full media resizing variants and the richer multi-option variant builder. Admin product create/edit currently covers core product fields, default variant price/SKU, and stock.
 - Phase 3 still needs richer error templates and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel; search modal autocomplete landed with the search slice.
 - Phase 5 backend bank-transfer confirmation, refunds, fulfillment creation, and shipped/delivered shipment transitions now have admin order-detail actions. More granular partial-fulfillment and line-level refund UI can still be expanded during polish.
-- Phase 4 has a functional cart page, accessible cart count, and slide-out cart drawer. Discount-code entry remains on the cart/checkout flow; the drawer links customers into checkout rather than applying discounts inline.
+- Phase 4 has a functional cart page, accessible cart count, slide-out cart drawer, and guided checkout step flow. Discount-code entry remains on the cart/checkout flow; the drawer links customers into checkout rather than applying discounts inline.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
@@ -165,3 +166,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact` passed, 111 tests / 517 assertions.
 - 2026-05-03: `npm run build` passed for the updated admin order detail UI assets.
 - 2026-05-03: Playwright smoke verified admin order #1001 fulfillment creation, mark as shipped, mark as delivered, tracking display, and mobile order-detail layout at `http://shop.test/admin/orders/1`; latest browser console checks reported no warnings or errors.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront/CheckoutStepFlowTest.php tests/Feature/Storefront/StorefrontCartLivewireTest.php tests/Feature/Checkout/CheckoutServiceTest.php tests/Feature/Api/StorefrontCheckoutPaymentApiTest.php` passed, 10 tests / 67 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after checkout step-flow changes.
+- 2026-05-03: `php artisan test --compact` passed, 112 tests / 528 assertions.
+- 2026-05-03: `npm run build` passed for the updated checkout step-flow UI assets.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after the checkout step-flow full-suite verification.
+- 2026-05-03: Playwright smoke verified desktop checkout address, shipping, payment, confirmation, and mobile checkout layout at `http://shop.test`; latest browser console checks reported no warnings or errors.
