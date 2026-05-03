@@ -3,14 +3,20 @@
 namespace App\Livewire\Storefront\Products;
 
 use App\Enums\InventoryPolicy;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductOptionValue;
 use App\Models\ProductVariant;
+use App\Models\Store;
+use App\Services\CartService;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Show extends Component
 {
     public string $handle;
+
+    public int $storeId;
 
     /**
      * @var array<string, string>
@@ -22,6 +28,7 @@ class Show extends Component
     public function mount(string $handle): void
     {
         $this->handle = $handle;
+        $this->storeId = $this->store()->getKey();
 
         $variant = $this->product()->variants->firstWhere('is_default', true)
             ?? $this->product()->variants->first();
@@ -58,15 +65,46 @@ class Show extends Component
 
     public function addToCart(): void
     {
-        if (! $this->canAddToCart()) {
+        $store = $this->store();
+        $variant = $this->selectedVariant();
+
+        if (! $variant instanceof ProductVariant || ! $this->canAddToCart()) {
             return;
         }
 
+        $customer = Auth::guard('customer')->user();
+        $customer = $customer instanceof Customer ? $customer : null;
+
+        app(CartService::class)->addLine(
+            app(CartService::class)->getOrCreateForSession($store, $customer),
+            $variant->getKey(),
+            $this->quantity,
+        );
+
+        $this->dispatch('cart-updated');
         $this->dispatch('toast', type: 'success', message: __('Added to cart'));
+    }
+
+    public function store(): Store
+    {
+        if (isset($this->storeId)) {
+            $store = Store::query()->findOrFail($this->storeId);
+            app()->instance('current_store', $store);
+
+            return $store;
+        }
+
+        $store = app('current_store');
+
+        abort_unless($store instanceof Store, 404);
+
+        return $store;
     }
 
     public function product(): Product
     {
+        $this->store();
+
         return Product::query()
             ->with(['options.values', 'variants.inventoryItem', 'variants.optionValues.option', 'collections'])
             ->where('handle', $this->handle)

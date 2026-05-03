@@ -79,6 +79,44 @@ class CartService
         return $cart;
     }
 
+    public function currentForSession(Store $store, ?Customer $customer = null): ?Cart
+    {
+        if ($customer instanceof Customer) {
+            $customerCart = Cart::withoutGlobalScopes()
+                ->where('store_id', $store->getKey())
+                ->where('customer_id', $customer->getKey())
+                ->where('status', CartStatus::Active)
+                ->latest('id')
+                ->first();
+
+            if ($customerCart instanceof Cart) {
+                return $customerCart;
+            }
+        }
+
+        $sessionCartId = session('cart_id');
+
+        if (! $sessionCartId) {
+            return null;
+        }
+
+        return Cart::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->where('status', CartStatus::Active)
+            ->where(function ($query) use ($customer): void {
+                if ($customer instanceof Customer) {
+                    $query
+                        ->whereNull('customer_id')
+                        ->orWhere('customer_id', $customer->getKey());
+
+                    return;
+                }
+
+                $query->whereNull('customer_id');
+            })
+            ->find($sessionCartId);
+    }
+
     public function addLine(Cart $cart, int $variantId, int $quantity, ?int $expectedVersion = null): CartLine
     {
         $this->assertPositiveQuantity($quantity);

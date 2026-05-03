@@ -45,10 +45,14 @@
                 <div class="flex items-center gap-2">
                     <flux:button :href="route('search.index')" wire:navigate variant="subtle" icon="magnifying-glass" aria-label="Search" />
                     <flux:button :href="route('account.dashboard')" wire:navigate variant="subtle" icon="user" aria-label="Account" />
-                    <flux:button href="#" variant="subtle" icon="shopping-bag" aria-label="Cart" />
+                    <flux:modal.trigger name="cart-drawer">
+                        <flux:button variant="subtle" icon="shopping-bag" aria-label="Cart" />
+                    </flux:modal.trigger>
                 </div>
             </div>
         </header>
+
+        <livewire:storefront.cart-drawer />
 
         <main id="main-content" class="min-h-screen">
             {{ $slot }}

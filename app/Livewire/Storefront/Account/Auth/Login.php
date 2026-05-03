@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Storefront\Account\Auth;
 
+use App\Models\Customer;
 use App\Models\Store;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
@@ -62,6 +64,12 @@ class Login extends Component
 
         if (request()->hasSession()) {
             request()->session()->regenerate();
+        }
+
+        $customer = Auth::guard('customer')->user();
+
+        if ($customer instanceof Customer && session()->has('cart_id')) {
+            app(CartService::class)->getOrCreateForSession(Store::query()->findOrFail($this->storeId), $customer);
         }
 
         $this->redirectRoute('account.dashboard', navigate: true);

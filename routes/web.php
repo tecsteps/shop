@@ -8,6 +8,8 @@ use App\Livewire\Admin\Products\Form as AdminProductForm;
 use App\Livewire\Admin\Products\Index as AdminProductsIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Cart\Show as StorefrontCartShow;
+use App\Livewire\Storefront\Checkout\Show as StorefrontCheckoutShow;
 use App\Livewire\Storefront\Collections\Index as StorefrontCollectionsIndex;
 use App\Livewire\Storefront\Collections\Show as StorefrontCollectionShow;
 use App\Livewire\Storefront\Home as StorefrontHome;
@@ -22,6 +24,8 @@ Route::middleware(['storefront'])->group(function (): void {
     Route::livewire('collections', StorefrontCollectionsIndex::class)->name('collections.index');
     Route::livewire('collections/{handle}', StorefrontCollectionShow::class)->name('collections.show');
     Route::livewire('products/{handle}', StorefrontProductShow::class)->name('products.show');
+    Route::livewire('cart', StorefrontCartShow::class)->name('cart.show');
+    Route::livewire('checkout', StorefrontCheckoutShow::class)->name('checkout.show');
     Route::livewire('search', StorefrontSearchIndex::class)->name('search.index');
     Route::livewire('pages/{handle}', StorefrontPageShow::class)->name('pages.show');
 });
