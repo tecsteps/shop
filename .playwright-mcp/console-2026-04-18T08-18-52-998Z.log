@@ -1,0 +1,3 @@
+[     168ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://shop.test/storage/products/tshirt-front.jpg:0
+[     282ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/products/organic-cotton-t-shirt:49
+[     378ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/favicon.ico:0

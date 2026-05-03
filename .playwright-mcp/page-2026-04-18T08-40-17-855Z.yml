@@ -1,0 +1,148 @@
+- generic [ref=e111]:
+  - link "Skip to content" [ref=e112] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e113]: Free shipping on orders over 50
+  - banner [ref=e114]:
+    - generic [ref=e115]:
+      - link "Acme Fashion" [ref=e116] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e117]:
+        - link "Collections" [ref=e118] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e119] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Account" [ref=e120] [cursor=pointer]:
+          - /url: http://shop.test/account
+        - link "Cart" [ref=e121] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e122]:
+    - generic [ref=e123]:
+      - navigation "Breadcrumb" [ref=e124]:
+        - list [ref=e125]:
+          - listitem [ref=e126]:
+            - link "Home" [ref=e127] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e128]
+          - listitem [ref=e130]:
+            - link "Cart" [ref=e131] [cursor=pointer]:
+              - /url: http://shop.test/cart
+            - img [ref=e132]
+          - listitem [ref=e134]:
+            - generic [ref=e135]: Checkout
+      - generic [ref=e136]: Checkout
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - generic [ref=e140]: 1. Contact & shipping
+            - generic [ref=e141]:
+              - generic [ref=e142]:
+                - generic [ref=e143]: Email
+                - textbox "Email" [ref=e145]: buyer@example.com
+              - generic [ref=e146]:
+                - generic [ref=e147]: First name
+                - textbox "First name" [ref=e149]: Billy
+              - generic [ref=e150]:
+                - generic [ref=e151]: Last name
+                - textbox "Last name" [ref=e153]: Buyer
+              - generic [ref=e154]:
+                - generic [ref=e155]: Address
+                - textbox "Address" [ref=e157]: 1 Shop Street
+              - generic [ref=e158]:
+                - generic [ref=e159]: Apt / Suite
+                - textbox "Apt / Suite" [ref=e161]
+              - generic [ref=e162]:
+                - generic [ref=e163]: City
+                - textbox "City" [ref=e165]: Berlin
+              - generic [ref=e166]:
+                - generic [ref=e167]: State / Province
+                - textbox "State / Province" [ref=e169]: BE
+              - generic [ref=e170]:
+                - generic [ref=e171]: Postal code
+                - textbox "Postal code" [ref=e173]: "10115"
+              - generic [ref=e174]:
+                - generic [ref=e175]: Country code
+                - textbox "Country code" [ref=e177]: US
+            - button "Continue" [active] [ref=e178]:
+              - img [ref=e180]
+              - generic [ref=e183]: Continue
+          - generic [ref=e184]:
+            - generic [ref=e185]: 2. Shipping method
+            - generic [ref=e186]:
+              - img [ref=e188]
+              - generic [ref=e192]: No shipping methods available yet. Continue past step 1 first.
+          - generic [ref=e193]:
+            - generic [ref=e194]: 3. Payment
+            - generic [ref=e195]:
+              - generic [ref=e196]:
+                - radio "Credit Card" [checked] [ref=e197]
+                - text: Credit Card
+              - generic [ref=e198]:
+                - radio "PayPal" [ref=e199]
+                - text: PayPal
+              - generic [ref=e200]:
+                - radio "Bank Transfer" [ref=e201]
+                - text: Bank Transfer
+            - button "Place order - 25.00 EUR" [ref=e202]:
+              - img [ref=e204]
+              - generic [ref=e207]: Place order - 25.00 EUR
+        - complementary [ref=e208]:
+          - generic [ref=e209]:
+            - generic [ref=e210]: Order summary
+            - generic [ref=e211]:
+              - generic [ref=e212]:
+                - term [ref=e213]: Subtotal
+                - definition [ref=e214]: 25.00 EUR
+              - generic [ref=e215]:
+                - term [ref=e216]: Shipping
+                - definition [ref=e217]: 0.00 EUR
+              - generic [ref=e218]:
+                - term [ref=e219]: Total
+                - definition [ref=e220]: 25.00 EUR
+  - contentinfo [ref=e221]:
+    - generic [ref=e222]: © 2026 Acme Fashion. All rights reserved.
+  - generic:
+    - generic:
+      - dialog "Shopping cart":
+        - banner:
+          - generic: Your Cart (1)
+          - button "Close cart":
+            - generic:
+              - img
+            - img
+        - generic:
+          - list:
+            - listitem:
+              - generic:
+                - paragraph: Organic Cotton T-Shirt
+                - paragraph: TSH-S-BLA
+                - generic:
+                  - button "Decrease quantity":
+                    - generic:
+                      - img
+                    - generic: "-"
+                  - generic: "1"
+                  - button "Increase quantity":
+                    - generic:
+                      - img
+                    - generic: +
+              - generic:
+                - paragraph: 25.00 EUR
+                - button "Remove Organic Cotton T-Shirt from cart":
+                  - generic:
+                    - img
+                  - img
+        - contentinfo:
+          - generic:
+            - generic:
+              - term: Subtotal
+              - definition: 25.00 EUR
+            - generic:
+              - term: Estimated total
+              - definition: 25.00 EUR
+          - paragraph: Shipping and taxes calculated at checkout
+          - link "Checkout":
+            - /url: http://shop.test/checkout
+          - button "Continue shopping":
+            - generic:
+              - img
+            - generic: Continue shopping

@@ -1,0 +1,90 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]: Acme Fashion
+    - navigation [ref=e5]:
+      - link "Dashboard" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test/admin
+      - link "Orders" [ref=e7] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+      - link "Products" [ref=e8] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+      - link "Collections" [ref=e9] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+      - link "Customers" [ref=e10] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+      - link "Discounts" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+      - link "Analytics" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+      - generic [ref=e13]: Content
+      - link "Pages" [ref=e14] [cursor=pointer]:
+        - /url: http://shop.test/admin/content/pages
+      - link "Navigation" [ref=e15] [cursor=pointer]:
+        - /url: http://shop.test/admin/content/navigation
+      - link "Themes" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/content/themes
+      - generic [ref=e17]: System
+      - link "Settings" [ref=e18] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+      - link "Search" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/search/settings
+      - link "Apps" [ref=e20] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+      - link "Developers" [ref=e21] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+  - generic [ref=e22]:
+    - banner [ref=e23]:
+      - generic [ref=e25]: Admin
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: owner@acme.test
+        - button "Sign out" [ref=e29]:
+          - img [ref=e31]
+          - generic [ref=e34]: Sign out
+    - main [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Products
+          - link "New product" [ref=e39] [cursor=pointer]:
+            - /url: http://shop.test/admin/products/new
+        - generic [ref=e40]:
+          - textbox "Search products..." [ref=e42]
+          - combobox [ref=e44]:
+            - option "All statuses" [disabled]
+            - option "All statuses" [selected]
+            - option "Draft"
+            - option "Active"
+            - option "Archived"
+        - table [ref=e46]:
+          - rowgroup [ref=e47]:
+            - row "Title Status Vendor Type Actions" [ref=e48]:
+              - columnheader [ref=e49]
+              - columnheader "Title" [ref=e50]
+              - columnheader "Status" [ref=e51]
+              - columnheader "Vendor" [ref=e52]
+              - columnheader "Type" [ref=e53]
+              - columnheader "Actions" [ref=e54]
+          - rowgroup [ref=e55]:
+            - row "Classic Pullover Hoodie active Acme Apparel Apparel Edit" [ref=e56]:
+              - cell [ref=e57]:
+                - checkbox [ref=e58]
+              - cell "Classic Pullover Hoodie" [ref=e60]:
+                - link "Classic Pullover Hoodie" [ref=e61] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/2
+              - cell "active" [ref=e62]
+              - cell "Acme Apparel" [ref=e63]
+              - cell "Apparel" [ref=e64]
+              - cell "Edit" [ref=e65]:
+                - link "Edit" [ref=e66] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/2
+            - row "Organic Cotton T-Shirt active Acme Apparel Apparel Edit" [ref=e67]:
+              - cell [ref=e68]:
+                - checkbox [ref=e69]
+              - cell "Organic Cotton T-Shirt" [ref=e71]:
+                - link "Organic Cotton T-Shirt" [ref=e72] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/1
+              - cell "active" [ref=e73]
+              - cell "Acme Apparel" [ref=e74]
+              - cell "Apparel" [ref=e75]
+              - cell "Edit" [ref=e76]:
+                - link "Edit" [ref=e77] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/1
