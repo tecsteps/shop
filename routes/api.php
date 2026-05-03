@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnalyticsSummaryController;
+use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
@@ -43,7 +44,25 @@ Route::prefix('storefront/v1')
 Route::prefix('admin/v1')
     ->middleware('throttle:api.admin')
     ->group(function (): void {
-        Route::get('/stores/{store}/analytics/summary', [AnalyticsSummaryController::class, 'show'])
-            ->middleware('api.token:read-analytics')
-            ->name('api.admin.analytics.summary');
+        Route::prefix('stores/{store}')->group(function (): void {
+            Route::get('/analytics/summary', [AnalyticsSummaryController::class, 'show'])
+                ->middleware('api.token:read-analytics')
+                ->name('api.admin.analytics.summary');
+
+            Route::get('/products', [AdminProductController::class, 'index'])
+                ->middleware('api.token:read-products')
+                ->name('api.admin.products.index');
+            Route::post('/products', [AdminProductController::class, 'store'])
+                ->middleware('api.token:write-products')
+                ->name('api.admin.products.store');
+            Route::get('/products/{product}', [AdminProductController::class, 'show'])
+                ->middleware('api.token:read-products')
+                ->name('api.admin.products.show');
+            Route::put('/products/{product}', [AdminProductController::class, 'update'])
+                ->middleware('api.token:write-products')
+                ->name('api.admin.products.update');
+            Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])
+                ->middleware('api.token:write-products')
+                ->name('api.admin.products.destroy');
+        });
     });

@@ -23,6 +23,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Storefront product stock states and the slide-out cart drawer are implemented and verified: sold-out `deny` variants disable add-to-cart, backorder `continue` variants add successfully, the cart drawer opens from cart events, quantity mutations reuse the versioned cart service, and the mobile storefront header fits small viewports.
 - Admin order fulfillment workflow now supports fulfillment creation, shipped/delivered shipment transitions, tracking links, shipment events, and verified desktop/mobile order-detail behavior.
 - Storefront checkout now uses a verified address, shipping, and payment step flow with locked future steps, editable completed steps, compact step summaries, and responsive order summary behavior.
+- Admin Product REST API endpoints are implemented and verified: token-scoped list/show/create/update/archive routes, product JSON resources, store-scoped validation, variant inventory mutation, collection assignment, and ability/store isolation tests.
 
 ## Execution Plan
 
@@ -82,6 +83,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
+- Admin REST API product catalog endpoints are implemented; collections, orders, discounts, settings, themes, pages, search maintenance, exports, and platform management endpoints still need REST coverage.
 
 ## Verification Log
 
@@ -172,3 +174,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `npm run build` passed for the updated checkout step-flow UI assets.
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after the checkout step-flow full-suite verification.
 - 2026-05-03: Playwright smoke verified desktop checkout address, shipping, payment, confirmation, and mobile checkout layout at `http://shop.test`; latest browser console checks reported no warnings or errors.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminProductApiTest.php` passed, 4 tests / 43 assertions.
+- 2026-05-03: `php artisan route:list --path=api/admin/v1/stores --except-vendor` passed and showed the admin analytics summary plus product index/store/show/update/destroy routes.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminProductApiTest.php tests/Feature/Analytics/AnalyticsTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php tests/Feature/Products/ProductServiceTest.php` passed, 13 tests / 96 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Admin Product API changes.
+- 2026-05-03: `php artisan test --compact` passed, 116 tests / 571 assertions.
