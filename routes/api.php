@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\SearchMaintenanceController as AdminSearchMaintenanceController;
 use App\Http\Controllers\Api\Admin\ShippingController as AdminShippingController;
 use App\Http\Controllers\Api\Admin\TaxSettingsController as AdminTaxSettingsController;
+use App\Http\Controllers\Api\Admin\ThemeController as AdminThemeController;
 use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
@@ -130,6 +131,16 @@ Route::prefix('admin/v1')
             Route::put('/tax/settings', [AdminTaxSettingsController::class, 'update'])
                 ->middleware('api.token:write-settings')
                 ->name('api.admin.tax.settings.update');
+
+            Route::post('/themes', [AdminThemeController::class, 'store'])
+                ->middleware('api.token:write-themes')
+                ->name('api.admin.themes.store');
+            Route::post('/themes/{theme}/publish', [AdminThemeController::class, 'publish'])
+                ->middleware('api.token:write-themes')
+                ->name('api.admin.themes.publish');
+            Route::put('/themes/{theme}/settings', [AdminThemeController::class, 'updateSettings'])
+                ->middleware('api.token:write-themes')
+                ->name('api.admin.themes.settings.update');
 
             Route::get('/pages', [AdminPageController::class, 'index'])
                 ->middleware('api.token:read-content')
