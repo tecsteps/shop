@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnalyticsSummaryController;
+use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
@@ -64,5 +65,18 @@ Route::prefix('admin/v1')
             Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])
                 ->middleware('api.token:write-products')
                 ->name('api.admin.products.destroy');
+
+            Route::get('/orders', [AdminOrderController::class, 'index'])
+                ->middleware('api.token:read-orders')
+                ->name('api.admin.orders.index');
+            Route::get('/orders/{order}', [AdminOrderController::class, 'show'])
+                ->middleware('api.token:read-orders')
+                ->name('api.admin.orders.show');
+            Route::post('/orders/{order}/fulfillments', [AdminOrderController::class, 'storeFulfillment'])
+                ->middleware('api.token:write-orders')
+                ->name('api.admin.orders.fulfillments.store');
+            Route::post('/orders/{order}/refunds', [AdminOrderController::class, 'storeRefund'])
+                ->middleware('api.token:write-orders')
+                ->name('api.admin.orders.refunds.store');
         });
     });
