@@ -25,6 +25,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Storefront checkout now uses a verified address, shipping, and payment step flow with locked future steps, editable completed steps, compact step summaries, and responsive order summary behavior.
 - Admin Product REST API endpoints are implemented and verified: token-scoped list/show/create/update/archive routes, product JSON resources, store-scoped validation, variant inventory mutation, collection assignment, and ability/store isolation tests.
 - Admin Order REST API endpoints are implemented and verified: token-scoped list/show routes, shipped fulfillment creation, captured-payment refunds, nested order JSON resources, validation, and ability/store isolation tests.
+- Admin Collection and Discount REST API endpoints are implemented and verified: token-scoped collection CRUD with product assignment, discount CRUD with scoped code validation, JSON resources, and cross-store isolation.
 
 ## Execution Plan
 
@@ -84,7 +85,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
-- Admin REST API product catalog and order endpoints are implemented; collections, discounts, settings, themes, pages, search maintenance, exports, and platform management endpoints still need REST coverage.
+- Admin REST API product catalog, order, collection, and discount endpoints are implemented; settings, themes, pages, search maintenance, exports, and platform management endpoints still need REST coverage.
 
 ## Verification Log
 
@@ -185,3 +186,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminOrderApiTest.php tests/Feature/Api/AdminProductApiTest.php tests/Feature/Orders/OrderServiceTest.php tests/Feature/Admin/AdminPanelTest.php tests/Feature/Analytics/AnalyticsTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php` passed, 28 tests / 253 assertions.
 - 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Admin Order API changes.
 - 2026-05-03: `php artisan test --compact` passed, 121 tests / 620 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminCollectionDiscountApiTest.php` passed, 3 tests / 35 assertions.
+- 2026-05-03: `php artisan route:list --path=api/admin/v1/stores --except-vendor` passed and showed the admin analytics summary, product, order, collection, and discount REST routes.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/AdminCollectionDiscountApiTest.php tests/Feature/Api/AdminProductApiTest.php tests/Feature/Api/AdminOrderApiTest.php tests/Feature/Admin/AdminPanelTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php` passed, 21 tests / 223 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Admin Collection and Discount API changes.
+- 2026-05-03: `php artisan test --compact` passed, 124 tests / 655 assertions.
