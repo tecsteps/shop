@@ -159,6 +159,20 @@ class OrderService
         return $prefix.($lastNumber + 1);
     }
 
+    public function accessToken(Order $order): string
+    {
+        return hash_hmac(
+            'sha256',
+            implode('|', [$order->store_id, $order->id, $order->order_number]),
+            (string) config('app.key'),
+        );
+    }
+
+    public function validAccessToken(Order $order, string $token): bool
+    {
+        return hash_equals($this->accessToken($order), $token);
+    }
+
     public function confirmBankTransfer(Order $order): Order
     {
         return DB::transaction(function () use ($order): Order {

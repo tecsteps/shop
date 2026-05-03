@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Pages;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\PageStatus;
 use App\Livewire\Admin\Concerns\UsesAdminStore;
 use App\Models\Page;
@@ -38,7 +39,7 @@ class Form extends Component
         $this->status = $this->page->status->value;
     }
 
-    public function save(HandleGenerator $handles): mixed
+    public function save(HandleGenerator $handles, SanitizeHtml $sanitizeHtml): mixed
     {
         $validated = $this->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -51,7 +52,7 @@ class Form extends Component
             'store_id' => $this->currentStore()->id,
             'title' => $validated['title'],
             'handle' => $validated['handle'] ?: $handles->generate($validated['title'], (new Page)->getTable(), $this->currentStore()->id, $this->page?->id),
-            'body_html' => $validated['bodyHtml'],
+            'body_html' => $sanitizeHtml($validated['bodyHtml']),
             'status' => $validated['status'],
             'published_at' => $validated['status'] === PageStatus::Published->value ? now() : null,
         ];

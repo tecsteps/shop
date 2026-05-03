@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Collections;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\CollectionStatus;
 use App\Livewire\Admin\Concerns\UsesAdminStore;
 use App\Models\Collection as ProductCollection;
@@ -38,7 +39,7 @@ class Form extends Component
         $this->status = $this->collection->status->value;
     }
 
-    public function save(HandleGenerator $handles): mixed
+    public function save(HandleGenerator $handles, SanitizeHtml $sanitizeHtml): mixed
     {
         $validated = $this->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -51,7 +52,7 @@ class Form extends Component
             'store_id' => $this->currentStore()->id,
             'title' => $validated['title'],
             'handle' => $validated['handle'] ?: $handles->generate($validated['title'], (new ProductCollection)->getTable(), $this->currentStore()->id, $this->collection?->id),
-            'description_html' => $validated['descriptionHtml'],
+            'description_html' => $sanitizeHtml($validated['descriptionHtml']),
             'status' => $validated['status'],
         ];
 

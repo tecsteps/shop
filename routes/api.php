@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AnalyticsSummaryController;
 use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
+use App\Http\Controllers\Api\Storefront\OrderController;
 use App\Http\Controllers\Api\Storefront\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,8 @@ Route::prefix('storefront/v1')
         Route::post('/analytics/events', [AnalyticsController::class, 'store'])
             ->middleware('throttle:analytics')
             ->name('api.storefront.analytics.events');
+
+        Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('api.storefront.orders.show');
 
         Route::post('/carts', [CartController::class, 'store'])->name('api.storefront.carts.store');
         Route::get('/carts/{cartId}', [CartController::class, 'show'])->name('api.storefront.carts.show');

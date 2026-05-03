@@ -66,6 +66,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - `orders.checkout_id` is intentionally added beyond the table list so `OrderService::createFromCheckout()` can enforce idempotency with a durable unique key.
 - Admin authentication uses a dedicated Livewire `/admin/login` screen on the existing `web` guard while leaving the starter-kit Fortify `/login` flow intact for existing auth/settings tests.
 - API token requirements mention Sanctum, but Sanctum is not installed and dependencies cannot be changed without approval. The developers/API slice uses a first-party hashed-token table and route middleware to satisfy store-scoped token generation, revocation, and ability checks without adding dependencies.
+- Storefront order-status API access uses an HMAC token derived from store, order id, and order number because confirmation/status URLs are public and should not require customer login.
 
 ## Open Gaps
 
@@ -140,3 +141,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `npm run build` passed for the updated analytics/apps/developer admin UI assets.
 - 2026-05-03: Playwright smoke completed admin analytics date-range interaction, developer API token generation, webhook creation, apps list, and app detail at `http://shop.test/admin`; latest browser console checks reported no warnings or errors.
 - 2026-05-03: HTTP smoke through Herd returned `202` for `POST /api/storefront/v1/analytics/events` and `200` for token-protected `GET /api/admin/v1/stores/1/analytics/summary`.
+- 2026-05-03: `php artisan test --compact tests/Feature/Security/HtmlSanitizerTest.php tests/Feature/Api/StorefrontOrderStatusApiTest.php` passed, 5 tests / 24 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed and fixed the new security test import list.
+- 2026-05-03: `php artisan route:list --path=api/storefront/v1/orders --except-vendor` passed and showed the signed storefront order-status route.
+- 2026-05-03: `php artisan test --compact` passed, 102 tests / 452 assertions.
+- 2026-05-03: `npm run build` passed after adding styled error pages.

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\ProductStatus;
 use App\Enums\VariantStatus;
 use App\Events\ProductStatusChanged;
@@ -19,6 +20,7 @@ class ProductService
     public function __construct(
         private readonly HandleGenerator $handleGenerator,
         private readonly VariantMatrixService $variantMatrixService,
+        private readonly SanitizeHtml $sanitizeHtml,
     ) {}
 
     /**
@@ -27,6 +29,10 @@ class ProductService
     public function create(Store $store, array $data): Product
     {
         return DB::transaction(function () use ($store, $data): Product {
+            if (array_key_exists('description_html', $data)) {
+                $data['description_html'] = ($this->sanitizeHtml)($data['description_html']);
+            }
+
             $product = Product::query()->create([
                 ...Arr::only($data, [
                     'title',
@@ -67,6 +73,10 @@ class ProductService
     public function update(Product $product, array $data): Product
     {
         return DB::transaction(function () use ($product, $data): Product {
+            if (array_key_exists('description_html', $data)) {
+                $data['description_html'] = ($this->sanitizeHtml)($data['description_html']);
+            }
+
             $payload = Arr::only($data, [
                 'title',
                 'status',
