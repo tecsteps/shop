@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->foreignId('cart_id')->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->enum('status', ['started', 'addressed', 'shipping_selected', 'payment_selected', 'completed', 'expired'])->default('started');
             $table->enum('payment_method', ['credit_card', 'paypal', 'bank_transfer'])->nullable();
             $table->string('email')->nullable();

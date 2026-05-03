@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             ShippingZoneSeeder::class,
             TaxSettingsSeeder::class,
             DiscountSeeder::class,
+            CustomerSeeder::class,
+            OrderSeeder::class,
             ThemeSeeder::class,
             PageSeeder::class,
             NavigationSeeder::class,

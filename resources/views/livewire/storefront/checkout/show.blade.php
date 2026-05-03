@@ -47,19 +47,45 @@
 
         <section class="rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
             <h2 class="text-lg font-semibold tracking-normal">Payment</h2>
-            <form wire:submit="selectPayment" class="mt-4 flex flex-col gap-3">
-                <select wire:model="paymentMethod" class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900">
-                    <option value="credit_card">Credit card</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="bank_transfer">Bank transfer</option>
-                </select>
-                <button type="submit" class="rounded-md bg-zinc-950 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950">
-                    Save payment method
+            @error('payment')
+                <p class="mt-3 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">{{ $message }}</p>
+            @enderror
+            <form wire:submit="pay" class="mt-4 flex flex-col gap-3">
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <label class="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-200 p-3 text-sm dark:border-zinc-800">
+                        <input wire:model.live="paymentMethod" type="radio" value="credit_card" class="size-4">
+                        <span class="font-medium">Credit card</span>
+                    </label>
+                    <label class="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-200 p-3 text-sm dark:border-zinc-800">
+                        <input wire:model.live="paymentMethod" type="radio" value="paypal" class="size-4">
+                        <span class="font-medium">PayPal</span>
+                    </label>
+                    <label class="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-200 p-3 text-sm dark:border-zinc-800">
+                        <input wire:model.live="paymentMethod" type="radio" value="bank_transfer" class="size-4">
+                        <span class="font-medium">Bank transfer</span>
+                    </label>
+                </div>
+
+                @if($paymentMethod === 'credit_card')
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <input wire:model="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="Card number" class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 sm:col-span-2">
+                        <input wire:model="cardHolder" autocomplete="cc-name" placeholder="Cardholder name" class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 sm:col-span-2">
+                        <input wire:model="cardExpiry" autocomplete="cc-exp" placeholder="MM/YY" class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900">
+                        <input wire:model="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="CVC" class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900">
+                    </div>
+                @elseif($paymentMethod === 'bank_transfer')
+                    <p class="rounded-md border border-zinc-200 p-3 text-sm text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">Your order will be held while payment is pending.</p>
+                @endif
+
+                <button type="submit" class="rounded-md bg-zinc-950 px-4 py-3 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950">
+                    <span wire:loading.remove wire:target="pay">
+                        {{ $paymentMethod === 'bank_transfer' ? 'Place order' : ($paymentMethod === 'paypal' ? 'Pay with PayPal' : 'Pay now') }}
+                        -
+                        @include('storefront.components.price', ['amount' => $totals['total'] ?? 0, 'currency' => $totals['currency'] ?? $checkout->cart->currency])
+                    </span>
+                    <span wire:loading wire:target="pay">Processing...</span>
                 </button>
             </form>
-            @if(session('checkout_status'))
-                <p class="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-400">{{ session('checkout_status') }}</p>
-            @endif
         </section>
     </div>
 

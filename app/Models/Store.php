@@ -139,11 +139,27 @@ class Store extends Model
     }
 
     /**
+     * @return HasMany<Customer, $this>
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    /**
      * @return HasMany<Checkout, $this>
      */
     public function checkouts(): HasMany
     {
         return $this->hasMany(Checkout::class);
+    }
+
+    /**
+     * @return HasMany<Order, $this>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     /**

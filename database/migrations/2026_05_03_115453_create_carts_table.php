@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->string('currency', 3)->default('USD');
             $table->integer('cart_version')->default(1);
             $table->enum('status', ['active', 'converted', 'abandoned'])->default('active');

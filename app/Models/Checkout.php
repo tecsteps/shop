@@ -8,6 +8,7 @@ use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Checkout extends Model
 {
@@ -86,6 +87,14 @@ class Checkout extends Model
     public function shippingRate(): BelongsTo
     {
         return $this->belongsTo(ShippingRate::class, 'shipping_method_id');
+    }
+
+    /**
+     * @return HasOne<Order, $this>
+     */
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class);
     }
 
     public function isExpired(): bool

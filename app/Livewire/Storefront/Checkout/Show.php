@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Storefront\Checkout;
 
+use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Exceptions\CheckoutStateException;
 use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\PaymentFailedException;
 use App\Exceptions\UnavailableShippingRateException;
 use App\Models\Checkout;
 use App\Services\CheckoutService;
+use App\Services\OrderService;
 use App\Services\ShippingCalculator;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -36,6 +39,14 @@ class Show extends Component
     public ?int $selectedShippingRateId = null;
 
     public string $paymentMethod = 'credit_card';
+
+    public string $cardNumber = '4242424242424242';
+
+    public string $cardExpiry = '12/28';
+
+    public string $cardCvc = '123';
+
+    public string $cardHolder = 'Jane Doe';
 
     public string $discountCode = '';
 
@@ -127,6 +138,47 @@ class Show extends Component
         }
     }
 
+    public function pay(): mixed
+    {
+        $this->validate([
+            'paymentMethod' => ['required', 'in:credit_card,paypal,bank_transfer'],
+            'cardNumber' => ['required_if:paymentMethod,credit_card', 'nullable', 'regex:/^[0-9 ]{16,23}$/'],
+            'cardExpiry' => ['required_if:paymentMethod,credit_card', 'nullable', 'regex:/^(0[1-9]|1[0-2])\/\d{2}$/'],
+            'cardCvc' => ['required_if:paymentMethod,credit_card', 'nullable', 'digits_between:3,4'],
+            'cardHolder' => ['required_if:paymentMethod,credit_card', 'nullable', 'string', 'max:255'],
+        ]);
+
+        $checkout = $this->checkout();
+
+        if ($checkout->order !== null) {
+            return $this->redirect(route('storefront.checkout.confirmation', $checkout), navigate: true);
+        }
+
+        try {
+            $method = PaymentMethod::from($this->paymentMethod);
+
+            if ($checkout->status !== CheckoutStatus::PaymentSelected || $checkout->payment_method !== $method) {
+                $checkout = app(CheckoutService::class)->selectPaymentMethod($checkout, $method);
+            }
+
+            app(OrderService::class)->createFromCheckout($checkout, [
+                'payment_method' => $this->paymentMethod,
+                'card_number' => preg_replace('/\D+/', '', $this->cardNumber) ?? '',
+                'card_expiry' => $this->cardExpiry,
+                'card_cvc' => $this->cardCvc,
+                'card_holder' => $this->cardHolder,
+            ]);
+
+            return $this->redirect(route('storefront.checkout.confirmation', $checkout), navigate: true);
+        } catch (PaymentFailedException $exception) {
+            $this->addError('payment', $exception->getMessage());
+        } catch (CheckoutStateException $exception) {
+            $this->addError('checkout', $exception->getMessage());
+        }
+
+        return null;
+    }
+
     public function render(): View
     {
         $checkout = $this->checkout();
@@ -146,7 +198,7 @@ class Show extends Component
     private function checkout(): Checkout
     {
         return Checkout::withoutGlobalScopes()
-            ->with('cart.lines.variant.product.media', 'cart.lines.variant.optionValues.option', 'cart.lines.variant.inventoryItem', 'shippingRate')
+            ->with('cart.lines.variant.product.media', 'cart.lines.variant.optionValues.option', 'cart.lines.variant.inventoryItem', 'shippingRate', 'order')
             ->where('store_id', app('current_store')->id)
             ->whereKey($this->checkoutId)
             ->firstOrFail();

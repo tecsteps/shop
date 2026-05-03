@@ -19,6 +19,7 @@ Route::prefix('storefront/v1')
             Route::put('/checkouts/{checkoutId}/address', [CheckoutController::class, 'address'])->name('api.storefront.checkouts.address');
             Route::put('/checkouts/{checkoutId}/shipping-method', [CheckoutController::class, 'shippingMethod'])->name('api.storefront.checkouts.shipping-method');
             Route::put('/checkouts/{checkoutId}/payment-method', [CheckoutController::class, 'paymentMethod'])->name('api.storefront.checkouts.payment-method');
+            Route::post('/checkouts/{checkoutId}/pay', [CheckoutController::class, 'pay'])->name('api.storefront.checkouts.pay');
             Route::post('/checkouts/{checkoutId}/apply-discount', [CheckoutController::class, 'applyDiscount'])->name('api.storefront.checkouts.apply-discount');
             Route::delete('/checkouts/{checkoutId}/discount', [CheckoutController::class, 'removeDiscount'])->name('api.storefront.checkouts.remove-discount');
         });

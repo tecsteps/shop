@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -26,7 +27,6 @@ class Customer extends Authenticatable
         'password',
         'password_hash',
         'marketing_opt_in',
-        'status',
     ];
 
     /**
@@ -34,7 +34,6 @@ class Customer extends Authenticatable
      */
     protected $attributes = [
         'marketing_opt_in' => false,
-        'status' => 'active',
     ];
 
     /**
@@ -42,7 +41,6 @@ class Customer extends Authenticatable
      */
     protected $hidden = [
         'password_hash',
-        'remember_token',
     ];
 
     /**
@@ -51,7 +49,6 @@ class Customer extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'marketing_opt_in' => 'bool',
             'password_hash' => 'hashed',
         ];
@@ -68,5 +65,29 @@ class Customer extends Authenticatable
                 'password_hash' => $value && ! Hash::isHashed($value) ? Hash::make($value) : $value,
             ],
         );
+    }
+
+    /**
+     * @return HasMany<CustomerAddress, $this>
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
+
+    /**
+     * @return HasMany<Order, $this>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * @return HasMany<Cart, $this>
+     */
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
     }
 }

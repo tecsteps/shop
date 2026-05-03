@@ -25,6 +25,8 @@ class StoreSettingsSeeder extends Seeder
                     'notifications' => [
                         'order_confirmation' => true,
                     ],
+                    'order_number_prefix' => '#',
+                    'bank_transfer_cancel_days' => 7,
                 ],
             ],
         );

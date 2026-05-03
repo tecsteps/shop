@@ -13,8 +13,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 2 catalog backend is implemented and committed: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, inventory service, handle generator, and product/collection policies.
 - Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
-- Admin shop UI, payments, orders, customer account flows, search indexing, analytics, apps, and webhooks are not implemented yet.
-- Phase 5 payments/orders/customer persistence is the next active vertical slice after committing cart and checkout progress.
+- Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
+- Admin shop UI, customer account flows, search indexing, analytics, apps, and webhooks are not implemented yet.
 
 ## Execution Plan
 
@@ -31,7 +31,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 4. **Cart, checkout, pricing** - Implemented and verified
    - Add carts, checkout, discounts, shipping, taxes, pricing engine, state transitions, and REST endpoints.
    - Verify cart API, cart UI, checkout state, pricing, discount, shipping, and tax tests.
-5. **Payments and orders** - Pending
+5. **Payments and orders** - Implemented and verified
    - Add customers, addresses, orders, payments, refunds, fulfillments, mock PSP, order events, and scheduled cleanup jobs.
    - Verify successful card checkout, declined card, bank transfer pending/confirmation, fulfillment guard, refunds, and inventory commits/releases.
 6. **Customer accounts** - Pending
@@ -53,23 +53,24 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Use SQLite, file cache/session, sync queue, log mail, and local filesystem as specified.
 - Keep all money as integer minor units.
 - Prefer Laravel conventions and existing starter-kit patterns unless specs require a different shop-specific behavior.
-- Phase 1 customer guard/provider is registered now, but `customers` persistence remains in the customer/order slice because the roadmap places the `customers` table in Phase 5.
+- Phase 1 customer guard/provider is registered now; `customers` persistence landed in Phase 5.
 - Admin users store credentials in `users.password_hash`; the `User` model keeps a `password` attribute alias so Fortify and starter-kit Livewire settings continue to work.
 - Storefront pages are class-based Livewire components using the existing starter layout conventions and store resolution middleware.
 - Phase 3 includes a cart page/drawer shell only; persistent carts and line-item actions stay in Phase 4 so pricing and checkout state can be implemented coherently.
 - Livewire update requests persist `ResolveStore` middleware so storefront actions keep tenant context after the initial page load.
-- Phase 4 keeps `customer_id` as nullable indexed IDs without foreign keys until the `customers` table lands in Phase 5; SQLite test connections reject foreign keys to future tables.
+- Phase 5 adds the `customers` table immediately before cart/checkout migrations and converts `carts.customer_id` and `checkouts.customer_id` to nullable foreign keys for fresh installs.
+- `orders.checkout_id` is intentionally added beyond the table list so `OrderService::createFromCheckout()` can enforce idempotency with a durable unique key.
 
 ## Open Gaps
 
 - Phase 1 still needs the resource policies listed in the roadmap, but most referenced resources do not exist until later phases. Policies will be added with their models to keep type hints and tests coherent.
 - Phase 2 still needs Livewire/admin product management and full media resizing variants. Storefront product/collection browsing is covered by the Phase 3 shell.
 - Phase 3 still needs the richer theme editor/admin surfaces, search modal autocomplete, checkout/account/error storefront templates, and fully configurable section ordering. These are deferred to the admin, search, checkout, and account slices.
-- Phase 4 stops at payment-method selection and inventory reservation. Mock payment processing, order creation, bank-transfer confirmation, refunds, and fulfillment are Phase 5.
+- Phase 5 includes backend bank-transfer confirmation/cancellation, refunds, and fulfillment services. Admin UI actions for those services are deferred to the admin panel slice.
 - Phase 4 has a functional cart page and accessible cart count, but the richer slide-out cart drawer can be expanded during UI polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
-- Customer accounts, admin surfaces, payments/orders, and all later shop phases remain unimplemented.
+- Customer account pages, admin surfaces, and all later shop phases remain unimplemented.
 - API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
 
 ## Verification Log
@@ -95,4 +96,11 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `npm run build` passed for the updated cart/checkout Tailwind/Vite assets.
 - 2026-05-03: Playwright smoke completed product add-to-cart, cart checkout start, checkout address save, shipping selection, and payment-method save at `http://shop.test`; latest console check reported no warnings or errors.
 - 2026-05-03: `browser_logs` reported no browser log file after the latest smoke check.
+- 2026-05-03: `php artisan test --compact tests/Feature/Payments/MockPaymentProviderTest.php tests/Feature/Orders/OrderServiceTest.php tests/Feature/Api/StorefrontCheckoutPaymentApiTest.php` passed, 13 tests / 79 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed and fixed generated seeder imports plus route/controller import ordering.
+- 2026-05-03: `php artisan test --compact` passed, 73 tests / 262 assertions.
+- 2026-05-03: `npm run build` passed for the updated payment/confirmation checkout UI assets.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with customers, orders, payments, refunds, and fulfillment migrations/seed data.
+- 2026-05-03: Playwright smoke completed product add-to-cart, cart checkout start, checkout address save, shipping selection, credit-card payment, and order confirmation at `http://shop.test`; latest console check reported no warnings or errors.
+- 2026-05-03: `browser_logs` reported no browser log file after the latest Phase 5 smoke check.
 - Pending: Playwright customer and admin browser flows.
