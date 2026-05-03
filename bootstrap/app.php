@@ -11,7 +11,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'store.resolve' => App\Http\Middleware\ResolveStore::class,
+        ]);
+
+        $middleware->appendToGroup('storefront', [
+            App\Http\Middleware\ResolveStore::class,
+        ]);
+
+        $middleware->appendToGroup('admin', [
+            App\Http\Middleware\ResolveStore::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
