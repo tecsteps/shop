@@ -62,8 +62,18 @@ class ResolveStore
         $user = $request->user();
         $storeId = $request->session()->get('current_store_id');
 
-        if (! $user || ! $storeId) {
+        if (! $user) {
             abort(403);
+        }
+
+        if (! $storeId) {
+            $storeId = $user->stores()->oldest((new Store)->getTable().'.id')->value((new Store)->getTable().'.id');
+
+            if (! $storeId) {
+                abort(403);
+            }
+
+            $request->session()->put('current_store_id', $storeId);
         }
 
         $store = Store::query()

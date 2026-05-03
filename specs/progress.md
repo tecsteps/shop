@@ -15,7 +15,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
 - Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
-- Admin shop UI, search indexing, analytics, apps, and webhooks are not implemented yet.
+- Phase 7 admin panel is implemented and verified: admin login, admin shell/store switcher, dashboard, product/order/customer/discount/inventory/settings/theme/page/navigation surfaces, basic analytics, apps, developer, and search-settings pages.
+- SQLite search indexing, analytics ingestion, API tokens, app installs, and webhooks are not implemented yet.
 
 ## Execution Plan
 
@@ -38,7 +39,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 6. **Customer accounts** - Implemented and verified
    - Add store-scoped customer auth, account dashboard, order history, and address book.
    - Verify customer registration/login isolation and account browser flows.
-7. **Admin panel** - Pending
+7. **Admin panel** - Implemented and verified
    - Add admin shell, dashboard, resource management pages, settings, themes, pages, navigation, analytics, apps, and developers surfaces.
    - Verify admin login, store switching, product/order/discount/settings flows.
 8. **Search, analytics, apps, webhooks** - Pending
@@ -61,18 +62,18 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Livewire update requests persist `ResolveStore` middleware so storefront actions keep tenant context after the initial page load.
 - Phase 5 adds the `customers` table immediately before cart/checkout migrations and converts `carts.customer_id` and `checkouts.customer_id` to nullable foreign keys for fresh installs.
 - `orders.checkout_id` is intentionally added beyond the table list so `OrderService::createFromCheckout()` can enforce idempotency with a durable unique key.
+- Admin authentication uses a dedicated Livewire `/admin/login` screen on the existing `web` guard while leaving the starter-kit Fortify `/login` flow intact for existing auth/settings tests.
 
 ## Open Gaps
 
-- Phase 1 still needs the resource policies listed in the roadmap, but most referenced resources do not exist until later phases. Policies will be added with their models to keep type hints and tests coherent.
-- Phase 2 still needs Livewire/admin product management and full media resizing variants. Storefront product/collection browsing is covered by the Phase 3 shell.
-- Phase 3 still needs the richer theme editor/admin surfaces, search modal autocomplete, checkout/account/error storefront templates, and fully configurable section ordering. These are deferred to the admin, search, checkout, and account slices.
-- Phase 5 includes backend bank-transfer confirmation/cancellation, refunds, and fulfillment services. Admin UI actions for those services are deferred to the admin panel slice.
+- Phase 2 still needs full media resizing variants and the richer multi-option variant builder. Admin product create/edit currently covers core product fields, default variant price/SKU, and stock.
+- Phase 3 still needs search modal autocomplete, richer error templates, and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel.
+- Phase 5 backend bank-transfer confirmation, refunds, and fulfillment services now have admin order-detail actions. More granular partial-fulfillment UI can still be expanded during polish.
 - Phase 4 has a functional cart page and accessible cart count, but the richer slide-out cart drawer can be expanded during UI polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
-- Admin surfaces and all later shop phases remain unimplemented.
+- Admin surfaces are implemented for the current data model; later search, analytics ingestion, apps, API tokens, and webhook backend phases remain unimplemented.
 - API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
 
 ## Verification Log
@@ -112,4 +113,11 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with customer login and account seed data.
 - 2026-05-03: Playwright smoke completed customer login, account dashboard, order history, order detail, and address book creation at `http://shop.test`; latest console check reported no warnings or errors.
 - 2026-05-03: `browser_logs` reported no browser log file after the latest Phase 6 smoke check.
-- Pending: Playwright admin browser flows.
+- 2026-05-03: `php artisan route:list --path=admin --except-vendor` passed and showed 31 admin routes.
+- 2026-05-03: `php artisan test --compact tests/Feature/Admin/AdminPanelTest.php` passed, 6 tests / 67 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Phase 7 admin changes.
+- 2026-05-03: `php artisan test --compact` passed, 85 tests / 355 assertions.
+- 2026-05-03: `npm run build` passed for the updated admin Tailwind/Vite assets.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with admin routes and seeded admin/customer/order/catalog data.
+- 2026-05-03: Playwright smoke completed admin login, dashboard, products list, and order detail at `http://shop.test/admin`; latest console check reported no new warnings or errors.
+- 2026-05-03: `browser_logs` reported no browser log file after the latest Phase 7 smoke check.
