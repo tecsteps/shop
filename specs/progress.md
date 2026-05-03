@@ -9,17 +9,18 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 ## Current State
 
 - Repository started from the Laravel Livewire starter kit with Fortify authentication.
-- Phase 1 foundation is partially implemented and verified: configuration defaults, core tenancy schema, models, factories, seeders, tenant middleware, customer guard provider registration, store role helper, and password_hash compatibility.
-- No catalog, storefront shop UI, admin shop UI, cart, checkout, orders, search, analytics, apps, or webhooks are implemented yet.
-- Phase 2 Catalog is the next active vertical slice after committing Phase 1 progress.
+- Phase 1 foundation is implemented and committed: configuration defaults, core tenancy schema, models, factories, seeders, tenant middleware, customer guard provider registration, store role helper, and password_hash compatibility.
+- Phase 2 catalog backend is partially implemented and verified: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, inventory service, handle generator, and product/collection policies.
+- Storefront shop UI, admin shop UI, cart, checkout, orders, search, analytics, apps, and webhooks are not implemented yet.
+- Phase 3 theme/storefront shell is the next active vertical slice after committing Phase 2 backend progress.
 
 ## Execution Plan
 
-1. **Foundation and tenancy** - In progress
+1. **Foundation and tenancy** - Committed (`2ebb8ed4`)
    - Configure SQLite/file/sync environment defaults.
    - Add organization/store/domain/settings schema, models, enums, factories, seeders, tenant middleware, store-scoped model support, customer guard baseline, and role-aware user helpers.
    - Verify with focused tenancy/model/auth tests and `migrate:fresh --seed`.
-2. **Catalog** - Pending
+2. **Catalog** - In progress
    - Add products, variants, options, inventory, collections, media, catalog services, and storefront/admin catalog basics.
    - Verify product lifecycle, inventory, variants, and collection isolation tests.
 3. **Theme and storefront shell** - Pending
@@ -56,7 +57,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 ## Open Gaps
 
 - Phase 1 still needs the resource policies listed in the roadmap, but most referenced resources do not exist until later phases. Policies will be added with their models to keep type hints and tests coherent.
-- Catalog and all later shop phases remain unimplemented.
+- Phase 2 still needs Livewire/admin product management, storefront product/collection pages, and full media resizing variants. The backend catalog data model and core services are implemented.
+- Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
+- Cart and all later shop phases remain unimplemented.
 - API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
 
 ## Verification Log
@@ -66,4 +69,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after creating missing `database/database.sqlite`.
 - 2026-05-03: `vendor/bin/pint --dirty --format agent` passed and fixed import ordering.
 - 2026-05-03: `php artisan test --compact` passed, 40 tests / 89 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Products` passed, 9 tests / 30 assertions.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with catalog migrations and seed data.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed and fixed generated catalog PHP files.
+- 2026-05-03: `php artisan test --compact` passed, 49 tests / 119 assertions.
 - Pending: Playwright customer and admin browser flows.

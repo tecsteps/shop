@@ -82,6 +82,30 @@ class Store extends Model
         return $this->hasOne(StoreSettings::class);
     }
 
+    /**
+     * @return HasMany<Product, $this>
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * @return HasMany<Collection, $this>
+     */
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    /**
+     * @return HasMany<InventoryItem, $this>
+     */
+    public function inventoryItems(): HasMany
+    {
+        return $this->hasMany(InventoryItem::class);
+    }
+
     public function isSuspended(): bool
     {
         return $this->status === StoreStatus::Suspended;
