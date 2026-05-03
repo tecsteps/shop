@@ -71,6 +71,7 @@
 
                 <div class="flex items-center gap-2">
                     <a href="/search" class="rounded-md px-3 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900">Search</a>
+                    <a href="/account" class="rounded-md px-3 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900">Account</a>
                     <a href="/cart" class="rounded-md bg-zinc-950 px-3 py-2 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950">Cart</a>
                 </div>
             </div>

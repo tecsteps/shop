@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
+            'customer.auth' => App\Http\Middleware\CustomerAuthenticate::class,
             'store.resolve' => App\Http\Middleware\ResolveStore::class,
         ]);
 

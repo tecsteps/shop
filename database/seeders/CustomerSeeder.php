@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\Store;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerSeeder extends Seeder
 {
@@ -27,7 +28,7 @@ class CustomerSeeder extends Seeder
                 ],
                 [
                     'name' => $data['name'],
-                    'password_hash' => null,
+                    'password_hash' => $index === 0 ? Hash::make('password') : null,
                     'marketing_opt_in' => $index === 0,
                 ],
             );

@@ -1,5 +1,11 @@
 <?php
 
+use App\Livewire\Storefront\Account\Addresses\Index as AccountAddressesIndex;
+use App\Livewire\Storefront\Account\Auth\Login as AccountLogin;
+use App\Livewire\Storefront\Account\Auth\Register as AccountRegister;
+use App\Livewire\Storefront\Account\Dashboard as AccountDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as AccountOrdersIndex;
+use App\Livewire\Storefront\Account\Orders\Show as AccountOrdersShow;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
@@ -21,6 +27,16 @@ Route::middleware('storefront')->group(function () {
     Route::get('/checkout/{checkoutId}/confirmation', CheckoutConfirmation::class)->name('storefront.checkout.confirmation');
     Route::get('/search', SearchIndex::class)->name('storefront.search.index');
     Route::get('/pages/{handle}', PageShow::class)->name('storefront.pages.show');
+
+    Route::get('/account/login', AccountLogin::class)->name('storefront.account.login');
+    Route::get('/account/register', AccountRegister::class)->name('storefront.account.register');
+
+    Route::middleware('customer.auth')->group(function (): void {
+        Route::get('/account', AccountDashboard::class)->name('storefront.account.dashboard');
+        Route::get('/account/orders', AccountOrdersIndex::class)->name('storefront.account.orders.index');
+        Route::get('/account/orders/{orderNumber}', AccountOrdersShow::class)->name('storefront.account.orders.show');
+        Route::get('/account/addresses', AccountAddressesIndex::class)->name('storefront.account.addresses.index');
+    });
 });
 
 Route::view('dashboard', 'dashboard')

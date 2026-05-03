@@ -14,7 +14,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
-- Admin shop UI, customer account flows, search indexing, analytics, apps, and webhooks are not implemented yet.
+- Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
+- Admin shop UI, search indexing, analytics, apps, and webhooks are not implemented yet.
 
 ## Execution Plan
 
@@ -34,7 +35,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 5. **Payments and orders** - Implemented and verified
    - Add customers, addresses, orders, payments, refunds, fulfillments, mock PSP, order events, and scheduled cleanup jobs.
    - Verify successful card checkout, declined card, bank transfer pending/confirmation, fulfillment guard, refunds, and inventory commits/releases.
-6. **Customer accounts** - Pending
+6. **Customer accounts** - Implemented and verified
    - Add store-scoped customer auth, account dashboard, order history, and address book.
    - Verify customer registration/login isolation and account browser flows.
 7. **Admin panel** - Pending
@@ -70,7 +71,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 4 has a functional cart page and accessible cart count, but the richer slide-out cart drawer can be expanded during UI polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
-- Customer account pages, admin surfaces, and all later shop phases remain unimplemented.
+- Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
+- Admin surfaces and all later shop phases remain unimplemented.
 - API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
 
 ## Verification Log
@@ -103,4 +105,11 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with customers, orders, payments, refunds, and fulfillment migrations/seed data.
 - 2026-05-03: Playwright smoke completed product add-to-cart, cart checkout start, checkout address save, shipping selection, credit-card payment, and order confirmation at `http://shop.test`; latest console check reported no warnings or errors.
 - 2026-05-03: `browser_logs` reported no browser log file after the latest Phase 5 smoke check.
-- Pending: Playwright customer and admin browser flows.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront/CustomerAccountTest.php` passed, 6 tests / 26 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Phase 6 account changes.
+- 2026-05-03: `php artisan test --compact` passed, 79 tests / 288 assertions.
+- 2026-05-03: `npm run build` passed for the updated account UI assets.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with customer login and account seed data.
+- 2026-05-03: Playwright smoke completed customer login, account dashboard, order history, order detail, and address book creation at `http://shop.test`; latest console check reported no warnings or errors.
+- 2026-05-03: `browser_logs` reported no browser log file after the latest Phase 6 smoke check.
+- Pending: Playwright admin browser flows.
