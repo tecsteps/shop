@@ -10,7 +10,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 
 - Repository started from the Laravel Livewire starter kit with Fortify authentication.
 - Phase 1 foundation is implemented and committed: configuration defaults, core tenancy schema, models, factories, seeders, tenant middleware, customer guard provider registration, store role helper, and password_hash compatibility.
-- Phase 2 catalog backend is implemented and committed: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, inventory service, handle generator, and product/collection policies.
+- Phase 2 catalog backend is implemented and committed: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, admin multi-option variant builder, inventory service, handle generator, and product/collection policies.
 - Product media processing now generates resized image variants (`thumbnail`, `small`, `medium`, `large`) plus WebP sidecars when supported, records original metadata, fails invalid/missing originals, retries up to three times, and cleans up original/generated files when media is deleted.
 - Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, persisted cart discount codes with line allocations, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
@@ -85,7 +85,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 
 ## Open Gaps
 
-- Phase 2 still needs the richer admin multi-option variant builder. Admin product create/edit currently covers core product fields, default variant price/SKU, and stock; backend variant matrix generation and media resizing are implemented and verified.
 - Phase 3 still needs richer error templates and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel; search modal autocomplete landed with the search slice.
 - Phase 5 backend bank-transfer confirmation, refunds, fulfillment creation, and shipped/delivered shipment transitions now have admin order-detail actions. More granular partial-fulfillment and line-level refund UI can still be expanded during polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
@@ -247,3 +246,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact` passed, 156 tests / 932 assertions.
 - 2026-05-03: `npm run build` passed for the updated cart drawer/cart page discount UI.
 - 2026-05-03: Playwright smoke verified product add-to-cart, drawer discount apply/remove, cart-page discount apply, and checkout inheritance of `WELCOME10` at `http://shop.test`; current Playwright console check reported no warnings or errors.
+- 2026-05-03: `php artisan test --compact tests/Feature/Admin/AdminPanelTest.php tests/Feature/Products/ProductServiceTest.php` passed, 16 tests / 111 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Admin/AdminPanelTest.php tests/Feature/Products tests/Feature/Api/AdminProductApiTest.php` passed, 29 tests / 228 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after admin variant-builder changes.
+- 2026-05-03: `php artisan test --compact` passed, 158 tests / 945 assertions.
+- 2026-05-03: `npm run build` passed for the updated admin product variant-builder UI.
+- 2026-05-03: Playwright smoke verified `/admin/products/create` option/value rows, generated 2x2 variant table, per-variant SKU/price/stock edits, save redirect to `/admin/products/{id}/edit`, and no current Playwright console warnings or errors.

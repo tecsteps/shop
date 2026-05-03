@@ -93,6 +93,45 @@ test('variant matrix rebuild creates combinations and removes orphan variants', 
         ->and(ProductVariant::query()->whereKey($template->id)->exists())->toBeFalse();
 });
 
+test('product service syncs option matrix variant fields and inventory', function () {
+    $store = Store::factory()->create(['default_currency' => 'EUR']);
+    $product = Product::factory()->for($store)->create();
+    ProductVariant::factory()->for($product)->default()->create(['price_amount' => 1999, 'currency' => 'EUR']);
+
+    app(ProductService::class)->syncOptionMatrix($product, [
+        ['name' => 'Size', 'values' => ['S', 'M']],
+        ['name' => 'Color', 'values' => ['Black', 'White']],
+    ], [
+        [
+            'option_values' => ['S', 'Black'],
+            'sku' => 'TEE-S-BLK',
+            'price_amount' => 2499,
+            'quantity_on_hand' => 5,
+            'requires_shipping' => true,
+            'currency' => 'EUR',
+        ],
+        [
+            'option_values' => ['M', 'White'],
+            'sku' => 'TEE-M-WHT',
+            'price_amount' => 2799,
+            'quantity_on_hand' => 8,
+            'requires_shipping' => false,
+            'currency' => 'EUR',
+        ],
+    ]);
+
+    $product = $product->refresh()->load('options.values', 'variants.optionValues.option', 'variants.inventoryItem');
+    $whiteMedium = $product->variants
+        ->first(fn (ProductVariant $variant): bool => $variant->optionValues->pluck('value')->sort()->values()->all() === ['M', 'White']);
+
+    expect($product->options)->toHaveCount(2)
+        ->and($product->variants)->toHaveCount(4)
+        ->and($whiteMedium->sku)->toBe('TEE-M-WHT')
+        ->and($whiteMedium->price_amount)->toBe(2799)
+        ->and($whiteMedium->requires_shipping)->toBeFalse()
+        ->and($whiteMedium->inventoryItem->quantity_on_hand)->toBe(8);
+});
+
 test('product service blocks draft reversion and deletion when order lines reference product', function () {
     $store = Store::factory()->create();
     $product = Product::factory()->for($store)->withDefaultVariant(1000)->create([

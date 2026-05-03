@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\SanitizeHtml;
+use App\Enums\InventoryPolicy;
 use App\Enums\ProductStatus;
 use App\Enums\VariantStatus;
 use App\Events\ProductStatusChanged;
@@ -99,6 +100,37 @@ class ProductService
             $product->update($payload);
 
             return $product->refresh();
+        });
+    }
+
+    /**
+     * @param  array<int, array{name: string, values?: array<int, string>}>  $options
+     * @param  array<int, array<string, mixed>>  $variants
+     */
+    public function syncOptionMatrix(Product $product, array $options, array $variants = []): Product
+    {
+        return DB::transaction(function () use ($product, $options, $variants): Product {
+            $product = Product::withoutGlobalScopes()
+                ->with('store')
+                ->whereKey($product->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $normalizedOptions = $this->normalizedOptions($options);
+
+            $product->options()->delete();
+
+            if ($normalizedOptions === []) {
+                $this->syncDefaultVariant($product, $variants[0] ?? []);
+
+                return $product->refresh()->load('options.values', 'variants.inventoryItem', 'variants.optionValues.option');
+            }
+
+            $this->createOptions($product, $normalizedOptions);
+            $this->variantMatrixService->rebuildMatrix($product->refresh()->load('store'));
+            $this->syncGeneratedVariants($product->refresh()->load('store'), $variants);
+
+            return $product->refresh()->load('options.values', 'variants.inventoryItem', 'variants.optionValues.option');
         });
     }
 
@@ -223,5 +255,156 @@ class ProductService
         if ($exists) {
             throw new InvalidProductTransitionException('SKU already exists for this store.');
         }
+    }
+
+    /**
+     * @param  array<int, array{name?: string, values?: array<int, string>}>  $options
+     * @return array<int, array{name: string, values: array<int, string>}>
+     */
+    private function normalizedOptions(array $options): array
+    {
+        return collect($options)
+            ->map(function (array $option): ?array {
+                $name = trim((string) ($option['name'] ?? ''));
+                $values = collect($option['values'] ?? [])
+                    ->map(fn (mixed $value): string => trim((string) $value))
+                    ->filter()
+                    ->unique(fn (string $value): string => mb_strtolower($value))
+                    ->values()
+                    ->all();
+
+                if ($name === '' || $values === []) {
+                    return null;
+                }
+
+                return [
+                    'name' => $name,
+                    'values' => $values,
+                ];
+            })
+            ->filter()
+            ->take(3)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<string, mixed>  $variantData
+     */
+    private function syncDefaultVariant(Product $product, array $variantData): void
+    {
+        $variants = $product->variants()
+            ->with('inventoryItem')
+            ->orderBy('position')
+            ->get()
+            ->values();
+
+        $defaultVariant = $variants->first();
+
+        if (! $defaultVariant instanceof ProductVariant) {
+            $defaultVariant = $product->variants()->create([
+                'price_amount' => 0,
+                'currency' => $product->store->default_currency,
+                'is_default' => true,
+            ]);
+        }
+
+        foreach ($variants->skip(1) as $variant) {
+            if ($this->variantHasOrderReferences($variant)) {
+                $variant->forceFill(['status' => VariantStatus::Archived])->save();
+
+                continue;
+            }
+
+            $variant->delete();
+        }
+
+        $this->syncVariantFields($product, $defaultVariant->refresh(), $variantData, 0, true);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $variantRows
+     */
+    private function syncGeneratedVariants(Product $product, array $variantRows): void
+    {
+        $rowsByKey = collect($variantRows)
+            ->keyBy(fn (array $row): string => $this->optionValueKey($row['option_values'] ?? []));
+
+        $variants = $product->variants()
+            ->with('optionValues.option', 'inventoryItem')
+            ->where('status', VariantStatus::Active->value)
+            ->orderBy('position')
+            ->get()
+            ->values();
+
+        $product->variants()
+            ->where('status', VariantStatus::Active->value)
+            ->update(['is_default' => false]);
+
+        foreach ($variants as $index => $variant) {
+            $key = $this->optionValueKey($variant->optionValues
+                ->sortBy(fn ($value): int => (int) ($value->option?->position ?? 0))
+                ->pluck('value')
+                ->all());
+
+            $this->syncVariantFields($product, $variant, $rowsByKey->get($key, []), $index, $index === 0);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $variantData
+     */
+    private function syncVariantFields(Product $product, ProductVariant $variant, array $variantData, int $position, bool $isDefault): void
+    {
+        $variant->forceFill([
+            'sku' => filled($variantData['sku'] ?? null) ? (string) $variantData['sku'] : null,
+            'barcode' => filled($variantData['barcode'] ?? null) ? (string) $variantData['barcode'] : null,
+            'price_amount' => (int) ($variantData['price_amount'] ?? $variant->price_amount ?? 0),
+            'compare_at_amount' => $this->nullableInteger($variantData['compare_at_amount'] ?? null),
+            'currency' => $variantData['currency'] ?? $product->store->default_currency,
+            'weight_g' => $this->nullableInteger($variantData['weight_g'] ?? null),
+            'requires_shipping' => (bool) ($variantData['requires_shipping'] ?? true),
+            'is_default' => $isDefault,
+            'position' => $position,
+            'status' => $variantData['status'] ?? VariantStatus::Active->value,
+        ])->save();
+
+        $variant->inventoryItem()->updateOrCreate(
+            ['variant_id' => $variant->id],
+            [
+                'store_id' => $product->store_id,
+                'quantity_on_hand' => (int) ($variantData['quantity_on_hand'] ?? $variant->inventoryItem?->quantity_on_hand ?? 0),
+                'policy' => $variantData['inventory_policy'] ?? $variant->inventoryItem?->policy ?? InventoryPolicy::Deny,
+            ],
+        );
+    }
+
+    private function nullableInteger(mixed $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int) $value;
+    }
+
+    /**
+     * @param  array<int, mixed>  $values
+     */
+    private function optionValueKey(array $values): string
+    {
+        return collect($values)
+            ->map(fn (mixed $value): string => mb_strtolower(trim((string) $value)))
+            ->filter()
+            ->implode('|');
+    }
+
+    private function variantHasOrderReferences(ProductVariant $variant): bool
+    {
+        if (! Schema::hasTable('order_lines')) {
+            return false;
+        }
+
+        return DB::table('order_lines')->where('variant_id', $variant->id)->exists();
     }
 }

@@ -112,6 +112,46 @@ test('admin can create a product with default variant inventory', function (): v
         ->and($variant->inventoryItem->quantity_on_hand)->toBe(8);
 });
 
+test('admin can create a product with multi option variants', function (): void {
+    actAsAdmin($this);
+
+    Livewire::test(ProductForm::class)
+        ->set('title', 'Matrix Hoodie')
+        ->set('status', 'active')
+        ->set('vendor', 'Acme')
+        ->set('productType', 'Hoodies')
+        ->set('priceAmount', 5900)
+        ->set('quantityOnHand', 3)
+        ->set('options', [
+            ['name' => 'Size', 'values' => ['S', 'M']],
+            ['name' => 'Color', 'values' => ['Black', 'White']],
+        ])
+        ->call('generateVariants')
+        ->set('variants.0.sku', 'HD-S-BLK')
+        ->set('variants.0.priceAmount', 5900)
+        ->set('variants.0.quantityOnHand', 4)
+        ->set('variants.3.sku', 'HD-M-WHT')
+        ->set('variants.3.priceAmount', 6200)
+        ->set('variants.3.quantityOnHand', 7)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $product = Product::query()
+        ->where('title', 'Matrix Hoodie')
+        ->with('options.values', 'variants.optionValues.option', 'variants.inventoryItem')
+        ->firstOrFail();
+
+    $whiteMedium = $product->variants
+        ->first(fn ($variant): bool => $variant->optionValues->pluck('value')->sort()->values()->all() === ['M', 'White']);
+
+    expect($product->options)->toHaveCount(2)
+        ->and($product->options->firstWhere('name', 'Size')->values)->toHaveCount(2)
+        ->and($product->variants)->toHaveCount(4)
+        ->and($whiteMedium->sku)->toBe('HD-M-WHT')
+        ->and($whiteMedium->price_amount)->toBe(6200)
+        ->and($whiteMedium->inventoryItem->quantity_on_hand)->toBe(7);
+});
+
 test('admin can confirm a pending bank transfer order', function (): void {
     actAsAdmin($this);
 
