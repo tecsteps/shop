@@ -14,18 +14,19 @@ class StoreUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
         $user = User::query()->where('email', 'admin@acme.test')->firstOrFail();
 
-        DB::table('store_users')->updateOrInsert(
-            [
-                'store_id' => $store->getKey(),
-                'user_id' => $user->getKey(),
-            ],
-            [
-                'role' => 'owner',
-                'created_at' => now(),
-            ],
-        );
+        Store::query()->each(function (Store $store) use ($user): void {
+            DB::table('store_users')->updateOrInsert(
+                [
+                    'store_id' => $store->getKey(),
+                    'user_id' => $user->getKey(),
+                ],
+                [
+                    'role' => 'owner',
+                    'created_at' => now(),
+                ],
+            );
+        });
     }
 }

@@ -13,18 +13,25 @@ class StoreDomainSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+        $domainsByStore = [
+            'acme-fashion' => ['shop.test', 'acme-fashion.test'],
+            'acme-electronics' => ['acme-electronics.test'],
+        ];
 
-        foreach (['shop.test', 'acme-fashion.test'] as $index => $hostname) {
-            StoreDomain::query()->updateOrCreate(
-                ['hostname' => $hostname],
-                [
-                    'store_id' => $store->getKey(),
-                    'type' => 'storefront',
-                    'is_primary' => $index === 0,
-                    'tls_mode' => 'managed',
-                ],
-            );
+        foreach ($domainsByStore as $storeHandle => $hostnames) {
+            $store = Store::query()->where('handle', $storeHandle)->firstOrFail();
+
+            foreach ($hostnames as $index => $hostname) {
+                StoreDomain::query()->updateOrCreate(
+                    ['hostname' => $hostname],
+                    [
+                        'store_id' => $store->getKey(),
+                        'type' => 'storefront',
+                        'is_primary' => $index === 0,
+                        'tls_mode' => 'managed',
+                    ],
+                );
+            }
         }
     }
 }

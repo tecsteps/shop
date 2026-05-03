@@ -13,21 +13,21 @@ class StoreSettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
-
-        StoreSettings::query()->updateOrCreate(
-            ['store_id' => $store->getKey()],
-            [
-                'settings_json' => [
-                    'announcement' => [
-                        'enabled' => true,
-                        'text' => 'Free shipping on orders over 75.00 EUR',
-                    ],
-                    'checkout' => [
-                        'guest_checkout_enabled' => true,
+        Store::query()->each(function (Store $store): void {
+            StoreSettings::query()->updateOrCreate(
+                ['store_id' => $store->getKey()],
+                [
+                    'settings_json' => [
+                        'announcement' => [
+                            'enabled' => true,
+                            'text' => 'Free shipping on orders over 75.00 EUR',
+                        ],
+                        'checkout' => [
+                            'guest_checkout_enabled' => true,
+                        ],
                     ],
                 ],
-            ],
-        );
+            );
+        });
     }
 }
