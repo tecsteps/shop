@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\StoreUserRole;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -22,7 +25,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'status',
         'password',
+        'last_login_at',
     ];
 
     /**
@@ -31,11 +36,56 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
     ];
+
+    /**
+     * @return BelongsToMany<Store, $this>
+     */
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')
+            ->using(StoreUser::class)
+            ->withPivot('role');
+    }
+
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        return $this->roleForStoreId($store->getKey());
+    }
+
+    public function roleForStoreId(int $storeId): ?StoreUserRole
+    {
+        $role = $this->stores()
+            ->whereKey($storeId)
+            ->first()
+            ?->pivot
+            ?->role;
+
+        if ($role instanceof StoreUserRole) {
+            return $role;
+        }
+
+        return is_string($role) ? StoreUserRole::tryFrom($role) : null;
+    }
+
+    public function getAuthPassword(): ?string
+    {
+        return $this->password_hash;
+    }
+
+    public function setPasswordAttribute(string $value): void
+    {
+        $this->attributes['password_hash'] = Hash::needsRehash($value) ? Hash::make($value) : $value;
+    }
+
+    public function getPasswordAttribute(): ?string
+    {
+        return $this->password_hash;
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -46,7 +96,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'last_login_at' => 'datetime',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 

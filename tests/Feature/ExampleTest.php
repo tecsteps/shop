@@ -1,7 +1,14 @@
 <?php
 
-it('returns a successful response', function () {
-    $response = $this->get('/');
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-    $response->assertStatus(200);
+uses(RefreshDatabase::class);
+
+it('returns a successful response', function () {
+    $this->seed(DatabaseSeeder::class);
+
+    $response = $this->get('http://shop.test/');
+
+    $response->assertOk();
 });
