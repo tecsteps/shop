@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             : route('login'));
 
         $middleware->alias([
+            'api.token' => App\Http\Middleware\AuthenticateApiToken::class,
             'customer.auth' => App\Http\Middleware\CustomerAuthenticate::class,
             'store.resolve' => App\Http\Middleware\ResolveStore::class,
         ]);

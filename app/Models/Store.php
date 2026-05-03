@@ -202,6 +202,46 @@ class Store extends Model
         return $this->hasMany(SearchQuery::class);
     }
 
+    /**
+     * @return HasMany<AnalyticsEvent, $this>
+     */
+    public function analyticsEvents(): HasMany
+    {
+        return $this->hasMany(AnalyticsEvent::class);
+    }
+
+    /**
+     * @return HasMany<AnalyticsDaily, $this>
+     */
+    public function analyticsDaily(): HasMany
+    {
+        return $this->hasMany(AnalyticsDaily::class);
+    }
+
+    /**
+     * @return HasMany<AppInstallation, $this>
+     */
+    public function appInstallations(): HasMany
+    {
+        return $this->hasMany(AppInstallation::class);
+    }
+
+    /**
+     * @return HasMany<ApiToken, $this>
+     */
+    public function apiTokens(): HasMany
+    {
+        return $this->hasMany(ApiToken::class);
+    }
+
+    /**
+     * @return HasMany<WebhookSubscription, $this>
+     */
+    public function webhookSubscriptions(): HasMany
+    {
+        return $this->hasMany(WebhookSubscription::class);
+    }
+
     public function isSuspended(): bool
     {
         return $this->status === StoreStatus::Suspended;

@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\AggregateAnalytics;
 use App\Jobs\CancelUnpaidBankTransferOrders;
 use App\Jobs\CleanupAbandonedCarts;
 use App\Jobs\ExpireAbandonedCheckouts;
@@ -14,3 +15,4 @@ Artisan::command('inspire', function () {
 Schedule::job(new ExpireAbandonedCheckouts)->everyFifteenMinutes();
 Schedule::job(new CleanupAbandonedCarts)->daily();
 Schedule::job(new CancelUnpaidBankTransferOrders)->daily();
+Schedule::job(new AggregateAnalytics)->dailyAt('01:00');

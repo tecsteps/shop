@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AnalyticsSummaryController;
+use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
 use App\Http\Controllers\Api\Storefront\SearchController;
@@ -12,6 +14,10 @@ Route::prefix('storefront/v1')
             Route::get('/search', [SearchController::class, 'index'])->name('api.storefront.search.index');
             Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('api.storefront.search.suggest');
         });
+
+        Route::post('/analytics/events', [AnalyticsController::class, 'store'])
+            ->middleware('throttle:analytics')
+            ->name('api.storefront.analytics.events');
 
         Route::post('/carts', [CartController::class, 'store'])->name('api.storefront.carts.store');
         Route::get('/carts/{cartId}', [CartController::class, 'show'])->name('api.storefront.carts.show');
@@ -29,4 +35,12 @@ Route::prefix('storefront/v1')
             Route::post('/checkouts/{checkoutId}/apply-discount', [CheckoutController::class, 'applyDiscount'])->name('api.storefront.checkouts.apply-discount');
             Route::delete('/checkouts/{checkoutId}/discount', [CheckoutController::class, 'removeDiscount'])->name('api.storefront.checkouts.remove-discount');
         });
+    });
+
+Route::prefix('admin/v1')
+    ->middleware('throttle:api.admin')
+    ->group(function (): void {
+        Route::get('/stores/{store}/analytics/summary', [AnalyticsSummaryController::class, 'show'])
+            ->middleware('api.token:read-analytics')
+            ->name('api.admin.analytics.summary');
     });

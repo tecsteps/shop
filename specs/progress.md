@@ -15,9 +15,10 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
 - Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
-- Phase 7 admin panel is implemented and verified: admin login, admin shell/store switcher, dashboard, product/order/customer/discount/inventory/settings/theme/page/navigation surfaces, basic analytics, apps, developer, and search-settings pages.
+- Phase 7 admin panel is implemented and verified: admin login, admin shell/store switcher, dashboard, product/order/customer/discount/inventory/settings/theme/page/navigation surfaces, analytics, apps, developer, and search-settings pages.
 - SQLite FTS5 search is implemented and verified: search settings/query tables, product FTS indexing, product observer sync, storefront search page, header search modal, search API, seeded synonyms/stop words, and admin reindex action.
-- Analytics ingestion, API tokens, app installs, and webhooks are not implemented yet.
+- Analytics ingestion and aggregation are implemented and verified: storefront batch event API, client event deduplication, seeded daily/event analytics, daily aggregation job, admin analytics summary API, and admin analytics dashboard.
+- Apps, API tokens, and webhooks are implemented and verified: apps/installations/OAuth metadata, developer API token generation/revocation, store-scoped token middleware, webhook subscriptions, signed delivery jobs, retry/failure tracking, and app admin screens.
 
 ## Execution Plan
 
@@ -43,10 +44,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 7. **Admin panel** - Implemented and verified
    - Add admin shell, dashboard, resource management pages, settings, themes, pages, navigation, analytics, apps, and developers surfaces.
    - Verify admin login, store switching, product/order/discount/settings flows.
-8. **Search, analytics, apps, webhooks** - Partially implemented
+8. **Search, analytics, apps, webhooks** - Implemented and verified
    - SQLite FTS5 search is implemented and verified.
-   - Analytics ingestion/aggregation, API token support, app installs, webhook dispatch/signing/delivery remain pending.
-   - Verify analytics and webhook tests once those slices land.
+   - Analytics ingestion/aggregation, API token support, app installs, webhook dispatch/signing/delivery are implemented and verified.
 9. **Polish and completion audit** - Pending
    - Run full Pest suite, style formatting, fresh migration/seeding, Playwright customer/admin flows, responsive and browser log review.
    - Update this file with final evidence and close all gaps.
@@ -65,6 +65,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 5 adds the `customers` table immediately before cart/checkout migrations and converts `carts.customer_id` and `checkouts.customer_id` to nullable foreign keys for fresh installs.
 - `orders.checkout_id` is intentionally added beyond the table list so `OrderService::createFromCheckout()` can enforce idempotency with a durable unique key.
 - Admin authentication uses a dedicated Livewire `/admin/login` screen on the existing `web` guard while leaving the starter-kit Fortify `/login` flow intact for existing auth/settings tests.
+- API token requirements mention Sanctum, but Sanctum is not installed and dependencies cannot be changed without approval. The developers/API slice uses a first-party hashed-token table and route middleware to satisfy store-scoped token generation, revocation, and ability checks without adding dependencies.
 
 ## Open Gaps
 
@@ -75,8 +76,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
-- Admin surfaces are implemented for the current data model; later analytics ingestion, apps, API tokens, and webhook backend phases remain unimplemented.
-- API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
+- Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
 
 ## Verification Log
 
@@ -131,3 +131,12 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `npm run build` passed for the updated search UI assets.
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with FTS5 search migrations, seeded search settings, and reindexed seeded products.
 - 2026-05-03: Playwright smoke completed `/search?q=linen`, header search modal suggestions for `lin`, and `api/storefront/v1/search?q=linen` at `http://shop.test`; latest browser console checks reported no current warnings or errors.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with analytics, apps, OAuth metadata, webhooks, and API token migrations/seed data.
+- 2026-05-03: `php artisan test --compact tests/Feature/Analytics/AnalyticsTest.php tests/Feature/Webhooks/WebhookDeliveryTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php` passed, 7 tests / 49 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Analytics/AnalyticsTest.php tests/Feature/Webhooks/WebhookDeliveryTest.php tests/Feature/Developers/DeveloperIntegrationsTest.php tests/Feature/Admin/AdminPanelTest.php tests/Feature/Search/SearchTest.php tests/Feature/Api/StorefrontCartApiTest.php tests/Feature/Api/StorefrontCheckoutPaymentApiTest.php` passed, 23 tests / 190 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed and fixed generated seeder imports plus console route import ordering.
+- 2026-05-03: `php artisan route:list --path=api --except-vendor` passed and showed 17 API routes, including storefront analytics ingestion and admin analytics summary.
+- 2026-05-03: `php artisan test --compact` passed, 97 tests / 428 assertions.
+- 2026-05-03: `npm run build` passed for the updated analytics/apps/developer admin UI assets.
+- 2026-05-03: Playwright smoke completed admin analytics date-range interaction, developer API token generation, webhook creation, apps list, and app detail at `http://shop.test/admin`; latest browser console checks reported no warnings or errors.
+- 2026-05-03: HTTP smoke through Herd returned `202` for `POST /api/storefront/v1/analytics/events` and `200` for token-protected `GET /api/admin/v1/stores/1/analytics/summary`.
