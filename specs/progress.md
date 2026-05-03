@@ -7,7 +7,7 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 ## Current Status
 
 - Status: in progress
-- Active slice: Phase 4 - Storefront cart/checkout API surface and remaining cart estimates, after UI connection
+- Active slice: Phase 4 - remaining cart estimates, then Phase 5 orders/payments
 - Started from: Laravel Livewire/Fortify starter kit with no shop domain tables or models present
 - Last updated: 2026-05-03
 
@@ -27,14 +27,14 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 | Area | Criteria Source | Status | Evidence |
 | --- | --- | --- | --- |
 | Database schema | `specs/01-DATABASE-SCHEMA.md` | partial | Phase 1 tenancy/auth tables, Phase 2 catalog tables, Phase 3 theme/content/navigation tables, and Phase 4 cart/checkout/pricing tables are implemented: carts, cart_lines, checkouts, shipping_zones, shipping_rates, tax_settings, discounts. Order/payment/search/analytics/app tables are still missing. |
-| Routes/API | `specs/02-API-ROUTES.md` | partial | Phase 1 auth routes plus catalog/cart UI routes exist: `/`, `/collections`, `/collections/{handle}`, `/products/{handle}`, `/cart`, `/checkout`, `/search`, `/pages/{handle}`, `/admin/products`, `/admin/products/create`, `/admin/products/{product}/edit`, `/admin/collections`, `/admin/collections/create`, `/admin/collections/{collection}/edit`, `/admin/inventory`. Storefront/admin API routes are still missing. |
+| Routes/API | `specs/02-API-ROUTES.md` | partial | Phase 1 auth routes plus catalog/cart UI routes exist: `/`, `/collections`, `/collections/{handle}`, `/products/{handle}`, `/cart`, `/checkout`, `/search`, `/pages/{handle}`, `/admin/products`, `/admin/products/create`, `/admin/products/{product}/edit`, `/admin/collections`, `/admin/collections/create`, `/admin/collections/{collection}/edit`, `/admin/inventory`. Storefront REST API now includes cart line CRUD and checkout address/shipping/discount/payment-method selection under `/api/storefront/v1`. Storefront search/suggest, analytics, order lookup/payment processing, and admin REST APIs are still missing. |
 | Admin UI | `specs/03-ADMIN-UI.md` | partial | Flux/Livewire admin catalog shell now includes product index/form, collection index/form, and inventory list with auth protection, filtering, pagination, status changes, SKU uniqueness checks, and collection assignment. Order/customer/content/settings admin pages are still missing. |
 | Storefront UI | `specs/04-STOREFRONT-UI.md` | partial | Storefront layout, home, collections index/detail, product detail, search, breadcrumbs, price display, product cards, DB-backed pages, seeded navigation menus, cached theme settings, product add-to-cart persistence, cart drawer, cart page, and checkout address/shipping/discount/payment-selection UI render seeded data. Cart page shipping estimate and discount entry are still pending. |
 | Business logic | `specs/05-BUSINESS-LOGIC.md` | partial | `ResolveStore`, `BelongsToStore`, `StoreScope`, role checks, customer guard provider, catalog product lifecycle transitions, SKU uniqueness, variant matrix rebuilding, inventory reserve/release/commit/restock, automatic variant inventory, variant option mapping, media resize/cleanup job, `CartService`, `DiscountService`, `ShippingCalculator`, `TaxCalculator`, `PricingEngine`, checkout transitions through payment selection, checkout expiration, abandoned cart cleanup, session cart lookup, customer login cart merge, and product add-to-cart mutations are implemented. Order/payment services are still missing. |
 | Auth/security | `specs/06-AUTH-AND-SECURITY.md` | partial | Admin Livewire login/logout, customer guard/provider, customer login/register, login rate limiting, session hardening, and resource policies implemented. Customer password reset and Sanctum token auth still missing. |
 | Seed/test data | `specs/07-SEEDERS-AND-TEST-DATA.md` | partial | Seeders create Acme Fashion and Acme Electronics stores/domains/settings/admin access, 6 collections, 25 products, 127 variants, 127 inventory rows, 206 variant option pivots, 2 themes, 6 theme files, 2 theme settings rows, 6 pages, 4 navigation menus, 17 navigation items, 2 tax settings rows, 2 shipping zones, 6 shipping rates, 6 discounts, and no product media/runtime carts. Order/payment seed data is still missing. |
 | Browser E2E plan | `specs/08-PLAYWRIGHT-E2E-PLAN.md` | partial | Manual Playwright MCP smoke coverage has verified storefront catalog browsing, product detail, add-to-cart, cart drawer/page, checkout through payment selection, search, DB-backed content pages, seeded navigation, admin product/collection/inventory pages, and auth flows without console warnings/errors on successful pages. Automated browser tests are still missing. |
-| Roadmap phases | `specs/09-IMPLEMENTATION-ROADMAP.md` | in progress | Phase 1 foundation, Phase 2 catalog data/UI, Phase 3 theme/content/navigation data with storefront consumption, Phase 4 cart/checkout/pricing backend foundation, and Phase 4 storefront cart/checkout UI through `payment_selected` are implemented. Phase 4 API/remaining cart estimates and Phase 5 orders/payments are next. |
+| Roadmap phases | `specs/09-IMPLEMENTATION-ROADMAP.md` | in progress | Phase 1 foundation, Phase 2 catalog data/UI, Phase 3 theme/content/navigation data with storefront consumption, Phase 4 cart/checkout/pricing backend foundation, Phase 4 storefront cart/checkout UI through `payment_selected`, and the Phase 4 cart/checkout REST API surface are implemented. Remaining cart estimates and Phase 5 orders/payments are next. |
 
 ## Verification Evidence
 
@@ -90,6 +90,12 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after the Phase 4 UI changes.
 - 2026-05-03: `npm run build` passed after the cart/checkout Blade changes.
 - 2026-05-03: Playwright MCP verified `http://shop.test/products/classic-cotton-t-shirt` add-to-cart, `http://shop.test/cart`, and `http://shop.test/checkout` render and progress through shipping, discount, and reserve-items payment selection with Livewire update requests returning 200 and no new console warnings/errors. Missing favicon links were fixed with `public/favicon.svg`.
+- 2026-05-03: `mcp__laravel_boost__.search_docs` consulted Laravel 12 JSON API tests/resources/form requests/route model binding docs and Pest 4 JSON expectation docs before the Phase 4 API changes.
+- 2026-05-03: `php artisan route:list --path=api/storefront/v1` confirmed 12 storefront API routes for carts, cart lines, checkouts, checkout address, shipping method, discount apply/remove, and payment method selection.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/StorefrontCartApiTest.php tests/Feature/Api/StorefrontCheckoutApiTest.php` passed: 6 tests, 73 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api tests/Feature/Cart tests/Feature/Checkout tests/Feature/Storefront` passed: 27 tests, 178 assertions.
+- 2026-05-03: `php artisan test --compact` passed after the cart/checkout API changes: 95 tests, 414 assertions.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after the cart/checkout API changes.
 
 ## Decisions
 
@@ -108,6 +114,7 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - Checkout completion intentionally stops before order creation in this slice. `CheckoutService::completeCheckout()` is a Phase 5 boundary until order, payment, and fulfillment tables/services exist.
 - The cart drawer reads the current session/customer cart without creating an empty cart on every storefront render; carts are created on first add-to-cart or checkout/cart service mutation.
 - The checkout UI currently reserves inventory by selecting a payment method and leaves payment capture/order creation for Phase 5.
+- The cart REST API exposes `cart_version` as the public optimistic concurrency field while the service layer keeps its `expectedVersion` argument; `expected_version` remains accepted as a compatibility alias in API requests.
 
 ## Open Issues
 
@@ -120,7 +127,7 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - Product options can be displayed and edited as text in the admin form, but full option matrix generation and option-value reassignment UI are not complete.
 - Theme/page/navigation admin management UI is still missing even though the Phase 3 data layer, seeders, services, and storefront consumption exist.
 - Storefront cart page shipping estimate and cart-level discount entry are still missing; discounts can be applied during checkout.
-- Storefront cart and checkout API endpoints are still missing.
+- Storefront search/suggest, analytics event, order lookup, checkout payment processing, and admin REST API endpoints are still missing.
 - Checkout order creation, payment capture, discount usage-count increment on successful order completion, and fulfillment are still pending Phase 5.
 - Automated browser tests from Spec 08 are still missing; current browser coverage is manual Playwright MCP smoke verification.
 - SQLite enum/check constraints from the schema spec are not yet explicitly enforced as database `CHECK` constraints; enum validation is currently enforced through casts/services/model invariants.
@@ -128,4 +135,4 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 
 ## Completion Summary
 
-Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, Phase 3 storefront theme/content/navigation data, the Phase 4 cart/checkout/pricing backend foundation, and cart/checkout storefront UI through payment selection are implemented, with known auth/token, media UI, theme admin UI, cart/checkout API, cart estimates, order/payment, browser-test, and database CHECK constraint gaps tracked above.
+Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, Phase 3 storefront theme/content/navigation data, the Phase 4 cart/checkout/pricing backend foundation, cart/checkout storefront UI through payment selection, and cart/checkout REST APIs are implemented, with known auth/token, media UI, theme admin UI, cart estimates, order/payment, remaining API, browser-test, and database CHECK constraint gaps tracked above.

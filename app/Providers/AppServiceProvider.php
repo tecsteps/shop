@@ -69,7 +69,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('checkout', function (Request $request): Limit {
-            return Limit::perMinute(10)->by($request->session()->getId() ?: $request->ip());
+            $sessionId = $request->hasSession() ? $request->session()->getId() : null;
+
+            return Limit::perMinute(10)->by($sessionId ?: $request->ip());
         });
 
         Authenticate::redirectUsing(function (Request $request): string {

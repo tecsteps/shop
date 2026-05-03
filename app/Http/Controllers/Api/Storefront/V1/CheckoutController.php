@@ -1,0 +1,148 @@
+<?php
+
+namespace App\Http\Controllers\Api\Storefront\V1;
+
+use App\Exceptions\InsufficientInventoryException;
+use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\UnserviceableShippingAddressException;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Storefront\V1\ApplyCheckoutDiscountRequest;
+use App\Http\Requests\Api\Storefront\V1\SelectCheckoutPaymentRequest;
+use App\Http\Requests\Api\Storefront\V1\SetCheckoutAddressRequest;
+use App\Http\Requests\Api\Storefront\V1\SetCheckoutShippingRequest;
+use App\Http\Requests\Api\Storefront\V1\StoreCheckoutRequest;
+use App\Http\Resources\Storefront\V1\CheckoutResource;
+use App\Models\Cart;
+use App\Models\Checkout;
+use App\Models\ShippingRate;
+use App\Services\CheckoutService;
+use App\Services\PricingEngine;
+use App\Services\ShippingCalculator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
+
+class CheckoutController extends Controller
+{
+    public function store(StoreCheckoutRequest $request, CheckoutService $checkouts, PricingEngine $pricing): CheckoutResource|JsonResponse
+    {
+        $cart = Cart::query()->findOrFail($request->validated('cart_id'));
+
+        try {
+            $checkout = $checkouts->createFromCart($cart);
+            $checkout->forceFill([
+                'email' => (string) $request->validated('email'),
+            ])->save();
+            $pricing->calculate($checkout);
+
+            return CheckoutResource::make($this->loadCheckout(
+                $checkout->refresh(),
+            ))->response()->setStatusCode(201);
+        } catch (InvalidCheckoutTransitionException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
+    }
+
+    public function show(Checkout $checkout): CheckoutResource
+    {
+        return CheckoutResource::make($this->loadCheckout($checkout));
+    }
+
+    public function address(SetCheckoutAddressRequest $request, Checkout $checkout, CheckoutService $checkouts): CheckoutResource|JsonResponse
+    {
+        $addressData = $request->validated();
+        $addressData['email'] ??= $checkout->email;
+
+        try {
+            return CheckoutResource::make($this->loadCheckout($checkouts->setAddress($checkout, $addressData)));
+        } catch (InvalidCheckoutTransitionException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
+    }
+
+    public function shippingMethod(SetCheckoutShippingRequest $request, Checkout $checkout, CheckoutService $checkouts): CheckoutResource|JsonResponse
+    {
+        try {
+            return CheckoutResource::make($this->loadCheckout($checkouts->setShippingMethod(
+                $checkout,
+                $request->validated('shipping_rate_id'),
+            )));
+        } catch (InvalidCheckoutTransitionException|UnserviceableShippingAddressException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
+    }
+
+    public function applyDiscount(ApplyCheckoutDiscountRequest $request, Checkout $checkout, PricingEngine $pricing): CheckoutResource|JsonResponse
+    {
+        $checkout->forceFill([
+            'discount_code' => trim((string) $request->validated('code')) ?: null,
+        ])->save();
+
+        try {
+            $pricing->calculate($checkout);
+
+            return CheckoutResource::make($this->loadCheckout($checkout->refresh()));
+        } catch (InvalidDiscountException $exception) {
+            $checkout->forceFill(['discount_code' => null])->save();
+            $pricing->calculate($checkout);
+
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'reason' => $exception->reasonCode,
+            ], 422);
+        }
+    }
+
+    public function destroyDiscount(Checkout $checkout, PricingEngine $pricing): CheckoutResource
+    {
+        abort_if($checkout->discount_code === null, 404);
+
+        $checkout->forceFill(['discount_code' => null])->save();
+        $pricing->calculate($checkout);
+
+        return CheckoutResource::make($this->loadCheckout($checkout->refresh()));
+    }
+
+    public function paymentMethod(SelectCheckoutPaymentRequest $request, Checkout $checkout, CheckoutService $checkouts): CheckoutResource|JsonResponse
+    {
+        try {
+            return CheckoutResource::make($this->loadCheckout($checkouts->selectPaymentMethod(
+                $checkout,
+                (string) $request->validated('payment_method'),
+            )));
+        } catch (InsufficientInventoryException|InvalidCheckoutTransitionException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
+    }
+
+    private function loadCheckout(Checkout $checkout): Checkout
+    {
+        $checkout = $checkout->load([
+            'cart.lines.variant.product',
+            'cart.lines.variant.optionValues.option',
+            'store',
+        ]);
+
+        $checkout->setRelation('availableRates', $this->availableRates($checkout));
+
+        return $checkout;
+    }
+
+    /**
+     * @return Collection<int, ShippingRate>
+     */
+    private function availableRates(Checkout $checkout): Collection
+    {
+        if (! is_array($checkout->shipping_address_json) || $checkout->shipping_address_json === []) {
+            return collect();
+        }
+
+        return app(ShippingCalculator::class)
+            ->getAvailableRates($checkout->store, $checkout->shipping_address_json)
+            ->map(function (ShippingRate $rate) use ($checkout): ShippingRate {
+                $rate->setAttribute('calculated_amount', app(ShippingCalculator::class)->calculate($rate, $checkout->cart));
+
+                return $rate;
+            });
+    }
+}
