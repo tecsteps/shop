@@ -90,6 +90,7 @@ class Show extends Component
         }
 
         $this->dispatch('cart-updated');
+        $this->dispatch('open-cart');
         session()->flash('cart_status', 'Added to cart.');
     }
 

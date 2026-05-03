@@ -24,7 +24,8 @@ test('product page adds a line to the session cart and cart page starts checkout
         ->set('quantity', 2)
         ->call('addToCart')
         ->assertHasNoErrors()
-        ->assertDispatched('cart-updated');
+        ->assertDispatched('cart-updated')
+        ->assertDispatched('open-cart');
 
     $cart = Cart::withoutGlobalScopes()->findOrFail(session('cart_id'));
 
@@ -57,7 +58,8 @@ test('backorder variants can be added despite zero available stock', function ()
         ->set('quantity', 2)
         ->call('addToCart')
         ->assertHasNoErrors()
-        ->assertDispatched('cart-updated');
+        ->assertDispatched('cart-updated')
+        ->assertDispatched('open-cart');
 
     $cart = Cart::withoutGlobalScopes()->findOrFail(session('cart_id'));
 
@@ -76,7 +78,7 @@ test('cart drawer opens from cart events and updates line quantities', function 
     $line = $cart->lines->first();
 
     Livewire::test(CartDrawer::class)
-        ->dispatch('cart-updated')
+        ->dispatch('open-cart')
         ->assertSet('open', true)
         ->assertSee('Linen Shirt')
         ->call('incrementLine', $line->id)
@@ -87,4 +89,56 @@ test('cart drawer opens from cart events and updates line quantities', function 
         ->assertHasNoErrors();
 
     expect($cart->lines()->whereKey($line->id)->exists())->toBeFalse();
+});
+
+test('cart drawer applies and removes discount codes inline', function (): void {
+    $product = Product::query()->where('handle', 'linen-shirt')->firstOrFail();
+
+    Livewire::test(ProductShow::class, ['handle' => $product->handle])
+        ->set('quantity', 1)
+        ->call('addToCart')
+        ->assertHasNoErrors();
+
+    $cart = Cart::withoutGlobalScopes()->findOrFail(session('cart_id'));
+
+    Livewire::test(CartDrawer::class)
+        ->dispatch('open-cart')
+        ->set('discountCode', 'welcome10')
+        ->call('applyDiscount')
+        ->assertHasNoErrors()
+        ->assertSee('WELCOME10')
+        ->assertSee('Discount')
+        ->call('removeDiscount')
+        ->assertHasNoErrors()
+        ->assertDontSee('WELCOME10');
+
+    $cart = $cart->refresh()->load('lines');
+
+    expect($cart->discount_code)->toBeNull()
+        ->and($cart->discountAmount())->toBe(0)
+        ->and($cart->totalAmount())->toBe($cart->subtotalAmount());
+});
+
+test('cart page applies discounts before checkout starts', function (): void {
+    $product = Product::query()->where('handle', 'linen-shirt')->firstOrFail();
+
+    Livewire::test(ProductShow::class, ['handle' => $product->handle])
+        ->set('quantity', 1)
+        ->call('addToCart')
+        ->assertHasNoErrors();
+
+    $cart = Cart::withoutGlobalScopes()->findOrFail(session('cart_id'));
+
+    Livewire::test(CartShow::class)
+        ->set('discountCode', 'welcome10')
+        ->call('applyDiscount')
+        ->assertHasNoErrors()
+        ->set('email', 'buyer@example.com')
+        ->call('startCheckout')
+        ->assertHasNoErrors();
+
+    $checkout = $cart->refresh()->checkouts()->firstOrFail();
+
+    expect($checkout->discount_code)->toBe('WELCOME10')
+        ->and($checkout->totals_json['discount'])->toBe(500);
 });

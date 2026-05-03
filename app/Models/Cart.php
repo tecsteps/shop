@@ -21,6 +21,7 @@ class Cart extends Model
         'store_id',
         'customer_id',
         'currency',
+        'discount_code',
         'cart_version',
         'status',
     ];
@@ -30,6 +31,7 @@ class Cart extends Model
      */
     protected $attributes = [
         'currency' => 'USD',
+        'discount_code' => null,
         'cart_version' => 1,
         'status' => CartStatus::Active->value,
     ];

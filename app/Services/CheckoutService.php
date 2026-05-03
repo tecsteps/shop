@@ -6,6 +6,7 @@ use App\Enums\CartStatus;
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Exceptions\CheckoutStateException;
+use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\UnavailableShippingRateException;
 use App\Models\Cart;
 use App\Models\Checkout;
@@ -47,10 +48,16 @@ class CheckoutService
                 'customer_id' => $cart->customer_id,
                 'status' => CheckoutStatus::Started,
                 'email' => $email,
+                'discount_code' => $cart->discount_code,
                 'expires_at' => now()->addDay(),
             ]);
 
-            $this->pricing->calculate($checkout);
+            try {
+                $this->pricing->calculate($checkout);
+            } catch (InvalidDiscountException) {
+                $checkout->forceFill(['discount_code' => null])->save();
+                $this->pricing->calculate($checkout);
+            }
 
             return $checkout->refresh()->load('cart.lines.variant.product', 'shippingRate');
         });

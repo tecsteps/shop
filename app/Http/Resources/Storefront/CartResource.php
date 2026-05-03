@@ -21,6 +21,7 @@ class CartResource extends JsonResource
             'store_id' => $this->store_id,
             'customer_id' => $this->customer_id,
             'currency' => $this->currency,
+            'discount_code' => $this->discount_code,
             'cart_version' => $this->cart_version,
             'status' => $this->status->value,
             'lines' => CartLineResource::collection($this->lines),

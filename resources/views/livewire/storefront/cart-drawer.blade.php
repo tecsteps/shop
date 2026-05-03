@@ -1,4 +1,4 @@
-<div wire:open-cart.window="open" wire:cart-updated.window="open" wire:keydown.escape.window="close">
+<div wire:open-cart.window="open" wire:keydown.escape.window="close">
     <div class="sr-only" aria-live="polite">
         Cart items: {{ $cart?->itemCount() ?? 0 }}
     </div>
@@ -79,8 +79,37 @@
                                 <span class="text-zinc-600 dark:text-zinc-400">Subtotal</span>
                                 <span class="font-semibold">@include('storefront.components.price', ['amount' => $cart->subtotalAmount(), 'currency' => $cart->currency])</span>
                             </div>
-                            <label class="mt-2 text-sm font-medium" for="cart-drawer-discount">Discount code</label>
-                            <input id="cart-drawer-discount" type="text" disabled placeholder="Apply during checkout" class="rounded-md border border-zinc-300 bg-zinc-50 px-3 py-2 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+                            @if($cart->discountAmount() > 0)
+                                <div class="flex justify-between gap-4">
+                                    <span class="text-zinc-600 dark:text-zinc-400">Discount</span>
+                                    <span class="font-semibold">-@include('storefront.components.price', ['amount' => $cart->discountAmount(), 'currency' => $cart->currency])</span>
+                                </div>
+                            @endif
+                            <div class="flex justify-between gap-4 border-t border-zinc-200 pt-2 dark:border-zinc-800">
+                                <span class="font-semibold">Total</span>
+                                <span class="font-semibold">@include('storefront.components.price', ['amount' => $cart->totalAmount(), 'currency' => $cart->currency])</span>
+                            </div>
+
+                            <form wire:submit="applyDiscount" class="mt-2 grid gap-2">
+                                <label class="text-sm font-medium" for="cart-drawer-discount">Discount code</label>
+                                <div class="flex gap-2">
+                                    <input id="cart-drawer-discount" wire:model="discountCode" type="text" autocomplete="off" placeholder="Discount code" class="min-w-0 flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
+                                    <button type="submit" class="rounded-md border border-zinc-300 px-3 py-2 text-sm font-semibold data-loading:opacity-60 dark:border-zinc-700">
+                                        Apply
+                                    </button>
+                                </div>
+                            </form>
+
+                            @if($cart->discount_code)
+                                <div class="flex items-center justify-between gap-3 rounded-md bg-zinc-100 px-3 py-2 text-sm dark:bg-zinc-900">
+                                    <span class="min-w-0 truncate font-medium">{{ $cart->discount_code }}</span>
+                                    <button type="button" wire:click="removeDiscount" class="shrink-0 text-xs font-semibold text-zinc-600 underline dark:text-zinc-300">Remove</button>
+                                </div>
+                            @endif
+
+                            @error('discountCode')
+                                <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mt-4 grid gap-2">

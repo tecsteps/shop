@@ -32,7 +32,7 @@ class DiscountService
             throw new InvalidDiscountException('discount_expired', 'This discount code is not active.');
         }
 
-        if ($discount->starts_at->isFuture()) {
+        if ($discount->starts_at !== null && $discount->starts_at->isFuture()) {
             throw new InvalidDiscountException('discount_not_yet_active', 'This discount code is not active yet.');
         }
 

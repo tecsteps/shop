@@ -22,6 +22,7 @@ class CartFactory extends Factory
             'store_id' => Store::factory(),
             'customer_id' => null,
             'currency' => 'EUR',
+            'discount_code' => null,
             'cart_version' => 1,
             'status' => CartStatus::Active,
         ];
