@@ -22,7 +22,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Apps, API tokens, and webhooks are implemented and verified: apps/installations/OAuth metadata, developer API token generation/revocation, spec-backed token ability selection, store-scoped token middleware, webhook subscriptions, signed delivery jobs, retry/failure tracking, and app admin screens.
 - Demo seed data now covers the browser-plan fixture contract while preserving `shop.test`: two stores/domains, admin aliases, 20 fashion products, 5 electronics products, sold-out/backorder/draft product edges, five discount codes, 10+2 customers, and 15+3 orders.
 - Storefront product stock states and the slide-out cart drawer are implemented and verified: sold-out `deny` variants disable add-to-cart, backorder `continue` variants add successfully, the cart drawer opens from add-to-cart events, quantity mutations reuse the versioned cart service, discount codes apply/remove inline, and the mobile storefront header fits small viewports.
-- Admin order fulfillment workflow now supports fulfillment creation, shipped/delivered shipment transitions, tracking links, shipment events, and verified desktop/mobile order-detail behavior.
+- Admin order fulfillment/refund workflow now supports selected line quantities, line-derived refund amounts, selected restocking, fulfillment creation, shipped/delivered shipment transitions, tracking links, shipment events, and verified desktop/mobile order-detail behavior.
 - Storefront checkout now uses a verified address, shipping, and payment step flow with locked future steps, editable completed steps, compact step summaries, and responsive order summary behavior.
 - Admin Product REST API endpoints are implemented and verified: token-scoped list/show/create/update/archive routes, product JSON resources, store-scoped validation, variant inventory mutation, collection assignment, and ability/store isolation tests.
 - Admin Order REST API endpoints are implemented and verified: token-scoped list/show routes, shipped fulfillment creation, captured-payment refunds, nested order JSON resources, validation, and ability/store isolation tests.
@@ -85,7 +85,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 
 ## Open Gaps
 
-- Phase 5 backend bank-transfer confirmation, refunds, fulfillment creation, and shipped/delivered shipment transitions now have admin order-detail actions. More granular partial-fulfillment and line-level refund UI can still be expanded during polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
 
@@ -256,3 +255,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact` passed, 161 tests / 964 assertions.
 - 2026-05-03: `npm run build` passed for the updated storefront sections, error templates, and admin theme editor UI.
 - 2026-05-03: Playwright smoke verified `http://shop.test/` homepage section rendering, `/products/missing-product` 404 search/home actions, suspended-store 503 identity/copy after temporary store status restoration, and `/admin/themes/1/editor` typed section editor with preview and rich-text settings. Current admin editor console check reported no warnings or errors; Boost browser logs only contained old 13:59 entries.
+- 2026-05-03: `php artisan test --compact tests/Feature/Admin/AdminPanelTest.php tests/Feature/Orders/OrderServiceTest.php tests/Feature/Api/AdminOrderApiTest.php` passed, 24 tests / 201 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after admin order line fulfillment/refund changes.
+- 2026-05-03: `php artisan test --compact` passed, 164 tests / 977 assertions.
+- 2026-05-03: `npm run build` passed for the updated admin order-detail UI.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed before and after the admin order-detail browser smoke, leaving the local database in the seeded demo state.
+- 2026-05-03: Playwright smoke verified `/admin/orders/1` selected line fulfillment quantity, tracking fields, computed selected-line refund amount, selected restock refund processing, and no current Playwright console warnings or errors. Boost browser logs only contained old 13:59 entries.

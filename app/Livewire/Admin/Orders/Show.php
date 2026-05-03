@@ -8,6 +8,7 @@ use App\Enums\PaymentStatus;
 use App\Livewire\Admin\Concerns\UsesAdminStore;
 use App\Models\Fulfillment;
 use App\Models\Order;
+use App\Models\OrderLine;
 use App\Services\FulfillmentService;
 use App\Services\OrderService;
 use App\Services\RefundService;
@@ -28,6 +29,18 @@ class Show extends Component
 
     public bool $restockRefund = false;
 
+    public bool $refundUseCustomAmount = false;
+
+    /**
+     * @var array<int, int>
+     */
+    public array $fulfillmentLines = [];
+
+    /**
+     * @var array<int, int>
+     */
+    public array $refundLines = [];
+
     public string $trackingCompany = '';
 
     public string $trackingNumber = '';
@@ -39,6 +52,7 @@ class Show extends Component
         Gate::authorize('view', $order);
 
         $this->order = $order;
+        $this->resetLineInputs();
     }
 
     public function confirmBankTransfer(OrderService $orders): void
@@ -55,22 +69,26 @@ class Show extends Component
 
     public function fulfillAll(FulfillmentService $fulfillments): void
     {
+        $this->order->load('lines.fulfillmentLines');
+        $this->fulfillmentLines = $this->remainingFulfillmentQuantities();
+
+        $this->createFulfillment($fulfillments);
+    }
+
+    public function createFulfillment(FulfillmentService $fulfillments): void
+    {
         Gate::authorize('fulfill', $this->order);
 
+        $this->validate([
+            'fulfillmentLines' => ['array'],
+            'fulfillmentLines.*' => ['integer', 'min:0'],
+            'trackingCompany' => ['nullable', 'string', 'max:255'],
+            'trackingNumber' => ['nullable', 'string', 'max:255'],
+            'trackingUrl' => ['nullable', 'url', 'max:255'],
+        ]);
+
         try {
-            $this->order->load('lines.fulfillmentLines');
-            $lines = [];
-
-            foreach ($this->order->lines as $line) {
-                $fulfilled = (int) $line->fulfillmentLines->sum('quantity');
-                $remaining = $line->quantity - $fulfilled;
-
-                if ($remaining > 0) {
-                    $lines[$line->id] = $remaining;
-                }
-            }
-
-            $fulfillments->create($this->order, $lines, [
+            $fulfillments->create($this->order, $this->positiveQuantities($this->fulfillmentLines), [
                 'tracking_company' => $this->trackingCompany ?: null,
                 'tracking_number' => $this->trackingNumber ?: null,
                 'tracking_url' => $this->trackingUrl ?: null,
@@ -78,6 +96,7 @@ class Show extends Component
 
             $this->order = $this->order->refresh();
             $this->reset('trackingCompany', 'trackingNumber', 'trackingUrl');
+            $this->resetLineInputs();
             $this->notify('Fulfillment created.');
         } catch (Throwable $exception) {
             $this->addError('order', $exception->getMessage());
@@ -116,10 +135,23 @@ class Show extends Component
     {
         Gate::authorize('refund', $this->order);
 
+        $lineQuantities = $this->positiveQuantities($this->refundLines);
+
+        if ($lineQuantities === [] && ! $this->refundUseCustomAmount) {
+            $this->addError('order', 'Select at least one line quantity to refund or enable a custom amount.');
+
+            return;
+        }
+
         $this->validate([
-            'refundAmount' => ['required', 'integer', 'min:1'],
+            'refundAmount' => $this->refundUseCustomAmount || $lineQuantities === []
+                ? ['required', 'integer', 'min:1']
+                : ['integer', 'min:0'],
             'refundReason' => ['nullable', 'string', 'max:500'],
             'restockRefund' => ['bool'],
+            'refundUseCustomAmount' => ['bool'],
+            'refundLines' => ['array'],
+            'refundLines.*' => ['integer', 'min:0'],
         ]);
 
         try {
@@ -128,8 +160,22 @@ class Show extends Component
                 ->latest('id')
                 ->firstOrFail();
 
-            $refunds->create($this->order, $payment, $this->refundAmount, $this->refundReason ?: null, $this->restockRefund);
-            $this->reset('refundAmount', 'refundReason', 'restockRefund');
+            if ($lineQuantities === []) {
+                $refunds->create($this->order, $payment, $this->refundAmount, $this->refundReason ?: null, $this->restockRefund);
+            } else {
+                $refunds->createForLines(
+                    $this->order,
+                    $payment,
+                    $lineQuantities,
+                    $this->refundReason ?: null,
+                    $this->restockRefund,
+                    $this->refundUseCustomAmount ? $this->refundAmount : null,
+                );
+            }
+
+            $this->order = $this->order->refresh();
+            $this->reset('refundAmount', 'refundReason', 'restockRefund', 'refundUseCustomAmount');
+            $this->resetLineInputs();
             $this->notify('Refund processed.');
         } catch (Throwable $exception) {
             $this->addError('order', $exception->getMessage());
@@ -151,6 +197,8 @@ class Show extends Component
                 $isFullyFulfilled => 'All line items have been fulfilled.',
                 default => null,
             },
+            'lineStates' => $this->lineStates(),
+            'computedRefundAmount' => $this->computedRefundAmount(),
         ])->layout('livewire.admin.layout.app', [
             'title' => $this->order->order_number,
         ]);
@@ -162,5 +210,78 @@ class Show extends Component
             ->fulfillments()
             ->whereKey($fulfillmentId)
             ->firstOrFail();
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function remainingFulfillmentQuantities(): array
+    {
+        return $this->order->lines
+            ->mapWithKeys(function (OrderLine $line): array {
+                $fulfilled = (int) $line->fulfillmentLines->sum('quantity');
+
+                return [$line->id => max(0, $line->quantity - $fulfilled)];
+            })
+            ->all();
+    }
+
+    private function resetLineInputs(): void
+    {
+        $this->order->load('lines.fulfillmentLines');
+        $this->fulfillmentLines = $this->remainingFulfillmentQuantities();
+        $this->refundLines = $this->order->lines
+            ->mapWithKeys(fn (OrderLine $line): array => [$line->id => 0])
+            ->all();
+    }
+
+    /**
+     * @param  array<int, int>  $quantities
+     * @return array<int, int>
+     */
+    private function positiveQuantities(array $quantities): array
+    {
+        return collect($quantities)
+            ->map(fn (mixed $quantity): int => (int) $quantity)
+            ->filter(fn (int $quantity): bool => $quantity > 0)
+            ->all();
+    }
+
+    /**
+     * @return array<int, array{fulfilled: int, unfulfilled: int, refund_amount: int}>
+     */
+    private function lineStates(): array
+    {
+        return $this->order->lines
+            ->mapWithKeys(function (OrderLine $line): array {
+                $fulfilled = (int) $line->fulfillmentLines->sum('quantity');
+
+                return [
+                    $line->id => [
+                        'fulfilled' => $fulfilled,
+                        'unfulfilled' => max(0, $line->quantity - $fulfilled),
+                        'refund_amount' => $this->lineRefundAmount($line, (int) ($this->refundLines[$line->id] ?? 0)),
+                    ],
+                ];
+            })
+            ->all();
+    }
+
+    private function computedRefundAmount(): int
+    {
+        return $this->order->lines->sum(
+            fn (OrderLine $line): int => $this->lineRefundAmount($line, (int) ($this->refundLines[$line->id] ?? 0)),
+        );
+    }
+
+    private function lineRefundAmount(OrderLine $line, int $quantity): int
+    {
+        if ($quantity < 1) {
+            return 0;
+        }
+
+        return $quantity >= $line->quantity
+            ? $line->total_amount
+            : intdiv($line->total_amount * $quantity, $line->quantity);
     }
 }

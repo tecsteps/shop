@@ -208,6 +208,23 @@ test('refund service updates financial status and can restock inventory', functi
         ->and($variant->inventoryItem->refresh()->quantity_on_hand)->toBe(10);
 });
 
+test('refund service refunds selected line quantities and restocks selected quantity', function () {
+    [, $checkout, $variant] = phaseFiveCheckoutFixture();
+    $order = app(OrderService::class)->createFromCheckout($checkout, [
+        'card_number' => '4242424242424242',
+    ]);
+    $line = $order->lines()->firstOrFail();
+
+    $refund = app(RefundService::class)->createForLines($order, $order->payments()->first(), [
+        $line->id => 1,
+    ], 'Line item return', true);
+
+    expect($refund->amount)->toBe(1000)
+        ->and($refund->reason)->toBe('Line item return')
+        ->and($order->refresh()->financial_status)->toBe(FinancialStatus::PartiallyRefunded)
+        ->and($variant->inventoryItem->refresh()->quantity_on_hand)->toBe(9);
+});
+
 test('bank transfer cancellation job voids stale pending orders and releases reservations', function () {
     [, $checkout, $variant] = phaseFiveCheckoutFixture(PaymentMethod::BankTransfer);
     $order = app(OrderService::class)->createFromCheckout($checkout);

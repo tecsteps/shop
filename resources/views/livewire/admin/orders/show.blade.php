@@ -28,7 +28,11 @@
                         <div wire:key="admin-order-line-{{ $line->id }}" class="grid grid-cols-[1fr_auto] gap-4 p-5 text-sm">
                             <div>
                                 <div class="font-medium">{{ $line->title_snapshot }}</div>
-                                <div class="text-zinc-500">{{ $line->sku_snapshot ?: 'No SKU' }} · Qty {{ $line->quantity }}</div>
+                                <div class="text-zinc-500">
+                                    {{ $line->sku_snapshot ?: 'No SKU' }} · Qty {{ $line->quantity }}
+                                    · Fulfilled {{ $lineStates[$line->id]['fulfilled'] ?? 0 }}
+                                    · Unfulfilled {{ $lineStates[$line->id]['unfulfilled'] ?? 0 }}
+                                </div>
                             </div>
                             <div class="font-semibold">{{ \Illuminate\Support\Number::currency($line->total_amount / 100, $order->currency) }}</div>
                         </div>
@@ -53,7 +57,22 @@
                         <flux:input wire:model="trackingNumber" label="Tracking number" />
                         <flux:input wire:model="trackingUrl" label="Tracking URL" />
                     </div>
-                    <flux:button class="mt-4" wire:click="fulfillAll">Create fulfillment</flux:button>
+                    <div class="mt-5 divide-y divide-zinc-100 rounded-md border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+                        @foreach ($order->lines as $line)
+                            @php($unfulfilled = $lineStates[$line->id]['unfulfilled'] ?? 0)
+                            <div wire:key="fulfillment-input-line-{{ $line->id }}" class="grid gap-3 p-4 text-sm sm:grid-cols-[1fr_8rem] sm:items-center">
+                                <div>
+                                    <div class="font-medium">{{ $line->title_snapshot }}</div>
+                                    <div class="text-zinc-500">Unfulfilled {{ $unfulfilled }} of {{ $line->quantity }}</div>
+                                </div>
+                                <flux:input wire:model="fulfillmentLines.{{ $line->id }}" type="number" min="0" max="{{ $unfulfilled }}" aria-label="Fulfill quantity for {{ $line->title_snapshot }}" />
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <flux:button wire:click="createFulfillment">Create fulfillment</flux:button>
+                        <flux:button wire:click="fulfillAll">Fulfill remaining</flux:button>
+                    </div>
                 @endif
 
                 <div class="mt-5 space-y-3">
@@ -93,10 +112,33 @@
 
             <section class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
                 <flux:heading size="lg">Refund</flux:heading>
-                <div class="mt-4 grid gap-4 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
-                    <flux:input wire:model="refundAmount" type="number" min="0" label="Amount cents" />
+                <div class="mt-4 divide-y divide-zinc-100 rounded-md border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+                    @foreach ($order->lines as $line)
+                        @php($lineRefundAmount = $lineStates[$line->id]['refund_amount'] ?? 0)
+                        <div wire:key="refund-input-line-{{ $line->id }}" class="grid gap-3 p-4 text-sm sm:grid-cols-[1fr_8rem_8rem] sm:items-center">
+                            <div>
+                                <div class="font-medium">{{ $line->title_snapshot }}</div>
+                                <div class="text-zinc-500">Ordered {{ $line->quantity }} · {{ \Illuminate\Support\Number::currency($line->total_amount / 100, $order->currency) }}</div>
+                            </div>
+                            <flux:input wire:model.live="refundLines.{{ $line->id }}" type="number" min="0" max="{{ $line->quantity }}" aria-label="Refund quantity for {{ $line->title_snapshot }}" />
+                            <div class="font-medium sm:text-right">{{ \Illuminate\Support\Number::currency($lineRefundAmount / 100, $order->currency) }}</div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="mt-4 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
                     <flux:input wire:model="refundReason" label="Reason" />
-                    <flux:checkbox wire:model="restockRefund" label="Restock" />
+                    <flux:checkbox wire:model.live="restockRefund" label="Restock selected" />
+                </div>
+                <div class="mt-4 grid gap-4 sm:grid-cols-[12rem_1fr] sm:items-end">
+                    <flux:checkbox wire:model.live="refundUseCustomAmount" label="Custom amount" />
+                    @if ($refundUseCustomAmount)
+                        <flux:input wire:model="refundAmount" type="number" min="1" label="Amount cents" />
+                    @else
+                        <div class="rounded-md bg-zinc-50 px-4 py-3 text-sm dark:bg-zinc-800">
+                            <div class="text-zinc-500 dark:text-zinc-400">Refund amount</div>
+                            <div class="font-semibold">{{ \Illuminate\Support\Number::currency($computedRefundAmount / 100, $order->currency) }}</div>
+                        </div>
+                    @endif
                 </div>
                 <flux:button class="mt-4" wire:click="refund">Process refund</flux:button>
             </section>

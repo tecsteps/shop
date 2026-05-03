@@ -2,6 +2,7 @@
 
 use App\Enums\FinancialStatus;
 use App\Enums\FulfillmentShipmentStatus;
+use App\Enums\FulfillmentStatus;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Orders\Show as OrderShow;
 use App\Livewire\Admin\Products\Form as ProductForm;
@@ -228,6 +229,48 @@ test('admin can create ship and deliver a fulfillment', function (): void {
 
     expect($fulfillment->refresh()->status)->toBe(FulfillmentShipmentStatus::Delivered)
         ->and($fulfillment->delivered_at)->not->toBeNull();
+});
+
+test('admin can create a selected quantity fulfillment', function (): void {
+    actAsAdmin($this);
+
+    $order = Order::query()->where('order_number', '#1001')->firstOrFail();
+    $line = $order->lines()->firstOrFail();
+    $line->forceFill(['quantity' => 2])->save();
+
+    Livewire::test(OrderShow::class, ['order' => $order])
+        ->set("fulfillmentLines.{$line->id}", 1)
+        ->call('createFulfillment')
+        ->assertHasNoErrors();
+
+    $fulfillment = $order->fulfillments()->with('lines')->firstOrFail();
+
+    expect($fulfillment->lines)->toHaveCount(1)
+        ->and($fulfillment->lines->first()->quantity)->toBe(1)
+        ->and($order->refresh()->fulfillment_status)->toBe(FulfillmentStatus::Partial);
+});
+
+test('admin can refund selected line quantities', function (): void {
+    actAsAdmin($this);
+
+    $order = Order::query()->where('order_number', '#1001')->firstOrFail();
+    $line = $order->lines()->with('variant.inventoryItem')->firstOrFail();
+    $inventory = $line->variant->inventoryItem;
+    $stockBeforeRefund = $inventory->quantity_on_hand;
+
+    Livewire::test(OrderShow::class, ['order' => $order])
+        ->set("refundLines.{$line->id}", 1)
+        ->set('refundReason', 'Customer returned one item')
+        ->set('restockRefund', true)
+        ->call('refund')
+        ->assertHasNoErrors();
+
+    $refund = $order->refunds()->firstOrFail();
+
+    expect($refund->amount)->toBe($line->total_amount)
+        ->and($refund->reason)->toBe('Customer returned one item')
+        ->and($order->refresh()->financial_status)->toBe(FinancialStatus::PartiallyRefunded)
+        ->and($inventory->refresh()->quantity_on_hand)->toBe($stockBeforeRefund + 1);
 });
 
 test('admin can update store settings', function (): void {
