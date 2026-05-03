@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -45,6 +46,22 @@ class Customer extends Authenticatable
     public function getPasswordAttribute(): ?string
     {
         return $this->password_hash;
+    }
+
+    /**
+     * @return HasMany<Cart, $this>
+     */
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    /**
+     * @return HasMany<Checkout, $this>
+     */
+    public function checkouts(): HasMany
+    {
+        return $this->hasMany(Checkout::class);
     }
 
     /**

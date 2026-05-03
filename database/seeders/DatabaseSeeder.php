@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             NavigationMenuSeeder::class,
             NavigationItemSeeder::class,
+            TaxSettingsSeeder::class,
+            ShippingZoneSeeder::class,
+            ShippingRateSeeder::class,
+            DiscountSeeder::class,
             CustomerSeeder::class,
         ]);
     }

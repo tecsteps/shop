@@ -1,0 +1,175 @@
+<?php
+
+namespace App\Services;
+
+use App\Enums\DiscountStatus;
+use App\Enums\DiscountType;
+use App\Enums\DiscountValueType;
+use App\Exceptions\InvalidDiscountException;
+use App\Models\Cart;
+use App\Models\CartLine;
+use App\Models\Discount;
+use App\Models\ProductVariant;
+use App\Models\Store;
+use App\ValueObjects\DiscountResult;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
+class DiscountService
+{
+    public function validate(string $code, Store $store, Cart $cart): Discount
+    {
+        $normalizedCode = mb_strtolower(trim($code));
+
+        $discount = Discount::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->where('type', DiscountType::Code)
+            ->whereRaw('lower(code) = ?', [$normalizedCode])
+            ->first();
+
+        if (! $discount instanceof Discount) {
+            throw InvalidDiscountException::because('discount_not_found', 'Discount code was not found.');
+        }
+
+        if ($discount->status !== DiscountStatus::Active) {
+            throw InvalidDiscountException::because('discount_expired', 'Discount is not active.');
+        }
+
+        if ($discount->starts_at->isFuture()) {
+            throw InvalidDiscountException::because('discount_not_yet_active', 'Discount is not active yet.');
+        }
+
+        if ($discount->ends_at !== null && $discount->ends_at->isPast()) {
+            throw InvalidDiscountException::because('discount_expired', 'Discount has expired.');
+        }
+
+        if ($discount->usage_limit !== null && $discount->usage_count >= $discount->usage_limit) {
+            throw InvalidDiscountException::because('discount_usage_limit_reached', 'Discount usage limit has been reached.');
+        }
+
+        $lines = $this->cartLines($cart);
+        $subtotal = $lines->sum('line_subtotal_amount');
+        $minimum = (int) data_get($discount->rules_json, 'min_purchase_amount', data_get($discount->rules_json, 'minimum_purchase', 0));
+
+        if ($minimum > 0 && $subtotal < $minimum) {
+            throw InvalidDiscountException::because('discount_min_purchase_not_met', 'Cart does not meet the minimum purchase amount.');
+        }
+
+        if ($this->qualifyingLines($discount, $lines)->isEmpty()) {
+            throw InvalidDiscountException::because('discount_not_applicable', 'Discount does not apply to these cart lines.');
+        }
+
+        return $discount;
+    }
+
+    /**
+     * @param  array<int, CartLine>  $lines
+     */
+    public function calculate(Discount $discount, int $subtotal, array $lines): DiscountResult
+    {
+        if ($discount->value_type === DiscountValueType::FreeShipping) {
+            return new DiscountResult(0, [], true);
+        }
+
+        $qualifyingLines = $this->qualifyingLines($discount, collect($lines));
+        $qualifyingSubtotal = $qualifyingLines->sum('line_subtotal_amount');
+
+        if ($qualifyingSubtotal <= 0) {
+            return new DiscountResult(0, []);
+        }
+
+        $discountAmount = match ($discount->value_type) {
+            DiscountValueType::Percent => (int) round($qualifyingSubtotal * $discount->value_amount / 100),
+            DiscountValueType::Fixed => min($discount->value_amount, $qualifyingSubtotal),
+            DiscountValueType::FreeShipping => 0,
+        };
+
+        $remaining = $discountAmount;
+        $allocations = [];
+        $lastIndex = $qualifyingLines->keys()->last();
+
+        foreach ($qualifyingLines as $index => $line) {
+            if ($index === $lastIndex) {
+                $allocations[$line->getKey()] = $remaining;
+
+                continue;
+            }
+
+            $allocation = (int) round($discountAmount * $line->line_subtotal_amount / $qualifyingSubtotal);
+            $allocations[$line->getKey()] = $allocation;
+            $remaining -= $allocation;
+        }
+
+        return new DiscountResult($discountAmount, $allocations);
+    }
+
+    public function applyToCart(Cart $cart, Discount $discount): DiscountResult
+    {
+        return DB::transaction(function () use ($cart, $discount): DiscountResult {
+            $lines = $this->cartLines($cart);
+            $result = $this->calculate($discount, $lines->sum('line_subtotal_amount'), $lines->all());
+
+            $lines->each(function (CartLine $line) use ($result): void {
+                $discountAmount = $result->allocations[$line->getKey()] ?? 0;
+
+                $line->forceFill([
+                    'line_discount_amount' => $discountAmount,
+                    'line_total_amount' => $line->line_subtotal_amount - $discountAmount,
+                ])->save();
+            });
+
+            return $result;
+        });
+    }
+
+    /**
+     * @return Collection<int, CartLine>
+     */
+    private function cartLines(Cart $cart): Collection
+    {
+        return CartLine::withoutGlobalScopes()
+            ->where('cart_id', $cart->getKey())
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * @param  Collection<int, CartLine>  $lines
+     * @return Collection<int, CartLine>
+     */
+    private function qualifyingLines(Discount $discount, Collection $lines): Collection
+    {
+        $productIds = collect(data_get($discount->rules_json, 'applicable_product_ids', []))
+            ->filter()
+            ->map(fn (mixed $id): int => (int) $id)
+            ->values();
+        $collectionIds = collect(data_get($discount->rules_json, 'applicable_collection_ids', []))
+            ->filter()
+            ->map(fn (mixed $id): int => (int) $id)
+            ->values();
+
+        if ($productIds->isEmpty() && $collectionIds->isEmpty()) {
+            return $lines;
+        }
+
+        return $lines->filter(function (CartLine $line) use ($productIds, $collectionIds): bool {
+            $variant = ProductVariant::withoutGlobalScopes()
+                ->with(['product' => fn ($query) => $query->withoutGlobalScopes()->with('collections')])
+                ->find($line->variant_id);
+
+            if (! $variant instanceof ProductVariant || $variant->product === null) {
+                return false;
+            }
+
+            if ($productIds->contains((int) $variant->product_id)) {
+                return true;
+            }
+
+            return $variant->product->collections
+                ->pluck('id')
+                ->map(fn (int $id): int => $id)
+                ->intersect($collectionIds)
+                ->isNotEmpty();
+        });
+    }
+}
