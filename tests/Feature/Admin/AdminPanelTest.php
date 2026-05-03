@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\FinancialStatus;
+use App\Enums\FulfillmentShipmentStatus;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Orders\Show as OrderShow;
 use App\Livewire\Admin\Products\Form as ProductForm;
@@ -121,6 +122,41 @@ test('admin can confirm a pending bank transfer order', function (): void {
         ->assertHasNoErrors();
 
     expect($order->fresh()->financial_status)->toBe(FinancialStatus::Paid);
+});
+
+test('admin can create ship and deliver a fulfillment', function (): void {
+    actAsAdmin($this);
+
+    $order = Order::query()->where('order_number', '#1001')->firstOrFail();
+    $component = Livewire::test(OrderShow::class, ['order' => $order]);
+
+    $component
+        ->set('trackingCompany', 'DHL')
+        ->set('trackingNumber', 'DHL123456789')
+        ->set('trackingUrl', 'https://tracking.test/DHL123456789')
+        ->call('fulfillAll')
+        ->assertHasNoErrors()
+        ->assertSee('All line items have been fulfilled.');
+
+    $fulfillment = $order->fulfillments()->firstOrFail();
+
+    expect($fulfillment->tracking_company)->toBe('DHL')
+        ->and($fulfillment->tracking_number)->toBe('DHL123456789')
+        ->and($fulfillment->status)->toBe(FulfillmentShipmentStatus::Pending);
+
+    $component
+        ->call('markFulfillmentShipped', $fulfillment->id)
+        ->assertHasNoErrors();
+
+    expect($fulfillment->refresh()->status)->toBe(FulfillmentShipmentStatus::Shipped)
+        ->and($fulfillment->shipped_at)->not->toBeNull();
+
+    $component
+        ->call('markFulfillmentDelivered', $fulfillment->id)
+        ->assertHasNoErrors();
+
+    expect($fulfillment->refresh()->status)->toBe(FulfillmentShipmentStatus::Delivered)
+        ->and($fulfillment->delivered_at)->not->toBeNull();
 });
 
 test('admin can update store settings', function (): void {

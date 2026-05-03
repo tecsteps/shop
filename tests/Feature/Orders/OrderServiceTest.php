@@ -5,11 +5,14 @@ use App\Enums\CheckoutStatus;
 use App\Enums\DiscountType;
 use App\Enums\DiscountValueType;
 use App\Enums\FinancialStatus;
+use App\Enums\FulfillmentShipmentStatus;
 use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ShippingRateType;
+use App\Events\FulfillmentDelivered;
+use App\Events\FulfillmentShipped;
 use App\Exceptions\FulfillmentGuardException;
 use App\Exceptions\PaymentFailedException;
 use App\Jobs\CancelUnpaidBankTransferOrders;
@@ -25,6 +28,7 @@ use App\Services\CheckoutService;
 use App\Services\FulfillmentService;
 use App\Services\OrderService;
 use App\Services\RefundService;
+use Illuminate\Support\Facades\Event;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
@@ -155,6 +159,39 @@ test('fulfillment guard blocks unpaid orders and marks paid orders fulfilled', f
 
     expect($order->refresh()->fulfillment_status)->toBe(FulfillmentStatus::Fulfilled)
         ->and($order->status)->toBe(OrderStatus::Fulfilled);
+});
+
+test('fulfillment service marks shipments shipped and delivered', function () {
+    [, $checkout] = phaseFiveCheckoutFixture();
+    $order = app(OrderService::class)->createFromCheckout($checkout, [
+        'card_number' => '4242424242424242',
+    ]);
+
+    $fulfillment = app(FulfillmentService::class)->create($order, [
+        $order->lines()->first()->id => 2,
+    ], [
+        'tracking_company' => 'DHL',
+        'tracking_number' => 'DHL123456789',
+        'tracking_url' => 'https://tracking.test/DHL123456789',
+    ]);
+
+    Event::fake([FulfillmentShipped::class, FulfillmentDelivered::class]);
+
+    app(FulfillmentService::class)->markAsShipped($fulfillment);
+
+    expect($fulfillment->refresh()->status)->toBe(FulfillmentShipmentStatus::Shipped)
+        ->and($fulfillment->shipped_at)->not->toBeNull()
+        ->and($fulfillment->tracking_company)->toBe('DHL')
+        ->and($fulfillment->tracking_number)->toBe('DHL123456789');
+
+    Event::assertDispatched(FulfillmentShipped::class, fn (FulfillmentShipped $event): bool => $event->fulfillment->is($fulfillment));
+
+    app(FulfillmentService::class)->markAsDelivered($fulfillment);
+
+    expect($fulfillment->refresh()->status)->toBe(FulfillmentShipmentStatus::Delivered)
+        ->and($fulfillment->delivered_at)->not->toBeNull();
+
+    Event::assertDispatched(FulfillmentDelivered::class, fn (FulfillmentDelivered $event): bool => $event->fulfillment->is($fulfillment));
 });
 
 test('refund service updates financial status and can restock inventory', function () {

@@ -46,7 +46,7 @@
             <section class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
                 <flux:heading size="lg">Fulfillment</flux:heading>
                 @if (! $canFulfill)
-                    <flux:callout class="mt-4" icon="information-circle" heading="Fulfillment cannot be created until payment is confirmed." />
+                    <flux:callout class="mt-4" icon="information-circle" heading="{{ $fulfillmentGuardMessage }}" />
                 @else
                     <div class="mt-4 grid gap-4 sm:grid-cols-3">
                         <flux:input wire:model="trackingCompany" label="Carrier" />
@@ -59,8 +59,33 @@
                 <div class="mt-5 space-y-3">
                     @foreach ($order->fulfillments as $fulfillment)
                         <div wire:key="fulfillment-{{ $fulfillment->id }}" class="rounded-md border border-zinc-200 p-4 text-sm dark:border-zinc-800">
-                            <div class="font-medium">{{ ucfirst($fulfillment->status->value) }}</div>
-                            <div class="text-zinc-500">{{ $fulfillment->tracking_company }} {{ $fulfillment->tracking_number }}</div>
+                            <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                                <div>
+                                    <div class="font-medium">{{ ucfirst($fulfillment->status->value) }}</div>
+                                    @if ($fulfillment->tracking_company || $fulfillment->tracking_number)
+                                        <div class="text-zinc-500">{{ $fulfillment->tracking_company }} {{ $fulfillment->tracking_number }}</div>
+                                    @endif
+                                    @if ($fulfillment->tracking_url)
+                                        <a href="{{ $fulfillment->tracking_url }}" target="_blank" rel="noopener noreferrer" class="text-zinc-700 underline dark:text-zinc-300">Tracking link</a>
+                                    @endif
+                                </div>
+
+                                <div class="flex flex-wrap gap-2">
+                                    @if ($fulfillment->status === \App\Enums\FulfillmentShipmentStatus::Pending)
+                                        <flux:button size="sm" wire:click="markFulfillmentShipped({{ $fulfillment->id }})" wire:loading.attr="disabled" wire:target="markFulfillmentShipped({{ $fulfillment->id }})">Mark as shipped</flux:button>
+                                    @elseif ($fulfillment->status === \App\Enums\FulfillmentShipmentStatus::Shipped)
+                                        <flux:button size="sm" wire:click="markFulfillmentDelivered({{ $fulfillment->id }})" wire:loading.attr="disabled" wire:target="markFulfillmentDelivered({{ $fulfillment->id }})">Mark as delivered</flux:button>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="mt-3 space-y-1 text-xs text-zinc-500 dark:text-zinc-400">
+                                @foreach ($fulfillment->lines as $fulfillmentLine)
+                                    <div wire:key="fulfillment-{{ $fulfillment->id }}-line-{{ $fulfillmentLine->id }}">
+                                        {{ $fulfillmentLine->orderLine?->title_snapshot }} × {{ $fulfillmentLine->quantity }}
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     @endforeach
                 </div>

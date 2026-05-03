@@ -6,6 +6,8 @@ use App\Enums\FinancialStatus;
 use App\Enums\FulfillmentShipmentStatus;
 use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
+use App\Events\FulfillmentDelivered;
+use App\Events\FulfillmentShipped;
 use App\Events\OrderFulfilled;
 use App\Exceptions\FulfillmentGuardException;
 use App\Exceptions\FulfillmentQuantityException;
@@ -65,6 +67,10 @@ class FulfillmentService
                 ->lockForUpdate()
                 ->firstOrFail();
 
+            if ($fulfillment->status !== FulfillmentShipmentStatus::Pending) {
+                throw new FulfillmentGuardException('Only pending fulfillments may be marked as shipped.');
+            }
+
             $fulfillment->forceFill([
                 'status' => FulfillmentShipmentStatus::Shipped,
                 'tracking_company' => $tracking['tracking_company'] ?? $fulfillment->tracking_company,
@@ -72,21 +78,29 @@ class FulfillmentService
                 'tracking_url' => $tracking['tracking_url'] ?? $fulfillment->tracking_url,
                 'shipped_at' => now(),
             ])->save();
+
+            FulfillmentShipped::dispatch($fulfillment->refresh());
         });
     }
 
     public function markAsDelivered(Fulfillment $fulfillment): void
     {
         DB::transaction(function () use ($fulfillment): void {
-            Fulfillment::query()
+            $fulfillment = Fulfillment::query()
                 ->whereKey($fulfillment->id)
                 ->lockForUpdate()
-                ->firstOrFail()
-                ->forceFill([
-                    'status' => FulfillmentShipmentStatus::Delivered,
-                    'delivered_at' => now(),
-                ])
-                ->save();
+                ->firstOrFail();
+
+            if ($fulfillment->status !== FulfillmentShipmentStatus::Shipped) {
+                throw new FulfillmentGuardException('Only shipped fulfillments may be marked as delivered.');
+            }
+
+            $fulfillment->forceFill([
+                'status' => FulfillmentShipmentStatus::Delivered,
+                'delivered_at' => now(),
+            ])->save();
+
+            FulfillmentDelivered::dispatch($fulfillment->refresh());
         });
     }
 

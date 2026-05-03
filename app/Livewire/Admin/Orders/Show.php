@@ -3,8 +3,10 @@
 namespace App\Livewire\Admin\Orders;
 
 use App\Enums\FinancialStatus;
+use App\Enums\FulfillmentStatus;
 use App\Enums\PaymentStatus;
 use App\Livewire\Admin\Concerns\UsesAdminStore;
+use App\Models\Fulfillment;
 use App\Models\Order;
 use App\Services\FulfillmentService;
 use App\Services\OrderService;
@@ -74,8 +76,37 @@ class Show extends Component
                 'tracking_url' => $this->trackingUrl ?: null,
             ]);
 
+            $this->order = $this->order->refresh();
             $this->reset('trackingCompany', 'trackingNumber', 'trackingUrl');
             $this->notify('Fulfillment created.');
+        } catch (Throwable $exception) {
+            $this->addError('order', $exception->getMessage());
+        }
+    }
+
+    public function markFulfillmentShipped(int $fulfillmentId, FulfillmentService $fulfillments): void
+    {
+        $fulfillment = $this->fulfillment($fulfillmentId);
+        Gate::authorize('update', $fulfillment);
+
+        try {
+            $fulfillments->markAsShipped($fulfillment);
+            $this->order = $this->order->refresh();
+            $this->notify('Fulfillment marked as shipped.');
+        } catch (Throwable $exception) {
+            $this->addError('order', $exception->getMessage());
+        }
+    }
+
+    public function markFulfillmentDelivered(int $fulfillmentId, FulfillmentService $fulfillments): void
+    {
+        $fulfillment = $this->fulfillment($fulfillmentId);
+        Gate::authorize('update', $fulfillment);
+
+        try {
+            $fulfillments->markAsDelivered($fulfillment);
+            $this->order = $this->order->refresh();
+            $this->notify('Fulfillment marked as delivered.');
         } catch (Throwable $exception) {
             $this->addError('order', $exception->getMessage());
         }
@@ -108,13 +139,28 @@ class Show extends Component
     public function render(): View
     {
         $this->order->load('customer', 'lines.fulfillmentLines', 'payments.refunds', 'refunds', 'fulfillments.lines.orderLine');
+        $paymentAllowsFulfillment = in_array($this->order->financial_status, [FinancialStatus::Paid, FinancialStatus::PartiallyRefunded], true);
+        $isFullyFulfilled = $this->order->fulfillment_status === FulfillmentStatus::Fulfilled;
 
         return view('livewire.admin.orders.show', [
             'canConfirmBankTransfer' => $this->order->payment_method->value === 'bank_transfer'
                 && $this->order->financial_status === FinancialStatus::Pending,
-            'canFulfill' => in_array($this->order->financial_status, [FinancialStatus::Paid, FinancialStatus::PartiallyRefunded], true),
+            'canFulfill' => $paymentAllowsFulfillment && ! $isFullyFulfilled,
+            'fulfillmentGuardMessage' => match (true) {
+                ! $paymentAllowsFulfillment => 'Payment must be confirmed before items can be fulfilled.',
+                $isFullyFulfilled => 'All line items have been fulfilled.',
+                default => null,
+            },
         ])->layout('livewire.admin.layout.app', [
             'title' => $this->order->order_number,
         ]);
+    }
+
+    private function fulfillment(int $fulfillmentId): Fulfillment
+    {
+        return $this->order
+            ->fulfillments()
+            ->whereKey($fulfillmentId)
+            ->firstOrFail();
     }
 }
