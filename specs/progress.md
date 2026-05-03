@@ -16,7 +16,8 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 5 payments/orders/customer persistence is implemented and verified: customers, customer addresses, orders, order lines, payments, refunds, fulfillments, mock PSP, checkout pay endpoint/UI, order confirmation, bank-transfer confirmation/cancellation services, and focused tests.
 - Phase 6 customer accounts are implemented and verified: store-scoped customer login/registration, account dashboard, order history/detail pages, address book CRUD, and seeded customer credentials.
 - Phase 7 admin panel is implemented and verified: admin login, admin shell/store switcher, dashboard, product/order/customer/discount/inventory/settings/theme/page/navigation surfaces, basic analytics, apps, developer, and search-settings pages.
-- SQLite search indexing, analytics ingestion, API tokens, app installs, and webhooks are not implemented yet.
+- SQLite FTS5 search is implemented and verified: search settings/query tables, product FTS indexing, product observer sync, storefront search page, header search modal, search API, seeded synonyms/stop words, and admin reindex action.
+- Analytics ingestion, API tokens, app installs, and webhooks are not implemented yet.
 
 ## Execution Plan
 
@@ -42,9 +43,10 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 7. **Admin panel** - Implemented and verified
    - Add admin shell, dashboard, resource management pages, settings, themes, pages, navigation, analytics, apps, and developers surfaces.
    - Verify admin login, store switching, product/order/discount/settings flows.
-8. **Search, analytics, apps, webhooks** - Pending
-   - Add SQLite FTS5 search, analytics ingestion/aggregation, API token support, app installs, webhook dispatch/signing/delivery.
-   - Verify API, search, analytics, and webhook tests.
+8. **Search, analytics, apps, webhooks** - Partially implemented
+   - SQLite FTS5 search is implemented and verified.
+   - Analytics ingestion/aggregation, API token support, app installs, webhook dispatch/signing/delivery remain pending.
+   - Verify analytics and webhook tests once those slices land.
 9. **Polish and completion audit** - Pending
    - Run full Pest suite, style formatting, fresh migration/seeding, Playwright customer/admin flows, responsive and browser log review.
    - Update this file with final evidence and close all gaps.
@@ -67,13 +69,13 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 ## Open Gaps
 
 - Phase 2 still needs full media resizing variants and the richer multi-option variant builder. Admin product create/edit currently covers core product fields, default variant price/SKU, and stock.
-- Phase 3 still needs search modal autocomplete, richer error templates, and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel.
+- Phase 3 still needs richer error templates and fully configurable storefront section ordering. Basic theme editing and publishing now exist in the admin panel; search modal autocomplete landed with the search slice.
 - Phase 5 backend bank-transfer confirmation, refunds, and fulfillment services now have admin order-detail actions. More granular partial-fulfillment UI can still be expanded during polish.
 - Phase 4 has a functional cart page and accessible cart count, but the richer slide-out cart drawer can be expanded during UI polish.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Customer account password reset UI and emails remain deferred; login, registration, dashboard, order history/detail, and address book flows are implemented.
-- Admin surfaces are implemented for the current data model; later search, analytics ingestion, apps, API tokens, and webhook backend phases remain unimplemented.
+- Admin surfaces are implemented for the current data model; later analytics ingestion, apps, API tokens, and webhook backend phases remain unimplemented.
 - API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
 
 ## Verification Log
@@ -121,3 +123,11 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with admin routes and seeded admin/customer/order/catalog data.
 - 2026-05-03: Playwright smoke completed admin login, dashboard, products list, and order detail at `http://shop.test/admin`; latest console check reported no new warnings or errors.
 - 2026-05-03: `browser_logs` reported no browser log file after the latest Phase 7 smoke check.
+- 2026-05-03: `php artisan test --compact tests/Feature/Search/SearchTest.php` passed, 5 tests / 24 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Search/SearchTest.php tests/Feature/Admin/AdminPanelTest.php tests/Feature/Storefront/StorefrontRenderTest.php` passed, 13 tests / 106 assertions.
+- 2026-05-03: `php artisan route:list --path=api/storefront/v1/search --except-vendor` passed and showed the search and suggest API routes.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after the search changes.
+- 2026-05-03: `php artisan test --compact` passed, 90 tests / 379 assertions.
+- 2026-05-03: `npm run build` passed for the updated search UI assets.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with FTS5 search migrations, seeded search settings, and reindexed seeded products.
+- 2026-05-03: Playwright smoke completed `/search?q=linen`, header search modal suggestions for `lin`, and `api/storefront/v1/search?q=linen` at `http://shop.test`; latest browser console checks reported no current warnings or errors.

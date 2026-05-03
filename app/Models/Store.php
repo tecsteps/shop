@@ -83,6 +83,14 @@ class Store extends Model
     }
 
     /**
+     * @return HasOne<SearchSettings, $this>
+     */
+    public function searchSettings(): HasOne
+    {
+        return $this->hasOne(SearchSettings::class);
+    }
+
+    /**
      * @return HasMany<Product, $this>
      */
     public function products(): HasMany
@@ -184,6 +192,14 @@ class Store extends Model
     public function discounts(): HasMany
     {
         return $this->hasMany(Discount::class);
+    }
+
+    /**
+     * @return HasMany<SearchQuery, $this>
+     */
+    public function searchQueries(): HasMany
+    {
+        return $this->hasMany(SearchQuery::class);
     }
 
     public function isSuspended(): bool

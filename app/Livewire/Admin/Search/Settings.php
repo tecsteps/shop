@@ -3,7 +3,8 @@
 namespace App\Livewire\Admin\Search;
 
 use App\Livewire\Admin\Concerns\UsesAdminStore;
-use App\Models\StoreSettings;
+use App\Models\SearchSettings;
+use App\Services\SearchService;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -11,31 +12,41 @@ class Settings extends Component
 {
     use UsesAdminStore;
 
-    public string $synonyms = '';
+    public string $synonymGroups = '';
 
     public string $stopWords = '';
 
+    public ?string $lastIndexedAt = null;
+
     public function mount(): void
     {
-        $settings = $this->settings()->settings_json;
-        $this->synonyms = implode("\n", data_get($settings, 'search.synonyms', []));
-        $this->stopWords = implode("\n", data_get($settings, 'search.stop_words', []));
+        $settings = $this->settings();
+        $this->synonymGroups = collect($settings->synonyms_json)
+            ->map(fn (array $group): string => implode(', ', $group))
+            ->implode("\n");
+        $this->stopWords = implode("\n", $settings->stop_words_json ?? []);
+        $this->lastIndexedAt = $settings->updated_at?->diffForHumans();
     }
 
     public function save(): void
     {
         $settings = $this->settings();
-        $payload = $settings->settings_json;
-        data_set($payload, 'search.synonyms', $this->lines($this->synonyms));
-        data_set($payload, 'search.stop_words', $this->lines($this->stopWords));
-        $settings->forceFill(['settings_json' => $payload])->save();
+        $settings->forceFill([
+            'synonyms_json' => $this->synonyms(),
+            'stop_words_json' => $this->lines($this->stopWords),
+        ])->save();
+
+        $this->lastIndexedAt = $settings->fresh()->updated_at?->diffForHumans();
 
         $this->notify('Search settings saved.');
     }
 
     public function reindex(): void
     {
-        $this->notify('Search index queued.');
+        $count = app(SearchService::class)->reindexStore($this->currentStore());
+        $this->lastIndexedAt = $this->settings()->fresh()->updated_at?->diffForHumans();
+
+        $this->notify("Search index rebuilt for {$count} products.");
     }
 
     public function render(): View
@@ -45,9 +56,9 @@ class Settings extends Component
         ]);
     }
 
-    private function settings(): StoreSettings
+    private function settings(): SearchSettings
     {
-        return StoreSettings::query()->firstOrCreate(['store_id' => $this->currentStore()->id]);
+        return SearchSettings::query()->firstOrCreate(['store_id' => $this->currentStore()->id]);
     }
 
     /**
@@ -58,6 +69,22 @@ class Settings extends Component
         return collect(explode("\n", $value))
             ->map(fn (string $line): string => trim($line))
             ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<list<string>>
+     */
+    private function synonyms(): array
+    {
+        return collect(explode("\n", $this->synonymGroups))
+            ->map(fn (string $line): array => collect(explode(',', $line))
+                ->map(fn (string $term): string => trim($term))
+                ->filter()
+                ->values()
+                ->all())
+            ->filter(fn (array $group): bool => count($group) > 1)
             ->values()
             ->all();
     }

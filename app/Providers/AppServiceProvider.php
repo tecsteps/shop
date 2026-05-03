@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Contracts\PaymentProvider;
 use App\Http\Middleware\ResolveStore;
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
@@ -35,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
         Livewire::addPersistentMiddleware([
             ResolveStore::class,
         ]);
+
+        Product::observe(ProductObserver::class);
 
         $this->configureDefaults();
         $this->configureRateLimiting();
@@ -74,6 +78,10 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('checkout', function (Request $request) {
             return Limit::perMinute(10)->by($request->hasSession() ? $request->session()->getId() : $request->ip());
+        });
+
+        RateLimiter::for('search', function (Request $request) {
+            return Limit::perMinute(30)->by($request->ip());
         });
     }
 }

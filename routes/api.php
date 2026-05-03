@@ -2,11 +2,17 @@
 
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
+use App\Http\Controllers\Api\Storefront\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('storefront/v1')
     ->middleware(['store.resolve', 'throttle:api.storefront'])
     ->group(function (): void {
+        Route::middleware('throttle:search')->group(function (): void {
+            Route::get('/search', [SearchController::class, 'index'])->name('api.storefront.search.index');
+            Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('api.storefront.search.suggest');
+        });
+
         Route::post('/carts', [CartController::class, 'store'])->name('api.storefront.carts.store');
         Route::get('/carts/{cartId}', [CartController::class, 'show'])->name('api.storefront.carts.show');
         Route::post('/carts/{cartId}/lines', [CartController::class, 'storeLine'])->name('api.storefront.carts.lines.store');

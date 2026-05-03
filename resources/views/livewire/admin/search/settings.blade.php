@@ -3,6 +3,9 @@
         <div>
             <flux:heading size="xl">Search settings</flux:heading>
             <flux:text>Synonyms, stop words, and index maintenance.</flux:text>
+            @if($lastIndexedAt)
+                <flux:text class="mt-1">Last indexed {{ $lastIndexedAt }}.</flux:text>
+            @endif
         </div>
 
         <div class="flex gap-2">
@@ -13,10 +16,10 @@
 
     <section class="grid gap-6 lg:grid-cols-2">
         <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-            <flux:textarea wire:model="synonyms" label="Synonyms" rows="12" />
+            <flux:textarea wire:model="synonymGroups" label="Synonym groups" rows="12" description="One comma-separated group per line." />
         </div>
         <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-            <flux:textarea wire:model="stopWords" label="Stop words" rows="12" />
+            <flux:textarea wire:model="stopWords" label="Stop words" rows="12" description="One word per line." />
         </div>
     </section>
 </form>

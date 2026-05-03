@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             StoreSettingsSeeder::class,
             CollectionSeeder::class,
             ProductSeeder::class,
+            SearchSettingsSeeder::class,
             ShippingZoneSeeder::class,
             TaxSettingsSeeder::class,
             DiscountSeeder::class,
