@@ -1,16 +1,18 @@
 <div>
+    @php($hero = data_get($themeSettings, 'home.hero', []))
+
     <section class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
         <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
             <div class="flex flex-col justify-center gap-6">
                 <div class="space-y-4">
-                    <p class="text-sm font-medium uppercase tracking-normal text-blue-700 dark:text-blue-300">New season essentials</p>
-                    <h1 class="max-w-3xl text-4xl font-semibold tracking-normal text-zinc-950 dark:text-white md:text-5xl">{{ $store->name }}</h1>
-                    <p class="max-w-2xl text-lg text-zinc-600 dark:text-zinc-300">Browse a scoped demo catalog with variants, inventory states, sale pricing, and digital products.</p>
+                    <p class="text-sm font-medium uppercase tracking-normal text-blue-700 dark:text-blue-300">{{ data_get($hero, 'eyebrow') }}</p>
+                    <h1 class="max-w-3xl text-4xl font-semibold tracking-normal text-zinc-950 dark:text-white md:text-5xl">{{ data_get($hero, 'heading', $store->name) }}</h1>
+                    <p class="max-w-2xl text-lg text-zinc-600 dark:text-zinc-300">{{ data_get($hero, 'subheading') }}</p>
                 </div>
 
                 <div class="flex flex-wrap gap-3">
-                    <flux:button :href="route('collections.show', 'new-arrivals')" wire:navigate variant="primary">Shop new arrivals</flux:button>
-                    <flux:button :href="route('collections.index')" wire:navigate variant="ghost">View collections</flux:button>
+                    <flux:button :href="data_get($hero, 'primary_url', '/collections')" wire:navigate variant="primary">{{ data_get($hero, 'primary_label', 'Shop') }}</flux:button>
+                    <flux:button :href="data_get($hero, 'secondary_url', '/collections')" wire:navigate variant="ghost">{{ data_get($hero, 'secondary_label', 'View collections') }}</flux:button>
                 </div>
             </div>
 
@@ -40,7 +42,7 @@
                         <flux:icon name="rectangle-stack" class="size-10" />
                     </div>
                     <h3 class="mt-4 font-semibold text-zinc-950 group-hover:underline dark:text-white">{{ $collection->title }}</h3>
-                    <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ $collection->products()->count() }} products</p>
+                    <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ $collection->products_count }} products</p>
                 </a>
             @endforeach
         </div>

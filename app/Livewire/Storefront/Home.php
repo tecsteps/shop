@@ -5,6 +5,7 @@ namespace App\Livewire\Storefront;
 use App\Models\Collection;
 use App\Models\Product;
 use App\Models\Store;
+use App\Services\ThemeSettingsService;
 use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Component;
 
@@ -27,17 +28,26 @@ class Home extends Component
             ->where('status', 'active')
             ->whereNotNull('published_at')
             ->oldest('id')
-            ->limit(8)
+            ->limit((int) data_get($this->themeSettings(), 'home.featured_product_limit', 8))
             ->get();
     }
 
     public function featuredCollections(): SupportCollection
     {
         return Collection::query()
+            ->withCount('products')
             ->where('status', 'active')
             ->orderBy('title')
-            ->limit(4)
+            ->limit((int) data_get($this->themeSettings(), 'home.featured_collection_limit', 4))
             ->get();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function themeSettings(): array
+    {
+        return app(ThemeSettingsService::class)->forStore($this->store());
     }
 
     public function render(): mixed
@@ -46,6 +56,7 @@ class Home extends Component
             'store' => $this->store(),
             'featuredProducts' => $this->featuredProducts(),
             'featuredCollections' => $this->featuredCollections(),
+            'themeSettings' => $this->themeSettings(),
         ])->layout('layouts.storefront', [
             'title' => $this->store()->name,
         ]);

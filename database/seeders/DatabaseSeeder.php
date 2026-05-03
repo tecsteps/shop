@@ -20,6 +20,12 @@ class DatabaseSeeder extends Seeder
             StoreSettingsSeeder::class,
             CollectionSeeder::class,
             ProductSeeder::class,
+            ThemeSeeder::class,
+            ThemeFileSeeder::class,
+            ThemeSettingsSeeder::class,
+            PageSeeder::class,
+            NavigationMenuSeeder::class,
+            NavigationItemSeeder::class,
             CustomerSeeder::class,
         ]);
     }

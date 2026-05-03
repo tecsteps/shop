@@ -7,7 +7,7 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 ## Current Status
 
 - Status: in progress
-- Active slice: Phase 3 - Storefront content/theme data and cart foundation
+- Active slice: Phase 4 - Cart, checkout, pricing, discounts, shipping, and tax foundation
 - Started from: Laravel Livewire/Fortify starter kit with no shop domain tables or models present
 - Last updated: 2026-05-03
 
@@ -26,15 +26,15 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 
 | Area | Criteria Source | Status | Evidence |
 | --- | --- | --- | --- |
-| Database schema | `specs/01-DATABASE-SCHEMA.md` | partial | Phase 1 tenancy/auth tables plus Phase 2 catalog tables implemented: products, product_options, product_option_values, product_variants, variant_option_values, inventory_items, collections, collection_products, product_media. Boost schema confirmed these tables after `migrate:fresh --seed`. |
+| Database schema | `specs/01-DATABASE-SCHEMA.md` | partial | Phase 1 tenancy/auth tables, Phase 2 catalog tables, and Phase 3 theme/content/navigation tables are implemented: themes, theme_files, theme_settings, pages, navigation_menus, navigation_items. Cart/checkout/order/search/analytics/app tables are still missing. |
 | Routes/API | `specs/02-API-ROUTES.md` | partial | Phase 1 auth routes plus catalog UI routes exist: `/`, `/collections`, `/collections/{handle}`, `/products/{handle}`, `/search`, `/pages/{handle}`, `/admin/products`, `/admin/products/create`, `/admin/products/{product}/edit`, `/admin/collections`, `/admin/collections/create`, `/admin/collections/{collection}/edit`, `/admin/inventory`. API routes are still missing. |
 | Admin UI | `specs/03-ADMIN-UI.md` | partial | Flux/Livewire admin catalog shell now includes product index/form, collection index/form, and inventory list with auth protection, filtering, pagination, status changes, SKU uniqueness checks, and collection assignment. Order/customer/content/settings admin pages are still missing. |
-| Storefront UI | `specs/04-STOREFRONT-UI.md` | partial | Storefront layout, home, collections index/detail, product detail, search, breadcrumbs, price display, product cards, and static about/faq pages render seeded catalog data. Cart interaction is currently a UI dispatch only. |
+| Storefront UI | `specs/04-STOREFRONT-UI.md` | partial | Storefront layout, home, collections index/detail, product detail, search, breadcrumbs, price display, product cards, DB-backed pages, seeded navigation menus, and cached theme settings render seeded catalog/content data. Cart interaction is currently a UI dispatch only. |
 | Business logic | `specs/05-BUSINESS-LOGIC.md` | partial | `ResolveStore`, `BelongsToStore`, `StoreScope`, role checks, customer guard provider, catalog product lifecycle transitions, SKU uniqueness, variant matrix rebuilding, inventory reserve/release/commit/restock, automatic variant inventory, variant option mapping, and media resize/cleanup job implemented. Cart/checkout/order services still missing. |
 | Auth/security | `specs/06-AUTH-AND-SECURITY.md` | partial | Admin Livewire login/logout, customer guard/provider, customer login/register, login rate limiting, session hardening, and resource policies implemented. Customer password reset and Sanctum token auth still missing. |
-| Seed/test data | `specs/07-SEEDERS-AND-TEST-DATA.md` | partial | Seeders create Acme Fashion and Acme Electronics stores/domains/settings/admin access, 6 collections, 25 products, 127 variants, 127 inventory rows, 206 variant option pivots, and no product media. Order/discount/theme/content seed data still missing. |
-| Browser E2E plan | `specs/08-PLAYWRIGHT-E2E-PLAN.md` | partial | Manual Playwright MCP smoke coverage has verified storefront catalog browsing, product detail, search, static page, admin product/collection/inventory pages, and auth flows without console warnings/errors. Automated browser tests are still missing. |
-| Roadmap phases | `specs/09-IMPLEMENTATION-ROADMAP.md` | in progress | Phase 1 foundation committed. Phase 2 catalog data layer, business services, media job, seed graph, admin catalog CRUD, and storefront catalog browsing are implemented with known media/option-matrix UI gaps. |
+| Seed/test data | `specs/07-SEEDERS-AND-TEST-DATA.md` | partial | Seeders create Acme Fashion and Acme Electronics stores/domains/settings/admin access, 6 collections, 25 products, 127 variants, 127 inventory rows, 206 variant option pivots, 2 themes, 6 theme files, 2 theme settings rows, 6 pages, 4 navigation menus, 17 navigation items, and no product media. Order/discount/shipping/tax seed data still missing. |
+| Browser E2E plan | `specs/08-PLAYWRIGHT-E2E-PLAN.md` | partial | Manual Playwright MCP smoke coverage has verified storefront catalog browsing, product detail, search, DB-backed content pages, seeded navigation, admin product/collection/inventory pages, and auth flows without console warnings/errors on successful pages. Automated browser tests are still missing. |
+| Roadmap phases | `specs/09-IMPLEMENTATION-ROADMAP.md` | in progress | Phase 1 foundation, Phase 2 catalog data/UI, and Phase 3 theme/content/navigation data with storefront consumption are implemented. Phase 4 cart/checkout/pricing is next. |
 
 ## Verification Evidence
 
@@ -64,6 +64,16 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after catalog UI test changes.
 - 2026-05-03: `npm run build` passed with Vite production assets generated under ignored `public/build`.
 - 2026-05-03: Playwright MCP verified `http://shop.test/`, `/collections/t-shirts`, `/products/classic-cotton-t-shirt`, `/search?q=Cotton`, `/pages/about`, `/admin/products`, `/admin/products/create`, `/admin/collections`, and `/admin/inventory` render with no console warnings/errors.
+- 2026-05-03: `mcp__laravel_boost__.search_docs` consulted Laravel 12 migration/model/factory/seeder/cache docs and Pest 4 database testing docs before Phase 3 data-layer changes.
+- 2026-05-03: Phase 3 explorer QA confirmed the required theme/page/navigation migrations, models, enums, factories, seeders, services, and tests; noted the spec tree-navigation mismatch because `navigation_items` has no `parent_id`.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed after adding Phase 3 migrations and seeders.
+- 2026-05-03: Boost schema summaries confirmed Phase 3 tables: themes, theme_files, theme_settings, pages, navigation_menus, navigation_items. Boost query counts after fresh seed: themes 2, theme_files 6, theme_settings 2, pages 6, navigation_menus 4, navigation_items 17.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront/ThemeDataTest.php` passed: 6 tests, 31 assertions.
+- 2026-05-03: `php artisan test --compact tests/Feature/Storefront tests/Feature/Catalog` passed: 29 tests, 146 assertions.
+- 2026-05-03: `php artisan test --compact` passed: 74 tests, 267 assertions.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Phase 3 changes.
+- 2026-05-03: `npm run build` passed after Phase 3 layout changes.
+- 2026-05-03: Playwright MCP verified `http://shop.test/` renders seeded main navigation and `http://shop.test/pages/faq` renders DB-backed page content with no console warnings/errors.
 
 ## Decisions
 
@@ -75,8 +85,9 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - Customer Livewire auth components persist `storeId` from the initial storefront request because Livewire update requests do not run through the original storefront route middleware.
 - The seed specification contains an arithmetic conflict: Acme Fashion's per-product variant table sums to 117 variants, while the prose says 107. The implementation follows the concrete per-product table, resulting in 117 Fashion variants and 10 Electronics variants, 127 total.
 - Child catalog models without a `store_id` column are tenant-scoped through their parent product relationship. Inventory keeps its denormalized `store_id` and enforces that it matches the variant product store at save time.
-- Static storefront content currently ships as code-backed placeholder pages until the content/page schema slice is implemented.
+- Storefront content pages now resolve from the `pages` table and only published pages are rendered.
 - The catalog admin form intentionally blocks active products without a priced variant and duplicate in-store SKUs during UI edits, mirroring service-layer invariants where the current CRUD surface touches product variants directly.
+- Navigation tree support is flat for now because the Phase 3 schema defines `navigation_items.position` but no `parent_id`; `NavigationService::buildTree()` returns a flat tree-compatible array with empty children.
 
 ## Open Issues
 
@@ -87,6 +98,7 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - `php artisan route:list --except-vendor` hides Livewire full-page routes because their controller is vendor-provided; path-filtered route-list commands are used as evidence for those routes.
 - Phase 2 media upload/admin UI is still missing, even though the media schema/job layer exists.
 - Product options can be displayed and edited as text in the admin form, but full option matrix generation and option-value reassignment UI are not complete.
+- Theme/page/navigation admin management UI is still missing even though the Phase 3 data layer, seeders, services, and storefront consumption exist.
 - Storefront product detail "Add to cart" currently dispatches a browser event only; cart persistence and checkout are still pending later roadmap phases.
 - Automated browser tests from Spec 08 are still missing; current browser coverage is manual Playwright MCP smoke verification.
 - SQLite enum/check constraints from the schema spec are not yet explicitly enforced as database `CHECK` constraints; enum validation is currently enforced through casts/services/model invariants.
@@ -94,4 +106,4 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 
 ## Completion Summary
 
-Not complete. Phase 1 foundation and Phase 2 catalog data/UI surfaces are implemented enough to support cart, checkout, and richer storefront content work, with known auth/token, media UI, API, browser-test, and database CHECK constraint gaps tracked above.
+Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, and Phase 3 storefront theme/content/navigation data are implemented enough to support cart and checkout work, with known auth/token, media UI, theme admin UI, API, browser-test, and database CHECK constraint gaps tracked above.

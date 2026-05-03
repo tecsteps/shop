@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Models\Store;
+use App\Services\NavigationService;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -11,8 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View as ViewInstance;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
         Auth::provider('store_scoped_eloquent', function ($app, array $config): CustomerUserProvider {
             return new CustomerUserProvider($app['hash'], $config['model']);
         });
+
+        $this->app->singleton(ThemeSettingsService::class);
+        $this->app->singleton(NavigationService::class);
     }
 
     /**
@@ -32,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureStorefrontViewData();
     }
 
     /**
@@ -73,6 +82,32 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return route('login');
+        });
+    }
+
+    protected function configureStorefrontViewData(): void
+    {
+        View::composer('layouts.storefront', function (ViewInstance $view): void {
+            $store = app()->bound('current_store') ? app('current_store') : null;
+
+            if (! $store instanceof Store) {
+                $view->with([
+                    'themeSettings' => [],
+                    'mainNavigation' => [],
+                    'footerNavigation' => [],
+                ]);
+
+                return;
+            }
+
+            $themeSettings = app(ThemeSettingsService::class)->forStore($store);
+            $navigation = app(NavigationService::class);
+
+            $view->with([
+                'themeSettings' => $themeSettings,
+                'mainNavigation' => $navigation->forHandle($store, data_get($themeSettings, 'header.main_menu', 'main-menu')),
+                'footerNavigation' => $navigation->forHandle($store, data_get($themeSettings, 'footer.menu', 'footer-menu')),
+            ]);
         });
     }
 }
