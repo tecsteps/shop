@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\AnalyticsSummaryController;
 use App\Http\Controllers\Api\Admin\CollectionController as AdminCollectionController;
 use App\Http\Controllers\Api\Admin\DiscountController as AdminDiscountController;
+use App\Http\Controllers\Api\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
@@ -56,6 +57,13 @@ Route::prefix('admin/v1')
             Route::get('/analytics/summary', [AnalyticsSummaryController::class, 'show'])
                 ->middleware('api.token:read-analytics')
                 ->name('api.admin.analytics.summary');
+
+            Route::post('/exports/orders', [AdminExportController::class, 'storeOrders'])
+                ->middleware('api.token:read-orders')
+                ->name('api.admin.exports.orders.store');
+            Route::get('/exports/{export}', [AdminExportController::class, 'show'])
+                ->middleware('api.token:read-orders')
+                ->name('api.admin.exports.show');
 
             Route::get('/products', [AdminProductController::class, 'index'])
                 ->middleware('api.token:read-products')
