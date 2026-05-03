@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Admin\CollectionController as AdminCollectionContro
 use App\Http\Controllers\Api\Admin\DiscountController as AdminDiscountController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Admin\ShippingController as AdminShippingController;
+use App\Http\Controllers\Api\Admin\TaxSettingsController as AdminTaxSettingsController;
 use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
@@ -106,5 +108,25 @@ Route::prefix('admin/v1')
             Route::delete('/discounts/{discount}', [AdminDiscountController::class, 'destroy'])
                 ->middleware('api.token:write-discounts')
                 ->name('api.admin.discounts.destroy');
+
+            Route::get('/shipping/zones', [AdminShippingController::class, 'index'])
+                ->middleware('api.token:read-settings')
+                ->name('api.admin.shipping.zones.index');
+            Route::post('/shipping/zones', [AdminShippingController::class, 'storeZone'])
+                ->middleware('api.token:write-settings')
+                ->name('api.admin.shipping.zones.store');
+            Route::put('/shipping/zones/{zone}', [AdminShippingController::class, 'updateZone'])
+                ->middleware('api.token:write-settings')
+                ->name('api.admin.shipping.zones.update');
+            Route::post('/shipping/zones/{zone}/rates', [AdminShippingController::class, 'storeRate'])
+                ->middleware('api.token:write-settings')
+                ->name('api.admin.shipping.zones.rates.store');
+
+            Route::get('/tax/settings', [AdminTaxSettingsController::class, 'show'])
+                ->middleware('api.token:read-settings')
+                ->name('api.admin.tax.settings.show');
+            Route::put('/tax/settings', [AdminTaxSettingsController::class, 'update'])
+                ->middleware('api.token:write-settings')
+                ->name('api.admin.tax.settings.update');
         });
     });
