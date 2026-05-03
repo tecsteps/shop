@@ -25,6 +25,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Storefront checkout now uses a verified address, shipping, and payment step flow with locked future steps, editable completed steps, compact step summaries, and responsive order summary behavior.
 - Admin Product REST API endpoints are implemented and verified: token-scoped list/show/create/update/archive routes, product JSON resources, store-scoped validation, variant inventory mutation, collection assignment, and ability/store isolation tests.
 - Admin Order REST API endpoints are implemented and verified: token-scoped list/show routes, shipped fulfillment creation, captured-payment refunds, nested order JSON resources, validation, and ability/store isolation tests.
+- Product lifecycle order-reference guards are now verified against real `order_lines`: draft reversion/deletion is blocked for referenced products, unreferenced draft products hard-delete, and orphan variants with order references are archived.
 - Admin Collection and Discount REST API endpoints are implemented and verified: token-scoped collection CRUD with product assignment, discount CRUD with scoped code validation, JSON resources, and cross-store isolation.
 - Admin Settings REST API endpoints are implemented and verified: shipping zone list/create/update, shipping-rate creation, tax settings show/update, overlap validation, JSON resources, and token/store isolation.
 - Admin Content and Search Maintenance REST API endpoints are implemented and verified: token-scoped page CRUD with sanitized HTML/generated handles, store-scoped validation, search index status reporting, synchronous FTS reindex behind the spec's accepted-job response, and ability/store isolation tests.
@@ -88,7 +89,6 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 5 backend bank-transfer confirmation, refunds, fulfillment creation, and shipped/delivered shipment transitions now have admin order-detail actions. More granular partial-fulfillment and line-level refund UI can still be expanded during polish.
 - Phase 4 has a functional cart page, accessible cart count, slide-out cart drawer, and guided checkout step flow. Discount-code entry remains on the cart/checkout flow; the drawer links customers into checkout rather than applying discounts inline.
 - Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
-- Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
 - Admin analytics, apps, API tokens, and webhook backend flows are implemented for the current data model. The developer screen exposes the current spec-backed token abilities, including theme/content/settings scopes and owner-only `manage-platform`. A future dependency decision could replace the first-party token table with Sanctum if package changes are approved.
 
 ## Verification Log
@@ -233,3 +233,7 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact` passed, 145 tests / 839 assertions.
 - 2026-05-03: `npm run build` passed for the updated customer account reset UI assets.
 - 2026-05-03: Playwright smoke verified `/forgot-password`, customer reset-link success, `/reset-password/{token}` with email prefill, successful reset redirect to `/account/login`, post-reset customer login to `/account`, token deletion, and no current browser console warnings or errors at `http://shop.test`.
+- 2026-05-03: `php artisan test --compact tests/Feature/Products/ProductServiceTest.php` passed, 7 tests / 20 assertions, including order-line product deletion/status guards and variant orphan archiving.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after product lifecycle guard regression tests.
+- 2026-05-03: `php artisan test --compact tests/Feature/Products` passed, 12 tests / 35 assertions.
+- 2026-05-03: `php artisan test --compact` passed, 148 tests / 844 assertions.

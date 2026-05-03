@@ -1,8 +1,11 @@
 <?php
 
 use App\Enums\ProductStatus;
+use App\Enums\VariantStatus;
 use App\Events\ProductStatusChanged;
 use App\Exceptions\InvalidProductTransitionException;
+use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\Product;
 use App\Models\ProductOption;
 use App\Models\ProductVariant;
@@ -88,4 +91,76 @@ test('variant matrix rebuild creates combinations and removes orphan variants', 
         ->and($variants->pluck('price_amount')->all())->toBe([1999, 1999])
         ->and($variants->flatMap->optionValues->pluck('id')->sort()->values()->all())->toBe([$small->id, $medium->id])
         ->and(ProductVariant::query()->whereKey($template->id)->exists())->toBeFalse();
+});
+
+test('product service blocks draft reversion and deletion when order lines reference product', function () {
+    $store = Store::factory()->create();
+    $product = Product::factory()->for($store)->withDefaultVariant(1000)->create([
+        'status' => ProductStatus::Active,
+    ]);
+    $variant = $product->variants()->firstOrFail();
+    $order = Order::factory()->for($store)->create();
+
+    OrderLine::query()->create([
+        'order_id' => $order->id,
+        'product_id' => $product->id,
+        'variant_id' => $variant->id,
+        'title_snapshot' => $product->title,
+        'sku_snapshot' => $variant->sku,
+        'quantity' => 1,
+        'unit_price_amount' => $variant->price_amount,
+        'total_amount' => $variant->price_amount,
+    ]);
+
+    expect(fn () => app(ProductService::class)->transitionStatus($product->refresh(), ProductStatus::Draft))
+        ->toThrow(InvalidProductTransitionException::class);
+
+    $product->forceFill(['status' => ProductStatus::Draft])->save();
+
+    expect(fn () => app(ProductService::class)->delete($product->refresh()))
+        ->toThrow(InvalidProductTransitionException::class)
+        ->and(Product::query()->whereKey($product->id)->exists())->toBeTrue();
+});
+
+test('product service hard deletes draft products without order references', function () {
+    $product = Product::factory()->draft()->withDefaultVariant(1000)->create();
+
+    app(ProductService::class)->delete($product);
+
+    $this->assertModelMissing($product);
+});
+
+test('variant matrix archives orphan variants with order references', function () {
+    $store = Store::factory()->create();
+    $product = Product::factory()->for($store)->create();
+    ProductVariant::factory()->for($product)->default()->create(['price_amount' => 1999]);
+    $option = ProductOption::factory()->for($product)->create(['name' => 'Size']);
+
+    $option->values()->create(['value' => 'S', 'position' => 0]);
+    $medium = $option->values()->create(['value' => 'M', 'position' => 1]);
+
+    app(VariantMatrixService::class)->rebuildMatrix($product);
+
+    $mediumVariant = ProductVariant::query()
+        ->where('product_id', $product->id)
+        ->whereHas('optionValues', fn ($query) => $query->whereKey($medium->id))
+        ->firstOrFail();
+    $order = Order::factory()->for($store)->create();
+
+    OrderLine::query()->create([
+        'order_id' => $order->id,
+        'product_id' => $product->id,
+        'variant_id' => $mediumVariant->id,
+        'title_snapshot' => $product->title,
+        'sku_snapshot' => $mediumVariant->sku,
+        'quantity' => 1,
+        'unit_price_amount' => $mediumVariant->price_amount,
+        'total_amount' => $mediumVariant->price_amount,
+    ]);
+
+    $medium->delete();
+
+    app(VariantMatrixService::class)->rebuildMatrix($product->refresh());
+
+    expect($mediumVariant->refresh()->status)->toBe(VariantStatus::Archived);
 });
