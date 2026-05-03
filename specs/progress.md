@@ -12,8 +12,9 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Phase 1 foundation is implemented and committed: configuration defaults, core tenancy schema, models, factories, seeders, tenant middleware, customer guard provider registration, store role helper, and password_hash compatibility.
 - Phase 2 catalog backend is implemented and committed: products, options, option values, variants, inventory, collections, collection pivot, media schema/models/factories/seed data, product lifecycle service, variant matrix service, inventory service, handle generator, and product/collection policies.
 - Phase 3 theme/storefront shell is implemented and verified: theme/page/navigation schema, models, factories, seed data, theme settings service, navigation service, storefront layout, product cards, price rendering, and initial Livewire storefront pages.
-- Admin shop UI, functional cart persistence, checkout, orders, customer account flows, search indexing, analytics, apps, and webhooks are not implemented yet.
-- Phase 4 cart/checkout/pricing is the next active vertical slice after committing the storefront shell.
+- Phase 4 cart/checkout/pricing is implemented and verified: carts, cart lines, checkouts, shipping zones/rates, tax settings, discounts, cart and checkout services, pricing snapshots, storefront REST endpoints, Livewire cart/checkout UI, and cleanup jobs.
+- Admin shop UI, payments, orders, customer account flows, search indexing, analytics, apps, and webhooks are not implemented yet.
+- Phase 5 payments/orders/customer persistence is the next active vertical slice after committing cart and checkout progress.
 
 ## Execution Plan
 
@@ -24,10 +25,10 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 2. **Catalog** - Committed (`ea70780e`)
    - Add products, variants, options, inventory, collections, media, catalog services, and storefront/admin catalog basics.
    - Verify product lifecycle, inventory, variants, and collection isolation tests.
-3. **Theme and storefront shell** - Implemented and verified
+3. **Theme and storefront shell** - Committed (`58879dde`)
    - Add themes, pages, navigation, storefront layout, reusable components, and initial storefront pages.
    - Verify storefront render, navigation, product detail, accessibility smoke, and responsive browser checks.
-4. **Cart, checkout, pricing** - Pending
+4. **Cart, checkout, pricing** - Implemented and verified
    - Add carts, checkout, discounts, shipping, taxes, pricing engine, state transitions, and REST endpoints.
    - Verify cart API, cart UI, checkout state, pricing, discount, shipping, and tax tests.
 5. **Payments and orders** - Pending
@@ -56,14 +57,19 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - Admin users store credentials in `users.password_hash`; the `User` model keeps a `password` attribute alias so Fortify and starter-kit Livewire settings continue to work.
 - Storefront pages are class-based Livewire components using the existing starter layout conventions and store resolution middleware.
 - Phase 3 includes a cart page/drawer shell only; persistent carts and line-item actions stay in Phase 4 so pricing and checkout state can be implemented coherently.
+- Livewire update requests persist `ResolveStore` middleware so storefront actions keep tenant context after the initial page load.
+- Phase 4 keeps `customer_id` as nullable indexed IDs without foreign keys until the `customers` table lands in Phase 5; SQLite test connections reject foreign keys to future tables.
 
 ## Open Gaps
 
 - Phase 1 still needs the resource policies listed in the roadmap, but most referenced resources do not exist until later phases. Policies will be added with their models to keep type hints and tests coherent.
 - Phase 2 still needs Livewire/admin product management and full media resizing variants. Storefront product/collection browsing is covered by the Phase 3 shell.
 - Phase 3 still needs the richer theme editor/admin surfaces, search modal autocomplete, checkout/account/error storefront templates, and fully configurable section ordering. These are deferred to the admin, search, checkout, and account slices.
+- Phase 4 stops at payment-method selection and inventory reservation. Mock payment processing, order creation, bank-transfer confirmation, refunds, and fulfillment are Phase 5.
+- Phase 4 has a functional cart page and accessible cart count, but the richer slide-out cart drawer can be expanded during UI polish.
+- Discounts, shipping, and tax are implemented for the specified local/manual flows; provider/carrier integrations remain stubs by design.
 - Order-reference guards in product deletion/status logic are present but only become fully meaningful once `order_lines` exists in Phase 5.
-- Cart and all later shop phases remain unimplemented.
+- Customer accounts, admin surfaces, payments/orders, and all later shop phases remain unimplemented.
 - API token requirements mention Sanctum, but the package is not currently installed. This remains an open dependency decision for the API/developers phase because dependencies must not be changed without approval.
 
 ## Verification Log
@@ -82,4 +88,11 @@ Build the complete self-contained shop platform from `specs/*` and verify it wit
 - 2026-05-03: `php artisan test --compact` passed, 53 tests / 139 assertions.
 - 2026-05-03: `npm run build` passed for the storefront Tailwind/Vite assets.
 - 2026-05-03: Playwright smoke visited `http://shop.test/` and `http://shop.test/products/linen-shirt`; latest browser console check reported no warnings or errors.
+- 2026-05-03: `php artisan test --compact tests/Feature/Api/StorefrontCartApiTest.php tests/Feature/Cart tests/Feature/Checkout tests/Feature/Storefront/StorefrontCartLivewireTest.php` passed, 7 tests / 44 assertions.
+- 2026-05-03: `php artisan migrate:fresh --seed --no-interaction` passed with cart, checkout, shipping, tax, and discount migrations/seed data.
+- 2026-05-03: `vendor/bin/pint --dirty --format agent` passed after Phase 4 changes.
+- 2026-05-03: `php artisan test --compact` passed, 60 tests / 183 assertions.
+- 2026-05-03: `npm run build` passed for the updated cart/checkout Tailwind/Vite assets.
+- 2026-05-03: Playwright smoke completed product add-to-cart, cart checkout start, checkout address save, shipping selection, and payment-method save at `http://shop.test`; latest console check reported no warnings or errors.
+- 2026-05-03: `browser_logs` reported no browser log file after the latest smoke check.
 - Pending: Playwright customer and admin browser flows.

@@ -1,3 +1,3 @@
-<div class="hidden" aria-hidden="true">
-    Cart drawer
+<div class="sr-only" aria-live="polite">
+    Cart items: {{ $cart?->itemCount() ?? 0 }}
 </div>

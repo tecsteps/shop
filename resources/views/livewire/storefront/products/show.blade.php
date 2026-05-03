@@ -37,8 +37,18 @@
             {!! $product->description_html !!}
         </div>
 
-        <button type="button" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950">
-            Add to cart
-        </button>
+        <form wire:submit="addToCart" class="flex flex-col gap-3 sm:max-w-sm">
+            <label class="text-sm font-semibold" for="quantity">Quantity</label>
+            <input id="quantity" wire:model="quantity" type="number" min="1" max="9999" class="w-28 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
+            @error('quantity')
+                <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+            @enderror
+            @if(session('cart_status'))
+                <p class="text-sm font-medium text-emerald-700 dark:text-emerald-400">{{ session('cart_status') }}</p>
+            @endif
+            <button type="submit" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60 dark:bg-white dark:text-zinc-950" wire:loading.attr="disabled">
+                Add to cart
+            </button>
+        </form>
     </div>
 </div>

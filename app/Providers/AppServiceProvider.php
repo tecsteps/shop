@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\ResolveStore;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Livewire::addPersistentMiddleware([
+            ResolveStore::class,
+        ]);
+
         $this->configureDefaults();
         $this->configureRateLimiting();
     }
@@ -57,6 +63,10 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api.storefront', function (Request $request) {
             return Limit::perMinute(120)->by($request->ip());
+        });
+
+        RateLimiter::for('checkout', function (Request $request) {
+            return Limit::perMinute(10)->by($request->hasSession() ? $request->session()->getId() : $request->ip());
         });
     }
 }

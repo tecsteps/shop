@@ -130,6 +130,46 @@ class Store extends Model
         return $this->hasMany(NavigationMenu::class);
     }
 
+    /**
+     * @return HasMany<Cart, $this>
+     */
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    /**
+     * @return HasMany<Checkout, $this>
+     */
+    public function checkouts(): HasMany
+    {
+        return $this->hasMany(Checkout::class);
+    }
+
+    /**
+     * @return HasMany<ShippingZone, $this>
+     */
+    public function shippingZones(): HasMany
+    {
+        return $this->hasMany(ShippingZone::class);
+    }
+
+    /**
+     * @return HasOne<TaxSettings, $this>
+     */
+    public function taxSettings(): HasOne
+    {
+        return $this->hasOne(TaxSettings::class);
+    }
+
+    /**
+     * @return HasMany<Discount, $this>
+     */
+    public function discounts(): HasMany
+    {
+        return $this->hasMany(Discount::class);
+    }
+
     public function isSuspended(): bool
     {
         return $this->status === StoreStatus::Suspended;
