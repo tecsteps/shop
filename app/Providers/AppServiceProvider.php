@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,18 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('checkout', function (Request $request): Limit {
             return Limit::perMinute(10)->by($request->session()->getId() ?: $request->ip());
+        });
+
+        Authenticate::redirectUsing(function (Request $request): string {
+            if ($request->is('admin*')) {
+                return route('admin.login');
+            }
+
+            if ($request->is('account*')) {
+                return route('account.login');
+            }
+
+            return route('login');
         });
     }
 }
