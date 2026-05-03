@@ -37,16 +37,34 @@
             {!! $product->description_html !!}
         </div>
 
+        @php
+            $stockClasses = match ($stock['tone']) {
+                'green' => 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:ring-emerald-900/50',
+                'amber' => 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:ring-amber-900/50',
+                'blue' => 'bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-950/30 dark:text-sky-300 dark:ring-sky-900/50',
+                default => 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-950/30 dark:text-red-300 dark:ring-red-900/50',
+            };
+        @endphp
+
+        <div aria-live="polite" class="inline-flex w-fit items-center gap-2 rounded-md px-3 py-2 text-sm font-medium ring-1 {{ $stockClasses }}">
+            <span class="h-2 w-2 rounded-full bg-current"></span>
+            <span>{{ $stock['message'] }}</span>
+        </div>
+
         <form wire:submit="addToCart" class="flex flex-col gap-3 sm:max-w-sm">
             <label class="text-sm font-semibold" for="quantity">Quantity</label>
-            <input id="quantity" wire:model="quantity" type="number" min="1" max="9999" class="w-28 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
+            <div class="inline-flex h-10 w-fit items-center rounded-md border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                <button type="button" wire:click="decrementQuantity" class="h-10 w-10 text-lg leading-none disabled:cursor-not-allowed disabled:opacity-40" aria-label="Decrease quantity" @disabled($quantity <= 1)>-</button>
+                <input id="quantity" wire:model.live="quantity" type="number" min="1" max="{{ $stock['max_quantity'] }}" inputmode="numeric" class="h-10 w-14 border-x border-zinc-300 bg-transparent text-center text-sm font-semibold text-zinc-950 [appearance:textfield] dark:border-zinc-700 dark:text-white [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none">
+                <button type="button" wire:click="incrementQuantity" class="h-10 w-10 text-lg leading-none disabled:cursor-not-allowed disabled:opacity-40" aria-label="Increase quantity" @disabled($quantity >= $stock['max_quantity'] || ! $stock['can_add_to_cart'])>+</button>
+            </div>
             @error('quantity')
                 <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
             @enderror
             @if(session('cart_status'))
                 <p class="text-sm font-medium text-emerald-700 dark:text-emerald-400">{{ session('cart_status') }}</p>
             @endif
-            <button type="submit" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60 dark:bg-white dark:text-zinc-950" wire:loading.attr="disabled">
+            <button type="submit" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-950" wire:loading.attr="disabled" @disabled(! $stock['can_add_to_cart'])>
                 Add to cart
             </button>
         </form>

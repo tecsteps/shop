@@ -41,7 +41,7 @@
         @endif
 
         <header class="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
-            <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+            <div class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 lg:px-8">
                 <details class="lg:hidden">
                     <summary class="cursor-pointer list-none rounded-md border border-zinc-300 px-3 py-2 text-sm font-medium dark:border-zinc-700">
                         Menu
@@ -57,7 +57,7 @@
                     </nav>
                 </details>
 
-                <a href="/" class="text-lg font-semibold tracking-normal">
+                <a href="/" class="min-w-0 truncate whitespace-nowrap text-lg font-semibold tracking-normal">
                     {{ $store->name }}
                 </a>
 
@@ -69,10 +69,10 @@
                     @endforeach
                 </nav>
 
-                <div class="flex items-center gap-2">
+                <div class="flex shrink-0 items-center gap-1 sm:gap-2">
                     @livewire('storefront.search.modal')
-                    <a href="/account" class="rounded-md px-3 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900">Account</a>
-                    <a href="/cart" class="rounded-md bg-zinc-950 px-3 py-2 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950">Cart</a>
+                    <a href="/account" class="hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 sm:inline-flex">Account</a>
+                    <button type="button" x-data x-on:click="$dispatch('open-cart')" class="rounded-md bg-zinc-950 px-2 py-2 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950 sm:px-3">Cart</button>
                 </div>
             </div>
         </header>

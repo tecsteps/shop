@@ -82,6 +82,7 @@ class Index extends Component
                 }))
                 ->when($this->status !== 'all', fn ($query) => $query->where('status', $this->status))
                 ->latest('updated_at')
+                ->orderBy('title')
                 ->paginate(10),
             'statuses' => ProductStatus::cases(),
         ])->layout('livewire.admin.layout.app', [

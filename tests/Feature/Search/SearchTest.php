@@ -2,6 +2,7 @@
 
 use App\Livewire\Admin\Search\Settings as AdminSearchSettings;
 use App\Livewire\Storefront\Search\Index as StorefrontSearchIndex;
+use App\Livewire\Storefront\Search\Modal as StorefrontSearchModal;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SearchQuery;
@@ -125,4 +126,19 @@ test('storefront search page and admin settings are livewire backed', function (
         ['bag', 'tote'],
         ['jacket', 'coat'],
     ])->and($settings->stop_words_json)->toBe(['foo', 'bar']);
+});
+
+test('storefront search modal opens and renders suggestions', function (): void {
+    app()->instance('current_store', $this->store);
+
+    Livewire::test(StorefrontSearchModal::class)
+        ->assertSet('isOpen', false)
+        ->call('show')
+        ->assertSet('isOpen', true)
+        ->assertSee('Start typing to search products and collections.')
+        ->set('q', 'linen')
+        ->assertSee('Linen Shirt')
+        ->call('close')
+        ->assertSet('isOpen', false)
+        ->assertSet('q', '');
 });
