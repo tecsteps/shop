@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFu
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
 use App\Http\Controllers\Api\Admin\V1\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Admin\V1\SearchIndexController as AdminSearchIndexController;
 use App\Http\Controllers\Api\Apps\V1\DeferredEndpointController as DeferredAppEndpointController;
 use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\V1\CartController;
@@ -93,6 +94,14 @@ Route::middleware('throttle:60,1')
             Route::post('pages', [AdminPageController::class, 'store'])->name('pages.store');
             Route::put('pages/{page}', [AdminPageController::class, 'update'])->name('pages.update');
             Route::delete('pages/{page}', [AdminPageController::class, 'destroy'])->name('pages.destroy');
+        });
+
+        Route::middleware('admin.api:read-settings')->group(function (): void {
+            Route::get('search/status', [AdminSearchIndexController::class, 'status'])->name('search.status');
+        });
+
+        Route::middleware('admin.api:write-settings')->group(function (): void {
+            Route::post('search/reindex', [AdminSearchIndexController::class, 'reindex'])->name('search.reindex');
         });
 
         Route::middleware('admin.api:read-orders')->group(function (): void {
