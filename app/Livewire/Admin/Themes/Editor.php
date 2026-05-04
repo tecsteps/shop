@@ -5,10 +5,12 @@ namespace App\Livewire\Admin\Themes;
 use App\Enums\ThemeStatus;
 use App\Models\Store;
 use App\Models\Theme;
+use App\Models\ThemeFile;
 use App\Models\ThemeSettings;
 use App\Services\ThemeSettingsService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class Editor extends Component
@@ -18,6 +20,10 @@ class Editor extends Component
     public Theme $theme;
 
     public string $selectedSection = 'announcement';
+
+    public ?int $selectedFileId = null;
+
+    public string $fileContents = '';
 
     /**
      * @var array<string, mixed>
@@ -45,6 +51,42 @@ class Editor extends Component
         abort_unless(array_key_exists($sectionKey, $this->sections()), 404);
 
         $this->selectedSection = $sectionKey;
+        $this->selectedFileId = null;
+        $this->fileContents = '';
+    }
+
+    public function selectFile(int $fileId): void
+    {
+        $file = $this->themeFile($fileId);
+
+        $this->authorize('update', $this->theme);
+
+        $this->selectedFileId = $file->getKey();
+        $this->fileContents = Storage::disk('local')->exists($file->storage_key)
+            ? Storage::disk('local')->get($file->storage_key)
+            : '';
+    }
+
+    public function saveFile(): void
+    {
+        abort_unless($this->selectedFileId !== null, 404);
+
+        $this->authorize('update', $this->theme);
+
+        $this->validate([
+            'fileContents' => ['string', 'max:262144'],
+        ]);
+
+        $file = $this->themeFile($this->selectedFileId);
+        Storage::disk('local')->put($file->storage_key, $this->fileContents);
+
+        $file->forceFill([
+            'sha256' => hash('sha256', $this->fileContents),
+            'byte_size' => strlen($this->fileContents),
+        ])->save();
+
+        session()->flash('status', 'Theme file saved');
+        $this->dispatch('toast', type: 'success', message: __('Theme file saved'));
     }
 
     public function save(ThemeSettingsService $settings): void
@@ -146,6 +188,8 @@ class Editor extends Component
         return view('livewire.admin.themes.editor', [
             'sections' => $this->sections(),
             'activeSection' => $this->sections()[$this->selectedSection],
+            'themeFiles' => $this->themeFiles(),
+            'selectedFile' => $this->selectedFile(),
             'previewUrl' => $this->previewUrl(),
         ])->layout('layouts.app', [
             'title' => __('Theme editor'),
@@ -155,5 +199,33 @@ class Editor extends Component
     private function store(): Store
     {
         return Store::query()->whereKey($this->theme->store_id)->firstOrFail();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, ThemeFile>
+     */
+    private function themeFiles(): \Illuminate\Database\Eloquent\Collection
+    {
+        return ThemeFile::withoutGlobalScopes()
+            ->where('theme_id', $this->theme->getKey())
+            ->orderBy('path')
+            ->get();
+    }
+
+    private function selectedFile(): ?ThemeFile
+    {
+        if ($this->selectedFileId === null) {
+            return null;
+        }
+
+        return $this->themeFile($this->selectedFileId);
+    }
+
+    private function themeFile(int $fileId): ThemeFile
+    {
+        return ThemeFile::withoutGlobalScopes()
+            ->where('theme_id', $this->theme->getKey())
+            ->whereKey($fileId)
+            ->firstOrFail();
     }
 }

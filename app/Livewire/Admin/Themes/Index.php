@@ -11,6 +11,7 @@ use App\Services\ThemeSettingsService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -76,13 +77,22 @@ class Index extends Component
             $theme->files()
                 ->withoutGlobalScopes()
                 ->get()
-                ->each(fn (ThemeFile $file): ThemeFile => ThemeFile::withoutGlobalScopes()->create([
-                    'theme_id' => $copy->getKey(),
-                    'path' => $file->path,
-                    'storage_key' => $file->storage_key,
-                    'sha256' => $file->sha256,
-                    'byte_size' => $file->byte_size,
-                ]));
+                ->each(function (ThemeFile $file) use ($copy): void {
+                    $contents = Storage::disk('local')->exists($file->storage_key)
+                        ? Storage::disk('local')->get($file->storage_key)
+                        : '';
+                    $storageKey = "themes/{$copy->getKey()}/{$file->path}";
+
+                    Storage::disk('local')->put($storageKey, $contents);
+
+                    ThemeFile::withoutGlobalScopes()->create([
+                        'theme_id' => $copy->getKey(),
+                        'path' => $file->path,
+                        'storage_key' => $storageKey,
+                        'sha256' => hash('sha256', $contents),
+                        'byte_size' => strlen($contents),
+                    ]);
+                });
 
             ThemeSettings::withoutGlobalScopes()->create([
                 'theme_id' => $copy->getKey(),

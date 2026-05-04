@@ -18,6 +18,7 @@ use App\Models\ThemeSettings;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
@@ -182,6 +183,11 @@ test('themes can be duplicated edited and published', function (): void {
         ->where('store_id', $store->getKey())
         ->where('name', $published->name.' Copy')
         ->firstOrFail();
+    $publishedFile = $published->files()->withoutGlobalScopes()->firstOrFail();
+    $copyFile = $copy->files()->withoutGlobalScopes()->where('path', $publishedFile->path)->firstOrFail();
+
+    expect($copyFile->storage_key)->not->toBe($publishedFile->storage_key)
+        ->and(Storage::disk('local')->get($copyFile->storage_key))->toBe(Storage::disk('local')->get($publishedFile->storage_key));
 
     Livewire::actingAs($user)
         ->test(AdminThemeEditor::class, ['theme' => $copy])
@@ -194,6 +200,29 @@ test('themes can be duplicated edited and published', function (): void {
         ->and($copy->refresh()->status)->toBe(ThemeStatus::Published)
         ->and($published->refresh()->status)->toBe(ThemeStatus::Draft)
         ->and(Theme::withoutGlobalScopes()->where('store_id', $store->getKey())->where('status', ThemeStatus::Published)->count())->toBe(1);
+});
+
+test('theme editor saves file contents and metadata', function (): void {
+    $store = adminContentStore();
+    $user = adminContentUser();
+    $theme = Theme::withoutGlobalScopes()->where('store_id', $store->getKey())->firstOrFail();
+    $file = $theme->files()->withoutGlobalScopes()->where('path', 'sections/hero.blade.php')->firstOrFail();
+
+    Storage::disk('local')->put($file->storage_key, 'Original theme file');
+
+    Livewire::actingAs($user)
+        ->test(AdminThemeEditor::class, ['theme' => $theme])
+        ->call('selectFile', $file->getKey())
+        ->assertSet('selectedFileId', $file->getKey())
+        ->assertSet('fileContents', 'Original theme file')
+        ->set('fileContents', '<section>Edited hero file</section>')
+        ->call('saveFile')
+        ->assertHasNoErrors()
+        ->assertSee('Theme file saved');
+
+    expect(Storage::disk('local')->get($file->storage_key))->toBe('<section>Edited hero file</section>')
+        ->and($file->refresh()->sha256)->toBe(hash('sha256', '<section>Edited hero file</section>'))
+        ->and($file->byte_size)->toBe(strlen('<section>Edited hero file</section>'));
 });
 
 test('content management honors store roles and store scoping', function (): void {

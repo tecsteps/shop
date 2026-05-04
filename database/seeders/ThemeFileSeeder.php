@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Theme;
 use App\Models\ThemeFile;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class ThemeFileSeeder extends Seeder
 {
@@ -19,18 +20,33 @@ class ThemeFileSeeder extends Seeder
                 'sections/hero.blade.php',
                 'sections/featured-products.blade.php',
             ] as $path) {
+                $contents = $this->contents($theme, $path);
+                $storageKey = "themes/{$theme->getKey()}/{$path}";
+
+                Storage::disk('local')->put($storageKey, $contents);
+
                 ThemeFile::withoutGlobalScopes()->updateOrCreate(
                     [
                         'theme_id' => $theme->getKey(),
                         'path' => $path,
                     ],
                     [
-                        'storage_key' => "themes/{$theme->getKey()}/{$path}",
-                        'sha256' => hash('sha256', "{$theme->getKey()}:{$path}"),
-                        'byte_size' => 1024,
+                        'storage_key' => $storageKey,
+                        'sha256' => hash('sha256', $contents),
+                        'byte_size' => strlen($contents),
                     ],
                 );
             }
         });
+    }
+
+    private function contents(Theme $theme, string $path): string
+    {
+        return match ($path) {
+            'layouts/storefront.blade.php' => "<x-layouts.storefront :title=\"\$title ?? '{$theme->name}'\">\n    {{ \$slot }}\n</x-layouts.storefront>\n",
+            'sections/hero.blade.php' => "<section class=\"hero\">\n    <h1>{{ data_get(\$settings, 'home.hero.heading') }}</h1>\n</section>\n",
+            'sections/featured-products.blade.php' => "<section class=\"featured-products\">\n    @foreach(\$products as \$product)\n        <article>{{ \$product->title }}</article>\n    @endforeach\n</section>\n",
+            default => '',
+        };
     }
 }
