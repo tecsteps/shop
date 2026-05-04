@@ -3,6 +3,7 @@
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 uses(RefreshDatabase::class);
 
@@ -21,4 +22,22 @@ test('sqlite enum columns are created with check constraints', function (): void
         ->and($tableSql['orders'])->toContain('"financial_status" varchar check ("financial_status" in (\'pending\', \'authorized\', \'paid\', \'partially_refunded\', \'refunded\', \'voided\'))')
         ->and($tableSql['tax_settings'])->toContain('"provider" varchar check ("provider" in (\'stripe_tax\', \'none\'))')
         ->and($tableSql['data_exports'])->toContain('"status" varchar check ("status" in (\'queued\', \'processing\', \'completed\', \'failed\'))');
+});
+
+test('personal access tokens table matches the api token schema', function (): void {
+    expect(Schema::hasTable('personal_access_tokens'))->toBeTrue()
+        ->and(Schema::hasColumns('personal_access_tokens', [
+            'id',
+            'tokenable_type',
+            'tokenable_id',
+            'name',
+            'token',
+            'abilities',
+            'last_used_at',
+            'expires_at',
+            'created_at',
+            'updated_at',
+        ]))->toBeTrue()
+        ->and(Schema::hasIndex('personal_access_tokens', ['token'], 'unique'))->toBeTrue()
+        ->and(Schema::hasIndex('personal_access_tokens', ['tokenable_type', 'tokenable_id']))->toBeTrue();
 });
