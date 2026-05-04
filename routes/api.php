@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundC
 use App\Http\Controllers\Api\Admin\V1\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\V1\SearchIndexController as AdminSearchIndexController;
+use App\Http\Controllers\Api\Admin\V1\TaxSettingsController as AdminTaxSettingsController;
 use App\Http\Controllers\Api\Apps\V1\DeferredEndpointController as DeferredAppEndpointController;
 use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\V1\CartController;
@@ -99,10 +100,12 @@ Route::middleware('throttle:60,1')
 
         Route::middleware('admin.api:read-settings')->group(function (): void {
             Route::get('search/status', [AdminSearchIndexController::class, 'status'])->name('search.status');
+            Route::get('tax/settings', [AdminTaxSettingsController::class, 'show'])->name('tax.settings.show');
         });
 
         Route::middleware('admin.api:write-settings')->group(function (): void {
             Route::post('search/reindex', [AdminSearchIndexController::class, 'reindex'])->name('search.reindex');
+            Route::put('tax/settings', [AdminTaxSettingsController::class, 'update'])->name('tax.settings.update');
         });
 
         Route::middleware('admin.api:read-analytics')->group(function (): void {
