@@ -14,6 +14,10 @@
                 </flux:button>
             </div>
 
+            @if ($cartMessage)
+                <flux:callout color="amber" icon="exclamation-triangle">{{ $cartMessage }}</flux:callout>
+            @endif
+
             @if ($lines->isEmpty())
                 <div class="rounded-lg border border-dashed border-zinc-300 p-10 text-center dark:border-zinc-700">
                     <flux:icon name="shopping-bag" class="mx-auto size-12 text-zinc-400 dark:text-zinc-600" />

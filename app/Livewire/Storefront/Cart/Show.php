@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Storefront\Cart;
 
+use App\Exceptions\InsufficientInventoryException;
+use App\Exceptions\InvalidCartOperationException;
 use App\Exceptions\InvalidDiscountException;
 use App\Models\Cart;
 use App\Models\CartLine;
@@ -32,6 +34,8 @@ class Show extends Component
 
     public string $shippingProvinceCode = '';
 
+    public ?string $cartMessage = null;
+
     public function mount(): void
     {
         $this->storeId = $this->store()->getKey();
@@ -50,8 +54,13 @@ class Show extends Component
             return;
         }
 
-        app(CartService::class)->updateLineQuantity($line->cart, $line->getKey(), $line->quantity + 1);
-        $this->dispatch('cart-updated');
+        try {
+            app(CartService::class)->updateLineQuantity($line->cart, $line->getKey(), $line->quantity + 1);
+            $this->cartMessage = null;
+            $this->dispatch('cart-updated');
+        } catch (InsufficientInventoryException|InvalidCartOperationException $exception) {
+            $this->cartMessage = $exception->getMessage();
+        }
     }
 
     public function decreaseQuantity(int $lineId): void
@@ -63,6 +72,7 @@ class Show extends Component
         }
 
         app(CartService::class)->updateLineQuantity($line->cart, $line->getKey(), $line->quantity - 1);
+        $this->cartMessage = null;
         $this->dispatch('cart-updated');
     }
 
@@ -75,6 +85,7 @@ class Show extends Component
         }
 
         app(CartService::class)->removeLine($line->cart, $line->getKey());
+        $this->cartMessage = null;
         $this->dispatch('cart-updated');
     }
 

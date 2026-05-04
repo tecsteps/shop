@@ -2,6 +2,7 @@
 
 use App\Enums\CartStatus;
 use App\Enums\CheckoutStatus;
+use App\Enums\InventoryPolicy;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
@@ -81,6 +82,27 @@ test('cart page updates and removes line quantities', function () {
         ->assertDispatched('cart-updated');
 
     expect($cart->lines()->withoutGlobalScopes()->count())->toBe(0);
+});
+
+test('cart page shows a stock message when quantity exceeds deny-policy inventory', function () {
+    $store = storefrontUiStore();
+    $variant = storefrontUiVariant($store);
+    $inventory = InventoryItem::withoutGlobalScopes()->where('variant_id', $variant->getKey())->firstOrFail();
+    $inventory->forceFill([
+        'quantity_on_hand' => 2,
+        'quantity_reserved' => 0,
+        'policy' => InventoryPolicy::Deny,
+    ])->save();
+
+    $cart = app(CartService::class)->create($store);
+    session(['cart_id' => $cart->getKey()]);
+    $line = app(CartService::class)->addLine($cart, $variant->getKey(), 2);
+
+    Livewire::test(CartShow::class)
+        ->call('increaseQuantity', $line->getKey())
+        ->assertSee('Only 2 units are available; 3 requested.');
+
+    expect($line->refresh()->quantity)->toBe(2);
 });
 
 test('cart page applies discount estimates shipping and carries discount into checkout', function () {
