@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\Admin\V1\SearchIndexController as AdminSearchIndexC
 use App\Http\Controllers\Api\Admin\V1\ShippingRateController as AdminShippingRateController;
 use App\Http\Controllers\Api\Admin\V1\ShippingZoneController as AdminShippingZoneController;
 use App\Http\Controllers\Api\Admin\V1\TaxSettingsController as AdminTaxSettingsController;
+use App\Http\Controllers\Api\Admin\V1\ThemeController as AdminThemeController;
+use App\Http\Controllers\Api\Admin\V1\ThemeSettingsController as AdminThemeSettingsController;
 use App\Http\Controllers\Api\Apps\V1\DeferredEndpointController as DeferredAppEndpointController;
 use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\V1\CartController;
@@ -112,6 +114,12 @@ Route::middleware('throttle:60,1')
             Route::put('shipping/zones/{shippingZone}', [AdminShippingZoneController::class, 'update'])->name('shipping.zones.update');
             Route::post('shipping/zones/{shippingZone}/rates', [AdminShippingRateController::class, 'store'])->name('shipping.zones.rates.store');
             Route::put('tax/settings', [AdminTaxSettingsController::class, 'update'])->name('tax.settings.update');
+        });
+
+        Route::middleware('admin.api:write-themes')->group(function (): void {
+            Route::post('themes', [AdminThemeController::class, 'store'])->name('themes.store');
+            Route::post('themes/{theme}/publish', [AdminThemeController::class, 'publish'])->name('themes.publish');
+            Route::put('themes/{theme}/settings', [AdminThemeSettingsController::class, 'update'])->name('themes.settings.update');
         });
 
         Route::middleware('admin.api:read-analytics')->group(function (): void {

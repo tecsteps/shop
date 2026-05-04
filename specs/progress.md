@@ -380,6 +380,13 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - 2026-05-04: `php artisan test --compact tests/Feature/Api` passed after the admin shipping settings API changes: 45 tests, 364 assertions.
 - 2026-05-04: `php artisan route:list --path=api/admin/v1/stores --except-vendor` confirmed 29 admin API routes, including shipping zone list/create/update and rate create.
 - 2026-05-04: `php artisan test --compact` passed after the admin shipping settings API changes: 232 tests, 1321 assertions.
+- 2026-05-04: `mcp__laravel_boost__.search_docs` consulted Laravel 12 file upload validation, scoped route model binding, JSON API testing, and Pest 4 docs before the admin theme API changes.
+- 2026-05-04: `php artisan make:class Services/ThemeArchiveInstaller --no-interaction`, `php artisan make:controller Api/Admin/V1/ThemeController --no-interaction`, `php artisan make:controller Api/Admin/V1/ThemeSettingsController --no-interaction`, `php artisan make:resource Admin/V1/ThemeResource --no-interaction`, and `php artisan make:test Api/AdminThemeApiTest --pest --no-interaction` created the theme archive installer, API controllers/resource, and tests.
+- 2026-05-04: `vendor/bin/pint --dirty --format agent` passed after the admin theme API changes.
+- 2026-05-04: `php artisan test --compact tests/Feature/Api/AdminThemeApiTest.php` passed after the admin theme API changes: 4 tests, 29 assertions.
+- 2026-05-04: `php artisan test --compact tests/Feature/Api` passed after the admin theme API changes: 49 tests, 393 assertions.
+- 2026-05-04: `php artisan route:list --path=api/admin/v1/stores/{store}/themes --except-vendor` confirmed 3 theme API routes: upload/install, publish, and settings update.
+- 2026-05-04: `php artisan test --compact` passed after the admin theme API changes: 236 tests, 1350 assertions.
 
 ## Decisions
 
@@ -421,6 +428,8 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - Admin settings are split across `/admin/settings`, `/admin/settings/shipping`, `/admin/settings/taxes`, `/admin/settings/checkout`, and `/admin/settings/notifications`; domains are managed on the general settings page because the current route surface does not need a separate domains route.
 - The tax settings API accepts the spec-facing `default_tax_rate`/`tax_rates` payload shape and normalizes it to the existing internal `default_rate_bps`/`rates` config consumed by the calculator and admin UI.
 - The shipping settings API accepts spec-facing `price_amount`/`tiers` rate config keys and normalizes them to the existing `amount`/`ranges` config consumed by `ShippingCalculator`.
+- The theme upload API imports ZIP archives with `theme.json` or `manifest.json`, requires the same core template paths seeded for default themes, stores each imported file on the local disk under the new theme id, and seeds theme settings from the manifest or the store defaults.
+- The theme publish API validates required files before switching the store to exactly one published theme and flushing cached theme settings.
 - Checkout and notification settings persist in `store_settings.settings_json`; `bank_transfer_cancel_days` remains a root-level key because the existing cancellation job already consumes it from that location.
 - Admin navigation persists nested ordered menu items with Livewire `wire:sort`, up/down sibling controls, and a parent selector; children are saved under their selected top-level parent with per-parent positions.
 - The theme editor uses the `ThemeSettingsService` default settings shape as the editable schema and writes back to `theme_settings.settings_json`.
@@ -447,10 +456,10 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 
 - Customer password reset is implemented under `/account/forgot-password` and `/account/reset-password/{token}`; the exact spec root paths remain occupied by the existing Fortify starter/admin reset routes.
 - `php artisan route:list --except-vendor` hides Livewire full-page routes because their controller is vendor-provided; path-filtered route-list commands are used as evidence for those routes.
-- Admin REST surfaces for general settings, themes, and exports are still missing; outbound webhook subscription management is implemented through the admin UI only, as specified for the initial implementation.
+- Admin REST surfaces for general settings and exports are still missing; outbound webhook subscription management is implemented through the admin UI only, as specified for the initial implementation.
 - Full automated browser suites from Spec 08 are still incomplete beyond the initial Pest browser smoke coverage for storefront, admin, and mobile rendering.
 - SQLite enum/check constraints from the schema spec are not yet explicitly enforced as database `CHECK` constraints; enum validation is currently enforced through casts/services/model invariants.
 
 ## Completion Summary
 
-Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, product media processing/admin upload controls, Phase 3 storefront theme/content/navigation data, the Phase 4 cart/checkout/pricing backend foundation, cart/checkout storefront UI through order completion, cart-page estimates, cart/checkout REST APIs, Phase 5 order/payment backend foundation, Phase 5 refund/fulfillment services, customer order views, admin dashboard/order/customer/discount/content/settings/theme-file/navigation/search/analytics/apps/developers management, storefront search and analytics APIs, product/customer/collection/discount/content page/search/analytics/shipping/tax settings/order API surfaces, deferred OAuth/app route stubs, initial automated browser smoke coverage, and outbound webhook delivery foundations are implemented, with known auth/token route compatibility, broader admin REST, full browser-suite, and database CHECK constraint gaps tracked above.
+Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, product media processing/admin upload controls, Phase 3 storefront theme/content/navigation data, the Phase 4 cart/checkout/pricing backend foundation, cart/checkout storefront UI through order completion, cart-page estimates, cart/checkout REST APIs, Phase 5 order/payment backend foundation, Phase 5 refund/fulfillment services, customer order views, admin dashboard/order/customer/discount/content/settings/theme-file/navigation/search/analytics/apps/developers management, storefront search and analytics APIs, product/customer/collection/discount/content page/search/analytics/shipping/tax/theme/order API surfaces, deferred OAuth/app route stubs, initial automated browser smoke coverage, and outbound webhook delivery foundations are implemented, with known auth/token route compatibility, broader admin REST, full browser-suite, and database CHECK constraint gaps tracked above.
