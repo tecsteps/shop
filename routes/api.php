@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\V1\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
+use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\V1\CartController;
 use App\Http\Controllers\Api\Storefront\V1\CartLineController;
 use App\Http\Controllers\Api\Storefront\V1\CheckoutController;
@@ -25,6 +26,10 @@ Route::middleware('store.resolve')
         Route::middleware('throttle:search')->group(function (): void {
             Route::get('search', [StorefrontSearchController::class, 'index'])->name('search.index');
             Route::get('search/suggest', [StorefrontSearchController::class, 'suggest'])->name('search.suggest');
+        });
+
+        Route::middleware('throttle:analytics')->group(function (): void {
+            Route::post('analytics/events', [StorefrontAnalyticsEventController::class, 'store'])->name('analytics.events.store');
         });
 
         Route::middleware('throttle:checkout')->group(function (): void {

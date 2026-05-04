@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureUserEmailIsVerified;
+use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
@@ -66,6 +67,7 @@ Route::post('admin/logout', function () {
 
 Route::middleware(['auth', EnsureUserEmailIsVerified::class, 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::livewire('/', AdminDashboard::class)->name('dashboard');
+    Route::livewire('analytics', AdminAnalyticsIndex::class)->name('analytics.index');
     Route::livewire('products', AdminProductsIndex::class)->name('products.index');
     Route::livewire('products/create', AdminProductForm::class)->name('products.create');
     Route::livewire('products/{product}/edit', AdminProductForm::class)->name('products.edit');

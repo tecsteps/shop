@@ -10,6 +10,7 @@ use App\Http\Middleware\ResolveStore;
 use App\Models\Product;
 use App\Models\Store;
 use App\Observers\ProductObserver;
+use App\Services\AnalyticsService;
 use App\Services\NavigationService;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\SearchService;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ThemeSettingsService::class);
         $this->app->singleton(NavigationService::class);
         $this->app->singleton(SearchService::class);
+        $this->app->singleton(AnalyticsService::class);
     }
 
     /**
