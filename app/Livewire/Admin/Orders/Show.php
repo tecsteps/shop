@@ -42,6 +42,8 @@ class Show extends Component
 
     public string $trackingUrl = '';
 
+    public string $actionMessage = '';
+
     public function mount(Order $order): void
     {
         $store = app('current_store');
@@ -65,6 +67,7 @@ class Show extends Component
         try {
             $orders->confirmBankTransferPayment($this->order());
             $this->resetFulfillmentLineQuantities($this->order());
+            $this->actionMessage = __('Payment confirmed');
             $this->dispatch('toast', type: 'success', message: __('Payment confirmed'));
         } catch (InvalidOrderOperationException $exception) {
             throw ValidationException::withMessages([
@@ -92,6 +95,7 @@ class Show extends Component
             $refunds->process($this->order(), $request);
             $this->refundAmount = '';
             $this->refundReason = '';
+            $this->actionMessage = __('Refund processed');
             $this->modal('refund-order')->close();
             $this->dispatch('toast', type: 'success', message: __('Refund processed'));
         } catch (InvalidRefundOperationException $exception) {
@@ -132,6 +136,7 @@ class Show extends Component
             $this->trackingNumber = '';
             $this->trackingUrl = '';
             $this->resetFulfillmentLineQuantities($this->order());
+            $this->actionMessage = __('Fulfillment created');
             $this->modal('fulfillment-order')->close();
             $this->dispatch('toast', type: 'success', message: __('Fulfillment created'));
         } catch (InvalidFulfillmentOperationException $exception) {
@@ -145,6 +150,7 @@ class Show extends Component
     {
         try {
             $fulfillments->markShipped($this->fulfillment($fulfillmentId));
+            $this->actionMessage = __('Fulfillment marked as shipped');
             $this->dispatch('toast', type: 'success', message: __('Fulfillment marked as shipped'));
         } catch (InvalidFulfillmentOperationException $exception) {
             throw ValidationException::withMessages([
@@ -157,6 +163,7 @@ class Show extends Component
     {
         try {
             $fulfillments->markDelivered($this->fulfillment($fulfillmentId));
+            $this->actionMessage = __('Fulfillment marked as delivered');
             $this->dispatch('toast', type: 'success', message: __('Fulfillment marked as delivered'));
         } catch (InvalidFulfillmentOperationException $exception) {
             throw ValidationException::withMessages([

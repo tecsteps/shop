@@ -13,14 +13,14 @@
 
         <div class="flex flex-wrap gap-2">
             @if ($order->payment_method === \App\Enums\PaymentMethod::BankTransfer && $order->financial_status === \App\Enums\FinancialStatus::Pending)
-                <flux:button wire:click="confirmBankTransferPayment" variant="primary" icon="banknotes">
+                <flux:button wire:click="confirmBankTransferPayment" variant="primary" icon="banknotes" data-test="confirm-payment-button">
                     Confirm payment
                 </flux:button>
             @endif
 
-            @if ($refundableAmount > 0)
+            @if (in_array($order->financial_status, [\App\Enums\FinancialStatus::Paid, \App\Enums\FinancialStatus::PartiallyRefunded], true) && $refundableAmount > 0)
                 <flux:modal.trigger name="refund-order">
-                    <flux:button variant="danger" icon="receipt-refund">
+                    <flux:button variant="danger" icon="receipt-refund" data-test="refund-modal-button">
                         Refund
                     </flux:button>
                 </flux:modal.trigger>
@@ -28,13 +28,17 @@
 
             @if (in_array($order->financial_status, [\App\Enums\FinancialStatus::Paid, \App\Enums\FinancialStatus::PartiallyRefunded], true) && collect($remainingFulfillmentQuantities)->sum() > 0)
                 <flux:modal.trigger name="fulfillment-order">
-                    <flux:button variant="filled" icon="truck">
+                    <flux:button variant="filled" icon="truck" data-test="fulfillment-modal-button">
                         Create fulfillment
                     </flux:button>
                 </flux:modal.trigger>
             @endif
         </div>
     </div>
+
+    @if ($actionMessage !== '')
+        <flux:callout color="green" icon="check-circle" data-test="order-action-message">{{ $actionMessage }}</flux:callout>
+    @endif
 
     @error('orderAction')
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
@@ -47,6 +51,12 @@
             {{ $message }}
         </div>
     @enderror
+
+    @if (! in_array($order->financial_status, [\App\Enums\FinancialStatus::Paid, \App\Enums\FinancialStatus::PartiallyRefunded], true) && collect($remainingFulfillmentQuantities)->sum() > 0)
+        <flux:callout color="amber" icon="exclamation-triangle" data-test="fulfillment-guard-message">
+            <strong>Cannot create fulfillment.</strong> Payment must be confirmed before items can be fulfilled. Current financial status: {{ Str::headline($order->financial_status->value) }}.
+        </flux:callout>
+    @endif
 
     <div class="grid gap-4 md:grid-cols-4">
         <div class="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
@@ -119,6 +129,53 @@
                 </div>
             </div>
 
+            <div class="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900" data-test="order-timeline">
+                <div class="border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
+                    <flux:heading size="lg">Timeline</flux:heading>
+                </div>
+                <div class="space-y-4 px-5 py-4 text-sm">
+                    <div class="flex gap-3">
+                        <div class="mt-1 size-2 rounded-full bg-zinc-400"></div>
+                        <div>
+                            <div class="font-medium text-zinc-950 dark:text-white">Order placed</div>
+                            <div class="text-zinc-500">{{ $order->placed_at?->format('M j, Y H:i') }}</div>
+                        </div>
+                    </div>
+
+                    @foreach ($order->payments as $payment)
+                        <div class="flex gap-3" wire:key="admin-order-timeline-payment-{{ $payment->getKey() }}">
+                            <div class="mt-1 size-2 rounded-full bg-zinc-400"></div>
+                            <div>
+                                <div class="font-medium text-zinc-950 dark:text-white">
+                                    {{ $payment->status === \App\Enums\PaymentStatus::Captured ? 'Payment received' : Str::headline($payment->status->value) }}
+                                </div>
+                                <div class="text-zinc-500">{{ Str::headline($payment->method->value) }} · {{ \App\Support\Money::format($payment->amount, $payment->currency) }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    @foreach ($order->fulfillments as $fulfillment)
+                        <div class="flex gap-3" wire:key="admin-order-timeline-fulfillment-{{ $fulfillment->getKey() }}">
+                            <div class="mt-1 size-2 rounded-full bg-zinc-400"></div>
+                            <div>
+                                <div class="font-medium text-zinc-950 dark:text-white">Fulfillment created</div>
+                                <div class="text-zinc-500">{{ Str::headline($fulfillment->status->value) }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    @foreach ($order->refunds as $refund)
+                        <div class="flex gap-3" wire:key="admin-order-timeline-refund-{{ $refund->getKey() }}">
+                            <div class="mt-1 size-2 rounded-full bg-zinc-400"></div>
+                            <div>
+                                <div class="font-medium text-zinc-950 dark:text-white">Refunded</div>
+                                <div class="text-zinc-500">{{ \App\Support\Money::format($refund->amount, $order->currency) }} · {{ Str::headline($refund->status->value) }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
                 <div class="border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
                     <flux:heading size="lg">Fulfillments</flux:heading>
@@ -135,10 +192,10 @@
                                 </div>
                                 <div class="flex flex-wrap gap-2">
                                     @if ($fulfillment->status === \App\Enums\FulfillmentShipmentStatus::Pending)
-                                        <flux:button wire:click="markFulfillmentShipped({{ $fulfillment->getKey() }})" size="sm" variant="filled">Mark shipped</flux:button>
+                                        <flux:button wire:click="markFulfillmentShipped({{ $fulfillment->getKey() }})" size="sm" variant="filled" data-test="mark-fulfillment-shipped-button">Mark as shipped</flux:button>
                                     @endif
                                     @if ($fulfillment->status === \App\Enums\FulfillmentShipmentStatus::Shipped)
-                                        <flux:button wire:click="markFulfillmentDelivered({{ $fulfillment->getKey() }})" size="sm" variant="filled">Mark delivered</flux:button>
+                                        <flux:button wire:click="markFulfillmentDelivered({{ $fulfillment->getKey() }})" size="sm" variant="filled" data-test="mark-fulfillment-delivered-button">Mark as delivered</flux:button>
                                     @endif
                                 </div>
                             </div>
@@ -231,7 +288,7 @@
                 <flux:modal.close>
                     <flux:button variant="filled">Cancel</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="danger">Process refund</flux:button>
+                <flux:button type="submit" variant="danger" data-test="refund-submit-button">Process refund</flux:button>
             </div>
         </form>
     </flux:modal>
@@ -271,7 +328,7 @@
                 <flux:modal.close>
                     <flux:button variant="filled">Cancel</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary">Create fulfillment</flux:button>
+                <flux:button type="submit" variant="primary" data-test="fulfillment-submit-button">Create fulfillment</flux:button>
             </div>
         </form>
     </flux:modal>

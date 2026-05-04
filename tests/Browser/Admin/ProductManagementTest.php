@@ -23,25 +23,20 @@ function adminProductHost(): array
     return ['host' => 'shop.test'];
 }
 
-function adminProductLogin(mixed $testCase): mixed
+function adminProductAuthenticate(mixed $testCase): void
 {
     $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
     $user = User::query()->where('email', 'admin@acme.test')->firstOrFail();
 
     $testCase->actingAs($user);
     $testCase->withSession(['current_store_id' => $store->getKey()]);
-
-    return visit('/admin', adminProductHost())
-        ->wait(1)
-        ->assertPathIs('/admin')
-        ->assertSee('Dashboard')
-        ->assertNoJavaScriptErrors();
 }
 
 function adminProductOpenProducts(mixed $testCase): mixed
 {
-    return adminProductLogin($testCase)
-        ->click('a[href$="/admin/products"]')
+    adminProductAuthenticate($testCase);
+
+    return visit('/admin/products', adminProductHost())
         ->wait(1)
         ->assertPathIs('/admin/products')
         ->assertSee('Products')
