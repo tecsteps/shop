@@ -164,6 +164,11 @@
                     <div class="font-medium text-zinc-950 dark:text-white">{{ $order->customer?->name ?: 'Guest checkout' }}</div>
                     <div class="text-zinc-500">{{ $order->email }}</div>
                 </div>
+                @if ($order->customer)
+                    <flux:button :href="route('admin.customers.show', $order->customer)" wire:navigate variant="filled" size="sm" class="mt-4">
+                        View customer
+                    </flux:button>
+                @endif
             </div>
 
             <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">

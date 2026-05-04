@@ -3,6 +3,8 @@
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
+use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
+use App\Livewire\Admin\Customers\Show as AdminCustomerShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
 use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
@@ -58,6 +60,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::livewire('inventory', AdminInventoryIndex::class)->name('inventory.index');
     Route::livewire('orders', AdminOrdersIndex::class)->name('orders.index');
     Route::livewire('orders/{order}', AdminOrderShow::class)->name('orders.show');
+    Route::livewire('customers', AdminCustomersIndex::class)->name('customers.index');
+    Route::livewire('customers/{customer}', AdminCustomerShow::class)->name('customers.show');
     Route::livewire('collections', AdminCollectionsIndex::class)->name('collections.index');
     Route::livewire('collections/create', AdminCollectionForm::class)->name('collections.create');
     Route::livewire('collections/{collection}/edit', AdminCollectionForm::class)->name('collections.edit');
