@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\User;
+use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -30,6 +31,15 @@ function adminOrderApiStore(): Store
 function adminOrderApiUser(): User
 {
     return User::query()->where('email', 'admin@acme.test')->firstOrFail();
+}
+
+/**
+ * @param  list<string>  $abilities
+ * @return array{token: \App\Models\OauthToken, plain_text: string}
+ */
+function adminOrderApiToken(Store $store, array $abilities): array
+{
+    return app(WebhookService::class)->createApiToken($store, 'Order integration', $abilities);
 }
 
 /**
@@ -153,4 +163,59 @@ test('admin order api rejects orders outside the requested store', function (): 
     $this->actingAs(adminOrderApiUser())
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$otherOrder->getKey()}")
         ->assertNotFound();
+});
+
+test('admin order api accepts scoped bearer tokens', function (): void {
+    $store = adminOrderApiStore();
+    adminOrderApiOrder($store, [
+        'order_number' => '#8101',
+        'email' => 'token@example.test',
+    ]);
+    $result = adminOrderApiToken($store, ['read-orders']);
+
+    $this->withToken($result['plain_text'])
+        ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders?query=token")
+        ->assertOk()
+        ->assertJsonPath('data.0.order_number', '#8101');
+
+    expect($result['token']->refresh()->last_used_at)->not->toBeNull();
+});
+
+test('admin order api enforces token store scope and abilities', function (): void {
+    $store = adminOrderApiStore();
+    [$order] = adminOrderApiOrder($store);
+    $readOnly = adminOrderApiToken($store, ['read-orders']);
+    $writeToken = adminOrderApiToken($store, ['write-orders']);
+    $otherStore = Store::factory()->create();
+    $otherStoreToken = adminOrderApiToken($otherStore, ['read-orders']);
+
+    $this->withToken($readOnly['plain_text'])
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}/refunds", [
+            'amount' => 500,
+            'reason' => 'Read-only token',
+        ])
+        ->assertForbidden();
+
+    $this->withToken($otherStoreToken['plain_text'])
+        ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders")
+        ->assertForbidden();
+
+    $this->withToken($writeToken['plain_text'])
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}/refunds", [
+            'amount' => 500,
+            'reason' => 'Write token',
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.amount', 500);
+});
+
+test('admin order api rejects expired bearer tokens', function (): void {
+    $store = adminOrderApiStore();
+    adminOrderApiOrder($store);
+    $result = adminOrderApiToken($store, ['read-orders']);
+    $result['token']->forceFill(['expires_at' => now()->subMinute()])->save();
+
+    $this->withToken($result['plain_text'])
+        ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders")
+        ->assertUnauthorized();
 });

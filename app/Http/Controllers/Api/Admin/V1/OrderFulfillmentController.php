@@ -36,7 +36,9 @@ class OrderFulfillmentController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
-        abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
+        if (! $request->attributes->has('admin_api_oauth_token')) {
+            abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
+        }
 
         app()->instance('current_store', $store);
     }

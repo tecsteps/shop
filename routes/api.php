@@ -45,12 +45,17 @@ Route::middleware('store.resolve')
         });
     });
 
-Route::middleware(['auth', 'throttle:60,1'])
+Route::middleware('throttle:60,1')
     ->prefix('admin/v1/stores/{store}')
     ->name('api.admin.v1.')
     ->group(function (): void {
-        Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
-        Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-        Route::post('orders/{order}/fulfillments', [AdminOrderFulfillmentController::class, 'store'])->name('orders.fulfillments.store');
-        Route::post('orders/{order}/refunds', [AdminOrderRefundController::class, 'store'])->name('orders.refunds.store');
+        Route::middleware('admin.api:read-orders')->group(function (): void {
+            Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+            Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+        });
+
+        Route::middleware('admin.api:write-orders')->group(function (): void {
+            Route::post('orders/{order}/fulfillments', [AdminOrderFulfillmentController::class, 'store'])->name('orders.fulfillments.store');
+            Route::post('orders/{order}/refunds', [AdminOrderRefundController::class, 'store'])->name('orders.refunds.store');
+        });
     });
