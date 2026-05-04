@@ -9,15 +9,18 @@ use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
+use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
 use App\Events\OrderPaid;
 use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\InvalidOrderOperationException;
 use App\Exceptions\PaymentFailedException;
 use App\Models\CartLine;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\InventoryItem;
 use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\ProductOptionValue;
 use App\Models\ProductVariant;
 use App\Models\Store;
@@ -32,6 +35,7 @@ class OrderService
         private readonly PaymentService $payments,
         private readonly InventoryService $inventory,
         private readonly PricingEngine $pricing,
+        private readonly FulfillmentService $fulfillments,
     ) {}
 
     /**
@@ -119,6 +123,10 @@ class OrderService
 
                 $this->incrementDiscountUsage($checkout);
 
+                if ($paidImmediately) {
+                    $this->fulfillments->autoFulfillDigital($order);
+                }
+
                 $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
 
                 event(new OrderCreated($order));
@@ -136,11 +144,72 @@ class OrderService
         }
     }
 
+    public function confirmBankTransferPayment(Order $order): Order
+    {
+        return DB::transaction(function () use ($order): Order {
+            $order = $this->freshOrder($order);
+            $this->assertPendingBankTransfer($order);
+
+            $order->payments()
+                ->where('status', PaymentStatus::Pending->value)
+                ->update(['status' => PaymentStatus::Captured->value]);
+
+            $this->commitReservedOrderInventory($order);
+
+            $order->forceFill([
+                'status' => OrderStatus::Paid,
+                'financial_status' => FinancialStatus::Paid,
+            ])->save();
+
+            $this->fulfillments->autoFulfillDigital($order);
+
+            $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+
+            event(new OrderPaid($order));
+
+            return $order;
+        });
+    }
+
+    public function cancelUnpaidBankTransferOrder(Order $order): Order
+    {
+        return DB::transaction(function () use ($order): Order {
+            $order = $this->freshOrder($order);
+            $this->assertPendingBankTransfer($order);
+
+            $this->releaseReservedOrderInventory($order);
+
+            $order->payments()
+                ->where('status', PaymentStatus::Pending->value)
+                ->update(['status' => PaymentStatus::Failed->value]);
+
+            $order->forceFill([
+                'status' => OrderStatus::Cancelled,
+                'financial_status' => FinancialStatus::Voided,
+            ])->save();
+
+            $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+
+            event(new OrderCancelled($order));
+
+            return $order;
+        });
+    }
+
     private function freshCheckout(Checkout $checkout): Checkout
     {
         return Checkout::withoutGlobalScopes()
             ->with(['cart', 'store'])
             ->whereKey($checkout->getKey())
+            ->lockForUpdate()
+            ->firstOrFail();
+    }
+
+    private function freshOrder(Order $order): Order
+    {
+        return Order::withoutGlobalScopes()
+            ->with(['lines', 'payments', 'store.settings'])
+            ->whereKey($order->getKey())
             ->lockForUpdate()
             ->firstOrFail();
     }
@@ -228,7 +297,25 @@ class OrderService
     private function commitReservedInventory(Checkout $checkout): void
     {
         $this->cartLines($checkout)->each(function (CartLine $line): void {
-            $this->inventory->commit($this->inventoryItem($line), $line->quantity);
+            $this->inventory->commit($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+        });
+    }
+
+    private function commitReservedOrderInventory(Order $order): void
+    {
+        $order->lines->each(function (OrderLine $line): void {
+            if ($line->variant_id !== null) {
+                $this->inventory->commit($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+            }
+        });
+    }
+
+    private function releaseReservedOrderInventory(Order $order): void
+    {
+        $order->lines->each(function (OrderLine $line): void {
+            if ($line->variant_id !== null) {
+                $this->inventory->release($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+            }
         });
     }
 
@@ -242,7 +329,7 @@ class OrderService
             }
 
             $this->cartLines($checkout)->each(function (CartLine $line): void {
-                $this->inventory->release($this->inventoryItem($line), $line->quantity);
+                $this->inventory->release($this->inventoryItemForVariant($line->variant_id), $line->quantity);
             });
 
             $checkout->forceFill([
@@ -267,10 +354,17 @@ class OrderService
             ->increment('usage_count');
     }
 
-    private function inventoryItem(CartLine $line): InventoryItem
+    private function assertPendingBankTransfer(Order $order): void
+    {
+        if ($order->payment_method !== PaymentMethod::BankTransfer || $order->financial_status !== FinancialStatus::Pending) {
+            throw InvalidOrderOperationException::because('Order is not a pending bank transfer order.');
+        }
+    }
+
+    private function inventoryItemForVariant(int $variantId): InventoryItem
     {
         return InventoryItem::withoutGlobalScopes()
-            ->where('variant_id', $line->variant_id)
+            ->where('variant_id', $variantId)
             ->firstOrFail();
     }
 

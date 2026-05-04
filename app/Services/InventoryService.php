@@ -93,7 +93,7 @@ class InventoryService
 
     private function freshItem(InventoryItem $item): InventoryItem
     {
-        return InventoryItem::query()
+        return InventoryItem::withoutGlobalScopes()
             ->whereKey($item->getKey())
             ->lockForUpdate()
             ->firstOrFail();
