@@ -9,10 +9,14 @@ use App\Http\Controllers\Api\Admin\V1\OrderExportController as AdminOrderExportC
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
 use App\Http\Controllers\Api\Admin\V1\PageController as AdminPageController;
+use App\Http\Controllers\Api\Admin\V1\PlatformOrganizationController as AdminPlatformOrganizationController;
+use App\Http\Controllers\Api\Admin\V1\PlatformStoreController as AdminPlatformStoreController;
 use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\V1\SearchIndexController as AdminSearchIndexController;
 use App\Http\Controllers\Api\Admin\V1\ShippingRateController as AdminShippingRateController;
 use App\Http\Controllers\Api\Admin\V1\ShippingZoneController as AdminShippingZoneController;
+use App\Http\Controllers\Api\Admin\V1\StoreInviteController as AdminStoreInviteController;
+use App\Http\Controllers\Api\Admin\V1\StoreMembershipController as AdminStoreMembershipController;
 use App\Http\Controllers\Api\Admin\V1\StoreSettingsController as AdminStoreSettingsController;
 use App\Http\Controllers\Api\Admin\V1\TaxSettingsController as AdminTaxSettingsController;
 use App\Http\Controllers\Api\Admin\V1\ThemeController as AdminThemeController;
@@ -61,9 +65,26 @@ Route::middleware('store.resolve')
     });
 
 Route::middleware('throttle:60,1')
+    ->prefix('admin/v1/platform')
+    ->name('api.admin.v1.platform.')
+    ->middleware('platform.api')
+    ->group(function (): void {
+        Route::post('organizations', [AdminPlatformOrganizationController::class, 'store'])->name('organizations.store');
+        Route::post('stores', [AdminPlatformStoreController::class, 'store'])->name('stores.store');
+    });
+
+Route::middleware('throttle:60,1')
     ->prefix('admin/v1/stores/{store}')
     ->name('api.admin.v1.')
     ->group(function (): void {
+        Route::middleware('admin.api')->group(function (): void {
+            Route::get('me', [AdminStoreMembershipController::class, 'show'])->name('stores.me');
+        });
+
+        Route::middleware('admin.api:manage-platform')->group(function (): void {
+            Route::post('invites', [AdminStoreInviteController::class, 'store'])->name('stores.invites.store');
+        });
+
         Route::middleware('admin.api:read-products')->group(function (): void {
             Route::get('products', [AdminProductController::class, 'index'])->name('products.index');
             Route::get('products/{product}', [AdminProductController::class, 'show'])->name('products.show');

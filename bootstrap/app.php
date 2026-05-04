@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AuthenticateAdminApi;
+use App\Http\Middleware\AuthenticatePlatformApi;
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\ResolveStore;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin.api' => AuthenticateAdminApi::class,
+            'platform.api' => AuthenticatePlatformApi::class,
             'role.check' => CheckStoreRole::class,
             'store.resolve' => ResolveStore::class,
         ]);
