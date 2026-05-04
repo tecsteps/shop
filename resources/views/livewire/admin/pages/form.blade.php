@@ -13,8 +13,8 @@
         </div>
     </div>
 
-    @if (session('status'))
-        <flux:callout color="green" icon="check-circle">{{ session('status') }}</flux:callout>
+    @if ($actionMessage !== '' || session('status'))
+        <flux:callout color="green" icon="check-circle">{{ $actionMessage !== '' ? $actionMessage : session('status') }}</flux:callout>
     @endif
 
     <form wire:submit="save" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -54,7 +54,7 @@
         <div class="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-950/95 lg:left-64">
             <div class="mx-auto flex max-w-7xl justify-end gap-3">
                 <flux:button :href="route('admin.pages.index')" wire:navigate variant="ghost">Discard</flux:button>
-                <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+                <flux:button type="submit" variant="primary" wire:loading.attr="disabled" data-test="page-save-button">
                     <span wire:loading.remove>Save</span>
                     <span wire:loading>Saving...</span>
                 </flux:button>

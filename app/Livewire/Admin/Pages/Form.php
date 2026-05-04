@@ -28,6 +28,8 @@ class Form extends Component
 
     public string $publishedAt = '';
 
+    public string $actionMessage = '';
+
     public function mount(?Page $page = null): void
     {
         $store = app('current_store');
@@ -99,6 +101,8 @@ class Form extends Component
         $this->page = $page->refresh();
         $this->fillFromPage($this->page);
         $this->forgetNavigation($store, $navigation);
+
+        $this->actionMessage = 'Page saved';
 
         session()->flash('status', 'Page saved');
         $this->dispatch('toast', type: 'success', message: __('Page saved'));

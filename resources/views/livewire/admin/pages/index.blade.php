@@ -7,7 +7,7 @@
 
         @can('create', App\Models\Page::class)
             <flux:button :href="route('admin.pages.create')" wire:navigate variant="primary" icon="plus">
-                Add page
+                Create page
             </flux:button>
         @endcan
     </div>
