@@ -44,6 +44,26 @@
                         {{ __('Discounts') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+
+                <flux:sidebar.group :heading="__('Storefront')" class="grid">
+                    <flux:sidebar.item icon="document-text" :href="route('admin.pages.index')" :current="request()->routeIs('admin.pages.*')" wire:navigate>
+                        {{ __('Pages') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="bars-3" :href="route('admin.navigation.index')" :current="request()->routeIs('admin.navigation.*')" wire:navigate>
+                        {{ __('Navigation') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="paint-brush" :href="route('admin.themes.index')" :current="request()->routeIs('admin.themes.*')" wire:navigate>
+                        {{ __('Themes') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+
+                <flux:sidebar.group :heading="__('Configuration')" class="grid">
+                    <flux:sidebar.item icon="cog-6-tooth" :href="route('admin.settings.index')" :current="request()->routeIs('admin.settings.*')" wire:navigate>
+                        {{ __('Settings') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />
