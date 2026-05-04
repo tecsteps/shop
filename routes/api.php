@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\V1\CollectionController as AdminCollectionCon
 use App\Http\Controllers\Api\Admin\V1\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Api\Admin\V1\DiscountController as AdminDiscountController;
 use App\Http\Controllers\Api\Admin\V1\OrderController as AdminOrderController;
+use App\Http\Controllers\Api\Admin\V1\OrderExportController as AdminOrderExportController;
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
 use App\Http\Controllers\Api\Admin\V1\PageController as AdminPageController;
@@ -130,6 +131,8 @@ Route::middleware('throttle:60,1')
         });
 
         Route::middleware('admin.api:read-orders')->group(function (): void {
+            Route::post('exports/orders', [AdminOrderExportController::class, 'store'])->name('exports.orders.store');
+            Route::get('exports/{dataExport}', [AdminOrderExportController::class, 'show'])->name('exports.show');
             Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
             Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
         });
