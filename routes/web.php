@@ -17,6 +17,7 @@ use App\Livewire\Admin\Pages\Form as AdminPageForm;
 use App\Livewire\Admin\Pages\Index as AdminPagesIndex;
 use App\Livewire\Admin\Products\Form as AdminProductForm;
 use App\Livewire\Admin\Products\Index as AdminProductsIndex;
+use App\Livewire\Admin\Search\Settings as AdminSearchSettings;
 use App\Livewire\Admin\Settings\Index as AdminSettingsIndex;
 use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
@@ -85,6 +86,7 @@ Route::middleware(['auth', EnsureUserEmailIsVerified::class, 'admin'])->prefix('
     Route::livewire('settings', AdminSettingsIndex::class)->name('settings.index');
     Route::livewire('settings/shipping', AdminSettingsShipping::class)->name('settings.shipping');
     Route::livewire('settings/taxes', AdminSettingsTaxes::class)->name('settings.taxes');
+    Route::livewire('search/settings', AdminSearchSettings::class)->name('search.settings');
     Route::livewire('collections', AdminCollectionsIndex::class)->name('collections.index');
     Route::livewire('collections/create', AdminCollectionForm::class)->name('collections.create');
     Route::livewire('collections/{collection}/edit', AdminCollectionForm::class)->name('collections.edit');

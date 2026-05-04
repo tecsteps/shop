@@ -7,9 +7,12 @@ use App\Contracts\PaymentProvider;
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\EnsureUserEmailIsVerified;
 use App\Http\Middleware\ResolveStore;
+use App\Models\Product;
 use App\Models\Store;
+use App\Observers\ProductObserver;
 use App\Services\NavigationService;
 use App\Services\Payments\MockPaymentProvider;
+use App\Services\SearchService;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -40,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ThemeSettingsService::class);
         $this->app->singleton(NavigationService::class);
+        $this->app->singleton(SearchService::class);
     }
 
     /**
@@ -82,6 +86,16 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(10)->by($sessionId ?: $request->ip());
         });
+
+        RateLimiter::for('search', function (Request $request): Limit {
+            return Limit::perMinute(30)->by($request->ip());
+        });
+
+        RateLimiter::for('analytics', function (Request $request): Limit {
+            return Limit::perMinute(60)->by($request->ip());
+        });
+
+        Product::observe(ProductObserver::class);
 
         Authenticate::redirectUsing(function (Request $request): string {
             if ($request->is('admin*')) {

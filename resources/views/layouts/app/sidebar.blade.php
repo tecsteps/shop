@@ -63,6 +63,10 @@
                     <flux:sidebar.item icon="cog-6-tooth" :href="route('admin.settings.index')" :current="request()->routeIs('admin.settings.*')" wire:navigate>
                         {{ __('Settings') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="magnifying-glass" :href="route('admin.search.settings')" :current="request()->routeIs('admin.search.*')" wire:navigate>
+                        {{ __('Search') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

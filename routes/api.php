@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Storefront\V1\CartController;
 use App\Http\Controllers\Api\Storefront\V1\CartLineController;
 use App\Http\Controllers\Api\Storefront\V1\CheckoutController;
 use App\Http\Controllers\Api\Storefront\V1\OrderController as StorefrontOrderController;
+use App\Http\Controllers\Api\Storefront\V1\SearchController as StorefrontSearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('store.resolve')
@@ -19,6 +20,11 @@ Route::middleware('store.resolve')
             Route::post('carts/{cart}/lines', [CartLineController::class, 'store'])->name('carts.lines.store');
             Route::put('carts/{cart}/lines/{cartLine}', [CartLineController::class, 'update'])->name('carts.lines.update');
             Route::delete('carts/{cart}/lines/{cartLine}', [CartLineController::class, 'destroy'])->name('carts.lines.destroy');
+        });
+
+        Route::middleware('throttle:search')->group(function (): void {
+            Route::get('search', [StorefrontSearchController::class, 'index'])->name('search.index');
+            Route::get('search/suggest', [StorefrontSearchController::class, 'suggest'])->name('search.suggest');
         });
 
         Route::middleware('throttle:checkout')->group(function (): void {

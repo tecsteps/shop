@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StoreUserSeeder::class,
             StoreSettingsSeeder::class,
+            SearchSettingsSeeder::class,
             CollectionSeeder::class,
             ProductSeeder::class,
             ThemeSeeder::class,
