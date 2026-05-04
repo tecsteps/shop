@@ -6,7 +6,7 @@
         </div>
 
         <flux:button :href="route('admin.collections.create')" wire:navigate variant="primary" icon="plus">
-            Add collection
+            Create collection
         </flux:button>
     </div>
 
@@ -66,7 +66,7 @@
                                     </div>
                                     <flux:heading size="lg">No collections found</flux:heading>
                                     <flux:text>Create a collection to organize your products.</flux:text>
-                                    <flux:button :href="route('admin.collections.create')" wire:navigate variant="primary">Add collection</flux:button>
+                                    <flux:button :href="route('admin.collections.create')" wire:navigate variant="primary">Create collection</flux:button>
                                 </div>
                             </td>
                         </tr>

@@ -25,6 +25,8 @@ class Form extends Component
 
     public string $productSearch = '';
 
+    public string $actionMessage = '';
+
     /**
      * @var array<int, int>
      */
@@ -106,6 +108,7 @@ class Form extends Component
         $this->collection = $collection->refresh()->load('products');
         $this->fillFromCollection($this->collection);
 
+        $this->actionMessage = 'Collection saved';
         session()->flash('status', 'Collection saved');
         $this->dispatch('toast', type: 'success', message: __('Collection saved'));
     }

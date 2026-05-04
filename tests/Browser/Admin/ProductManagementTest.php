@@ -217,6 +217,8 @@ test('can filter products by status in admin', function (): void {
         ->assertNoJavaScriptErrors()
         ->select('select[wire\\:model\\.live="statusFilter"]', 'active')
         ->wait(1)
+        ->fill('input[wire\\:model\\.live\\.debounce\\.300ms="search"]', 'Classic')
+        ->wait(1)
         ->assertSee('Classic Cotton T-Shirt')
         ->assertDontSee('Unreleased Winter Jacket')
         ->assertNoJavaScriptErrors();

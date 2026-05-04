@@ -9,8 +9,8 @@
         <flux:heading size="xl" class="mt-3">{{ $isEditing ? $title : 'Add collection' }}</flux:heading>
     </div>
 
-    @if (session('status'))
-        <flux:callout color="green" icon="check-circle">{{ session('status') }}</flux:callout>
+    @if ($actionMessage !== '' || session('status'))
+        <flux:callout color="green" icon="check-circle">{{ $actionMessage !== '' ? $actionMessage : session('status') }}</flux:callout>
     @endif
 
     <form wire:submit="save" class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
@@ -85,7 +85,7 @@
         <div class="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-950/95 lg:left-64">
             <div class="mx-auto flex max-w-7xl justify-end gap-3">
                 <flux:button :href="route('admin.collections.index')" wire:navigate variant="ghost">Discard</flux:button>
-                <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+                <flux:button type="submit" variant="primary" wire:loading.attr="disabled" data-test="collection-save-button">
                     <span wire:loading.remove>Save</span>
                     <span wire:loading>Saving...</span>
                 </flux:button>
