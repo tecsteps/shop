@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductControlle
 use App\Http\Controllers\Api\Admin\V1\SearchIndexController as AdminSearchIndexController;
 use App\Http\Controllers\Api\Admin\V1\ShippingRateController as AdminShippingRateController;
 use App\Http\Controllers\Api\Admin\V1\ShippingZoneController as AdminShippingZoneController;
+use App\Http\Controllers\Api\Admin\V1\StoreSettingsController as AdminStoreSettingsController;
 use App\Http\Controllers\Api\Admin\V1\TaxSettingsController as AdminTaxSettingsController;
 use App\Http\Controllers\Api\Admin\V1\ThemeController as AdminThemeController;
 use App\Http\Controllers\Api\Admin\V1\ThemeSettingsController as AdminThemeSettingsController;
@@ -104,12 +105,14 @@ Route::middleware('throttle:60,1')
 
         Route::middleware('admin.api:read-settings')->group(function (): void {
             Route::get('search/status', [AdminSearchIndexController::class, 'status'])->name('search.status');
+            Route::get('settings', [AdminStoreSettingsController::class, 'show'])->name('settings.show');
             Route::get('shipping/zones', [AdminShippingZoneController::class, 'index'])->name('shipping.zones.index');
             Route::get('tax/settings', [AdminTaxSettingsController::class, 'show'])->name('tax.settings.show');
         });
 
         Route::middleware('admin.api:write-settings')->group(function (): void {
             Route::post('search/reindex', [AdminSearchIndexController::class, 'reindex'])->name('search.reindex');
+            Route::put('settings', [AdminStoreSettingsController::class, 'update'])->name('settings.update');
             Route::post('shipping/zones', [AdminShippingZoneController::class, 'store'])->name('shipping.zones.store');
             Route::put('shipping/zones/{shippingZone}', [AdminShippingZoneController::class, 'update'])->name('shipping.zones.update');
             Route::post('shipping/zones/{shippingZone}/rates', [AdminShippingRateController::class, 'store'])->name('shipping.zones.rates.store');

@@ -22,7 +22,7 @@ class ThemeSettingsController extends Controller
             'settings_json' => ['required', 'array'],
         ]);
 
-        if (array_is_list($validated['settings_json'])) {
+        if ($validated['settings_json'] !== [] && array_is_list($validated['settings_json'])) {
             throw ValidationException::withMessages([
                 'settings_json' => __('The settings json field must be an object.'),
             ]);
