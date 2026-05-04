@@ -30,6 +30,12 @@
                         {{ __('Inventory') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+
+                <flux:sidebar.group :heading="__('Operations')" class="grid">
+                    <flux:sidebar.item icon="shopping-bag" :href="route('admin.orders.index')" :current="request()->routeIs('admin.orders.*')" wire:navigate>
+                        {{ __('Orders') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />

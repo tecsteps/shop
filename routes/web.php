@@ -4,6 +4,8 @@ use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
 use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
+use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
+use App\Livewire\Admin\Orders\Show as AdminOrderShow;
 use App\Livewire\Admin\Products\Form as AdminProductForm;
 use App\Livewire\Admin\Products\Index as AdminProductsIndex;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
@@ -53,6 +55,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::livewire('products/create', AdminProductForm::class)->name('products.create');
     Route::livewire('products/{product}/edit', AdminProductForm::class)->name('products.edit');
     Route::livewire('inventory', AdminInventoryIndex::class)->name('inventory.index');
+    Route::livewire('orders', AdminOrdersIndex::class)->name('orders.index');
+    Route::livewire('orders/{order}', AdminOrderShow::class)->name('orders.show');
     Route::livewire('collections', AdminCollectionsIndex::class)->name('collections.index');
     Route::livewire('collections/create', AdminCollectionForm::class)->name('collections.create');
     Route::livewire('collections/{collection}/edit', AdminCollectionForm::class)->name('collections.edit');
