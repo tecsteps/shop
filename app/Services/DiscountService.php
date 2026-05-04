@@ -29,7 +29,7 @@ class DiscountService
             ->first();
 
         if (! $discount instanceof Discount) {
-            throw InvalidDiscountException::because('discount_not_found', 'Discount code was not found.');
+            throw InvalidDiscountException::because('discount_not_found', 'Invalid discount code.');
         }
 
         $this->validateDiscountForCart($discount, $cart);
@@ -62,16 +62,16 @@ class DiscountService
 
     private function validateDiscountForCart(Discount $discount, Cart $cart): void
     {
+        if ($discount->status === DiscountStatus::Expired || ($discount->ends_at !== null && $discount->ends_at->isPast())) {
+            throw InvalidDiscountException::because('discount_expired', 'Discount has expired.');
+        }
+
         if ($discount->status !== DiscountStatus::Active) {
-            throw InvalidDiscountException::because('discount_expired', 'Discount is not active.');
+            throw InvalidDiscountException::because('discount_not_active', 'Discount is not active.');
         }
 
         if ($discount->starts_at->isFuture()) {
             throw InvalidDiscountException::because('discount_not_yet_active', 'Discount is not active yet.');
-        }
-
-        if ($discount->ends_at !== null && $discount->ends_at->isPast()) {
-            throw InvalidDiscountException::because('discount_expired', 'Discount has expired.');
         }
 
         if ($discount->usage_limit !== null && $discount->usage_count >= $discount->usage_limit) {

@@ -150,7 +150,7 @@
                     @else
                         <div class="mt-5 space-y-5">
                             <div class="flex gap-2">
-                                <flux:input wire:model="discountCode" label="Discount code" placeholder="SAVE10" />
+                                <flux:input wire:model="discountCode" label="Discount code" placeholder="WELCOME10" />
                                 <flux:button type="button" wire:click="applyDiscount" variant="ghost" class="mt-6">
                                     Apply
                                 </flux:button>

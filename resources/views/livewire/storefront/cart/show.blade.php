@@ -5,7 +5,7 @@
         <div class="space-y-6">
             <div class="flex items-end justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-semibold tracking-normal text-zinc-950 dark:text-white">Cart</h1>
+                    <h1 class="text-3xl font-semibold tracking-normal text-zinc-950 dark:text-white">Your Cart</h1>
                     <p class="mt-2 text-zinc-600 dark:text-zinc-400">{{ $lineCount }} {{ Str::plural('item', $lineCount) }}</p>
                 </div>
 
@@ -106,7 +106,7 @@
                 <form wire:submit="applyDiscount" class="mt-5 border-t border-zinc-200 pt-5 dark:border-zinc-800">
                     <div class="flex items-end gap-2">
                         <div class="min-w-0 flex-1">
-                            <flux:input wire:model="discountCode" label="Discount code" placeholder="SAVE10" />
+                            <flux:input wire:model="discountCode" label="Discount code" placeholder="WELCOME10" />
                         </div>
                         <flux:button type="submit" variant="ghost" icon="tag" class="shrink-0">
                             Apply
