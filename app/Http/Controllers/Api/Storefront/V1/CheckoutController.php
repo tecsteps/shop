@@ -5,16 +5,20 @@ namespace App\Http\Controllers\Api\Storefront\V1;
 use App\Exceptions\InsufficientInventoryException;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\PaymentFailedException;
 use App\Exceptions\UnserviceableShippingAddressException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Storefront\V1\ApplyCheckoutDiscountRequest;
+use App\Http\Requests\Api\Storefront\V1\CompleteCheckoutPaymentRequest;
 use App\Http\Requests\Api\Storefront\V1\SelectCheckoutPaymentRequest;
 use App\Http\Requests\Api\Storefront\V1\SetCheckoutAddressRequest;
 use App\Http\Requests\Api\Storefront\V1\SetCheckoutShippingRequest;
 use App\Http\Requests\Api\Storefront\V1\StoreCheckoutRequest;
 use App\Http\Resources\Storefront\V1\CheckoutResource;
+use App\Http\Resources\Storefront\V1\OrderResource;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use App\Services\CheckoutService;
 use App\Services\PricingEngine;
@@ -115,6 +119,30 @@ class CheckoutController extends Controller
         }
     }
 
+    public function pay(CompleteCheckoutPaymentRequest $request, Checkout $checkout, CheckoutService $checkouts): OrderResource|JsonResponse
+    {
+        try {
+            if ($checkout->payment_method !== $request->validated('payment_method')) {
+                $checkout = $checkouts->selectPaymentMethod($checkout, (string) $request->validated('payment_method'));
+            }
+
+            $order = $checkouts->completeCheckout($checkout, [
+                'card_number' => $request->validated('card_number'),
+                'cardholder_name' => $request->validated('card_holder'),
+                'expiry' => $request->validated('card_expiry'),
+                'cvc' => $request->validated('card_cvc'),
+            ]);
+
+            return OrderResource::make($this->loadOrder($order))
+                ->response()
+                ->setStatusCode(200);
+        } catch (PaymentFailedException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 402);
+        } catch (InsufficientInventoryException|InvalidCheckoutTransitionException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
+    }
+
     private function loadCheckout(Checkout $checkout): Checkout
     {
         $checkout = $checkout->load([
@@ -126,6 +154,11 @@ class CheckoutController extends Controller
         $checkout->setRelation('availableRates', $this->availableRates($checkout));
 
         return $checkout;
+    }
+
+    private function loadOrder(Order $order): Order
+    {
+        return $order->load(['lines', 'payments', 'fulfillments.lines']);
     }
 
     /**
