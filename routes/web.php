@@ -3,6 +3,7 @@
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
+use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
 use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
 use App\Livewire\Admin\Orders\Show as AdminOrderShow;
@@ -50,7 +51,7 @@ Route::post('admin/logout', function () {
 })->middleware('auth')->name('admin.logout');
 
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
-    Route::view('/', 'dashboard')->name('dashboard');
+    Route::livewire('/', AdminDashboard::class)->name('dashboard');
     Route::livewire('products', AdminProductsIndex::class)->name('products.index');
     Route::livewire('products/create', AdminProductForm::class)->name('products.create');
     Route::livewire('products/{product}/edit', AdminProductForm::class)->name('products.edit');
