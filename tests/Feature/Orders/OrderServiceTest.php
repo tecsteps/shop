@@ -162,7 +162,11 @@ test('checkout completion creates a paid order and commits inventory', function 
         ->and($order->total_amount)->toBe(4999)
         ->and($order->lines)->toHaveCount(1)
         ->and($order->lines->first()->title_snapshot)->toContain($variant->product->title)
-        ->and($order->lines->first()->discount_allocations_json)->toBe([['code' => 'SAVE500', 'amount' => 500]])
+        ->and($order->lines->first()->discount_allocations_json)->toBe([[
+            'discount_id' => $discount->getKey(),
+            'code' => 'SAVE500',
+            'amount' => 500,
+        ]])
         ->and($order->payments)->toHaveCount(1)
         ->and($order->payments->first()->status)->toBe(PaymentStatus::Captured)
         ->and($order->payments->first()->raw_json_encrypted['success'])->toBeTrue()

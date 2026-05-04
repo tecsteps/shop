@@ -2,9 +2,13 @@
 
 use App\Enums\DiscountType;
 use App\Enums\DiscountValueType;
+use App\Exceptions\InvalidDiscountException;
 use App\Models\Checkout;
+use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\InventoryItem;
+use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShippingRate;
@@ -12,6 +16,7 @@ use App\Models\ShippingZone;
 use App\Models\Store;
 use App\Models\TaxSettings;
 use App\Services\CartService;
+use App\Services\DiscountService;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
 use App\Services\TaxCalculator;
@@ -196,6 +201,51 @@ test('pricing engine stacks automatic discounts after explicit code discounts', 
         ->and($result->total)->toBe(4820)
         ->and($line->refresh()->line_discount_amount)->toBe(950)
         ->and($line->line_total_amount)->toBe(4050);
+});
+
+test('discount validation enforces one use per customer from order history', function () {
+    $store = pricingStore();
+    $customer = Customer::factory()->create(['store_id' => $store->getKey()]);
+    $otherCustomer = Customer::factory()->create(['store_id' => $store->getKey()]);
+    $variant = pricingVariant($store);
+    $discount = Discount::factory()->create([
+        'store_id' => $store->getKey(),
+        'code' => 'ONCE',
+        'rules_json' => [
+            'customer_eligibility' => 'all',
+            'one_per_customer' => true,
+        ],
+    ]);
+    $order = Order::factory()
+        ->forCustomer($customer)
+        ->create([
+            'store_id' => $store->getKey(),
+            'discount_amount' => 500,
+        ]);
+    OrderLine::factory()->create([
+        'order_id' => $order->getKey(),
+        'discount_allocations_json' => [[
+            'discount_id' => $discount->getKey(),
+            'code' => 'ONCE',
+            'amount' => 500,
+        ]],
+    ]);
+
+    $usedCart = app(CartService::class)->create($store, $customer);
+    app(CartService::class)->addLine($usedCart, $variant->getKey(), 1);
+
+    try {
+        app(DiscountService::class)->validate('once', $store, $usedCart);
+
+        $this->fail('Expected one-per-customer discount validation to fail.');
+    } catch (InvalidDiscountException $exception) {
+        expect($exception->reasonCode)->toBe('discount_usage_limit_reached');
+    }
+
+    $otherCart = app(CartService::class)->create($store, $otherCustomer);
+    app(CartService::class)->addLine($otherCart, $variant->getKey(), 1);
+
+    expect(app(DiscountService::class)->validate('ONCE', $store, $otherCart)->is($discount))->toBeTrue();
 });
 
 test('shipping and tax calculators handle matching ranges and inclusive extraction', function () {

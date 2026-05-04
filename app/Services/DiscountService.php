@@ -9,6 +9,7 @@ use App\Exceptions\InvalidDiscountException;
 use App\Models\Cart;
 use App\Models\CartLine;
 use App\Models\Discount;
+use App\Models\OrderLine;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use App\ValueObjects\DiscountResult;
@@ -75,6 +76,10 @@ class DiscountService
 
         if ($discount->usage_limit !== null && $discount->usage_count >= $discount->usage_limit) {
             throw InvalidDiscountException::because('discount_usage_limit_reached', 'Discount usage limit has been reached.');
+        }
+
+        if ($this->onePerCustomer($discount) && $this->customerHasUsedDiscount($discount, $cart)) {
+            throw InvalidDiscountException::because('discount_usage_limit_reached', 'Discount has already been used by this customer.');
         }
 
         $lines = $this->cartLines($cart);
@@ -199,5 +204,45 @@ class DiscountService
                 ->intersect($collectionIds)
                 ->isNotEmpty();
         });
+    }
+
+    private function onePerCustomer(Discount $discount): bool
+    {
+        return (bool) data_get($discount->rules_json, 'one_per_customer', false);
+    }
+
+    private function customerHasUsedDiscount(Discount $discount, Cart $cart): bool
+    {
+        if ($cart->customer_id === null) {
+            return false;
+        }
+
+        $discountCode = $discount->code ? mb_strtolower($discount->code) : null;
+
+        return OrderLine::query()
+            ->whereHas('order', function ($query) use ($discount, $cart): void {
+                $query
+                    ->withoutGlobalScopes()
+                    ->where('store_id', $discount->store_id)
+                    ->where('customer_id', $cart->customer_id)
+                    ->where('discount_amount', '>', 0);
+            })
+            ->get()
+            ->contains(function (OrderLine $line) use ($discount, $discountCode): bool {
+                return collect($line->discount_allocations_json ?? [])
+                    ->contains(function (mixed $allocation) use ($discount, $discountCode): bool {
+                        $allocationDiscountId = data_get($allocation, 'discount_id');
+
+                        if ($allocationDiscountId !== null && (int) $allocationDiscountId === $discount->getKey()) {
+                            return true;
+                        }
+
+                        if ($discountCode === null) {
+                            return false;
+                        }
+
+                        return mb_strtolower((string) data_get($allocation, 'code', '')) === $discountCode;
+                    });
+            });
     }
 }

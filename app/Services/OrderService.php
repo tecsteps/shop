@@ -280,7 +280,7 @@ class OrderService
     }
 
     /**
-     * @return array<int, array{code: string, amount: int}>
+     * @return array<int, array{discount_id: int|null, code: string, amount: int}>
      */
     private function discountAllocations(Checkout $checkout, CartLine $line): array
     {
@@ -288,8 +288,15 @@ class OrderService
             return [];
         }
 
+        $code = trim($checkout->discount_code);
+        $discount = Discount::withoutGlobalScopes()
+            ->where('store_id', $checkout->store_id)
+            ->whereRaw('lower(code) = ?', [mb_strtolower($code)])
+            ->first();
+
         return [[
-            'code' => $checkout->discount_code,
+            'discount_id' => $discount?->getKey(),
+            'code' => $code,
             'amount' => $line->line_discount_amount,
         ]];
     }
