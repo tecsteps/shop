@@ -69,23 +69,53 @@ test('admin core pages render for an authenticated store user', function (): voi
     $this->actingAs($user);
     $this->withSession(['current_store_id' => $store->getKey()]);
 
+    $expected = [
+        '/admin' => 'Dashboard',
+        '/admin/analytics' => 'Analytics',
+        '/admin/apps' => 'Apps',
+        '/admin/developers' => 'Developers',
+        '/admin/products' => 'Products',
+        '/admin/collections' => 'Collections',
+        '/admin/inventory' => 'Inventory',
+        '/admin/orders' => 'Orders',
+        '/admin/customers' => 'Customers',
+        '/admin/discounts' => 'Discounts',
+        '/admin/pages' => 'Pages',
+        '/admin/navigation' => 'Navigation',
+        '/admin/themes' => 'Themes',
+        '/admin/settings' => 'Settings',
+        '/admin/settings/shipping' => 'Shipping',
+        '/admin/settings/taxes' => 'Taxes',
+        '/admin/settings/checkout' => 'Checkout',
+        '/admin/settings/notifications' => 'Notifications',
+        '/admin/search/settings' => 'Search',
+    ];
+
+    $pages = visit(array_keys($expected), browserSmokeHost());
+
+    $pages->assertNoJavaScriptErrors();
+
+    foreach ($pages as $index => $page) {
+        $page->assertSee(array_values($expected)[$index]);
+    }
+});
+
+test('storefront account auth pages render without javascript errors', function (): void {
     $pages = visit([
-        '/admin',
-        '/admin/products',
-        '/admin/orders',
-        '/admin/customers',
-        '/admin/navigation',
+        '/account/login',
+        '/account/register',
+        '/account/forgot-password',
+        '/account/reset-password/test-token?email=customer@example.test',
     ], browserSmokeHost());
 
     $pages->assertNoJavaScriptErrors();
 
-    [$dashboard, $products, $orders, $customers, $navigation] = $pages;
+    [$login, $register, $forgotPassword, $resetPassword] = $pages;
 
-    $dashboard->assertSee('Dashboard');
-    $products->assertSee('Products');
-    $orders->assertSee('Orders');
-    $customers->assertSee('Customers');
-    $navigation->assertSee('Navigation');
+    $login->assertSee('Log in');
+    $register->assertSee('Create an account');
+    $forgotPassword->assertSee('Reset password');
+    $resetPassword->assertSee('New password');
 });
 
 test('storefront home renders on a mobile viewport', function (): void {
