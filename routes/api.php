@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\V1\CollectionController as AdminCollectionController;
 use App\Http\Controllers\Api\Admin\V1\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Api\Admin\V1\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
@@ -60,6 +61,16 @@ Route::middleware('throttle:60,1')
         Route::middleware('admin.api:read-customers')->group(function (): void {
             Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
             Route::get('customers/{customer}', [AdminCustomerController::class, 'show'])->name('customers.show');
+        });
+
+        Route::middleware('admin.api:read-collections')->group(function (): void {
+            Route::get('collections', [AdminCollectionController::class, 'index'])->name('collections.index');
+        });
+
+        Route::middleware('admin.api:write-collections')->group(function (): void {
+            Route::post('collections', [AdminCollectionController::class, 'store'])->name('collections.store');
+            Route::put('collections/{collection}', [AdminCollectionController::class, 'update'])->name('collections.update');
+            Route::delete('collections/{collection}', [AdminCollectionController::class, 'destroy'])->name('collections.destroy');
         });
 
         Route::middleware('admin.api:read-orders')->group(function (): void {
