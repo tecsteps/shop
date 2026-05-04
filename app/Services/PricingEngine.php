@@ -35,17 +35,27 @@ class PricingEngine
                 ->orderBy('id')
                 ->get();
             $subtotal = $lines->sum('line_subtotal_amount');
-            $discountResult = new DiscountResult(0, []);
+            $discountAmount = 0;
+            $freeShipping = false;
 
             if ($checkout->discount_code) {
                 $discount = $this->discounts->validate($checkout->discount_code, $checkout->store, $cart);
                 $discountResult = $this->discounts->applyToCart($cart, $discount);
-                $lines = CartLine::withoutGlobalScopes()
-                    ->where('cart_id', $cart->getKey())
-                    ->orderBy('id')
-                    ->get();
+                $discountAmount += $discountResult->amount;
+                $freeShipping = $freeShipping || $discountResult->freeShipping;
             }
 
+            foreach ($this->discounts->automaticForCart($checkout->store, $cart) as $discount) {
+                $discountResult = $this->discounts->applyToCart($cart, $discount);
+                $discountAmount += $discountResult->amount;
+                $freeShipping = $freeShipping || $discountResult->freeShipping;
+            }
+
+            $lines = CartLine::withoutGlobalScopes()
+                ->where('cart_id', $cart->getKey())
+                ->orderBy('id')
+                ->get();
+            $discountResult = new DiscountResult($discountAmount, [], $freeShipping);
             $shippingAmount = $this->shippingAmount($checkout, $discountResult);
             $taxSettings = $this->taxSettings($checkout);
             $taxResult = $this->taxes->calculateForAmounts(

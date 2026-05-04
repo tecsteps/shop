@@ -39,6 +39,10 @@
                     <flux:sidebar.item icon="users" :href="route('admin.customers.index')" :current="request()->routeIs('admin.customers.*')" wire:navigate>
                         {{ __('Customers') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="tag" :href="route('admin.discounts.index')" :current="request()->routeIs('admin.discounts.*')" wire:navigate>
+                        {{ __('Discounts') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

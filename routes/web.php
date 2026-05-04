@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Middleware\EnsureUserEmailIsVerified;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
 use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
 use App\Livewire\Admin\Customers\Show as AdminCustomerShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Discounts\Form as AdminDiscountForm;
+use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
 use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
 use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
 use App\Livewire\Admin\Orders\Show as AdminOrderShow;
@@ -52,7 +55,7 @@ Route::post('admin/logout', function () {
     return redirect()->route('admin.login');
 })->middleware('auth')->name('admin.logout');
 
-Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
+Route::middleware(['auth', EnsureUserEmailIsVerified::class, 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::livewire('/', AdminDashboard::class)->name('dashboard');
     Route::livewire('products', AdminProductsIndex::class)->name('products.index');
     Route::livewire('products/create', AdminProductForm::class)->name('products.create');
@@ -62,6 +65,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::livewire('orders/{order}', AdminOrderShow::class)->name('orders.show');
     Route::livewire('customers', AdminCustomersIndex::class)->name('customers.index');
     Route::livewire('customers/{customer}', AdminCustomerShow::class)->name('customers.show');
+    Route::livewire('discounts', AdminDiscountsIndex::class)->name('discounts.index');
+    Route::livewire('discounts/create', AdminDiscountForm::class)->name('discounts.create');
+    Route::livewire('discounts/{discount}/edit', AdminDiscountForm::class)->name('discounts.edit');
     Route::livewire('collections', AdminCollectionsIndex::class)->name('collections.index');
     Route::livewire('collections/create', AdminCollectionForm::class)->name('collections.create');
     Route::livewire('collections/{collection}/edit', AdminCollectionForm::class)->name('collections.edit');

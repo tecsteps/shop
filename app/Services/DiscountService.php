@@ -31,6 +31,36 @@ class DiscountService
             throw InvalidDiscountException::because('discount_not_found', 'Discount code was not found.');
         }
 
+        $this->validateDiscountForCart($discount, $cart);
+
+        return $discount;
+    }
+
+    /**
+     * @return Collection<int, Discount>
+     */
+    public function automaticForCart(Store $store, Cart $cart): Collection
+    {
+        return Discount::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->where('type', DiscountType::Automatic->value)
+            ->where('status', DiscountStatus::Active->value)
+            ->orderBy('id')
+            ->get()
+            ->filter(function (Discount $discount) use ($cart): bool {
+                try {
+                    $this->validateDiscountForCart($discount, $cart);
+
+                    return true;
+                } catch (InvalidDiscountException) {
+                    return false;
+                }
+            })
+            ->values();
+    }
+
+    private function validateDiscountForCart(Discount $discount, Cart $cart): void
+    {
         if ($discount->status !== DiscountStatus::Active) {
             throw InvalidDiscountException::because('discount_expired', 'Discount is not active.');
         }
@@ -58,8 +88,6 @@ class DiscountService
         if ($this->qualifyingLines($discount, $lines)->isEmpty()) {
             throw InvalidDiscountException::because('discount_not_applicable', 'Discount does not apply to these cart lines.');
         }
-
-        return $discount;
     }
 
     /**
@@ -72,7 +100,7 @@ class DiscountService
         }
 
         $qualifyingLines = $this->qualifyingLines($discount, collect($lines));
-        $qualifyingSubtotal = $qualifyingLines->sum('line_subtotal_amount');
+        $qualifyingSubtotal = $qualifyingLines->sum('line_total_amount');
 
         if ($qualifyingSubtotal <= 0) {
             return new DiscountResult(0, []);
@@ -95,7 +123,7 @@ class DiscountService
                 continue;
             }
 
-            $allocation = (int) round($discountAmount * $line->line_subtotal_amount / $qualifyingSubtotal);
+            $allocation = (int) round($discountAmount * $line->line_total_amount / $qualifyingSubtotal);
             $allocations[$line->getKey()] = $allocation;
             $remaining -= $allocation;
         }
@@ -113,8 +141,8 @@ class DiscountService
                 $discountAmount = $result->allocations[$line->getKey()] ?? 0;
 
                 $line->forceFill([
-                    'line_discount_amount' => $discountAmount,
-                    'line_total_amount' => $line->line_subtotal_amount - $discountAmount,
+                    'line_discount_amount' => $line->line_discount_amount + $discountAmount,
+                    'line_total_amount' => max(0, $line->line_total_amount - $discountAmount),
                 ])->save();
             });
 

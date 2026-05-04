@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
+use App\Http\Middleware\CheckStoreRole;
+use App\Http\Middleware\EnsureUserEmailIsVerified;
+use App\Http\Middleware\ResolveStore;
 use App\Models\Store;
 use App\Services\NavigationService;
 use App\Services\Payments\MockPaymentProvider;
@@ -20,6 +23,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View as ViewInstance;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureLivewireMiddleware();
         $this->configureStorefrontViewData();
     }
 
@@ -115,5 +120,14 @@ class AppServiceProvider extends ServiceProvider
                 'footerNavigation' => $navigation->forHandle($store, data_get($themeSettings, 'footer.menu', 'footer-menu')),
             ]);
         });
+    }
+
+    protected function configureLivewireMiddleware(): void
+    {
+        Livewire::addPersistentMiddleware([
+            EnsureUserEmailIsVerified::class,
+            ResolveStore::class,
+            CheckStoreRole::class,
+        ]);
     }
 }

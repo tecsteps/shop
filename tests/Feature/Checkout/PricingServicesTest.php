@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\DiscountType;
+use App\Enums\DiscountValueType;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\InventoryItem;
@@ -145,6 +147,55 @@ test('pricing engine applies percent and free shipping discounts', function () {
     expect($freeShipping->discount)->toBe(0)
         ->and($freeShipping->shipping)->toBe(0)
         ->and($freeShipping->total)->toBe(5950);
+});
+
+test('pricing engine applies active automatic discounts', function () {
+    $store = pricingStore();
+    $variant = pricingVariant($store);
+    $checkout = pricingCheckout($store, $variant);
+    Discount::factory()->create([
+        'store_id' => $store->getKey(),
+        'type' => DiscountType::Automatic,
+        'code' => null,
+        'value_type' => DiscountValueType::Percent,
+        'value_amount' => 10,
+    ]);
+
+    $result = app(PricingEngine::class)->calculate($checkout);
+    $line = $checkout->cart->lines()->firstOrFail();
+
+    expect($result->discount)->toBe(500)
+        ->and($result->total)->toBe(5355)
+        ->and($line->refresh()->line_discount_amount)->toBe(500)
+        ->and($line->line_total_amount)->toBe(4500);
+});
+
+test('pricing engine stacks automatic discounts after explicit code discounts', function () {
+    $store = pricingStore();
+    $variant = pricingVariant($store);
+    $checkout = pricingCheckout($store, $variant);
+    Discount::factory()->create([
+        'store_id' => $store->getKey(),
+        'code' => 'SAVE10',
+        'value_type' => DiscountValueType::Percent,
+        'value_amount' => 10,
+    ]);
+    Discount::factory()->create([
+        'store_id' => $store->getKey(),
+        'type' => DiscountType::Automatic,
+        'code' => null,
+        'value_type' => DiscountValueType::Percent,
+        'value_amount' => 10,
+    ]);
+    $checkout->forceFill(['discount_code' => 'SAVE10'])->save();
+
+    $result = app(PricingEngine::class)->calculate($checkout);
+    $line = $checkout->cart->lines()->firstOrFail();
+
+    expect($result->discount)->toBe(950)
+        ->and($result->total)->toBe(4820)
+        ->and($line->refresh()->line_discount_amount)->toBe(950)
+        ->and($line->line_total_amount)->toBe(4050);
 });
 
 test('shipping and tax calculators handle matching ranges and inclusive extraction', function () {
