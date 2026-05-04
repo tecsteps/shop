@@ -1,3 +1,5 @@
+@php($logoutRoute = request()->routeIs('admin.*') ? route('admin.logout') : route('logout'))
+
 <flux:dropdown position="bottom" align="start">
     <flux:sidebar.profile
         {{ $attributes->only('name') }}
@@ -22,7 +24,7 @@
             <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
                 {{ __('Settings') }}
             </flux:menu.item>
-            <form method="POST" action="{{ route('logout') }}" class="w-full">
+            <form method="POST" action="{{ $logoutRoute }}" class="w-full">
                 @csrf
                 <flux:menu.item
                     as="button"

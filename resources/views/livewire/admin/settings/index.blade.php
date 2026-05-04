@@ -1,7 +1,7 @@
 <section class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <flux:heading size="xl">Settings</flux:heading>
+            <flux:heading size="xl">Store Settings</flux:heading>
             <flux:text class="mt-1">Store defaults, checkout preferences, and domains.</flux:text>
         </div>
 
