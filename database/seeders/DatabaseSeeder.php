@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             OrganizationSeeder::class,
             StoreSeeder::class,
             StoreDomainSeeder::class,
+            AppSeeder::class,
             UserSeeder::class,
             StoreUserSeeder::class,
             StoreSettingsSeeder::class,

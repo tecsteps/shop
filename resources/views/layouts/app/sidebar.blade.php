@@ -19,6 +19,14 @@
                     <flux:sidebar.item icon="chart-bar" :href="route('admin.analytics.index')" :current="request()->routeIs('admin.analytics.*')" wire:navigate>
                         {{ __('Analytics') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="squares-2x2" :href="route('admin.apps.index')" :current="request()->routeIs('admin.apps.*')" wire:navigate>
+                        {{ __('Apps') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="code-bracket" :href="route('admin.developers.index')" :current="request()->routeIs('admin.developers.*')" wire:navigate>
+                        {{ __('Developers') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Products')" class="grid">

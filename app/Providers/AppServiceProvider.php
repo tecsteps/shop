@@ -4,9 +4,18 @@ namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
+use App\Events\FulfillmentCreated;
+use App\Events\FulfillmentDelivered;
+use App\Events\FulfillmentShipped;
+use App\Events\OrderCancelled;
+use App\Events\OrderCreated;
+use App\Events\OrderPaid;
+use App\Events\OrderRefunded;
+use App\Events\ProductStatusChanged;
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\EnsureUserEmailIsVerified;
 use App\Http\Middleware\ResolveStore;
+use App\Listeners\DispatchWebhooks;
 use App\Models\Product;
 use App\Models\Store;
 use App\Observers\ProductObserver;
@@ -15,6 +24,7 @@ use App\Services\NavigationService;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\SearchService;
 use App\Services\ThemeSettingsService;
+use App\Services\WebhookService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -22,6 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -46,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(NavigationService::class);
         $this->app->singleton(SearchService::class);
         $this->app->singleton(AnalyticsService::class);
+        $this->app->singleton(WebhookService::class);
     }
 
     /**
@@ -54,6 +66,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureEventListeners();
         $this->configureLivewireMiddleware();
         $this->configureStorefrontViewData();
     }
@@ -97,6 +110,10 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->ip());
         });
 
+        RateLimiter::for('webhooks', function (Request $request): Limit {
+            return Limit::perMinute(100)->by($request->ip());
+        });
+
         Product::observe(ProductObserver::class);
 
         Authenticate::redirectUsing(function (Request $request): string {
@@ -136,6 +153,22 @@ class AppServiceProvider extends ServiceProvider
                 'footerNavigation' => $navigation->forHandle($store, data_get($themeSettings, 'footer.menu', 'footer-menu')),
             ]);
         });
+    }
+
+    protected function configureEventListeners(): void
+    {
+        foreach ([
+            OrderCreated::class,
+            OrderPaid::class,
+            OrderCancelled::class,
+            OrderRefunded::class,
+            FulfillmentCreated::class,
+            FulfillmentShipped::class,
+            FulfillmentDelivered::class,
+            ProductStatusChanged::class,
+        ] as $event) {
+            Event::listen($event, DispatchWebhooks::class);
+        }
     }
 
     protected function configureLivewireMiddleware(): void

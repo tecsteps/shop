@@ -134,6 +134,22 @@ class Store extends Model
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * @return HasMany<AppInstallation, $this>
+     */
+    public function appInstallations(): HasMany
+    {
+        return $this->hasMany(AppInstallation::class);
+    }
+
+    /**
+     * @return HasMany<WebhookSubscription, $this>
+     */
+    public function webhookSubscriptions(): HasMany
+    {
+        return $this->hasMany(WebhookSubscription::class);
+    }
+
     public function isSuspended(): bool
     {
         return $this->status === StoreStatus::Suspended;

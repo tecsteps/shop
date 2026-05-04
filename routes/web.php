@@ -2,12 +2,15 @@
 
 use App\Http\Middleware\EnsureUserEmailIsVerified;
 use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
+use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
+use App\Livewire\Admin\Apps\Show as AdminAppShow;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
 use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
 use App\Livewire\Admin\Customers\Show as AdminCustomerShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Developers\Index as AdminDevelopersIndex;
 use App\Livewire\Admin\Discounts\Form as AdminDiscountForm;
 use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
 use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
@@ -68,6 +71,9 @@ Route::post('admin/logout', function () {
 Route::middleware(['auth', EnsureUserEmailIsVerified::class, 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::livewire('/', AdminDashboard::class)->name('dashboard');
     Route::livewire('analytics', AdminAnalyticsIndex::class)->name('analytics.index');
+    Route::livewire('apps', AdminAppsIndex::class)->name('apps.index');
+    Route::livewire('apps/{installation}', AdminAppShow::class)->name('apps.show');
+    Route::livewire('developers', AdminDevelopersIndex::class)->name('developers.index');
     Route::livewire('products', AdminProductsIndex::class)->name('products.index');
     Route::livewire('products/create', AdminProductForm::class)->name('products.create');
     Route::livewire('products/{product}/edit', AdminProductForm::class)->name('products.edit');
