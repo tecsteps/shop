@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping on orders over 50
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - navigation "Breadcrumb" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Home" [ref=e17] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e18]
+          - listitem [ref=e20]:
+            - generic [ref=e21]: Cart
+      - generic [ref=e22]: Your cart
+      - generic [ref=e23]:
+        - img [ref=e25]
+        - generic [ref=e28]:
+          - text: Your cart is empty. Browse
+          - link "our collections" [ref=e29] [cursor=pointer]:
+            - /url: http://shop.test/collections
+          - text: to get started.
+  - contentinfo [ref=e30]:
+    - generic [ref=e31]: © 2026 Acme Fashion. All rights reserved.

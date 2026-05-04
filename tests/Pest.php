@@ -12,8 +12,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', 'Browser');
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +40,31 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * @param  list<string>  $abilities
+ */
+function adminApiBearerToken(\App\Models\Store $store, array $abilities, ?\App\Models\User $user = null): string
 {
-    // ..
+    return adminApiToken($store, $abilities, $user)['plain_text'];
+}
+
+/**
+ * @param  list<string>  $abilities
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
+ */
+function adminApiToken(\App\Models\Store $store, array $abilities, ?\App\Models\User $user = null): array
+{
+    $user ??= $store->users()->wherePivot('role', 'owner')->first()
+        ?? $store->users()->first();
+
+    if (! $user instanceof \App\Models\User) {
+        $user = \App\Models\User::factory()->create(['email_verified_at' => now()]);
+        $store->users()->attach($user->getKey(), [
+            'role' => \App\Enums\StoreUserRole::Owner->value,
+            'created_at' => now(),
+        ]);
+    }
+
+    return app(\App\Services\WebhookService::class)
+        ->createApiToken($store, 'Test API token', $abilities, $user);
 }

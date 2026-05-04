@@ -1,0 +1,81 @@
+- generic [active] [ref=e1]:
+  - dialog [ref=e53]:
+    - iframe [ref=e54]:
+      - generic [ref=f1e2]:
+        - paragraph [ref=f1e3]: "404"
+        - heading "Page not found" [level=1] [ref=f1e4]
+        - paragraph [ref=f1e5]: The page you are looking for does not exist or has been moved.
+        - link "Back to home" [ref=f1e7] [cursor=pointer]:
+          - /url: /
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping on orders over 50
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: http://shop.test/collections
+        - link "Search" [ref=e9] [cursor=pointer]:
+          - /url: http://shop.test/search
+        - link "Sign in" [ref=e10] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - link "Cart" [ref=e11] [cursor=pointer]:
+          - /url: http://shop.test/cart
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - navigation "Breadcrumb" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Home" [ref=e17] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e18]
+          - listitem [ref=e20]:
+            - generic [ref=e21]: Products
+            - img [ref=e22]
+          - listitem [ref=e24]:
+            - generic [ref=e25]: Organic Cotton T-Shirt
+      - generic [ref=e26]:
+        - img "Organic Cotton T-Shirt front" [ref=e29]
+        - generic [ref=e30]:
+          - generic [ref=e31]: Organic Cotton T-Shirt
+          - generic [ref=e33]: 25.00 EUR
+          - generic [ref=e34]:
+            - generic [ref=e35]: Variant
+            - combobox "Variant" [ref=e36]:
+              - option "TSH-S-BLA" [selected]
+              - option "TSH-S-WHI"
+              - option "TSH-M-BLA"
+              - option "TSH-M-WHI"
+              - option "TSH-L-BLA"
+              - option "TSH-L-WHI"
+          - generic [ref=e37]:
+            - generic [ref=e38]: Quantity
+            - spinbutton "Quantity" [ref=e39]: "1"
+          - button "Add to cart" [ref=e40]:
+            - img [ref=e42]
+            - generic [ref=e45]: Add to cart
+          - paragraph [ref=e47]: Soft, breathable, sustainably sourced.
+          - generic [ref=e48]:
+            - generic [ref=e49]: summer
+            - generic [ref=e50]: bestseller
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]: © 2026 Acme Fashion. All rights reserved.
+  - generic:
+    - generic:
+      - dialog "Shopping cart":
+        - banner:
+          - generic: Your Cart (0)
+          - button "Close cart":
+            - generic:
+              - img
+            - img
+        - generic:
+          - generic:
+            - img
+            - paragraph: Your cart is empty
+            - button "Continue shopping":
+              - generic:
+                - img
+              - generic: Continue shopping

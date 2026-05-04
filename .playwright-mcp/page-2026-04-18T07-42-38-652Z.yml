@@ -1,0 +1,212 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - generic [ref=e10]: Internal Server Error
+    - button "Copy as Markdown" [ref=e11] [cursor=pointer]:
+      - img [ref=e12]
+      - generic [ref=e15]: Copy as Markdown
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - heading "ErrorException" [level=1] [ref=e20]
+      - generic [ref=e22]: resources/views/livewire/storefront/products/show.blade.php:17
+      - paragraph [ref=e23]: "Undefined property: stdClass::$url"
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: LARAVEL
+          - generic [ref=e28]: 12.51.0
+        - generic [ref=e29]:
+          - generic [ref=e30]: PHP
+          - generic [ref=e31]: 8.4.17
+      - generic [ref=e32]:
+        - img [ref=e33]
+        - text: UNHANDLED
+      - generic [ref=e36]: CODE 0
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - img [ref=e40]
+        - text: "500"
+      - generic [ref=e43]:
+        - img [ref=e44]
+        - text: GET
+      - generic [ref=e47]: http://shop.test/products/organic-cotton-t-shirt
+      - button [ref=e48] [cursor=pointer]:
+        - img [ref=e49]
+  - generic [ref=e53]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - img [ref=e57]
+        - heading "Exception trace" [level=3] [ref=e60]
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63] [cursor=pointer]:
+            - generic [ref=e66]:
+              - code [ref=e70]:
+                - generic [ref=e71]: resources/views/livewire/storefront/products/show.blade.php
+              - generic [ref=e73]: resources/views/livewire/storefront/products/show.blade.php:17
+            - button [ref=e75]:
+              - img [ref=e76]
+          - code [ref=e84]:
+            - generic [ref=e85]: "12"
+            - generic [ref=e86]: 13 <div class="grid gap-8 lg:grid-cols-2">
+            - generic [ref=e87]: 14 <div class="space-y-3">
+            - generic [ref=e88]: 15 @if (! empty($media))
+            - generic [ref=e89]: 16 <div class="aspect-square w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+            - generic [ref=e90]: "17 <img src=\"{{ $media[0]->url }}\" alt=\"{{ $media[0]->alt_text ?? $product->title }}\" class=\"h-full w-full object-cover\" />"
+            - generic [ref=e91]: 18 </div>
+            - generic [ref=e92]: 19 @if (count($media) > 1)
+            - generic [ref=e93]: 20 <div class="grid grid-cols-4 gap-2">
+            - generic [ref=e94]: 21 @foreach (array_slice($media, 1, 7) as $item)
+            - generic [ref=e95]: "22 <div wire:key=\"pm-{{ $item->id }}\" class=\"aspect-square overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800\">"
+            - generic [ref=e96]: "23 <img src=\"{{ $item->url }}\" alt=\"{{ $item->alt_text ?? '' }}\" class=\"h-full w-full object-cover\" loading=\"lazy\" />"
+            - generic [ref=e97]: 24 </div>
+            - generic [ref=e98]: 25 @endforeach
+            - generic [ref=e99]: 26 </div>
+            - generic [ref=e100]: 27 @endif
+            - generic [ref=e101]: 28 @else
+            - generic [ref=e102]: "29"
+        - generic [ref=e104] [cursor=pointer]:
+          - img [ref=e105]
+          - generic [ref=e109]: 20 vendor frames
+          - button [ref=e110]:
+            - img [ref=e111]
+        - generic [ref=e116] [cursor=pointer]:
+          - generic [ref=e119]:
+            - code [ref=e123]:
+              - generic [ref=e124]: app/Http/Middleware/ResolveStore.php
+            - generic [ref=e126]: app/Http/Middleware/ResolveStore.php:36
+          - button [ref=e128]:
+            - img [ref=e129]
+        - generic [ref=e134] [cursor=pointer]:
+          - img [ref=e135]
+          - generic [ref=e139]: 49 vendor frames
+          - button [ref=e140]:
+            - img [ref=e141]
+        - generic [ref=e146] [cursor=pointer]:
+          - generic [ref=e149]:
+            - code [ref=e153]:
+              - generic [ref=e154]: public/index.php
+            - generic [ref=e156]: public/index.php:20
+          - button [ref=e158]:
+            - img [ref=e159]
+        - generic [ref=e164] [cursor=pointer]:
+          - img [ref=e165]
+          - generic [ref=e169]: 1 vendor frame
+          - button [ref=e170]:
+            - img [ref=e171]
+    - generic [ref=e175]:
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - img [ref=e179]
+          - heading "Queries" [level=3] [ref=e181]
+        - generic [ref=e183]: 1-7 of 7
+      - generic [ref=e184]:
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - generic [ref=e187]:
+              - img [ref=e188]
+              - generic [ref=e190]: sqlite
+            - code [ref=e194]:
+              - generic [ref=e195]: select * from "stores" where "stores"."id" = 1 limit 1
+          - generic [ref=e196]: 1.77ms
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - img [ref=e200]
+              - generic [ref=e202]: sqlite
+            - code [ref=e206]:
+              - generic [ref=e207]: select exists (select 1 from "main".sqlite_master where name = 'products' and type = 'table') as "exists"
+          - generic [ref=e208]: 0.04ms
+        - generic [ref=e209]:
+          - generic [ref=e210]:
+            - generic [ref=e211]:
+              - img [ref=e212]
+              - generic [ref=e214]: sqlite
+            - code [ref=e218]:
+              - generic [ref=e219]: select "id", "title", "handle", "description_html", "tags" from "products" where "store_id" = 1 and "handle" = 'organic-cotton-t-shirt' and "status" = 'active' limit 1
+          - generic [ref=e220]: 0.04ms
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - generic [ref=e223]:
+              - img [ref=e224]
+              - generic [ref=e226]: sqlite
+            - code [ref=e230]:
+              - generic [ref=e231]: select exists (select 1 from "main".sqlite_master where name = 'product_variants' and type = 'table') as "exists"
+          - generic [ref=e232]: 0.02ms
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - generic [ref=e235]:
+              - img [ref=e236]
+              - generic [ref=e238]: sqlite
+            - code [ref=e242]:
+              - generic [ref=e243]: select "id", "sku", "price_amount", "compare_at_amount", "currency", "is_default", "status" from "product_variants" where "product_id" = 1 order by "position" asc
+          - generic [ref=e244]: 0.1ms
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - generic [ref=e247]:
+              - img [ref=e248]
+              - generic [ref=e250]: sqlite
+            - code [ref=e254]:
+              - generic [ref=e255]: select exists (select 1 from "main".sqlite_master where name = 'product_media' and type = 'table') as "exists"
+          - generic [ref=e256]: 0.02ms
+        - generic [ref=e257]:
+          - generic [ref=e258]:
+            - generic [ref=e259]:
+              - img [ref=e260]
+              - generic [ref=e262]: sqlite
+            - code [ref=e266]:
+              - generic [ref=e267]: select "id", "url", "alt_text" from "product_media" where "product_id" = 1 order by "position" asc
+          - generic [ref=e268]: 0.03ms
+  - generic [ref=e270]:
+    - generic [ref=e271]:
+      - heading "Headers" [level=2] [ref=e272]
+      - generic [ref=e273]:
+        - generic [ref=e274]:
+          - generic [ref=e275]: cookie
+          - generic [ref=e277]: XSRF-TOKEN=eyJpdiI6IlJINnRyMXFuWFpGby80QjVuclVHRmc9PSIsInZhbHVlIjoiOTJyZGVNY0s5TnVWZDlOWThzNDBTTXFUMXhRd0lyZlNZYytoTTFjQ1lubXI3RHhtZkpwangzRDBTY1JyNlRCd0xORnRiYUlrNnRRV0lNZmgwTU1pakRqOVJ6UHN4UWpJdnBvNzE0SUxGWUxIUThpOUZiWnZPL1FSNUtXakhub1ciLCJtYWMiOiJiOWRmMWMyN2Q2YmFlNzI1MWM4MGYyNzU4YjM3ZTE1NTdjZDdmMmFjMzgxY2UxMDIyN2E5NTJkZTUzZGZiN2MxIiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6Imk5MDRCRnp6Q1FSckhVU1FQZmhpeXc9PSIsInZhbHVlIjoiNnIyMUdHdHozQk5GcHUvNkFMN0FMS2FPMDdTcnA0cnptV1VjTm0ySFdndDlySSt1R2pDbzJZN09VdXhGUHZsQi83R09Udnpiby95NmFrclEyUVd6Vk5ETlo0ai9TOHd4UjhyWlc1RlVLNXArcW9udmljMDU4TTloTUtwbjZQNzkiLCJtYWMiOiI4YmU4OWI0OGI5N2ZhOGVkNDgyMmIzYjE2YWY0ZTc3Zjg1ZjFlYzM4YWYzZTE5NmNlNTUzYmI1MGZjNzMyYWY5IiwidGFnIjoiIn0%3D
+        - generic [ref=e278]:
+          - generic [ref=e279]: accept-language
+          - generic [ref=e281]: en-GB,en-US;q=0.9,en;q=0.8
+        - generic [ref=e282]:
+          - generic [ref=e283]: accept-encoding
+          - generic [ref=e285]: gzip, deflate
+        - generic [ref=e286]:
+          - generic [ref=e287]: accept
+          - generic [ref=e289]: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        - generic [ref=e290]:
+          - generic [ref=e291]: user-agent
+          - generic [ref=e293]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+        - generic [ref=e294]:
+          - generic [ref=e295]: upgrade-insecure-requests
+          - generic [ref=e297]: "1"
+        - generic [ref=e298]:
+          - generic [ref=e299]: connection
+          - generic [ref=e301]: keep-alive
+        - generic [ref=e302]:
+          - generic [ref=e303]: host
+          - generic [ref=e305]: shop.test
+    - generic [ref=e306]:
+      - heading "Body" [level=2] [ref=e307]
+      - generic [ref=e308]: // No request body
+    - generic [ref=e309]:
+      - heading "Routing" [level=2] [ref=e310]
+      - generic [ref=e311]:
+        - generic [ref=e312]:
+          - generic [ref=e313]: controller
+          - generic [ref=e315]: App\Livewire\Storefront\Products\Show
+        - generic [ref=e316]:
+          - generic [ref=e317]: route name
+          - generic [ref=e319]: storefront.products.show
+        - generic [ref=e320]:
+          - generic [ref=e321]: middleware
+          - generic [ref=e323]: web, storefront
+    - generic [ref=e324]:
+      - heading "Routing parameters" [level=2] [ref=e325]
+      - code [ref=e330]:
+        - generic [ref=e331]: "{"
+        - generic [ref=e332]: "\"handle\": \"organic-cotton-t-shirt\""
+        - generic [ref=e333]: "}"
+  - generic [ref=e336]:
+    - img [ref=e338]
+    - img [ref=e3376]

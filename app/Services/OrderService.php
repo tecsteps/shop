@@ -1,0 +1,491 @@
+<?php
+
+namespace App\Services;
+
+use App\Enums\CartStatus;
+use App\Enums\CheckoutStatus;
+use App\Enums\FinancialStatus;
+use App\Enums\FulfillmentStatus;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
+use App\Events\CheckoutCompleted;
+use App\Events\OrderCancelled;
+use App\Events\OrderCreated;
+use App\Events\OrderPaid;
+use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\InvalidOrderOperationException;
+use App\Exceptions\PaymentFailedException;
+use App\Models\CartLine;
+use App\Models\Checkout;
+use App\Models\Discount;
+use App\Models\InventoryItem;
+use App\Models\Order;
+use App\Models\OrderLine;
+use App\Models\ProductOptionValue;
+use App\Models\ProductVariant;
+use App\Models\Store;
+use App\Models\StoreSettings;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use ValueError;
+
+class OrderService
+{
+    public function __construct(
+        private readonly PaymentService $payments,
+        private readonly InventoryService $inventory,
+        private readonly PricingEngine $pricing,
+        private readonly FulfillmentService $fulfillments,
+        private readonly DiscountService $discounts,
+    ) {}
+
+    /**
+     * Create an order from a checkout after payment has been selected.
+     *
+     * @param  array<string, mixed>  $paymentMethodData
+     */
+    public function createFromCheckout(Checkout $checkout, array $paymentMethodData = []): Order
+    {
+        try {
+            return DB::transaction(function () use ($checkout, $paymentMethodData): Order {
+                $checkout = $this->freshCheckout($checkout);
+                $existingOrder = Order::withoutGlobalScopes()
+                    ->where('checkout_id', $checkout->getKey())
+                    ->first();
+
+                if ($existingOrder instanceof Order) {
+                    return $existingOrder->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+                }
+
+                if ($checkout->status !== CheckoutStatus::PaymentSelected) {
+                    throw InvalidCheckoutTransitionException::because("Checkout cannot transition from {$checkout->status->value}.");
+                }
+
+                if ($checkout->totals_json === null) {
+                    $this->pricing->calculate($checkout);
+                    $checkout = $this->freshCheckout($checkout);
+                }
+
+                $store = $this->lockedStore($checkout);
+                $appliedDiscounts = $this->lockedAppliedDiscounts($checkout);
+                $method = $this->paymentMethod($checkout);
+                $paymentResult = $this->payments->charge($checkout, $method, $paymentMethodData);
+
+                if (! $paymentResult->success) {
+                    throw PaymentFailedException::fromResult($paymentResult);
+                }
+
+                $paidImmediately = $paymentResult->status === PaymentStatus::Captured;
+                $totals = $checkout->totals_json ?? [];
+
+                $order = Order::withoutGlobalScopes()->create([
+                    'store_id' => $checkout->store_id,
+                    'checkout_id' => $checkout->getKey(),
+                    'customer_id' => $checkout->customer_id,
+                    'order_number' => $this->nextOrderNumber($store),
+                    'payment_method' => $method,
+                    'status' => $paidImmediately ? OrderStatus::Paid : OrderStatus::Pending,
+                    'financial_status' => $paidImmediately ? FinancialStatus::Paid : FinancialStatus::Pending,
+                    'fulfillment_status' => FulfillmentStatus::Unfulfilled,
+                    'currency' => (string) data_get($totals, 'currency', $checkout->cart->currency),
+                    'subtotal_amount' => (int) data_get($totals, 'subtotal', 0),
+                    'discount_amount' => (int) data_get($totals, 'discount', 0),
+                    'shipping_amount' => (int) data_get($totals, 'shipping', 0),
+                    'tax_amount' => (int) data_get($totals, 'tax', 0),
+                    'total_amount' => (int) data_get($totals, 'total', 0),
+                    'email' => $checkout->email,
+                    'billing_address_json' => $checkout->billing_address_json,
+                    'shipping_address_json' => $checkout->shipping_address_json,
+                    'placed_at' => now(),
+                ]);
+
+                $this->createOrderLines($checkout, $order, $this->discountAllocationsByCartLine($checkout, $appliedDiscounts));
+
+                $order->payments()->create([
+                    'provider' => 'mock',
+                    'method' => $method,
+                    'provider_payment_id' => $paymentResult->referenceId,
+                    'status' => $paymentResult->status,
+                    'amount' => $order->total_amount,
+                    'currency' => $order->currency,
+                    'raw_json_encrypted' => $paymentResult->toArray(),
+                ]);
+
+                if ($paidImmediately) {
+                    $this->commitReservedInventory($checkout);
+                }
+
+                $checkout->cart->forceFill([
+                    'status' => CartStatus::Converted,
+                ])->save();
+
+                $checkout->forceFill([
+                    'status' => CheckoutStatus::Completed,
+                    'expires_at' => null,
+                ])->save();
+
+                $this->incrementDiscountUsage($appliedDiscounts);
+
+                if ($paidImmediately) {
+                    $this->fulfillments->autoFulfillDigital($order);
+                }
+
+                $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+                $checkout = $checkout->refresh();
+
+                event(new OrderCreated($order));
+                event(new CheckoutCompleted($checkout, $order));
+
+                if ($paidImmediately) {
+                    event(new OrderPaid($order));
+                }
+
+                return $order;
+            });
+        } catch (PaymentFailedException $exception) {
+            $this->releaseFailedPaymentReservation($checkout);
+
+            throw $exception;
+        }
+    }
+
+    public function confirmBankTransferPayment(Order $order): Order
+    {
+        return DB::transaction(function () use ($order): Order {
+            $order = $this->freshOrder($order);
+            $this->assertPendingBankTransfer($order);
+
+            $order->payments()
+                ->where('status', PaymentStatus::Pending->value)
+                ->update(['status' => PaymentStatus::Captured->value]);
+
+            $this->commitReservedOrderInventory($order);
+
+            $order->forceFill([
+                'status' => OrderStatus::Paid,
+                'financial_status' => FinancialStatus::Paid,
+            ])->save();
+
+            $this->fulfillments->autoFulfillDigital($order);
+
+            $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+
+            event(new OrderPaid($order));
+
+            return $order;
+        });
+    }
+
+    public function cancelUnpaidBankTransferOrder(Order $order): Order
+    {
+        return DB::transaction(function () use ($order): Order {
+            $order = $this->freshOrder($order);
+            $this->assertPendingBankTransfer($order);
+
+            $this->releaseReservedOrderInventory($order);
+
+            $order->payments()
+                ->where('status', PaymentStatus::Pending->value)
+                ->update(['status' => PaymentStatus::Failed->value]);
+
+            $order->forceFill([
+                'status' => OrderStatus::Cancelled,
+                'financial_status' => FinancialStatus::Voided,
+            ])->save();
+
+            $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+
+            event(new OrderCancelled($order));
+
+            return $order;
+        });
+    }
+
+    private function freshCheckout(Checkout $checkout): Checkout
+    {
+        return Checkout::withoutGlobalScopes()
+            ->with(['cart', 'store'])
+            ->whereKey($checkout->getKey())
+            ->lockForUpdate()
+            ->firstOrFail();
+    }
+
+    private function lockedStore(Checkout $checkout): Store
+    {
+        return Store::withoutGlobalScopes()
+            ->whereKey($checkout->store_id)
+            ->lockForUpdate()
+            ->firstOrFail();
+    }
+
+    private function freshOrder(Order $order): Order
+    {
+        return Order::withoutGlobalScopes()
+            ->with(['lines', 'payments', 'store.settings'])
+            ->whereKey($order->getKey())
+            ->lockForUpdate()
+            ->firstOrFail();
+    }
+
+    private function paymentMethod(Checkout $checkout): PaymentMethod
+    {
+        try {
+            return PaymentMethod::from((string) $checkout->payment_method);
+        } catch (ValueError) {
+            throw InvalidCheckoutTransitionException::because('Payment method is invalid.');
+        }
+    }
+
+    private function nextOrderNumber(Store $store): string
+    {
+        $settings = StoreSettings::query()
+            ->where('store_id', $store->getKey())
+            ->first()
+            ?->settings_json ?? [];
+        $prefix = (string) data_get($settings, 'order_number_prefix', '#');
+        $start = max(1, (int) data_get($settings, 'order_number_start', 1001));
+        $maxExisting = Order::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->pluck('order_number')
+            ->map(fn (string $orderNumber): ?int => $this->sequenceFromOrderNumber($orderNumber))
+            ->filter()
+            ->max();
+
+        return $prefix.((int) max($start - 1, $maxExisting ?? 0) + 1);
+    }
+
+    private function sequenceFromOrderNumber(string $orderNumber): ?int
+    {
+        $digits = preg_replace('/\D+/', '', $orderNumber);
+
+        return $digits === '' ? null : (int) $digits;
+    }
+
+    /**
+     * @param  array<int, list<array{discount_id: int|null, code: string|null, amount: int}>>  $discountAllocations
+     */
+    private function createOrderLines(Checkout $checkout, Order $order, array $discountAllocations): void
+    {
+        $this->cartLines($checkout)->each(function (CartLine $line) use ($discountAllocations, $order): void {
+            $variant = $line->variant;
+
+            $order->lines()->create([
+                'product_id' => $variant?->product_id,
+                'variant_id' => $variant?->getKey(),
+                'title_snapshot' => $this->titleSnapshot($variant),
+                'sku_snapshot' => $variant?->sku,
+                'quantity' => $line->quantity,
+                'unit_price_amount' => $line->unit_price_amount,
+                'total_amount' => $line->line_total_amount,
+                'tax_lines_json' => [],
+                'discount_allocations_json' => $discountAllocations[$line->getKey()] ?? [],
+            ]);
+        });
+    }
+
+    private function titleSnapshot(?ProductVariant $variant): string
+    {
+        $title = $variant?->product?->title ?? 'Product';
+        $optionValues = $variant?->optionValues
+            ->sortBy(fn (ProductOptionValue $value): int => $value->option?->position ?? $value->position)
+            ->pluck('value')
+            ->filter()
+            ->implode(' / ');
+
+        return $optionValues ? "{$title} - {$optionValues}" : $title;
+    }
+
+    /**
+     * @return array<int, list<array{discount_id: int|null, code: string|null, amount: int}>>
+     */
+    private function discountAllocationsByCartLine(Checkout $checkout, ?Collection $discounts = null): array
+    {
+        $lines = $this->cartLines($checkout)
+            ->map(function (CartLine $line): CartLine {
+                $simulatedLine = clone $line;
+                $simulatedLine->forceFill([
+                    'line_discount_amount' => 0,
+                    'line_total_amount' => $line->line_subtotal_amount,
+                ]);
+
+                return $simulatedLine;
+            });
+        $allocations = [];
+
+        foreach (($discounts ?? $this->appliedDiscounts($checkout)) as $discount) {
+            $result = $this->discounts->calculate($discount, $lines->sum('line_subtotal_amount'), $lines->all());
+
+            foreach ($result->allocations as $lineId => $amount) {
+                if ($amount <= 0) {
+                    continue;
+                }
+
+                $allocations[(int) $lineId][] = [
+                    'discount_id' => $discount->getKey(),
+                    'code' => $discount->code,
+                    'amount' => $amount,
+                ];
+            }
+
+            $lines->each(function (CartLine $line) use ($result): void {
+                $discountAmount = $result->allocations[$line->getKey()] ?? 0;
+
+                $line->forceFill([
+                    'line_discount_amount' => $line->line_discount_amount + $discountAmount,
+                    'line_total_amount' => max(0, $line->line_total_amount - $discountAmount),
+                ]);
+            });
+        }
+
+        return $allocations;
+    }
+
+    /**
+     * @return Collection<int, Discount>
+     */
+    private function appliedDiscounts(Checkout $checkout): Collection
+    {
+        $discounts = collect();
+        $code = trim((string) $checkout->discount_code);
+
+        if ($code !== '') {
+            $discount = Discount::withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->whereRaw('lower(code) = ?', [mb_strtolower($code)])
+                ->first();
+
+            if ($discount instanceof Discount) {
+                $discounts->push($discount);
+            }
+        }
+
+        return $discounts
+            ->merge($this->discounts->automaticForCart($checkout->store, $checkout->cart))
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, Discount>
+     */
+    private function lockedAppliedDiscounts(Checkout $checkout): Collection
+    {
+        $discountIds = $this->appliedDiscounts($checkout)
+            ->pluck('id')
+            ->filter()
+            ->values();
+
+        if ($discountIds->isEmpty()) {
+            return collect();
+        }
+
+        $lockedDiscounts = Discount::withoutGlobalScopes()
+            ->whereIn('id', $discountIds->all())
+            ->orderBy('id')
+            ->lockForUpdate()
+            ->get()
+            ->keyBy(fn (Discount $discount): int => $discount->getKey());
+
+        $discounts = $discountIds
+            ->map(fn (int $discountId): ?Discount => $lockedDiscounts->get($discountId))
+            ->filter()
+            ->values();
+
+        $discounts->each(function (Discount $discount): void {
+            if ($discount->usage_limit !== null && $discount->usage_count >= $discount->usage_limit) {
+                throw InvalidCheckoutTransitionException::because('Discount usage limit has been reached.');
+            }
+        });
+
+        return $discounts;
+    }
+
+    private function commitReservedInventory(Checkout $checkout): void
+    {
+        $this->cartLines($checkout)->each(function (CartLine $line): void {
+            $this->inventory->commit($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+        });
+    }
+
+    private function commitReservedOrderInventory(Order $order): void
+    {
+        $order->lines->each(function (OrderLine $line): void {
+            if ($line->variant_id !== null) {
+                $this->inventory->commit($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+            }
+        });
+    }
+
+    private function releaseReservedOrderInventory(Order $order): void
+    {
+        $order->lines->each(function (OrderLine $line): void {
+            if ($line->variant_id !== null) {
+                $this->inventory->release($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+            }
+        });
+    }
+
+    private function releaseFailedPaymentReservation(Checkout $checkout): void
+    {
+        DB::transaction(function () use ($checkout): void {
+            $checkout = $this->freshCheckout($checkout);
+
+            if ($checkout->status !== CheckoutStatus::PaymentSelected) {
+                return;
+            }
+
+            $this->cartLines($checkout)->each(function (CartLine $line): void {
+                $this->inventory->release($this->inventoryItemForVariant($line->variant_id), $line->quantity);
+            });
+
+            $checkout->forceFill([
+                'status' => CheckoutStatus::ShippingSelected,
+                'payment_method' => null,
+                'expires_at' => null,
+            ])->save();
+        });
+    }
+
+    /**
+     * @param  Collection<int, Discount>  $discounts
+     */
+    private function incrementDiscountUsage(Collection $discounts): void
+    {
+        $discounts->each(function (Discount $discount): void {
+            Discount::withoutGlobalScopes()
+                ->whereKey($discount->getKey())
+                ->increment('usage_count');
+        });
+    }
+
+    private function assertPendingBankTransfer(Order $order): void
+    {
+        if ($order->payment_method !== PaymentMethod::BankTransfer || $order->financial_status !== FinancialStatus::Pending) {
+            throw InvalidOrderOperationException::because('Order is not a pending bank transfer order.');
+        }
+    }
+
+    private function inventoryItemForVariant(int $variantId): InventoryItem
+    {
+        return InventoryItem::withoutGlobalScopes()
+            ->where('variant_id', $variantId)
+            ->firstOrFail();
+    }
+
+    /**
+     * @return Collection<int, CartLine>
+     */
+    private function cartLines(Checkout $checkout): Collection
+    {
+        return CartLine::withoutGlobalScopes()
+            ->with([
+                'variant' => fn ($query) => $query->withoutGlobalScopes(),
+                'variant.product' => fn ($query) => $query->withoutGlobalScopes(),
+                'variant.optionValues' => fn ($query) => $query->withoutGlobalScopes(),
+                'variant.optionValues.option' => fn ($query) => $query->withoutGlobalScopes(),
+            ])
+            ->where('cart_id', $checkout->cart_id)
+            ->orderBy('id')
+            ->get();
+    }
+}

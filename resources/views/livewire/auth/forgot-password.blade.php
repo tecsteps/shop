@@ -5,7 +5,7 @@
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
-        <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-6">
+        <form method="POST" action="{{ request()->routeIs('admin.password.request') ? route('admin.password.email') : route('password.email') }}" class="flex flex-col gap-6">
             @csrf
 
             <!-- Email Address -->
@@ -25,7 +25,7 @@
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-400">
             <span>{{ __('Or, return to') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('log in') }}</flux:link>
+            <flux:link :href="request()->routeIs('admin.password.request') ? route('admin.login') : route('login')" wire:navigate>{{ __('log in') }}</flux:link>
         </div>
     </div>
 </x-layouts::auth>
