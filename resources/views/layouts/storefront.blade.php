@@ -65,9 +65,46 @@
                     <flux:modal.trigger name="cart-drawer">
                         <flux:button variant="subtle" icon="shopping-bag" aria-label="Cart" />
                     </flux:modal.trigger>
+                    <flux:modal.trigger name="mobile-navigation">
+                        <flux:button variant="subtle" icon="bars-3" aria-label="Open menu" class="md:hidden" data-test="mobile-menu-button" />
+                    </flux:modal.trigger>
                 </div>
             </div>
         </header>
+
+        <flux:modal name="mobile-navigation" flyout position="left" class="w-80 max-w-[calc(100vw-2rem)] md:hidden">
+            <div class="space-y-8">
+                <div class="pr-8">
+                    <p class="text-base font-semibold text-zinc-950 dark:text-white">{{ $store?->name ?? config('app.name') }}</p>
+                </div>
+
+                <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
+                    @foreach ($mainLinks as $item)
+                        <a href="{{ $item['url'] }}" class="rounded-md px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white" @unless ($item['external'] ?? false) wire:navigate @endunless>
+                            {{ $item['label'] }}
+                        </a>
+
+                        @foreach (($item['children'] ?? []) as $child)
+                            <a href="{{ $child['url'] }}" class="rounded-md px-6 py-2 text-sm text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-white" @unless ($child['external'] ?? false) wire:navigate @endunless>
+                                {{ $child['label'] }}
+                            </a>
+                        @endforeach
+                    @endforeach
+                </nav>
+
+                <div class="border-t border-zinc-200 pt-6 dark:border-zinc-700">
+                    <div class="flex flex-col gap-1">
+                        <a href="{{ route('search.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white" wire:navigate>
+                            Search
+                        </a>
+
+                        <a href="{{ route('account.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white" wire:navigate>
+                            Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </flux:modal>
 
         <livewire:storefront.cart-drawer />
 
