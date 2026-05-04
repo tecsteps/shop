@@ -36,6 +36,7 @@ class OrderService
         private readonly InventoryService $inventory,
         private readonly PricingEngine $pricing,
         private readonly FulfillmentService $fulfillments,
+        private readonly DiscountService $discounts,
     ) {}
 
     /**
@@ -96,7 +97,7 @@ class OrderService
                     'placed_at' => now(),
                 ]);
 
-                $this->createOrderLines($checkout, $order);
+                $this->createOrderLines($checkout, $order, $this->discountAllocationsByCartLine($checkout));
 
                 $order->payments()->create([
                     'provider' => 'mock',
@@ -248,9 +249,12 @@ class OrderService
         return $digits === '' ? null : (int) $digits;
     }
 
-    private function createOrderLines(Checkout $checkout, Order $order): void
+    /**
+     * @param  array<int, list<array{discount_id: int|null, code: string|null, amount: int}>>  $discountAllocations
+     */
+    private function createOrderLines(Checkout $checkout, Order $order, array $discountAllocations): void
     {
-        $this->cartLines($checkout)->each(function (CartLine $line) use ($checkout, $order): void {
+        $this->cartLines($checkout)->each(function (CartLine $line) use ($discountAllocations, $order): void {
             $variant = $line->variant;
 
             $order->lines()->create([
@@ -262,7 +266,7 @@ class OrderService
                 'unit_price_amount' => $line->unit_price_amount,
                 'total_amount' => $line->line_total_amount,
                 'tax_lines_json' => [],
-                'discount_allocations_json' => $this->discountAllocations($checkout, $line),
+                'discount_allocations_json' => $discountAllocations[$line->getKey()] ?? [],
             ]);
         });
     }
@@ -280,25 +284,72 @@ class OrderService
     }
 
     /**
-     * @return array<int, array{discount_id: int|null, code: string, amount: int}>
+     * @return array<int, list<array{discount_id: int|null, code: string|null, amount: int}>>
      */
-    private function discountAllocations(Checkout $checkout, CartLine $line): array
+    private function discountAllocationsByCartLine(Checkout $checkout): array
     {
-        if ($checkout->discount_code === null || $line->line_discount_amount <= 0) {
-            return [];
+        $lines = $this->cartLines($checkout)
+            ->map(function (CartLine $line): CartLine {
+                $simulatedLine = clone $line;
+                $simulatedLine->forceFill([
+                    'line_discount_amount' => 0,
+                    'line_total_amount' => $line->line_subtotal_amount,
+                ]);
+
+                return $simulatedLine;
+            });
+        $allocations = [];
+
+        foreach ($this->appliedDiscounts($checkout) as $discount) {
+            $result = $this->discounts->calculate($discount, $lines->sum('line_subtotal_amount'), $lines->all());
+
+            foreach ($result->allocations as $lineId => $amount) {
+                if ($amount <= 0) {
+                    continue;
+                }
+
+                $allocations[(int) $lineId][] = [
+                    'discount_id' => $discount->getKey(),
+                    'code' => $discount->code,
+                    'amount' => $amount,
+                ];
+            }
+
+            $lines->each(function (CartLine $line) use ($result): void {
+                $discountAmount = $result->allocations[$line->getKey()] ?? 0;
+
+                $line->forceFill([
+                    'line_discount_amount' => $line->line_discount_amount + $discountAmount,
+                    'line_total_amount' => max(0, $line->line_total_amount - $discountAmount),
+                ]);
+            });
         }
 
-        $code = trim($checkout->discount_code);
-        $discount = Discount::withoutGlobalScopes()
-            ->where('store_id', $checkout->store_id)
-            ->whereRaw('lower(code) = ?', [mb_strtolower($code)])
-            ->first();
+        return $allocations;
+    }
 
-        return [[
-            'discount_id' => $discount?->getKey(),
-            'code' => $code,
-            'amount' => $line->line_discount_amount,
-        ]];
+    /**
+     * @return Collection<int, Discount>
+     */
+    private function appliedDiscounts(Checkout $checkout): Collection
+    {
+        $discounts = collect();
+        $code = trim((string) $checkout->discount_code);
+
+        if ($code !== '') {
+            $discount = Discount::withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->whereRaw('lower(code) = ?', [mb_strtolower($code)])
+                ->first();
+
+            if ($discount instanceof Discount) {
+                $discounts->push($discount);
+            }
+        }
+
+        return $discounts
+            ->merge($this->discounts->automaticForCart($checkout->store, $checkout->cart))
+            ->values();
     }
 
     private function commitReservedInventory(Checkout $checkout): void

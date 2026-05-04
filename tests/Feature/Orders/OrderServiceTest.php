@@ -2,6 +2,8 @@
 
 use App\Enums\CartStatus;
 use App\Enums\CheckoutStatus;
+use App\Enums\DiscountType;
+use App\Enums\DiscountValueType;
 use App\Enums\FinancialStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
@@ -181,6 +183,68 @@ test('checkout completion creates a paid order and commits inventory', function 
 
     Event::assertDispatched(OrderCreated::class, fn (OrderCreated $event): bool => $event->order->is($order));
     Event::assertDispatched(OrderPaid::class, fn (OrderPaid $event): bool => $event->order->is($order));
+});
+
+test('checkout completion attributes automatic discounts on order lines', function () {
+    $store = orderCompletionStore();
+    $automatic = Discount::factory()
+        ->create([
+            'store_id' => $store->getKey(),
+            'type' => DiscountType::Automatic,
+            'code' => null,
+            'value_type' => DiscountValueType::Percent,
+            'value_amount' => 10,
+        ]);
+    [$checkout] = orderCompletionCheckout($store);
+
+    $order = app(CheckoutService::class)->completeCheckout($checkout, [
+        'card_number' => '4242 4242 4242 4242',
+    ]);
+
+    expect($order->discount_amount)->toBe(500)
+        ->and($order->lines->first()->discount_allocations_json)->toBe([[
+            'discount_id' => $automatic->getKey(),
+            'code' => null,
+            'amount' => 500,
+        ]]);
+});
+
+test('checkout completion keeps explicit and automatic discount allocations separate', function () {
+    $store = orderCompletionStore();
+    $codeDiscount = Discount::factory()
+        ->create([
+            'store_id' => $store->getKey(),
+            'code' => 'SAVE10',
+            'value_type' => DiscountValueType::Percent,
+            'value_amount' => 10,
+        ]);
+    $automatic = Discount::factory()
+        ->create([
+            'store_id' => $store->getKey(),
+            'type' => DiscountType::Automatic,
+            'code' => null,
+            'value_type' => DiscountValueType::Percent,
+            'value_amount' => 10,
+        ]);
+    [$checkout] = orderCompletionCheckout($store, discountCode: 'SAVE10');
+
+    $order = app(CheckoutService::class)->completeCheckout($checkout, [
+        'card_number' => '4242 4242 4242 4242',
+    ]);
+
+    expect($order->discount_amount)->toBe(950)
+        ->and($order->lines->first()->discount_allocations_json)->toBe([
+            [
+                'discount_id' => $codeDiscount->getKey(),
+                'code' => 'SAVE10',
+                'amount' => 500,
+            ],
+            [
+                'discount_id' => $automatic->getKey(),
+                'code' => null,
+                'amount' => 450,
+            ],
+        ]);
 });
 
 test('checkout completion is idempotent for the same checkout', function () {
