@@ -2,6 +2,7 @@
 
 use App\Models\Product;
 use App\Models\SearchQuery;
+use App\Models\SearchSettings;
 use App\Models\Store;
 use App\Services\SearchService;
 use Database\Seeders\DatabaseSeeder;
@@ -98,4 +99,54 @@ test('search service paginates unique matches', function (): void {
     expect($results->total())->toBe(25)
         ->and($results->currentPage())->toBe(3)
         ->and($results->getCollection())->toHaveCount(1);
+});
+
+test('search service expands configured synonyms', function (): void {
+    $store = searchServiceStore();
+
+    SearchSettings::withoutGlobalScopes()->updateOrCreate(
+        ['store_id' => $store->getKey()],
+        [
+            'synonyms_json' => [['tee', 'tshirt']],
+            'stop_words_json' => [],
+        ],
+    );
+
+    Product::factory()
+        ->for($store)
+        ->withDefaultVariant(1999)
+        ->create([
+            'title' => 'Emerald Tee Synonym Match',
+            'handle' => 'emerald-tee-synonym-match',
+        ]);
+
+    $results = app(SearchService::class)->search($store, 'tshirt synonym', [], 12);
+
+    expect($results->total())->toBe(1)
+        ->and($results->getCollection()->first()->title)->toBe('Emerald Tee Synonym Match');
+});
+
+test('search service removes configured stop words before matching', function (): void {
+    $store = searchServiceStore();
+
+    SearchSettings::withoutGlobalScopes()->updateOrCreate(
+        ['store_id' => $store->getKey()],
+        [
+            'synonyms_json' => [],
+            'stop_words_json' => ['the', 'for'],
+        ],
+    );
+
+    Product::factory()
+        ->for($store)
+        ->withDefaultVariant(1999)
+        ->create([
+            'title' => 'Stopword Linen Token',
+            'handle' => 'stopword-linen-token',
+        ]);
+
+    $results = app(SearchService::class)->search($store, 'the stopword', [], 12);
+
+    expect($results->total())->toBe(1)
+        ->and($results->getCollection()->first()->title)->toBe('Stopword Linen Token');
 });

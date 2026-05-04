@@ -8,6 +8,7 @@ use App\Models\Collection as ProductCollection;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SearchQuery;
+use App\Models\SearchSettings;
 use App\Models\Store;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -229,7 +230,7 @@ class SearchService
      */
     private function baseSearchQuery(Store $store, string $query, array $filters): QueryBuilder
     {
-        $match = $this->toFtsQuery($query);
+        $match = $this->toFtsQuery($store, $query);
 
         if ($match === '') {
             return $this->activeProductQuery($store, $filters);
@@ -376,15 +377,97 @@ class SearchService
             ->values();
     }
 
-    private function toFtsQuery(string $query): string
+    private function toFtsQuery(Store $store, string $query): string
     {
-        $tokens = preg_split('/[^\pL\pN]+/u', mb_strtolower($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
-        $tokens = array_slice($tokens, 0, 8);
+        $settings = $this->settings($store);
+        $stopWords = collect($settings?->stop_words_json ?? [])
+            ->map(fn (mixed $word): string => (string) $word)
+            ->flatMap(fn (string $word): array => $this->tokens($word))
+            ->unique()
+            ->values();
+        $synonyms = $this->synonymExpressions($settings);
+        $tokens = collect($this->tokens($query))
+            ->reject(fn (string $token): bool => $stopWords->contains($token))
+            ->take(8)
+            ->values()
+            ->all();
         $lastIndex = count($tokens) - 1;
 
         return collect($tokens)
-            ->map(fn (string $token, int $index): string => $index === $lastIndex ? "{$token}*" : $token)
-            ->implode(' ');
+            ->map(function (string $token, int $index) use ($lastIndex, $synonyms): string {
+                $prefix = $index === $lastIndex;
+                $expressions = $synonyms[$token] ?? [$this->termExpression([$token], $prefix)];
+
+                if (count($expressions) === 1) {
+                    return $expressions[0];
+                }
+
+                return '('.implode(' OR ', $expressions).')';
+            })
+            ->implode(' AND ');
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function tokens(string $value): array
+    {
+        return preg_split('/[^\pL\pN]+/u', mb_strtolower($value), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    }
+
+    /**
+     * @return array<string, list<string>>
+     */
+    private function synonymExpressions(?SearchSettings $settings): array
+    {
+        $synonyms = [];
+
+        foreach ($settings?->synonyms_json ?? [] as $group) {
+            $terms = collect(Arr::wrap($group))
+                ->map(fn (mixed $term): array => $this->tokens((string) $term))
+                ->filter()
+                ->values();
+            $expressions = $terms
+                ->map(fn (array $tokens): string => $this->termExpression($tokens, true))
+                ->unique()
+                ->values()
+                ->all();
+
+            if (count($expressions) < 2) {
+                continue;
+            }
+
+            foreach ($terms as $tokens) {
+                foreach ($tokens as $token) {
+                    $synonyms[$token] = collect($synonyms[$token] ?? [])
+                        ->merge($expressions)
+                        ->unique()
+                        ->values()
+                        ->all();
+                }
+            }
+        }
+
+        return $synonyms;
+    }
+
+    /**
+     * @param  list<string>  $tokens
+     */
+    private function termExpression(array $tokens, bool $prefix): string
+    {
+        if (count($tokens) === 1) {
+            return $tokens[0].($prefix ? '*' : '');
+        }
+
+        return '"'.implode(' ', $tokens).'"';
+    }
+
+    private function settings(Store $store): ?SearchSettings
+    {
+        return SearchSettings::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->first();
     }
 
     /**
