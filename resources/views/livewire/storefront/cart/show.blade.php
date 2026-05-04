@@ -130,6 +130,7 @@
                             <flux:select.option value="DE">Germany</flux:select.option>
                             <flux:select.option value="AT">Austria</flux:select.option>
                             <flux:select.option value="CH">Switzerland</flux:select.option>
+                            <flux:select.option value="US">United States</flux:select.option>
                         </flux:select>
 
                         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">

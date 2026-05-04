@@ -42,7 +42,7 @@ test('admin shipping settings api lists creates updates zones and adds rates', f
     $this->actingAs($user)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones")
         ->assertOk()
-        ->assertJsonPath('data.0.name', 'DACH')
+        ->assertJsonPath('data.0.name', 'Domestic')
         ->assertJsonPath('data.0.rates.0.config_json.currency', $store->default_currency);
 
     $createResponse = $this->actingAs($user)

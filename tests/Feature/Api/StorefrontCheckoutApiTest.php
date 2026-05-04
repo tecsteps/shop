@@ -112,7 +112,7 @@ test('storefront checkout api progresses through address shipping discount remov
         ->assertOk()
         ->assertJsonPath('data.status', 'shipping_selected')
         ->assertJsonPath('data.shipping_method_id', $shippingRateId)
-        ->assertJsonPath('data.totals.shipping', 799);
+        ->assertJsonPath('data.totals.shipping', 499);
 
     $api()
         ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/apply-discount", ['code' => 'SAVE10'])

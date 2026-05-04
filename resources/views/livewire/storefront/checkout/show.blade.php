@@ -49,8 +49,14 @@
                             <flux:error name="email" />
                         </div>
 
-                        <flux:input wire:model="shippingAddress.first_name" label="First name" />
-                        <flux:input wire:model="shippingAddress.last_name" label="Last name" />
+                        <div>
+                            <flux:input wire:model="shippingAddress.first_name" label="First name" />
+                            <flux:error name="shippingAddress.first_name" />
+                        </div>
+                        <div>
+                            <flux:input wire:model="shippingAddress.last_name" label="Last name" />
+                            <flux:error name="shippingAddress.last_name" />
+                        </div>
 
                         <div class="sm:col-span-2">
                             <flux:input wire:model="shippingAddress.address1" label="Address" />
@@ -61,15 +67,25 @@
                             <flux:input wire:model="shippingAddress.address2" label="Apartment, suite, etc." />
                         </div>
 
-                        <flux:input wire:model="shippingAddress.city" label="City" />
-                        <flux:input wire:model="shippingAddress.postal_code" label="Postal code" />
+                        <div>
+                            <flux:input wire:model="shippingAddress.city" label="City" />
+                            <flux:error name="shippingAddress.city" />
+                        </div>
+                        <div>
+                            <flux:input wire:model="shippingAddress.postal_code" label="Postal code" />
+                            <flux:error name="shippingAddress.postal_code" />
+                        </div>
 
                         <flux:input wire:model="shippingAddress.province_code" label="Region code" placeholder="DE-BE" />
-                        <flux:select wire:model="shippingAddress.country" label="Country">
-                            <flux:select.option value="DE">Germany</flux:select.option>
-                            <flux:select.option value="AT">Austria</flux:select.option>
-                            <flux:select.option value="CH">Switzerland</flux:select.option>
-                        </flux:select>
+                        <div>
+                            <flux:select wire:model="shippingAddress.country" label="Country">
+                                <flux:select.option value="DE">Germany</flux:select.option>
+                                <flux:select.option value="AT">Austria</flux:select.option>
+                                <flux:select.option value="CH">Switzerland</flux:select.option>
+                                <flux:select.option value="US">United States</flux:select.option>
+                            </flux:select>
+                            <flux:error name="shippingAddress.country" />
+                        </div>
                     </div>
 
                     <flux:checkbox wire:model="billingSame" label="Billing address is the same" class="mt-5" />
@@ -157,10 +173,10 @@
                             </div>
                             <flux:error name="discountCode" />
 
-                            <flux:select wire:model="paymentMethod" label="Payment method">
-                                <flux:select.option value="credit_card">Credit card</flux:select.option>
+                            <flux:select wire:model.live="paymentMethod" label="Payment method">
+                                <flux:select.option value="credit_card">Credit Card</flux:select.option>
                                 <flux:select.option value="paypal">PayPal</flux:select.option>
-                                <flux:select.option value="bank_transfer">Bank transfer</flux:select.option>
+                                <flux:select.option value="bank_transfer">Bank Transfer</flux:select.option>
                             </flux:select>
                             <flux:error name="paymentMethod" />
 
@@ -176,15 +192,23 @@
                                 </div>
                             @endif
 
-                            @if ($step === 'reserved')
-                                <flux:button wire:click="placeOrder" wire:loading.attr="disabled" variant="primary" class="w-full">
-                                    Place order
-                                </flux:button>
-                            @else
-                                <flux:button wire:click="selectPaymentMethod" wire:loading.attr="disabled" variant="primary" class="w-full">
-                                    Reserve items
-                                </flux:button>
+                            @if ($paymentMethod === 'paypal')
+                                <p class="text-sm text-zinc-600 dark:text-zinc-400">Your PayPal payment will be processed securely.</p>
                             @endif
+
+                            @if ($paymentMethod === 'bank_transfer')
+                                <p class="text-sm text-zinc-600 dark:text-zinc-400">After placing your order, bank transfer instructions will be shown on the confirmation page.</p>
+                            @endif
+
+                            <flux:button wire:click="placeOrder" wire:loading.attr="disabled" variant="primary" class="w-full">
+                                @if ($paymentMethod === 'paypal')
+                                    Pay with PayPal
+                                @elseif ($paymentMethod === 'credit_card')
+                                    Pay now
+                                @else
+                                    Place order
+                                @endif
+                            </flux:button>
                         </div>
                     @endif
                 </div>
@@ -216,7 +240,12 @@
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-zinc-600 dark:text-zinc-400">Discount</span>
-                    <span class="font-semibold text-zinc-950 dark:text-white">-{{ \App\Support\Money::format((int) data_get($totals, 'discount', 0), data_get($totals, 'currency', $cart?->currency ?? 'EUR')) }}</span>
+                    <span class="text-right font-semibold text-zinc-950 dark:text-white">
+                        @if ($checkout?->discount_code)
+                            <span class="block text-xs font-medium text-zinc-500 dark:text-zinc-400">{{ $checkout->discount_code }}</span>
+                        @endif
+                        -{{ \App\Support\Money::format((int) data_get($totals, 'discount', 0), data_get($totals, 'currency', $cart?->currency ?? 'EUR')) }}
+                    </span>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-zinc-600 dark:text-zinc-400">Shipping</span>

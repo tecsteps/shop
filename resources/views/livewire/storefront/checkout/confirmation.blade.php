@@ -1,4 +1,12 @@
 <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    @php
+        $paymentMethodLabel = match ($order->payment_method) {
+            \App\Enums\PaymentMethod::CreditCard => 'Credit Card',
+            \App\Enums\PaymentMethod::Paypal => 'PayPal',
+            \App\Enums\PaymentMethod::BankTransfer => 'Bank Transfer',
+        };
+    @endphp
+
     <x-storefront.breadcrumbs :items="[
         ['label' => 'Cart', 'url' => route('cart.show')],
         ['label' => 'Checkout', 'url' => route('checkout.show')],
@@ -10,10 +18,10 @@
             <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                 <flux:badge color="green">Order placed</flux:badge>
                 <h1 class="mt-4 text-3xl font-semibold tracking-normal text-zinc-950 dark:text-white">
-                    {{ $order->order_number }}
+                    Thank you for your order!
                 </h1>
                 <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                    Confirmation sent to {{ $order->email }}.
+                    Order {{ $order->order_number }} has been placed. Confirmation sent to {{ $order->email }}.
                 </p>
             </div>
 
@@ -79,6 +87,10 @@
                 <div class="flex justify-between gap-4">
                     <span class="text-zinc-600 dark:text-zinc-400">Tax</span>
                     <x-storefront.price :amount="$order->tax_amount" :currency="$order->currency" />
+                </div>
+                <div class="flex justify-between gap-4">
+                    <span class="text-zinc-600 dark:text-zinc-400">Payment method</span>
+                    <span class="font-medium text-zinc-950 dark:text-white">{{ $paymentMethodLabel }}</span>
                 </div>
                 <div class="flex justify-between gap-4 border-t border-zinc-200 pt-3 text-base dark:border-zinc-800">
                     <span class="font-semibold text-zinc-950 dark:text-white">Total</span>

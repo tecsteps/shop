@@ -14,13 +14,28 @@ class ShippingZoneSeeder extends Seeder
     public function run(): void
     {
         Store::query()->get()->each(function (Store $store): void {
+            ShippingZone::withoutGlobalScopes()
+                ->where('store_id', $store->getKey())
+                ->delete();
+
             ShippingZone::withoutGlobalScopes()->updateOrCreate(
                 [
                     'store_id' => $store->getKey(),
-                    'name' => 'DACH',
+                    'name' => 'Domestic',
                 ],
                 [
-                    'countries_json' => ['DE', 'AT', 'CH'],
+                    'countries_json' => ['DE'],
+                    'regions_json' => [],
+                ],
+            );
+
+            ShippingZone::withoutGlobalScopes()->updateOrCreate(
+                [
+                    'store_id' => $store->getKey(),
+                    'name' => 'International',
+                ],
+                [
+                    'countries_json' => ['AT', 'CH', 'US', 'GB', 'CA', 'AU'],
                     'regions_json' => [],
                 ],
             );

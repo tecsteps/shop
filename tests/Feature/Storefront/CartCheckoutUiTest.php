@@ -103,8 +103,8 @@ test('cart page applies discount estimates shipping and carries discount into ch
 
     expect(session('cart_discount_code'))->toBe('SAVE10')
         ->and($component->instance()->discountAmount())->toBe(500)
-        ->and($component->instance()->estimatedShippingAmount())->toBe(799)
-        ->and($component->instance()->estimatedTotal())->toBe(5297);
+        ->and($component->instance()->estimatedShippingAmount())->toBe(499)
+        ->and($component->instance()->estimatedTotal())->toBe(4997);
 
     Livewire::test(CheckoutShow::class)
         ->assertSet('discountCode', 'SAVE10');

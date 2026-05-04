@@ -17,6 +17,7 @@ use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
+use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -93,7 +94,15 @@ class Show extends Component
             'shippingAddress.address1' => ['required', 'string'],
             'shippingAddress.city' => ['required', 'string'],
             'shippingAddress.country' => ['required', 'string', 'size:2'],
-            'shippingAddress.postal_code' => ['required', 'string'],
+            'shippingAddress.postal_code' => [
+                'required',
+                'string',
+                function (string $attribute, mixed $value, Closure $fail): void {
+                    if (strtoupper($this->shippingAddress['country']) === 'DE' && preg_match('/^\d{5}$/', (string) $value) !== 1) {
+                        $fail('The postal code format is invalid.');
+                    }
+                },
+            ],
             'billingSame' => ['boolean'],
         ]);
 
