@@ -21,7 +21,7 @@
     <div class="grid gap-6 xl:grid-cols-[1fr_360px]">
         <div class="space-y-4">
             @foreach ($zones as $zone)
-                <div wire:key="shipping-zone-{{ $zone->getKey() }}" class="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                <div wire:key="shipping-zone-{{ $zone->getKey() }}" class="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900" data-test="shipping-zone-{{ Str::slug($zone->name) }}">
                     <div class="flex flex-col gap-3 border-b border-zinc-200 p-5 dark:border-zinc-700 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                             <flux:heading size="lg">{{ $zone->name }}</flux:heading>
@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="border-t border-zinc-200 p-4 dark:border-zinc-700">
-                        <flux:button type="button" wire:click="addRate({{ $zone->getKey() }})" variant="filled" icon="plus">Add rate</flux:button>
+                        <flux:button type="button" wire:click="addRate({{ $zone->getKey() }})" variant="filled" icon="plus" data-test="add-rate-{{ Str::slug($zone->name) }}">Add rate</flux:button>
                     </div>
                 </div>
             @endforeach
@@ -127,7 +127,7 @@
 
                         <div class="flex justify-end gap-2">
                             <flux:button type="button" wire:click="$set('rateZoneId', null)" variant="ghost">Cancel</flux:button>
-                            <flux:button type="submit" variant="primary">Save rate</flux:button>
+                            <flux:button type="submit" variant="primary" data-test="shipping-rate-save-button">Save rate</flux:button>
                         </div>
                     </div>
                 </form>

@@ -78,7 +78,7 @@
             </div>
 
             <div class="flex justify-end border-t border-zinc-200 p-5 dark:border-zinc-700">
-                <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+                <flux:button type="submit" variant="primary" wire:loading.attr="disabled" data-test="settings-save-button">
                     <span wire:loading.remove>Save settings</span>
                     <span wire:loading>Saving...</span>
                 </flux:button>
@@ -101,7 +101,7 @@
                     <flux:select.option value="api">API</flux:select.option>
                 </flux:select>
                 <div class="flex items-end">
-                    <flux:button type="button" wire:click="addDomain" variant="primary" icon="plus">Add</flux:button>
+                    <flux:button type="button" wire:click="addDomain" variant="primary" icon="plus" data-test="domain-add-button">Add</flux:button>
                 </div>
             </div>
         </div>

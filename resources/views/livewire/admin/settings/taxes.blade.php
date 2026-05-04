@@ -1,7 +1,7 @@
 <section class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <flux:heading size="xl">Taxes</flux:heading>
+            <flux:heading size="xl">Tax Settings</flux:heading>
             <flux:text class="mt-1">Manual tax rates and provider mode.</flux:text>
         </div>
 
@@ -60,11 +60,11 @@
         @endif
 
         <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:switch wire:model="pricesIncludeTax" label="Prices include tax" align="left" />
+            <flux:switch wire:model="pricesIncludeTax" label="Prices include tax" align="left" data-test="prices-include-tax-switch" />
         </div>
 
         <div class="flex justify-end">
-            <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+            <flux:button type="submit" variant="primary" wire:loading.attr="disabled" data-test="tax-settings-save-button">
                 <span wire:loading.remove>Save taxes</span>
                 <span wire:loading>Saving...</span>
             </flux:button>
