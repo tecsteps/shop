@@ -69,6 +69,13 @@ Route::middleware('throttle:60,1')
             Route::get('products/{product}', [AdminProductController::class, 'show'])->name('products.show');
         });
 
+        Route::middleware('admin.api:write-products')->group(function (): void {
+            Route::post('products', [AdminProductController::class, 'store'])->name('products.store');
+            Route::put('products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+            Route::delete('products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+            Route::post('products/{product}/media/presign-upload', [AdminProductController::class, 'presignUpload'])->name('products.media.presign-upload');
+        });
+
         Route::middleware('admin.api:read-customers')->group(function (): void {
             Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
             Route::get('customers/{customer}', [AdminCustomerController::class, 'show'])->name('customers.show');

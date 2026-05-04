@@ -1,9 +1,13 @@
 <?php
 
+use App\Enums\MediaStatus;
+use App\Enums\ProductStatus;
+use App\Models\Collection as ProductCollection;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductMedia;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\User;
@@ -77,6 +81,149 @@ test('admin product api lists and shows store scoped products', function (): voi
         ->assertJsonPath('data.variants.0.inventory.quantity_on_hand', 50);
 });
 
+test('admin product api creates updates and archives products', function (): void {
+    $store = adminCatalogApiStore();
+    $collection = ProductCollection::factory()->create([
+        'store_id' => $store->getKey(),
+        'title' => 'API Summer',
+        'handle' => 'api-summer',
+    ]);
+    $user = adminCatalogApiUser();
+
+    $createResponse = $this->actingAs($user)
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/products", [
+            'title' => 'API Cotton T-Shirt',
+            'handle' => 'api-cotton-t-shirt',
+            'description_html' => '<p>Soft cotton tee.</p>',
+            'vendor' => 'API Apparel',
+            'product_type' => 'Shirts',
+            'status' => 'active',
+            'tags' => ['organic', 'cotton'],
+            'options' => [
+                ['name' => 'Color', 'position' => 1],
+                ['name' => 'Size', 'position' => 2],
+            ],
+            'variants' => [
+                [
+                    'sku' => 'API-TEE-BLU-S',
+                    'price_amount' => 2500,
+                    'compare_at_amount' => 3000,
+                    'is_default' => true,
+                    'position' => 1,
+                    'option_values' => [
+                        ['option_name' => 'Color', 'value' => 'Blue'],
+                        ['option_name' => 'Size', 'value' => 'Small'],
+                    ],
+                    'inventory' => [
+                        'quantity_on_hand' => 12,
+                        'policy' => 'deny',
+                    ],
+                ],
+                [
+                    'sku' => 'API-TEE-BLU-M',
+                    'price_amount' => 2600,
+                    'is_default' => false,
+                    'position' => 2,
+                    'option_values' => [
+                        ['option_name' => 'Color', 'value' => 'Blue'],
+                        ['option_name' => 'Size', 'value' => 'Medium'],
+                    ],
+                    'inventory' => [
+                        'quantity_on_hand' => 8,
+                        'policy' => 'continue',
+                    ],
+                ],
+            ],
+            'collections' => [$collection->getKey()],
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.title', 'API Cotton T-Shirt')
+        ->assertJsonPath('data.status', 'active')
+        ->assertJsonPath('data.variants.0.inventory.quantity_on_hand', 12)
+        ->assertJsonPath('data.collections.0.handle', 'api-summer');
+
+    $product = Product::withoutGlobalScopes()
+        ->where('store_id', $store->getKey())
+        ->where('handle', 'api-cotton-t-shirt')
+        ->firstOrFail();
+    $defaultVariant = ProductVariant::withoutGlobalScopes()
+        ->where('product_id', $product->getKey())
+        ->where('is_default', true)
+        ->firstOrFail();
+    $removedVariant = ProductVariant::withoutGlobalScopes()
+        ->where('product_id', $product->getKey())
+        ->where('sku', 'API-TEE-BLU-M')
+        ->firstOrFail();
+
+    expect($product->status)->toBe(ProductStatus::Active)
+        ->and($product->options()->count())->toBe(2)
+        ->and($product->variants()->count())->toBe(2);
+
+    $this->actingAs($user)
+        ->putJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}", [
+            'title' => 'API Cotton T-Shirt Updated',
+            'tags' => ['organic', 'bestseller'],
+            'variants' => [
+                [
+                    'id' => $defaultVariant->getKey(),
+                    'sku' => 'API-TEE-BLU-S-UPDATED',
+                    'price_amount' => 2700,
+                    'is_default' => true,
+                    'position' => 1,
+                    'option_values' => [
+                        ['option_name' => 'Color', 'value' => 'Blue'],
+                        ['option_name' => 'Size', 'value' => 'Small'],
+                    ],
+                    'inventory' => [
+                        'quantity_on_hand' => 15,
+                    ],
+                ],
+            ],
+        ])
+        ->assertOk()
+        ->assertJsonPath('data.title', 'API Cotton T-Shirt Updated')
+        ->assertJsonPath('data.variants.0.sku', 'API-TEE-BLU-S-UPDATED')
+        ->assertJsonPath('data.variants.0.inventory.quantity_on_hand', 15);
+
+    $this->assertModelMissing($removedVariant);
+
+    $this->actingAs($user)
+        ->deleteJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}")
+        ->assertOk()
+        ->assertJsonPath('data.status', 'archived');
+
+    expect($product->refresh()->status)->toBe(ProductStatus::Archived);
+});
+
+test('admin product api presigns media uploads', function (): void {
+    $store = adminCatalogApiStore();
+    $product = Product::factory()->withDefaultVariant()->create([
+        'store_id' => $store->getKey(),
+        'title' => 'API Media Product',
+    ]);
+
+    $this->actingAs(adminCatalogApiUser())
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}/media/presign-upload", [
+            'filename' => 'front.jpg',
+            'content_type' => 'image/jpeg',
+            'byte_size' => 245000,
+        ])
+        ->assertCreated()
+        ->assertJsonPath('method', 'PUT')
+        ->assertJsonPath('headers.Content-Type', 'image/jpeg')
+        ->assertJsonPath('storage_key', fn (string $storageKey): bool => str_starts_with($storageKey, "media/originals/{$product->getKey()}/"))
+        ->assertJsonPath('upload_url', fn (string $uploadUrl): bool => $uploadUrl !== '');
+
+    $media = ProductMedia::withoutGlobalScopes()
+        ->where('product_id', $product->getKey())
+        ->firstOrFail();
+
+    expect($media->status)->toBe(MediaStatus::Processing)
+        ->and($media->mime_type)->toBe('image/jpeg')
+        ->and($media->byte_size)->toBe(245000)
+        ->and($media->position)->toBe(0);
+});
+
 test('admin customer api lists and shows store scoped customers', function (): void {
     $store = adminCatalogApiStore();
     $customer = Customer::factory()->create([
@@ -123,6 +270,7 @@ test('admin catalog api accepts scoped tokens and enforces abilities', function 
         'email' => 'token-customer@example.test',
     ]);
     $productToken = adminCatalogApiToken($store, ['read-products']);
+    $writeProductToken = adminCatalogApiToken($store, ['write-products']);
     $customerToken = adminCatalogApiToken($store, ['read-customers']);
 
     $this->withToken($productToken['plain_text'])
@@ -134,12 +282,40 @@ test('admin catalog api accepts scoped tokens and enforces abilities', function 
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/customers")
         ->assertForbidden();
 
+    $this->withToken($productToken['plain_text'])
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/products", [
+            'title' => 'Token Created Product',
+            'variants' => [
+                [
+                    'sku' => 'TOKEN-CREATED-001',
+                    'price_amount' => 1999,
+                    'is_default' => true,
+                ],
+            ],
+        ])
+        ->assertForbidden();
+
+    $this->withToken($writeProductToken['plain_text'])
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/products", [
+            'title' => 'Token Created Product',
+            'variants' => [
+                [
+                    'sku' => 'TOKEN-CREATED-001',
+                    'price_amount' => 1999,
+                    'is_default' => true,
+                ],
+            ],
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.title', 'Token Created Product');
+
     $this->withToken($customerToken['plain_text'])
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/customers?query=token-customer")
         ->assertOk()
         ->assertJsonPath('data.0.email', 'token-customer@example.test');
 
     expect($productToken['token']->refresh()->last_used_at)->not->toBeNull()
+        ->and($writeProductToken['token']->refresh()->last_used_at)->not->toBeNull()
         ->and($customerToken['token']->refresh()->last_used_at)->not->toBeNull();
 });
 
