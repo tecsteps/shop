@@ -126,6 +126,14 @@ class Store extends Model
         return $this->hasMany(Discount::class);
     }
 
+    /**
+     * @return HasMany<Order, $this>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function isSuspended(): bool
     {
         return $this->status === StoreStatus::Suspended;

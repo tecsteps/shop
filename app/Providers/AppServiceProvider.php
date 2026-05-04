@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Contracts\PaymentProvider;
 use App\Models\Store;
 use App\Services\NavigationService;
+use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -26,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
+
         Auth::provider('store_scoped_eloquent', function ($app, array $config): CustomerUserProvider {
             return new CustomerUserProvider($app['hash'], $config['model']);
         });

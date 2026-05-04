@@ -11,10 +11,10 @@ use App\Models\CartLine;
 use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\InventoryItem;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use RuntimeException;
 
 class CheckoutService
 {
@@ -22,6 +22,7 @@ class CheckoutService
         private readonly InventoryService $inventory,
         private readonly ShippingCalculator $shipping,
         private readonly PricingEngine $pricing,
+        private readonly OrderService $orders,
     ) {}
 
     public function createFromCart(Cart $cart, ?Customer $customer = null): Checkout
@@ -192,9 +193,12 @@ class CheckoutService
         });
     }
 
-    public function completeCheckout(Checkout $checkout, array $paymentMethodData = []): never
+    /**
+     * @param  array<string, mixed>  $paymentMethodData
+     */
+    public function completeCheckout(Checkout $checkout, array $paymentMethodData = []): Order
     {
-        throw new RuntimeException('Order creation is implemented in the payments and orders phase.');
+        return $this->orders->createFromCheckout($checkout, $paymentMethodData);
     }
 
     private function freshCheckout(Checkout $checkout): Checkout
