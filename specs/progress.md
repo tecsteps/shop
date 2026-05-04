@@ -404,6 +404,12 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - 2026-05-04: `php artisan route:list --path=api/admin/v1/stores/{store}/exports --except-vendor` confirmed 2 order export API routes: create and status.
 - 2026-05-04: `php artisan migrate:fresh --seed --no-interaction` passed after the admin order export API changes and confirmed the `data_exports` migration runs with the seed suite.
 - 2026-05-04: `php artisan test --compact` passed after the admin order export API changes: 242 tests, 1408 assertions.
+- 2026-05-04: `mcp__laravel_boost__.search_docs` consulted Laravel 12 database inspection and Pest 4 database assertion docs before adding SQLite CHECK constraint coverage.
+- 2026-05-04: `php artisan make:test Foundation/DatabaseConstraintTest --pest --no-interaction` created representative database constraint coverage.
+- 2026-05-04: `vendor/bin/pint --dirty --format agent` passed after adding database constraint coverage.
+- 2026-05-04: `php artisan test --compact tests/Feature/Foundation/DatabaseConstraintTest.php` passed: 1 test, 6 assertions.
+- 2026-05-04: `php artisan test --compact tests/Feature/Foundation` passed after adding database constraint coverage: 14 tests, 108 assertions.
+- 2026-05-04: `php artisan test --compact` passed after adding database constraint coverage: 243 tests, 1414 assertions.
 
 ## Decisions
 
@@ -470,14 +476,13 @@ Build a complete, self-contained Laravel shop system from `specs/*`, with implem
 - Customer password reset pages are routed under `/account/forgot-password` and `/account/reset-password/{token}` so the existing Fortify starter/admin root routes (`/forgot-password`, `/reset-password/{token}`) remain intact.
 - Product media uploads use Livewire temporary file uploads on the existing product form, create `ProductMedia` rows in `processing` status, and dispatch the existing `ProcessMediaUpload` job instead of adding a second media-processing path.
 - Resource policies now type concrete model parameters for Product, Collection, Customer, Discount, Order, Fulfillment, Refund, Page, and Theme actions; `ChecksStoreRole::storeIdForModel()` stays generic because it is the shared store-id extraction helper.
+- Laravel's SQLite `enum()` migrations generate database `CHECK` clauses in this app; `DatabaseConstraintTest` locks representative constraints across tenancy, roles, catalog, orders, tax settings, and exports.
 
 ## Open Issues
 
 - Customer password reset is implemented under `/account/forgot-password` and `/account/reset-password/{token}`; the exact spec root paths remain occupied by the existing Fortify starter/admin reset routes.
-- `php artisan route:list --except-vendor` hides Livewire full-page routes because their controller is vendor-provided; path-filtered route-list commands are used as evidence for those routes.
 - Full automated browser suites from Spec 08 are still incomplete beyond the initial Pest browser smoke coverage for storefront, admin, and mobile rendering.
-- SQLite enum/check constraints from the schema spec are not yet explicitly enforced as database `CHECK` constraints; enum validation is currently enforced through casts/services/model invariants.
 
 ## Completion Summary
 
-Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, product media processing/admin upload controls, Phase 3 storefront theme/content/navigation data, the Phase 4 cart/checkout/pricing backend foundation, cart/checkout storefront UI through order completion, cart-page estimates, cart/checkout REST APIs, Phase 5 order/payment backend foundation, Phase 5 refund/fulfillment services, customer order views, admin dashboard/order/customer/discount/content/settings/theme-file/navigation/search/analytics/apps/developers management, storefront search and analytics APIs, product/customer/collection/discount/content page/store settings/search/analytics/shipping/tax/theme/order/export API surfaces, deferred OAuth/app route stubs, initial automated browser smoke coverage, and outbound webhook delivery foundations are implemented, with known auth/token route compatibility, deferred OAuth/app ecosystem routes, full browser-suite, and database CHECK constraint gaps tracked above.
+Not complete. Phase 1 foundation, Phase 2 catalog data/UI surfaces, product media processing/admin upload controls, Phase 3 storefront theme/content/navigation data, the Phase 4 cart/checkout/pricing backend foundation, cart/checkout storefront UI through order completion, cart-page estimates, cart/checkout REST APIs, Phase 5 order/payment backend foundation, Phase 5 refund/fulfillment services, customer order views, admin dashboard/order/customer/discount/content/settings/theme-file/navigation/search/analytics/apps/developers management, storefront search and analytics APIs, product/customer/collection/discount/content page/store settings/search/analytics/shipping/tax/theme/order/export API surfaces, deferred OAuth/app route stubs, initial automated browser smoke coverage, outbound webhook delivery foundations, and representative database CHECK constraint coverage are implemented, with known customer password reset route compatibility, deferred OAuth/app ecosystem routes, and full browser-suite gaps tracked above.
