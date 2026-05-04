@@ -232,6 +232,8 @@ class Show extends Component
             $checkout = app(CheckoutService::class)->createFromCart($cart, $this->customer());
         }
 
+        $checkout = $this->syncSessionDiscount($checkout);
+
         return $checkout->load(['cart.lines.variant.product', 'cart.lines.variant.optionValues.option']);
     }
 
@@ -349,5 +351,26 @@ class Show extends Component
             CheckoutStatus::PaymentSelected => 'reserved',
             default => 'address',
         };
+    }
+
+    private function syncSessionDiscount(Checkout $checkout): Checkout
+    {
+        $code = trim((string) session('cart_discount_code'));
+
+        if ($code === '' || $checkout->discount_code !== null) {
+            return $checkout;
+        }
+
+        $checkout->forceFill(['discount_code' => $code])->save();
+
+        try {
+            app(PricingEngine::class)->calculate($checkout);
+        } catch (InvalidDiscountException) {
+            $checkout->forceFill(['discount_code' => null])->save();
+            session()->forget('cart_discount_code');
+            app(PricingEngine::class)->calculate($checkout);
+        }
+
+        return $checkout->refresh();
     }
 }

@@ -83,6 +83,38 @@ test('cart page updates and removes line quantities', function () {
     expect($cart->lines()->withoutGlobalScopes()->count())->toBe(0);
 });
 
+test('cart page applies discount estimates shipping and carries discount into checkout', function () {
+    $store = storefrontUiStore();
+    $variant = storefrontUiVariant($store);
+    $cart = app(CartService::class)->create($store);
+    session(['cart_id' => $cart->getKey()]);
+    app(CartService::class)->addLine($cart, $variant->getKey(), 2);
+
+    $component = Livewire::test(CartShow::class)
+        ->set('discountCode', 'SAVE10')
+        ->call('applyDiscount')
+        ->assertHasNoErrors()
+        ->assertSet('appliedDiscountCode', 'SAVE10')
+        ->set('shippingCountry', 'DE')
+        ->set('shippingPostalCode', '10115')
+        ->call('estimateShipping')
+        ->assertHasNoErrors()
+        ->assertSee('Standard Shipping');
+
+    expect(session('cart_discount_code'))->toBe('SAVE10')
+        ->and($component->instance()->discountAmount())->toBe(500)
+        ->and($component->instance()->estimatedShippingAmount())->toBe(799)
+        ->and($component->instance()->estimatedTotal())->toBe(5297);
+
+    Livewire::test(CheckoutShow::class)
+        ->assertSet('discountCode', 'SAVE10');
+
+    $checkout = Checkout::withoutGlobalScopes()->where('cart_id', $cart->getKey())->firstOrFail();
+
+    expect($checkout->discount_code)->toBe('SAVE10')
+        ->and($checkout->totals_json['discount'])->toBe(500);
+});
+
 test('customer login merges an existing guest cart without creating empty carts', function () {
     $store = storefrontUiStore();
     $variant = storefrontUiVariant($store);
