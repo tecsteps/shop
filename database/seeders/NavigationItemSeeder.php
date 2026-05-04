@@ -28,7 +28,7 @@ class NavigationItemSeeder extends Seeder
     }
 
     /**
-     * @param  array<int, array{label: string, type: string, url?: string|null, resource_id?: int|null}>  $items
+     * @param  array<int, array<string, mixed>>  $items
      */
     private function replaceItems(?NavigationMenu $menu, array $items): void
     {
@@ -40,38 +40,62 @@ class NavigationItemSeeder extends Seeder
             ->where('menu_id', $menu->getKey())
             ->delete();
 
+        $this->createItems($menu, $items);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $items
+     */
+    private function createItems(NavigationMenu $menu, array $items, ?int $parentId = null): void
+    {
         foreach ($items as $position => $item) {
-            NavigationItem::withoutGlobalScopes()->create([
+            $navigationItem = NavigationItem::withoutGlobalScopes()->create([
                 'menu_id' => $menu->getKey(),
+                'parent_id' => $parentId,
                 'type' => $item['type'],
                 'label' => $item['label'],
                 'url' => $item['url'] ?? null,
                 'resource_id' => $item['resource_id'] ?? null,
                 'position' => $position,
             ]);
+
+            if (($item['children'] ?? []) !== []) {
+                $this->createItems($menu, array_values($item['children']), $navigationItem->getKey());
+            }
         }
     }
 
     /**
-     * @return array<int, array{label: string, type: string, url?: string|null, resource_id?: int|null}>
+     * @return array<int, array<string, mixed>>
      */
     private function mainMenuItems(Store $store): array
     {
         $newArrivals = $this->collection($store, 'new-arrivals') ?? $this->collection($store, 'featured');
         $secondaryCollection = $this->collection($store, 't-shirts') ?? $this->collection($store, 'accessories');
+        $tertiaryCollection = $this->collection($store, 'pants-jeans');
+        $sale = $this->collection($store, 'sale');
         $about = $this->page($store, 'about');
 
         return array_values(array_filter([
-            ['label' => 'Collections', 'type' => 'link', 'url' => '/collections'],
-            $newArrivals ? ['label' => $newArrivals->title, 'type' => 'collection', 'resource_id' => $newArrivals->getKey()] : null,
-            $secondaryCollection ? ['label' => $secondaryCollection->title, 'type' => 'collection', 'resource_id' => $secondaryCollection->getKey()] : null,
+            ['label' => 'Home', 'type' => 'link', 'url' => '/'],
+            [
+                'label' => 'Shop',
+                'type' => 'link',
+                'url' => '/collections',
+                'children' => array_values(array_filter([
+                    $newArrivals ? ['label' => $newArrivals->title, 'type' => 'collection', 'resource_id' => $newArrivals->getKey()] : null,
+                    $secondaryCollection ? ['label' => $secondaryCollection->title, 'type' => 'collection', 'resource_id' => $secondaryCollection->getKey()] : null,
+                    $tertiaryCollection ? ['label' => $tertiaryCollection->title, 'type' => 'collection', 'resource_id' => $tertiaryCollection->getKey()] : null,
+                    $sale ? ['label' => 'Sale', 'type' => 'collection', 'resource_id' => $sale->getKey()] : null,
+                ])),
+            ],
             ['label' => 'Search', 'type' => 'link', 'url' => '/search'],
             $about ? ['label' => 'About', 'type' => 'page', 'resource_id' => $about->getKey()] : null,
         ]));
     }
 
     /**
-     * @return array<int, array{label: string, type: string, url?: string|null, resource_id?: int|null}>
+     * @return array<int, array<string, mixed>>
      */
     private function footerMenuItems(Store $store): array
     {

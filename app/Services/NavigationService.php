@@ -37,18 +37,38 @@ class NavigationService
     public function buildTree(NavigationMenu $menu): array
     {
         return Cache::remember($this->cacheKey($menu), now()->addMinutes(5), function () use ($menu): array {
-            return $menu->items()
+            $items = $menu->items()
                 ->with('menu')
-                ->get()
-                ->map(fn (NavigationItem $item): array => [
-                    'label' => $item->label,
-                    'url' => $this->resolveUrl($item),
-                    'type' => $item->type->value,
-                    'external' => $this->isExternal((string) ($item->url ?? '')),
-                    'children' => [],
-                ])
-                ->all();
+                ->orderBy('parent_id')
+                ->orderBy('position')
+                ->get();
+
+            $itemsByParent = $items->groupBy(fn (NavigationItem $item): string => $item->parent_id === null ? 'root' : (string) $item->parent_id);
+
+            $build = function (string $parentKey) use (&$build, $itemsByParent): array {
+                return $itemsByParent->get($parentKey, collect())
+                    ->sortBy('position')
+                    ->map(fn (NavigationItem $item): array => $this->node($item, $build((string) $item->getKey())))
+                    ->values()
+                    ->all();
+            };
+
+            return $build('root');
         });
+    }
+
+    /**
+     * @return array{label: string, url: string, type: string, external: bool, children: array<int, mixed>}
+     */
+    private function node(NavigationItem $item, array $children): array
+    {
+        return [
+            'label' => $item->label,
+            'url' => $this->resolveUrl($item),
+            'type' => $item->type->value,
+            'external' => $this->isExternal((string) ($item->url ?? '')),
+            'children' => $children,
+        ];
     }
 
     public function resolveUrl(NavigationItem $item): string

@@ -36,9 +36,26 @@
 
                 <nav class="hidden items-center gap-6 text-sm font-medium md:flex" aria-label="Main navigation">
                     @foreach ($mainLinks as $item)
-                        <a href="{{ $item['url'] }}" class="text-zinc-600 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white" @unless ($item['external']) wire:navigate @endunless>
-                            {{ $item['label'] }}
-                        </a>
+                        @if (($item['children'] ?? []) !== [])
+                            <div class="group relative">
+                                <a href="{{ $item['url'] }}" class="inline-flex items-center gap-1 text-zinc-600 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white" @unless ($item['external']) wire:navigate @endunless>
+                                    {{ $item['label'] }}
+                                    <flux:icon name="chevron-down" class="size-4" />
+                                </a>
+
+                                <div class="invisible absolute left-0 top-full z-50 mt-3 min-w-52 rounded-lg border border-zinc-200 bg-white p-2 opacity-0 shadow-lg transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100 dark:border-zinc-700 dark:bg-zinc-900">
+                                    @foreach ($item['children'] as $child)
+                                        <a href="{{ $child['url'] }}" class="block rounded-md px-3 py-2 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white" @unless ($child['external']) wire:navigate @endunless>
+                                            {{ $child['label'] }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ $item['url'] }}" class="text-zinc-600 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white" @unless ($item['external']) wire:navigate @endunless>
+                                {{ $item['label'] }}
+                            </a>
+                        @endif
                     @endforeach
                 </nav>
 
@@ -72,6 +89,11 @@
                             <a href="{{ $item['url'] }}" @unless ($item['external']) wire:navigate @endunless>
                                 {{ $item['label'] }}
                             </a>
+                            @foreach (($item['children'] ?? []) as $child)
+                                <a href="{{ $child['url'] }}" class="pl-3 text-sm" @unless ($child['external']) wire:navigate @endunless>
+                                    {{ $child['label'] }}
+                                </a>
+                            @endforeach
                         @endforeach
                     </div>
                 </div>

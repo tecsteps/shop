@@ -148,15 +148,22 @@ test('navigation menu items can be edited and persisted in order', function (): 
         ->where('handle', 'main-menu')
         ->firstOrFail();
     $initialItemCount = $menu->items()->count();
-
-    Livewire::actingAs($user)
+    $component = Livewire::actingAs($user)
         ->test(AdminNavigationIndex::class)
-        ->call('selectMenu', $menu->getKey())
+        ->call('selectMenu', $menu->getKey());
+    $shopKey = collect($component->get('menuItems'))->firstWhere('label', 'Shop')['key'];
+
+    $component
         ->set('itemLabel', 'Lookbook')
+        ->set('itemParentKey', $shopKey)
         ->set('itemType', NavigationItemType::Link->value)
         ->set('itemUrl', '/lookbook')
-        ->call('saveItem')
-        ->call('moveItemUp', $initialItemCount)
+        ->call('saveItem');
+
+    $lookbookKey = collect($component->get('menuItems'))->firstWhere('label', 'Lookbook')['key'];
+
+    $component
+        ->call('reorderItem', $lookbookKey, 0, $shopKey)
         ->call('saveMenu')
         ->assertHasNoErrors();
 
@@ -164,9 +171,31 @@ test('navigation menu items can be edited and persisted in order', function (): 
         ->where('menu_id', $menu->getKey())
         ->orderBy('position')
         ->get();
+    $shop = $items->firstWhere('label', 'Shop');
+    $lookbook = $items->firstWhere('label', 'Lookbook');
 
-    expect($items->pluck('position')->all())->toBe(range(0, $items->count() - 1))
-        ->and($items->pluck('label'))->toContain('Lookbook');
+    expect($items)->toHaveCount($initialItemCount + 1)
+        ->and($lookbook?->parent_id)->toBe($shop?->getKey())
+        ->and($lookbook?->position)->toBe(0);
+
+    $shopIndex = collect($component->get('menuItems'))
+        ->search(fn (array $item): bool => $item['label'] === 'Shop');
+
+    expect($shopIndex)->not->toBeFalse();
+
+    $component
+        ->call('removeItem', (int) $shopIndex)
+        ->call('saveMenu')
+        ->assertHasNoErrors();
+
+    expect(NavigationItem::withoutGlobalScopes()
+        ->where('menu_id', $menu->getKey())
+        ->where('label', 'Shop')
+        ->exists())->toBeFalse()
+        ->and(NavigationItem::withoutGlobalScopes()
+            ->where('menu_id', $menu->getKey())
+            ->where('label', 'Lookbook')
+            ->exists())->toBeFalse();
 });
 
 test('themes can be duplicated edited and published', function (): void {

@@ -33,25 +33,58 @@
                 <flux:button type="button" wire:click="addItem" variant="filled" icon="plus">Add item</flux:button>
             </div>
 
-            <div class="divide-y divide-zinc-200 dark:divide-zinc-800">
-                @forelse ($menuItems as $index => $item)
-                    <div wire:key="navigation-item-{{ $index }}-{{ $item['id'] ?? 'new' }}" class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-                        <div class="flex flex-1 items-center gap-3">
-                            <div class="flex gap-1">
-                                <flux:button type="button" wire:click="moveItemUp({{ $index }})" size="sm" variant="ghost" icon="arrow-up" aria-label="Move {{ $item['label'] }} up" />
-                                <flux:button type="button" wire:click="moveItemDown({{ $index }})" size="sm" variant="ghost" icon="arrow-down" aria-label="Move {{ $item['label'] }} down" />
+            <div class="divide-y divide-zinc-200 dark:divide-zinc-800" wire:sort="reorderItem" wire:sort:group="navigation-items" wire:sort:group-id="root">
+                @forelse ($navigationTree as $item)
+                    <div wire:key="navigation-item-{{ $item['key'] }}" wire:sort:item="{{ $item['key'] }}" class="p-4">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                            <div class="flex flex-1 items-center gap-3">
+                                <div class="flex items-center gap-1">
+                                    <span wire:sort:handle class="flex size-8 cursor-grab items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200">
+                                        <flux:icon name="bars-3" class="size-4" />
+                                    </span>
+                                    <flux:button type="button" wire:click="moveItemUp({{ $item['index'] }})" size="sm" variant="ghost" icon="arrow-up" aria-label="Move {{ $item['label'] }} up" />
+                                    <flux:button type="button" wire:click="moveItemDown({{ $item['index'] }})" size="sm" variant="ghost" icon="arrow-down" aria-label="Move {{ $item['label'] }} down" />
+                                </div>
+
+                                <div>
+                                    <div class="font-medium text-zinc-950 dark:text-white">{{ $item['label'] }}</div>
+                                    <div class="text-xs text-zinc-500">{{ $this->targetLabel($item) }}</div>
+                                </div>
                             </div>
 
-                            <div>
-                                <div class="font-medium text-zinc-950 dark:text-white">{{ $item['label'] }}</div>
-                                <div class="text-xs text-zinc-500">{{ $this->targetLabel($item) }}</div>
+                            <div class="flex justify-end gap-2" wire:sort:ignore>
+                                <flux:button type="button" wire:click="editItem({{ $item['index'] }})" size="sm" variant="filled">Edit</flux:button>
+                                <flux:button type="button" wire:click="removeItem({{ $item['index'] }})" size="sm" variant="danger">Remove</flux:button>
                             </div>
                         </div>
 
-                        <div class="flex justify-end gap-2">
-                            <flux:button type="button" wire:click="editItem({{ $index }})" size="sm" variant="filled">Edit</flux:button>
-                            <flux:button type="button" wire:click="removeItem({{ $index }})" size="sm" variant="danger">Remove</flux:button>
-                        </div>
+                        @if ($item['children'] !== [])
+                            <div class="mt-3 space-y-2 border-l border-zinc-200 pl-5 dark:border-zinc-700" wire:sort="reorderItem" wire:sort:group="navigation-items" wire:sort:group-id="{{ $item['key'] }}">
+                                @foreach ($item['children'] as $child)
+                                    <div wire:key="navigation-item-{{ $child['key'] }}" wire:sort:item="{{ $child['key'] }}" class="flex flex-col gap-3 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-950 sm:flex-row sm:items-center">
+                                        <div class="flex flex-1 items-center gap-3">
+                                            <div class="flex items-center gap-1">
+                                                <span wire:sort:handle class="flex size-8 cursor-grab items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200">
+                                                    <flux:icon name="bars-3" class="size-4" />
+                                                </span>
+                                                <flux:button type="button" wire:click="moveItemUp({{ $child['index'] }})" size="sm" variant="ghost" icon="arrow-up" aria-label="Move {{ $child['label'] }} up" />
+                                                <flux:button type="button" wire:click="moveItemDown({{ $child['index'] }})" size="sm" variant="ghost" icon="arrow-down" aria-label="Move {{ $child['label'] }} down" />
+                                            </div>
+
+                                            <div>
+                                                <div class="font-medium text-zinc-950 dark:text-white">{{ $child['label'] }}</div>
+                                                <div class="text-xs text-zinc-500">{{ $this->targetLabel($child) }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex justify-end gap-2" wire:sort:ignore>
+                                            <flux:button type="button" wire:click="editItem({{ $child['index'] }})" size="sm" variant="filled">Edit</flux:button>
+                                            <flux:button type="button" wire:click="removeItem({{ $child['index'] }})" size="sm" variant="danger">Remove</flux:button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 @empty
                     <div class="p-8 text-center text-zinc-500">No menu items.</div>
@@ -69,6 +102,14 @@
             <div class="mt-4 space-y-4">
                 <flux:input wire:model="itemLabel" label="Label" />
                 <flux:error name="itemLabel" />
+
+                <flux:select wire:model="itemParentKey" label="Parent item">
+                    <flux:select.option value="">Top level</flux:select.option>
+                    @foreach ($parentOptions as $parent)
+                        <flux:select.option value="{{ $parent['key'] }}">{{ $parent['label'] }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+                <flux:error name="itemParentKey" />
 
                 <flux:select wire:model.live="itemType" label="Type">
                     <flux:select.option value="link">Custom link</flux:select.option>

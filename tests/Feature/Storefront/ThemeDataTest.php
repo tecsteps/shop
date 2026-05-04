@@ -29,7 +29,7 @@ test('theme page and navigation tables and seeded fixtures exist', function () {
         ->and(Schema::hasColumns('theme_settings', ['theme_id', 'settings_json', 'updated_at']))->toBeTrue()
         ->and(Schema::hasColumns('pages', ['store_id', 'title', 'handle', 'body_html', 'status', 'published_at']))->toBeTrue()
         ->and(Schema::hasColumns('navigation_menus', ['store_id', 'handle', 'title']))->toBeTrue()
-        ->and(Schema::hasColumns('navigation_items', ['menu_id', 'type', 'label', 'url', 'resource_id', 'position']))->toBeTrue()
+        ->and(Schema::hasColumns('navigation_items', ['menu_id', 'parent_id', 'type', 'label', 'url', 'resource_id', 'position']))->toBeTrue()
         ->and(Theme::withoutGlobalScopes()->count())->toBe(2)
         ->and(ThemeFile::withoutGlobalScopes()->count())->toBe(6)
         ->and(ThemeSettings::withoutGlobalScopes()->count())->toBe(2)
@@ -99,9 +99,13 @@ test('navigation service resolves resource URLs for seeded menus', function () {
         ->firstOrFail();
 
     $items = app(NavigationService::class)->buildTree($menu);
+    $shop = collect($items)->firstWhere('label', 'Shop');
+    $shopChildren = collect($shop['children']);
 
-    expect(collect($items)->pluck('label')->all())->toContain('New Arrivals', 'T-Shirts', 'About')
-        ->and(collect($items)->firstWhere('label', 'New Arrivals')['url'])->toBe('/collections/new-arrivals')
+    expect(collect($items)->pluck('label')->all())->toContain('Home', 'Shop', 'About')
+        ->and($shop['url'])->toBe('/collections')
+        ->and($shopChildren->pluck('label')->all())->toContain('New Arrivals', 'T-Shirts')
+        ->and($shopChildren->firstWhere('label', 'New Arrivals')['url'])->toBe('/collections/new-arrivals')
         ->and(collect($items)->firstWhere('label', 'About')['url'])->toBe('/pages/about');
 });
 

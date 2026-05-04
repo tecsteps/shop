@@ -20,6 +20,7 @@ class NavigationItemFactory extends Factory
     {
         return [
             'menu_id' => NavigationMenu::factory(),
+            'parent_id' => null,
             'type' => NavigationItemType::Link,
             'label' => fake()->words(2, true),
             'url' => '/'.fake()->slug(),
