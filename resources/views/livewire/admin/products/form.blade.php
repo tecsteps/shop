@@ -151,7 +151,10 @@
             <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
                 <div class="flex items-center justify-between gap-4">
                     <flux:heading size="lg">Options</flux:heading>
-                    <flux:button type="button" wire:click="addOption" variant="ghost" icon="plus">Add option</flux:button>
+                    <div class="flex flex-wrap justify-end gap-2">
+                        <flux:button type="button" wire:click="generateVariants" variant="filled" icon="squares-2x2">Generate variants</flux:button>
+                        <flux:button type="button" wire:click="addOption" variant="ghost" icon="plus">Add option</flux:button>
+                    </div>
                 </div>
 
                 <div class="mt-5 space-y-3">

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Products;
 use App\Enums\MediaStatus;
 use App\Enums\MediaType;
 use App\Enums\ProductStatus;
+use App\Enums\VariantStatus;
 use App\Jobs\ProcessMediaUpload;
 use App\Models\Collection;
 use App\Models\InventoryItem;
@@ -17,6 +18,7 @@ use App\Models\Store;
 use App\Services\ProductService;
 use App\Support\Money;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -56,7 +58,7 @@ class Form extends Component
     public array $options = [];
 
     /**
-     * @var array<int, array{id: int|null, label: string, sku: string, price: string, compareAtPrice: string, quantity: int, requiresShipping: bool}>
+     * @var array<int, array{id: int|null, label: string, sku: string, price: string, compareAtPrice: string, quantity: int, requiresShipping: bool, options: array<string, string>}>
      */
     public array $variants = [];
 
@@ -91,6 +93,7 @@ class Form extends Component
             'compareAtPrice' => '',
             'quantity' => 0,
             'requiresShipping' => true,
+            'options' => [],
         ]];
     }
 
@@ -115,10 +118,55 @@ class Form extends Component
         $this->options = array_values($this->options);
     }
 
+    public function generateVariants(): void
+    {
+        $optionPayload = $this->optionPayload();
+
+        if ($optionPayload === []) {
+            $template = $this->variants[0] ?? [];
+            $this->variants = [[
+                'id' => $template['id'] ?? null,
+                'label' => 'Default',
+                'sku' => $template['sku'] ?? '',
+                'price' => $template['price'] ?? '0.00',
+                'compareAtPrice' => $template['compareAtPrice'] ?? '',
+                'quantity' => (int) ($template['quantity'] ?? 0),
+                'requiresShipping' => (bool) ($template['requiresShipping'] ?? true),
+                'options' => [],
+            ]];
+
+            return;
+        }
+
+        $existingVariants = collect($this->variants)
+            ->keyBy(fn (array $variant): string => $this->variantOptionKey($variant['options'] ?? []));
+        $template = $this->variants[0] ?? [];
+
+        $this->variants = collect($this->optionCombinations($optionPayload))
+            ->map(function (array $options) use ($existingVariants, $template): array {
+                $existingVariant = $existingVariants->get($this->variantOptionKey($options));
+
+                return [
+                    'id' => $existingVariant['id'] ?? null,
+                    'label' => $this->variantLabel($options),
+                    'sku' => $existingVariant['sku'] ?? '',
+                    'price' => $existingVariant['price'] ?? ($template['price'] ?? '0.00'),
+                    'compareAtPrice' => $existingVariant['compareAtPrice'] ?? ($template['compareAtPrice'] ?? ''),
+                    'quantity' => (int) ($existingVariant['quantity'] ?? 0),
+                    'requiresShipping' => (bool) ($existingVariant['requiresShipping'] ?? ($template['requiresShipping'] ?? true)),
+                    'options' => $options,
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
     public function save(): void
     {
         $store = app('current_store');
         abort_unless($store instanceof Store, 404);
+
+        $this->ensureVariantMatrixMatchesOptions();
 
         $this->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -164,6 +212,7 @@ class Form extends Component
                 unset($payload['status']);
 
                 $product = $productService->update($this->product, $payload);
+                $this->syncProductOptions($product);
                 $this->syncExistingVariants($product, $store);
 
                 if ($requestedStatus !== $product->refresh()->status) {
@@ -353,6 +402,9 @@ class Form extends Component
                 'compareAtPrice' => $variant->compare_at_amount ? number_format($variant->compare_at_amount / 100, 2, '.', '') : '',
                 'quantity' => $variant->inventoryItem?->quantity_on_hand ?? 0,
                 'requiresShipping' => $variant->requires_shipping,
+                'options' => $variant->optionValues
+                    ->mapWithKeys(fn (ProductOptionValue $value): array => [$value->option?->name ?? 'Option' => $value->value])
+                    ->all(),
             ])
             ->values()
             ->all();
@@ -419,12 +471,15 @@ class Form extends Component
                 'requires_shipping' => (bool) $variant['requiresShipping'],
                 'is_default' => $position === 0,
                 'position' => $position,
+                'options' => $variant['options'] ?? [],
             ])
             ->all();
     }
 
     private function syncExistingVariants(Product $product, Store $store): void
     {
+        $syncedVariantIds = [];
+
         foreach ($this->variantPayload($store) as $position => $variantData) {
             $variantId = $this->variants[$position]['id'] ?? null;
             $variant = $variantId
@@ -450,7 +505,175 @@ class Form extends Component
                     'policy' => 'deny',
                 ],
             );
+
+            $variant->optionValues()->sync($this->optionValueIdsForVariant($product, $variantData['options'] ?? []));
+            $syncedVariantIds[] = $variant->getKey();
         }
+
+        ProductVariant::withoutGlobalScopes()
+            ->where('product_id', $product->getKey())
+            ->when($syncedVariantIds !== [], fn ($query) => $query->whereNotIn('id', $syncedVariantIds))
+            ->get()
+            ->each(function (ProductVariant $variant): void {
+                if ($this->variantHasOrderLines($variant)) {
+                    $variant->forceFill(['status' => VariantStatus::Archived])->save();
+
+                    return;
+                }
+
+                $variant->delete();
+            });
+    }
+
+    private function syncProductOptions(Product $product): void
+    {
+        $optionPayload = $this->optionPayload();
+        $syncedOptionIds = [];
+
+        foreach ($optionPayload as $optionData) {
+            $option = ProductOption::withoutGlobalScopes()
+                ->where('product_id', $product->getKey())
+                ->where('position', $optionData['position'])
+                ->first()
+                ?? $product->options()->create([
+                    'name' => $optionData['name'],
+                    'position' => $optionData['position'],
+                ]);
+
+            $option->forceFill([
+                'name' => $optionData['name'],
+                'position' => $optionData['position'],
+            ])->save();
+
+            $syncedOptionIds[] = $option->getKey();
+            $syncedValueIds = [];
+
+            foreach ($optionData['values'] as $valueData) {
+                $value = ProductOptionValue::withoutGlobalScopes()
+                    ->where('product_option_id', $option->getKey())
+                    ->where('position', $valueData['position'])
+                    ->first()
+                    ?? $option->values()->create([
+                        'value' => $valueData['value'],
+                        'position' => $valueData['position'],
+                    ]);
+
+                $value->forceFill([
+                    'value' => $valueData['value'],
+                    'position' => $valueData['position'],
+                ])->save();
+
+                $syncedValueIds[] = $value->getKey();
+            }
+
+            ProductOptionValue::withoutGlobalScopes()
+                ->where('product_option_id', $option->getKey())
+                ->when($syncedValueIds !== [], fn ($query) => $query->whereNotIn('id', $syncedValueIds))
+                ->delete();
+        }
+
+        ProductOption::withoutGlobalScopes()
+            ->where('product_id', $product->getKey())
+            ->when($syncedOptionIds !== [], fn ($query) => $query->whereNotIn('id', $syncedOptionIds))
+            ->delete();
+    }
+
+    private function ensureVariantMatrixMatchesOptions(): void
+    {
+        $desiredKeys = collect($this->optionCombinations($this->optionPayload()))
+            ->map(fn (array $options): string => $this->variantOptionKey($options))
+            ->sort()
+            ->values()
+            ->all();
+        $currentKeys = collect($this->variants)
+            ->map(fn (array $variant): string => $this->variantOptionKey($variant['options'] ?? []))
+            ->sort()
+            ->values()
+            ->all();
+
+        if ($desiredKeys !== $currentKeys) {
+            $this->generateVariants();
+        }
+    }
+
+    /**
+     * @param  array<int, array{name: string, position: int, values: array<int, array{value: string, position: int}>}>  $options
+     * @return array<int, array<string, string>>
+     */
+    private function optionCombinations(array $options): array
+    {
+        if ($options === []) {
+            return [[]];
+        }
+
+        return collect($options)
+            ->reduce(function (array $combinations, array $option): array {
+                $next = [];
+
+                foreach ($combinations as $combination) {
+                    foreach ($option['values'] as $value) {
+                        $next[] = [
+                            ...$combination,
+                            $option['name'] => $value['value'],
+                        ];
+                    }
+                }
+
+                return $next;
+            }, [[]]);
+    }
+
+    /**
+     * @param  array<string, string>  $options
+     */
+    private function variantOptionKey(array $options): string
+    {
+        ksort($options);
+
+        return collect($options)
+            ->map(fn (string $value, string $name): string => "{$name}:{$value}")
+            ->implode('|');
+    }
+
+    /**
+     * @param  array<string, string>  $options
+     */
+    private function variantLabel(array $options): string
+    {
+        return $options === [] ? 'Default' : implode(' / ', array_values($options));
+    }
+
+    /**
+     * @param  array<string, string>  $options
+     * @return list<int>
+     */
+    private function optionValueIdsForVariant(Product $product, array $options): array
+    {
+        if ($options === []) {
+            return [];
+        }
+
+        return collect($options)
+            ->map(function (string $value, string $optionName) use ($product): int {
+                return (int) ProductOptionValue::withoutGlobalScopes()
+                    ->where('value', $value)
+                    ->whereHas('option', function ($query) use ($optionName, $product): void {
+                        $query
+                            ->withoutGlobalScopes()
+                            ->where('product_id', $product->getKey())
+                            ->where('name', $optionName);
+                    })
+                    ->value('id');
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    private function variantHasOrderLines(ProductVariant $variant): bool
+    {
+        return Schema::hasTable('order_lines')
+            && DB::table('order_lines')->where('variant_id', $variant->getKey())->exists();
     }
 
     private function validateActiveVariantPricing(): bool

@@ -51,21 +51,25 @@ test('storefront catalog browsing routes render seeded products', function () {
 test('admin catalog routes require authentication and render for store admins', function () {
     $this->get('/admin/products')->assertRedirect('/admin/login');
 
+    $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
     $user = User::query()->where('email', 'admin@acme.test')->firstOrFail();
 
     $this->actingAs($user)
+        ->withSession(['current_store_id' => $store->getKey()])
         ->get('/admin/products')
         ->assertSuccessful()
-        ->assertSee('Classic Cotton T-Shirt')
-        ->assertSee('Premium Slim Fit Jeans');
+        ->assertSee('Products')
+        ->assertSee('Add product');
 
     $this->actingAs($user)
+        ->withSession(['current_store_id' => $store->getKey()])
         ->get('/admin/collections')
         ->assertSuccessful()
         ->assertSee('Collections')
         ->assertSee('T-Shirts');
 
     $this->actingAs($user)
+        ->withSession(['current_store_id' => $store->getKey()])
         ->get('/admin/inventory')
         ->assertSuccessful()
         ->assertSee('Inventory')
@@ -150,6 +154,75 @@ test('admin product form creates edits archives and index filters products', fun
         ->set('search', 'Cotton')
         ->assertSee('Classic Cotton T-Shirt');
 });
+
+test('admin product form generates and syncs option variant matrix', function () {
+    $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+    $user = User::query()->where('email', 'admin@acme.test')->firstOrFail();
+    app()->instance('current_store', $store);
+
+    $component = Livewire::actingAs($user)
+        ->test(ProductForm::class)
+        ->set('title', 'Matrix Product')
+        ->set('handle', 'matrix-product')
+        ->set('options', [
+            ['name' => 'Size', 'values' => 'S, M'],
+            ['name' => 'Color', 'values' => 'Black, White'],
+        ])
+        ->call('generateVariants');
+
+    $generatedVariants = $component->get('variants');
+
+    expect($generatedVariants)->toHaveCount(4)
+        ->and($generatedVariants[0]['label'])->toBe('S / Black')
+        ->and($generatedVariants[3]['label'])->toBe('M / White');
+
+    foreach (range(0, 3) as $index) {
+        $component
+            ->set("variants.{$index}.sku", 'MATRIX-'.$index)
+            ->set("variants.{$index}.price", '19.99')
+            ->set("variants.{$index}.quantity", 10 + $index);
+    }
+
+    $component
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertSee('Product saved');
+
+    $product = Product::query()->where('handle', 'matrix-product')->firstOrFail();
+    $labels = matrixVariantLabels($product);
+
+    expect($product->variants)->toHaveCount(4)
+        ->and($labels)->toBe(['M / Black', 'M / White', 'S / Black', 'S / White']);
+
+    $editComponent = Livewire::actingAs($user)
+        ->test(ProductForm::class, ['product' => $product->refresh()])
+        ->set('options.1.values', 'Black, Navy')
+        ->call('generateVariants');
+
+    expect(collect($editComponent->get('variants'))->pluck('label')->sort()->values()->all())
+        ->toBe(['M / Black', 'M / Navy', 'S / Black', 'S / Navy']);
+
+    $editComponent
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertSee('Product saved');
+
+    expect(matrixVariantLabels($product->refresh()))->toBe(['M / Black', 'M / Navy', 'S / Black', 'S / Navy']);
+});
+
+function matrixVariantLabels(Product $product): array
+{
+    return $product->variants()
+        ->with(['optionValues.option'])
+        ->get()
+        ->map(fn ($variant): string => $variant->optionValues
+            ->sortBy(fn ($value): int => $value->option->position)
+            ->pluck('value')
+            ->implode(' / '))
+        ->sort()
+        ->values()
+        ->all();
+}
 
 test('admin collection form creates and assigns products', function () {
     $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
