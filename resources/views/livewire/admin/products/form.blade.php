@@ -33,6 +33,79 @@
 
             <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
                 <div class="flex items-center justify-between gap-4">
+                    <flux:heading size="lg">Media</flux:heading>
+                    <flux:text>{{ count($media) }} {{ Str::plural('item', count($media)) }}</flux:text>
+                </div>
+
+                <div class="mt-5 rounded-lg border border-dashed border-zinc-300 p-4 dark:border-zinc-700">
+                    <div class="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+                        <flux:input
+                            wire:model="newMedia"
+                            type="file"
+                            label="Images"
+                            multiple
+                            accept="image/*"
+                            data-test="product-media-input"
+                        />
+
+                        @if ($isEditing)
+                            <flux:button type="button" wire:click="uploadMedia" variant="primary" icon="cloud-arrow-up" wire:loading.attr="disabled" wire:target="newMedia,uploadMedia" data-test="product-media-upload-button">
+                                Upload
+                            </flux:button>
+                        @endif
+                    </div>
+
+                    <flux:error name="newMedia" />
+                    <flux:error name="newMedia.0" />
+
+                    <div wire:loading wire:target="newMedia" class="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+                        <div class="h-full w-1/2 animate-pulse rounded-full bg-zinc-900 dark:bg-zinc-100"></div>
+                    </div>
+                </div>
+
+                <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    @forelse ($media as $index => $item)
+                        <div class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800" wire:key="product-media-{{ $item['id'] }}">
+                            <div class="aspect-square bg-zinc-100 dark:bg-zinc-800">
+                                @if ($item['exists'])
+                                    <img src="{{ $item['url'] }}" alt="{{ $item['altText'] }}" class="h-full w-full object-cover">
+                                @else
+                                    <div class="flex h-full items-center justify-center text-zinc-400">
+                                        <flux:icon.photo class="size-10" />
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="space-y-3 p-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <flux:badge :color="$item['status'] === 'ready' ? 'green' : ($item['status'] === 'failed' ? 'red' : 'amber')">
+                                        {{ Str::headline($item['status']) }}
+                                    </flux:badge>
+
+                                    <div class="flex items-center gap-1">
+                                        <flux:button type="button" wire:click="moveMedia({{ $item['id'] }}, 'up')" variant="ghost" icon="arrow-up" size="sm" :aria-label="__('Move media up')" />
+                                        <flux:button type="button" wire:click="moveMedia({{ $item['id'] }}, 'down')" variant="ghost" icon="arrow-down" size="sm" :aria-label="__('Move media down')" />
+                                        <flux:button type="button" wire:click="removeMedia({{ $item['id'] }})" variant="ghost" icon="trash" size="sm" :aria-label="__('Remove media')" />
+                                    </div>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <flux:input wire:model="media.{{ $index }}.altText" label="Alt text" />
+                                    <flux:error name="media.{{ $index }}.altText" />
+                                    <flux:button type="button" wire:click="updateMediaAlt({{ $item['id'] }})" variant="ghost" icon="check" size="sm">Save alt text</flux:button>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="rounded-lg border border-zinc-200 p-4 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+                            No media for this product.
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
+                <div class="flex items-center justify-between gap-4">
                     <flux:heading size="lg">Variants</flux:heading>
                     <flux:text>{{ count($variants) }} {{ Str::plural('variant', count($variants)) }}</flux:text>
                 </div>
