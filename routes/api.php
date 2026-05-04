@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\V1\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Api\Admin\V1\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
+use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Apps\V1\DeferredEndpointController as DeferredAppEndpointController;
 use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\V1\CartController;
 use App\Http\Controllers\Api\Storefront\V1\CartLineController;
@@ -49,6 +52,16 @@ Route::middleware('throttle:60,1')
     ->prefix('admin/v1/stores/{store}')
     ->name('api.admin.v1.')
     ->group(function (): void {
+        Route::middleware('admin.api:read-products')->group(function (): void {
+            Route::get('products', [AdminProductController::class, 'index'])->name('products.index');
+            Route::get('products/{product}', [AdminProductController::class, 'show'])->name('products.show');
+        });
+
+        Route::middleware('admin.api:read-customers')->group(function (): void {
+            Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+            Route::get('customers/{customer}', [AdminCustomerController::class, 'show'])->name('customers.show');
+        });
+
         Route::middleware('admin.api:read-orders')->group(function (): void {
             Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
             Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
@@ -58,4 +71,13 @@ Route::middleware('throttle:60,1')
             Route::post('orders/{order}/fulfillments', [AdminOrderFulfillmentController::class, 'store'])->name('orders.fulfillments.store');
             Route::post('orders/{order}/refunds', [AdminOrderRefundController::class, 'store'])->name('orders.refunds.store');
         });
+    });
+
+Route::middleware('throttle:60,1')
+    ->prefix('apps/v1/stores/{store}')
+    ->name('api.apps.v1.')
+    ->group(function (): void {
+        Route::get('products', DeferredAppEndpointController::class)->name('products.index');
+        Route::get('orders', DeferredAppEndpointController::class)->name('orders.index');
+        Route::get('customers', DeferredAppEndpointController::class)->name('customers.index');
     });

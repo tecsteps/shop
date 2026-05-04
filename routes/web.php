@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\OAuthController;
 use App\Http\Middleware\EnsureUserEmailIsVerified;
 use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
 use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
@@ -71,6 +72,13 @@ Route::post('admin/logout', function () {
 
     return redirect()->route('admin.login');
 })->middleware('auth')->name('admin.logout');
+
+Route::get('oauth/authorize', [OAuthController::class, 'authorize'])
+    ->middleware('auth')
+    ->name('oauth.authorize');
+
+Route::post('oauth/token', [OAuthController::class, 'token'])
+    ->name('oauth.token');
 
 Route::middleware(['auth', EnsureUserEmailIsVerified::class, 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::livewire('/', AdminDashboard::class)->name('dashboard');
