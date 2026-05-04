@@ -148,7 +148,7 @@
         <div class="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-950/95 lg:left-64">
             <div class="mx-auto flex max-w-7xl justify-end gap-3">
                 <flux:button :href="route('admin.discounts.index')" wire:navigate variant="ghost">Discard</flux:button>
-                <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+                <flux:button type="submit" variant="primary" wire:loading.attr="disabled" data-test="discount-save-button">
                     <span wire:loading.remove>Save</span>
                     <span wire:loading>Saving...</span>
                 </flux:button>
