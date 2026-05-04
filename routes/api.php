@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\V1\AnalyticsSummaryController as AdminAnalyticsSummaryController;
 use App\Http\Controllers\Api\Admin\V1\CollectionController as AdminCollectionController;
 use App\Http\Controllers\Api\Admin\V1\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Api\Admin\V1\DiscountController as AdminDiscountController;
@@ -102,6 +103,10 @@ Route::middleware('throttle:60,1')
 
         Route::middleware('admin.api:write-settings')->group(function (): void {
             Route::post('search/reindex', [AdminSearchIndexController::class, 'reindex'])->name('search.reindex');
+        });
+
+        Route::middleware('admin.api:read-analytics')->group(function (): void {
+            Route::get('analytics/summary', [AdminAnalyticsSummaryController::class, 'show'])->name('analytics.summary');
         });
 
         Route::middleware('admin.api:read-orders')->group(function (): void {
