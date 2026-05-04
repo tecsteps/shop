@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\V1\DiscountController as AdminDiscountControl
 use App\Http\Controllers\Api\Admin\V1\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
+use App\Http\Controllers\Api\Admin\V1\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Apps\V1\DeferredEndpointController as DeferredAppEndpointController;
 use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
@@ -82,6 +83,16 @@ Route::middleware('throttle:60,1')
             Route::post('discounts', [AdminDiscountController::class, 'store'])->name('discounts.store');
             Route::put('discounts/{discount}', [AdminDiscountController::class, 'update'])->name('discounts.update');
             Route::delete('discounts/{discount}', [AdminDiscountController::class, 'destroy'])->name('discounts.destroy');
+        });
+
+        Route::middleware('admin.api:read-content')->group(function (): void {
+            Route::get('pages', [AdminPageController::class, 'index'])->name('pages.index');
+        });
+
+        Route::middleware('admin.api:write-content')->group(function (): void {
+            Route::post('pages', [AdminPageController::class, 'store'])->name('pages.store');
+            Route::put('pages/{page}', [AdminPageController::class, 'update'])->name('pages.update');
+            Route::delete('pages/{page}', [AdminPageController::class, 'destroy'])->name('pages.destroy');
         });
 
         Route::middleware('admin.api:read-orders')->group(function (): void {
