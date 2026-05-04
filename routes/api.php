@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\V1\CollectionController as AdminCollectionController;
 use App\Http\Controllers\Api\Admin\V1\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Api\Admin\V1\DiscountController as AdminDiscountController;
 use App\Http\Controllers\Api\Admin\V1\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\V1\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundController;
@@ -71,6 +72,16 @@ Route::middleware('throttle:60,1')
             Route::post('collections', [AdminCollectionController::class, 'store'])->name('collections.store');
             Route::put('collections/{collection}', [AdminCollectionController::class, 'update'])->name('collections.update');
             Route::delete('collections/{collection}', [AdminCollectionController::class, 'destroy'])->name('collections.destroy');
+        });
+
+        Route::middleware('admin.api:read-discounts')->group(function (): void {
+            Route::get('discounts', [AdminDiscountController::class, 'index'])->name('discounts.index');
+        });
+
+        Route::middleware('admin.api:write-discounts')->group(function (): void {
+            Route::post('discounts', [AdminDiscountController::class, 'store'])->name('discounts.store');
+            Route::put('discounts/{discount}', [AdminDiscountController::class, 'update'])->name('discounts.update');
+            Route::delete('discounts/{discount}', [AdminDiscountController::class, 'destroy'])->name('discounts.destroy');
         });
 
         Route::middleware('admin.api:read-orders')->group(function (): void {
