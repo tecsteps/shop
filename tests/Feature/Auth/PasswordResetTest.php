@@ -37,6 +37,33 @@ test('reset password screen can be rendered', function () {
     });
 });
 
+test('admin password reset routes render and submit through admin paths', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    $this->get(route('admin.password.request'))
+        ->assertOk()
+        ->assertSee(route('admin.password.email', absolute: false), false);
+
+    $this->post(route('admin.password.email'), ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+        $this->get(route('admin.password.reset', $notification->token).'?email='.$user->email)
+            ->assertOk()
+            ->assertSee(route('admin.password.update', absolute: false), false);
+
+        $this->post(route('admin.password.update'), [
+            'token' => $notification->token,
+            'email' => $user->email,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertSessionHasNoErrors();
+
+        return true;
+    });
+});
+
 test('password can be reset with valid token', function () {
     Notification::fake();
 

@@ -47,6 +47,8 @@ use App\Livewire\Storefront\Products\Show as StorefrontProductShow;
 use App\Livewire\Storefront\Search\Index as StorefrontSearchIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\NewPasswordController as FortifyNewPasswordController;
+use Laravel\Fortify\Http\Controllers\PasswordResetLinkController as FortifyPasswordResetLinkController;
 
 Route::middleware(['storefront'])->group(function (): void {
     Route::livewire('/', StorefrontHome::class)->name('home');
@@ -63,6 +65,22 @@ Route::middleware(['storefront'])->group(function (): void {
 Route::livewire('admin/login', AdminLogin::class)
     ->middleware('guest')
     ->name('admin.login');
+
+Route::get('admin/forgot-password', [FortifyPasswordResetLinkController::class, 'create'])
+    ->middleware('guest')
+    ->name('admin.password.request');
+
+Route::post('admin/forgot-password', [FortifyPasswordResetLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('admin.password.email');
+
+Route::get('admin/reset-password/{token}', [FortifyNewPasswordController::class, 'create'])
+    ->middleware('guest')
+    ->name('admin.password.reset');
+
+Route::post('admin/reset-password', [FortifyNewPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('admin.password.update');
 
 Route::post('admin/logout', function () {
     Auth::guard('web')->logout();
