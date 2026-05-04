@@ -3,7 +3,9 @@
 use App\Enums\ShippingRateType;
 use App\Enums\StoreUserRole;
 use App\Enums\TaxMode;
+use App\Livewire\Admin\Settings\Checkout as AdminSettingsCheckout;
 use App\Livewire\Admin\Settings\Index as AdminSettingsIndex;
+use App\Livewire\Admin\Settings\Notifications as AdminSettingsNotifications;
 use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
 use App\Models\ShippingRate;
@@ -53,7 +55,7 @@ test('settings routes render for owners and reject staff', function (): void {
     $owner = adminSettingsUser();
     $staff = adminSettingsUserWithRole($store, StoreUserRole::Staff);
 
-    foreach (['/admin/settings', '/admin/settings/shipping', '/admin/settings/taxes'] as $path) {
+    foreach (['/admin/settings', '/admin/settings/shipping', '/admin/settings/taxes', '/admin/settings/checkout', '/admin/settings/notifications'] as $path) {
         $this->actingAs($owner)
             ->withSession(['current_store_id' => $store->getKey()])
             ->get($path)
@@ -132,6 +134,70 @@ test('shipping settings manage zones rates and address tests', function (): void
     expect($zone->countries_json)->toBe(['SE', 'NO'])
         ->and($rate->type)->toBe(ShippingRateType::Flat)
         ->and($rate->config_json['amount'])->toBe(1250);
+});
+
+test('checkout settings save customer and payment policy values', function (): void {
+    $store = adminSettingsStore();
+    $user = adminSettingsUser();
+
+    Livewire::actingAs($user)
+        ->test(AdminSettingsCheckout::class)
+        ->set('guestCheckoutEnabled', false)
+        ->set('customerAccountsRequired', true)
+        ->set('phoneNumberRequired', true)
+        ->set('billingAddressEnabled', false)
+        ->set('orderNotesEnabled', false)
+        ->set('termsRequired', true)
+        ->set('termsUrl', 'https://shop.test/pages/terms')
+        ->set('paymentHoldHours', 36)
+        ->set('abandonedCheckoutDays', 21)
+        ->set('bankTransferCancelDays', 9)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $settings = StoreSettings::query()->whereKey($store->getKey())->firstOrFail()->settings_json;
+
+    expect(data_get($settings, 'checkout.guest_checkout_enabled'))->toBeFalse()
+        ->and(data_get($settings, 'checkout.customer_accounts_required'))->toBeTrue()
+        ->and(data_get($settings, 'checkout.phone_number_required'))->toBeTrue()
+        ->and(data_get($settings, 'checkout.billing_address_enabled'))->toBeFalse()
+        ->and(data_get($settings, 'checkout.order_notes_enabled'))->toBeFalse()
+        ->and(data_get($settings, 'checkout.terms_required'))->toBeTrue()
+        ->and(data_get($settings, 'checkout.terms_url'))->toBe('https://shop.test/pages/terms')
+        ->and(data_get($settings, 'checkout.payment_hold_hours'))->toBe(36)
+        ->and(data_get($settings, 'checkout.abandoned_checkout_days'))->toBe(21)
+        ->and(data_get($settings, 'bank_transfer_cancel_days'))->toBe(9);
+});
+
+test('notification settings save sender and event preferences', function (): void {
+    $store = adminSettingsStore();
+    $user = adminSettingsUser();
+
+    Livewire::actingAs($user)
+        ->test(AdminSettingsNotifications::class)
+        ->set('senderName', 'Acme Ops')
+        ->set('senderEmail', 'ops@shop.test')
+        ->set('replyToEmail', 'support@shop.test')
+        ->set('orderConfirmationEnabled', false)
+        ->set('shippingConfirmationEnabled', true)
+        ->set('refundConfirmationEnabled', false)
+        ->set('adminOrderAlertsEnabled', false)
+        ->set('lowStockAlertsEnabled', true)
+        ->set('lowStockThreshold', 3)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $settings = StoreSettings::query()->whereKey($store->getKey())->firstOrFail()->settings_json;
+
+    expect(data_get($settings, 'notifications.sender_name'))->toBe('Acme Ops')
+        ->and(data_get($settings, 'notifications.sender_email'))->toBe('ops@shop.test')
+        ->and(data_get($settings, 'notifications.reply_to_email'))->toBe('support@shop.test')
+        ->and(data_get($settings, 'notifications.order_confirmation_enabled'))->toBeFalse()
+        ->and(data_get($settings, 'notifications.shipping_confirmation_enabled'))->toBeTrue()
+        ->and(data_get($settings, 'notifications.refund_confirmation_enabled'))->toBeFalse()
+        ->and(data_get($settings, 'notifications.admin_order_alerts_enabled'))->toBeFalse()
+        ->and(data_get($settings, 'notifications.low_stock_alerts_enabled'))->toBeTrue()
+        ->and(data_get($settings, 'notifications.low_stock_threshold'))->toBe(3);
 });
 
 test('tax settings save manual and provider configuration', function (): void {

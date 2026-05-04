@@ -9,6 +9,8 @@
             <flux:button :href="route('admin.settings.index')" wire:navigate variant="filled">General</flux:button>
             <flux:button :href="route('admin.settings.shipping')" wire:navigate variant="filled">Shipping</flux:button>
             <flux:button :href="route('admin.settings.taxes')" wire:navigate variant="primary">Taxes</flux:button>
+            <flux:button :href="route('admin.settings.checkout')" wire:navigate variant="filled">Checkout</flux:button>
+            <flux:button :href="route('admin.settings.notifications')" wire:navigate variant="filled">Notifications</flux:button>
         </div>
     </div>
 
