@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Admin\Collections;
 
+use App\Actions\SanitizeHtml;
 use App\Models\Collection;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -13,6 +15,8 @@ use Livewire\Component;
 
 class Form extends Component
 {
+    use AuthorizesRequests;
+
     public ?Collection $collection = null;
 
     public string $title = '';
@@ -39,9 +43,15 @@ class Form extends Component
 
             abort_unless($store instanceof Store && (int) $collection->store_id === $store->getKey(), 404);
 
+            $this->authorize('update', $collection);
+
             $this->collection = $collection->load('products');
             $this->fillFromCollection($this->collection);
+
+            return;
         }
+
+        $this->authorize('create', Collection::class);
     }
 
     public function updatedTitle(): void
@@ -53,6 +63,19 @@ class Form extends Component
 
     public function addProduct(int $productId): void
     {
+        $store = app('current_store');
+
+        abort_unless($store instanceof Store, 404);
+
+        $exists = Product::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->whereKey($productId)
+            ->exists();
+
+        if (! $exists) {
+            return;
+        }
+
         if (! in_array($productId, $this->assignedProductIds, true)) {
             $this->assignedProductIds[] = $productId;
         }
@@ -73,6 +96,8 @@ class Form extends Component
         $store = app('current_store');
         abort_unless($store instanceof Store, 404);
 
+        $this->authorizeSave();
+
         $this->validate([
             'title' => ['required', 'string', 'max:255'],
             'handle' => [
@@ -91,7 +116,7 @@ class Form extends Component
             'store_id' => $store->getKey(),
             'title' => $this->title,
             'handle' => Str::slug($this->handle),
-            'description_html' => $this->descriptionHtml ?: null,
+            'description_html' => $this->sanitizeHtml($this->descriptionHtml),
             'type' => 'manual',
             'status' => $this->status,
         ];
@@ -100,7 +125,7 @@ class Form extends Component
             ? tap($this->collection)->update($attributes)
             : Collection::query()->create($attributes);
 
-        $collection->products()->sync(collect($this->assignedProductIds)
+        $collection->products()->sync(collect($this->assignedProductIdsForSync($store))
             ->values()
             ->mapWithKeys(fn (int $productId, int $position): array => [$productId => ['position' => $position]])
             ->all());
@@ -119,7 +144,12 @@ class Form extends Component
             return collect();
         }
 
-        return Product::query()
+        $store = app('current_store');
+
+        abort_unless($store instanceof Store, 404);
+
+        return Product::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
             ->whereNotIn('id', $this->assignedProductIds)
             ->where(function (Builder $query): void {
                 $query
@@ -136,7 +166,12 @@ class Form extends Component
             return collect();
         }
 
-        return Product::query()
+        $store = app('current_store');
+
+        abort_unless($store instanceof Store, 404);
+
+        return Product::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
             ->whereIn('id', $this->assignedProductIds)
             ->get()
             ->sortBy(fn (Product $product): int => array_search($product->getKey(), $this->assignedProductIds, true))
@@ -161,5 +196,40 @@ class Form extends Component
         $this->descriptionHtml = (string) $collection->description_html;
         $this->status = $collection->status->value;
         $this->assignedProductIds = $collection->products->pluck('id')->map(fn (int $id): int => $id)->all();
+    }
+
+    private function sanitizeHtml(?string $html): ?string
+    {
+        $sanitized = app(SanitizeHtml::class)($html);
+
+        return $sanitized === '' ? null : $sanitized;
+    }
+
+    private function authorizeSave(): void
+    {
+        if ($this->collection instanceof Collection) {
+            $this->authorize('update', $this->collection);
+
+            return;
+        }
+
+        $this->authorize('create', Collection::class);
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function assignedProductIdsForSync(Store $store): array
+    {
+        if ($this->assignedProductIds === []) {
+            return [];
+        }
+
+        return Product::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->whereIn('id', $this->assignedProductIds)
+            ->pluck('id')
+            ->map(fn (int $id): int => $id)
+            ->all();
     }
 }

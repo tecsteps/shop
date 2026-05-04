@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Enums\FinancialStatus;
+use App\Enums\StoreUserRole;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Order;
@@ -74,6 +75,7 @@ class Dashboard extends Component
         $store = app('current_store');
 
         abort_unless($store instanceof Store, 404);
+        abort_unless($this->canViewAnalytics($store), 403);
 
         $this->storeId = $store->getKey();
         $this->storeCurrency = $store->default_currency;
@@ -292,5 +294,12 @@ class Dashboard extends Component
         }
 
         return round((($current - $previous) / $previous) * 100, 1);
+    }
+
+    private function canViewAnalytics(Store $store): bool
+    {
+        $role = auth()->user()?->roleForStoreId($store->getKey());
+
+        return in_array($role, [StoreUserRole::Owner, StoreUserRole::Admin, StoreUserRole::Staff], true);
     }
 }

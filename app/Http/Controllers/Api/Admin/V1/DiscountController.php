@@ -74,7 +74,7 @@ class DiscountController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
-        if (! $request->attributes->has('admin_api_oauth_token')) {
+        if (! $request->attributes->has('sanctum_personal_access_token')) {
             abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
         }
 

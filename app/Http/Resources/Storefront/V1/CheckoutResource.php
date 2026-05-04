@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Storefront\V1;
 
+use App\Support\CheckoutAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,7 @@ class CheckoutResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'access_token' => CheckoutAccessToken::make($this->resource),
             'store_id' => $this->store_id,
             'cart_id' => $this->cart_id,
             'customer_id' => $this->customer_id,

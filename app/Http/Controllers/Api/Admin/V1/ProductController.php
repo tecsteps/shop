@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin\V1;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\MediaStatus;
 use App\Enums\MediaType;
 use App\Enums\ProductStatus;
@@ -41,6 +42,7 @@ class ProductController extends Controller
     public function index(Request $request, Store $store): AnonymousResourceCollection
     {
         $this->authorizeStore($request, $store);
+        abort_unless($request->user()?->can('viewAny', Product::class), 403);
 
         $validated = $request->validate([
             'status' => ['nullable', Rule::in(['draft', 'active', 'archived'])],
@@ -81,6 +83,7 @@ class ProductController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessProductBelongsToStore($product, $store);
+        abort_unless($request->user()?->can('view', $product), 403);
 
         return ProductResource::make($this->loadProduct($product));
     }
@@ -88,6 +91,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request, Store $store, ProductService $products): JsonResponse
     {
         $this->authorizeStore($request, $store);
+        abort_unless($request->user()?->can('create', Product::class), 403);
 
         $validated = $request->validated();
 
@@ -114,8 +118,13 @@ class ProductController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessProductBelongsToStore($product, $store);
+        abort_unless($request->user()?->can('update', $product), 403);
 
         $validated = $request->validated();
+
+        if (($validated['status'] ?? null) === ProductStatus::Archived->value) {
+            abort_unless($request->user()?->can('archive', $product), 403);
+        }
 
         try {
             $product = DB::transaction(function () use ($products, $store, $product, $validated): Product {
@@ -165,6 +174,7 @@ class ProductController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessProductBelongsToStore($product, $store);
+        abort_unless($request->user()?->can('archive', $product), 403);
 
         $products->transitionStatus($product, ProductStatus::Archived);
 
@@ -181,6 +191,7 @@ class ProductController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessProductBelongsToStore($product, $store);
+        abort_unless($request->user()?->can('update', $product), 403);
 
         $validated = $request->validated();
         $expiresAt = now()->addMinutes(10);
@@ -217,7 +228,7 @@ class ProductController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
-        if (! $request->attributes->has('admin_api_oauth_token')) {
+        if (! $request->attributes->has('sanctum_personal_access_token')) {
             abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
         }
 
@@ -259,7 +270,7 @@ class ProductController extends Controller
     {
         $attributes = [
             'title' => $validated['title'],
-            'description_html' => $validated['description_html'] ?? null,
+            'description_html' => $this->sanitizeHtml($validated['description_html'] ?? null),
             'vendor' => $validated['vendor'] ?? null,
             'product_type' => $validated['product_type'] ?? null,
             'status' => $validated['status'] ?? ProductStatus::Draft->value,
@@ -293,11 +304,22 @@ class ProductController extends Controller
             $attributes['tags'] = $this->tagList($validated['tags']);
         }
 
+        if (array_key_exists('description_html', $attributes)) {
+            $attributes['description_html'] = $this->sanitizeHtml($attributes['description_html']);
+        }
+
         if (filled($validated['handle'] ?? null)) {
             $attributes['handle'] = Str::slug((string) $validated['handle']);
         }
 
         return $attributes;
+    }
+
+    private function sanitizeHtml(?string $html): ?string
+    {
+        $sanitized = app(SanitizeHtml::class)($html);
+
+        return $sanitized === '' ? null : $sanitized;
     }
 
     /**

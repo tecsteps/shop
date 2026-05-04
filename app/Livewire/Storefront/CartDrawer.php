@@ -7,6 +7,7 @@ use App\Models\CartLine;
 use App\Models\Customer;
 use App\Models\Store;
 use App\Services\CartService;
+use App\Services\CheckoutService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -66,7 +67,15 @@ class CartDrawer extends Component
             return;
         }
 
-        $this->redirectRoute('checkout.show', navigate: true);
+        $cart = $this->cart();
+
+        if (! $cart instanceof Cart) {
+            return;
+        }
+
+        $checkout = app(CheckoutService::class)->createFromCart($cart, $this->customer());
+
+        $this->redirectRoute('checkout.show', ['checkout' => $checkout->getKey()], navigate: true);
     }
 
     public function store(): Store

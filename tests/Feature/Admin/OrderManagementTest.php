@@ -6,6 +6,7 @@ use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
+use App\Enums\StoreUserRole;
 use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
 use App\Livewire\Admin\Orders\Show as AdminOrderShow;
 use App\Models\Fulfillment;
@@ -19,6 +20,7 @@ use App\Models\Store;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
@@ -39,6 +41,20 @@ function adminOrderManagementStore(): Store
 function adminOrderManagementUser(): User
 {
     return User::query()->where('email', 'admin@acme.test')->firstOrFail();
+}
+
+function adminOrderManagementUserWithRole(Store $store, StoreUserRole $role): User
+{
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    DB::table('store_users')->insert([
+        'store_id' => $store->getKey(),
+        'user_id' => $user->getKey(),
+        'role' => $role->value,
+        'created_at' => now(),
+    ]);
+
+    return $user;
 }
 
 /**
@@ -212,6 +228,34 @@ test('admin order detail processes refunds and fulfillment transitions', functio
 
     expect($fulfillment->refresh()->status)->toBe(FulfillmentShipmentStatus::Delivered)
         ->and($fulfillment->delivered_at)->not->toBeNull();
+});
+
+test('admin order detail enforces refund and fulfillment role policies', function (): void {
+    $store = adminOrderManagementStore();
+    $supportUser = adminOrderManagementUserWithRole($store, StoreUserRole::Support);
+    $staffUser = adminOrderManagementUserWithRole($store, StoreUserRole::Staff);
+    [$order, $line] = adminOrderManagementOrder($store, quantity: 2, unitPrice: 2500);
+
+    Livewire::actingAs($supportUser)
+        ->test(AdminOrderShow::class, ['order' => $order])
+        ->set('refundAmount', '5.00')
+        ->call('processRefund')
+        ->assertStatus(403);
+
+    Livewire::actingAs($staffUser)
+        ->test(AdminOrderShow::class, ['order' => $order])
+        ->set('refundAmount', '5.00')
+        ->call('processRefund')
+        ->assertStatus(403);
+
+    Livewire::actingAs($staffUser)
+        ->test(AdminOrderShow::class, ['order' => $order])
+        ->set("fulfillmentLineQuantities.{$line->getKey()}", 1)
+        ->call('createFulfillment')
+        ->assertHasNoErrors();
+
+    expect(Fulfillment::query()->where('order_id', $order->getKey())->exists())->toBeTrue()
+        ->and($order->refresh()->refunds()->exists())->toBeFalse();
 });
 
 test('admin order detail rejects orders from another store', function () {

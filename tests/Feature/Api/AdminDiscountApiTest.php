@@ -5,7 +5,6 @@ use App\Models\Discount;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -29,11 +28,11 @@ function adminDiscountApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminDiscountApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Discount integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin discount api lists creates updates and deletes discounts', function (): void {
@@ -41,12 +40,14 @@ test('admin discount api lists creates updates and deletes discounts', function 
     $product = Product::factory()->withDefaultVariant()->create(['store_id' => $store->getKey()]);
     $collection = Collection::factory()->create(['store_id' => $store->getKey()]);
     $user = adminDiscountApiUser();
+    $readToken = adminApiBearerToken($store, ['read-discounts'], $user);
+    $writeToken = adminApiBearerToken($store, ['write-discounts'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/discounts?type=code&status=active")
         ->assertOk();
 
-    $createResponse = $this->actingAs($user)
+    $createResponse = $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/discounts", [
             'type' => 'code',
             'code' => 'api20',
@@ -73,7 +74,7 @@ test('admin discount api lists creates updates and deletes discounts', function 
     expect($discount->rules_json['applicable_product_ids'])->toBe([$product->getKey()])
         ->and($discount->rules_json['applicable_collection_ids'])->toBe([$collection->getKey()]);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/discounts/{$discount->getKey()}", [
             'value_type' => 'fixed',
             'value_amount' => 750,
@@ -85,7 +86,7 @@ test('admin discount api lists creates updates and deletes discounts', function 
         ->assertJsonPath('data.value_amount', 750)
         ->assertJsonPath('data.status', 'disabled');
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->deleteJson("/api/admin/v1/stores/{$store->getKey()}/discounts/{$discount->getKey()}")
         ->assertOk()
         ->assertJsonPath('message', 'Discount deleted');
@@ -132,7 +133,7 @@ test('admin discount api validates code dates and scoped rule resources', functi
         ->withDefaultVariant()
         ->create(['store_id' => Store::factory()->create()->getKey()]);
 
-    $this->actingAs(adminDiscountApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-discounts'], adminDiscountApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/discounts", [
             'type' => 'code',
             'code' => Str::lower($existing->code),

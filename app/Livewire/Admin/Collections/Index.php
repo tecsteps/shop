@@ -5,11 +5,13 @@ namespace App\Livewire\Admin\Collections;
 use App\Models\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
 
     public string $search = '';
@@ -28,7 +30,11 @@ class Index extends Component
 
     public function deleteCollection(int $id): void
     {
-        Collection::query()->findOrFail($id)->delete();
+        $collection = Collection::query()->findOrFail($id);
+
+        $this->authorize('delete', $collection);
+
+        $collection->delete();
 
         $this->dispatch('toast', type: 'success', message: __('Collection deleted'));
     }
@@ -47,6 +53,8 @@ class Index extends Component
 
     public function render(): mixed
     {
+        $this->authorize('viewAny', Collection::class);
+
         return view('livewire.admin.collections.index', [
             'collections' => $this->collections(),
         ])->layout('layouts.app', [

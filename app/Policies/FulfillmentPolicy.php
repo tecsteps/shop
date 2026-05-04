@@ -17,7 +17,7 @@ class FulfillmentPolicy
 
     public function update(User $user, Fulfillment $fulfillment): bool
     {
-        return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($fulfillment));
+        return $this->isOwnerAdminOrStaff($user, $fulfillment->order?->store_id);
     }
 
     public function cancel(User $user, Fulfillment $fulfillment): bool

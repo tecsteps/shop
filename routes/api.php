@@ -64,18 +64,17 @@ Route::middleware('store.resolve')
         });
     });
 
-Route::middleware('throttle:60,1')
-    ->prefix('admin/v1/platform')
+Route::prefix('admin/v1/platform')
     ->name('api.admin.v1.platform.')
-    ->middleware('platform.api')
+    ->middleware(['auth:sanctum', 'throttle:api.admin', 'platform.api'])
     ->group(function (): void {
         Route::post('organizations', [AdminPlatformOrganizationController::class, 'store'])->name('organizations.store');
         Route::post('stores', [AdminPlatformStoreController::class, 'store'])->name('stores.store');
     });
 
-Route::middleware('throttle:60,1')
-    ->prefix('admin/v1/stores/{store}')
+Route::prefix('admin/v1/stores/{store}')
     ->name('api.admin.v1.')
+    ->middleware(['auth:sanctum', 'throttle:api.admin'])
     ->group(function (): void {
         Route::middleware('admin.api')->group(function (): void {
             Route::get('me', [AdminStoreMembershipController::class, 'show'])->name('stores.me');

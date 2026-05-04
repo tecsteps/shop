@@ -29,6 +29,9 @@ class Show extends Component
     #[Locked]
     public int $storeId;
 
+    #[Locked]
+    public ?int $checkoutId = null;
+
     public string $step = 'address';
 
     public string $email = '';
@@ -77,10 +80,14 @@ class Show extends Component
 
     public string $cardCvc = '';
 
-    public function mount(): void
+    public function mount(?Checkout $checkout = null): void
     {
         $this->storeId = $this->store()->getKey();
         $this->email = $this->customer()?->email ?? '';
+
+        if ($checkout instanceof Checkout) {
+            $this->mountCheckout($checkout);
+        }
 
         $this->fillFromCheckout($this->checkout());
     }
@@ -249,7 +256,7 @@ class Show extends Component
             ]);
             session()->forget(['cart_id', 'cart_discount_code']);
 
-            $this->redirectRoute('checkout.confirmation', ['order' => $order], navigate: true);
+            $this->redirectRoute('checkout.confirmation', ['checkout' => $checkout->getKey()], navigate: true);
         } catch (InvalidCheckoutTransitionException|PaymentFailedException $exception) {
             $this->step = 'payment';
 
@@ -277,6 +284,21 @@ class Show extends Component
 
     public function cart(): ?Cart
     {
+        if ($this->checkoutId !== null) {
+            $checkout = Checkout::withoutGlobalScopes()
+                ->with('cart')
+                ->where('store_id', $this->storeId)
+                ->whereKey($this->checkoutId)
+                ->first();
+
+            if ($checkout instanceof Checkout) {
+                return $checkout->cart?->load([
+                    'lines.variant.product',
+                    'lines.variant.optionValues.option',
+                ]);
+            }
+        }
+
         $cart = app(CartService::class)->currentForSession($this->store(), $this->customer());
 
         return $cart?->load([
@@ -287,6 +309,22 @@ class Show extends Component
 
     public function checkout(): ?Checkout
     {
+        if ($this->checkoutId !== null) {
+            $checkout = Checkout::withoutGlobalScopes()
+                ->where('store_id', $this->storeId)
+                ->whereKey($this->checkoutId)
+                ->first();
+
+            if (! $checkout instanceof Checkout) {
+                return null;
+            }
+
+            $this->authorizeCheckoutAccess($checkout);
+
+            return $this->syncSessionDiscount($checkout)
+                ->load(['cart.lines.variant.product', 'cart.lines.variant.optionValues.option']);
+        }
+
         $cart = $this->cart();
 
         if (! $cart instanceof Cart || $cart->lines->isEmpty()) {
@@ -303,6 +341,7 @@ class Show extends Component
             $checkout = app(CheckoutService::class)->createFromCart($cart, $this->customer());
         }
 
+        $this->checkoutId = $checkout->getKey();
         $checkout = $this->syncSessionDiscount($checkout);
 
         return $checkout->load(['cart.lines.variant.product', 'cart.lines.variant.optionValues.option']);
@@ -401,6 +440,30 @@ class Show extends Component
         $customer = Auth::guard('customer')->user();
 
         return $customer instanceof Customer ? $customer : null;
+    }
+
+    private function mountCheckout(Checkout $checkout): void
+    {
+        $checkout = Checkout::withoutGlobalScopes()
+            ->where('store_id', $this->storeId)
+            ->whereKey($checkout->getKey())
+            ->first();
+
+        abort_unless($checkout instanceof Checkout, 404);
+
+        $this->authorizeCheckoutAccess($checkout);
+
+        $this->checkoutId = $checkout->getKey();
+    }
+
+    private function authorizeCheckoutAccess(Checkout $checkout): void
+    {
+        $customer = $this->customer();
+        $sessionCartId = session('cart_id');
+        $isCustomerCheckout = $customer instanceof Customer && $checkout->customer_id === $customer->getKey();
+        $isSessionCheckout = $sessionCartId !== null && (int) $sessionCartId === (int) $checkout->cart_id;
+
+        abort_unless($isCustomerCheckout || $isSessionCheckout, 404);
     }
 
     private function fillFromCheckout(?Checkout $checkout): void

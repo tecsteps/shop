@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Checkout;
 
+use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Store;
@@ -17,15 +18,22 @@ class Confirmation extends Component
     #[Locked]
     public int $orderId;
 
-    public function mount(Order $order): void
+    public function mount(Checkout $checkout): void
     {
         $store = app('current_store');
 
         abort_unless($store instanceof Store, 404);
 
+        $checkout = Checkout::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->whereKey($checkout->getKey())
+            ->first();
+
+        abort_unless($checkout instanceof Checkout, 404);
+
         $order = Order::withoutGlobalScopes()
             ->where('store_id', $store->getKey())
-            ->whereKey($order->getKey())
+            ->where('checkout_id', $checkout->getKey())
             ->first();
 
         abort_unless($order instanceof Order, 404);

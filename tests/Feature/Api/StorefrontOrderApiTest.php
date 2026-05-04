@@ -3,6 +3,8 @@
 use App\Enums\CheckoutStatus;
 use App\Models\Checkout;
 use App\Models\InventoryItem;
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Store;
@@ -44,7 +46,7 @@ function storefrontOrderApiVariant(Store $store): ProductVariant
 }
 
 /**
- * @return array{0: int, 1: ProductVariant}
+ * @return array{0: int, 1: ProductVariant, 2: string}
  */
 function storefrontOrderApiCheckout(object $testCase, string $remoteAddress = '10.0.0.41'): array
 {
@@ -63,15 +65,17 @@ function storefrontOrderApiCheckout(object $testCase, string $remoteAddress = '1
         ])
         ->assertCreated();
 
-    $checkoutId = $api()
+    $checkoutResponse = $api()
         ->postJson('/api/storefront/v1/checkouts', [
             'cart_id' => $cartId,
             'email' => 'buyer@example.test',
         ])
-        ->assertCreated()['data']['id'];
+        ->assertCreated();
+    $checkoutId = $checkoutResponse['data']['id'];
+    $checkoutToken = $checkoutResponse['data']['access_token'];
 
     $addressResponse = $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/address", [
+        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/address?token={$checkoutToken}", [
             'shipping_address' => [
                 'first_name' => 'Test',
                 'last_name' => 'Buyer',
@@ -84,20 +88,20 @@ function storefrontOrderApiCheckout(object $testCase, string $remoteAddress = '1
         ->assertOk();
 
     $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/shipping-method", [
+        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/shipping-method?token={$checkoutToken}", [
             'shipping_rate_id' => $addressResponse['data']['available_shipping_rates'][0]['id'],
         ])
         ->assertOk();
 
-    return [$checkoutId, $variant];
+    return [$checkoutId, $variant, $checkoutToken];
 }
 
 test('storefront order api pays a checkout and exposes token-gated order lookup', function (): void {
-    [$checkoutId] = storefrontOrderApiCheckout($this);
+    [$checkoutId, , $checkoutToken] = storefrontOrderApiCheckout($this);
     $api = fn () => $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.41'])->withHeader('Host', 'shop.test');
 
     $payResponse = $api()
-        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/pay", [
+        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/pay?token={$checkoutToken}", [
             'payment_method' => 'credit_card',
             'card_number' => '4242 4242 4242 4242',
             'card_holder' => 'Test Buyer',
@@ -125,12 +129,38 @@ test('storefront order api pays a checkout and exposes token-gated order lookup'
         ->assertNotFound();
 });
 
+test('storefront order api returns the same order when checkout payment is retried', function (): void {
+    [$checkoutId, $variant, $checkoutToken] = storefrontOrderApiCheckout($this, '10.0.0.43');
+    $api = fn () => $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.43'])->withHeader('Host', 'shop.test');
+    $payload = [
+        'payment_method' => 'credit_card',
+        'card_number' => '4242 4242 4242 4242',
+        'card_holder' => 'Test Buyer',
+        'card_expiry' => '12/30',
+        'card_cvc' => '123',
+    ];
+
+    $firstResponse = $api()
+        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/pay?token={$checkoutToken}", $payload)
+        ->assertOk();
+    $secondResponse = $api()
+        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/pay?token={$checkoutToken}", $payload)
+        ->assertOk();
+
+    $orderId = $firstResponse->json('data.id');
+
+    expect($secondResponse->json('data.id'))->toBe($orderId)
+        ->and(Order::withoutGlobalScopes()->where('checkout_id', $checkoutId)->count())->toBe(1)
+        ->and(Payment::query()->where('order_id', $orderId)->count())->toBe(1)
+        ->and(InventoryItem::withoutGlobalScopes()->where('variant_id', $variant->getKey())->firstOrFail()->quantity_reserved)->toBe(0);
+});
+
 test('storefront order api returns payment failures and releases reservations', function (): void {
-    [$checkoutId, $variant] = storefrontOrderApiCheckout($this, '10.0.0.42');
+    [$checkoutId, $variant, $checkoutToken] = storefrontOrderApiCheckout($this, '10.0.0.42');
     $api = fn () => $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.42'])->withHeader('Host', 'shop.test');
 
     $api()
-        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/pay", [
+        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/pay?token={$checkoutToken}", [
             'payment_method' => 'credit_card',
             'card_number' => '4000 0000 0000 0002',
             'card_holder' => 'Test Buyer',

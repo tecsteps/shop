@@ -3,7 +3,6 @@
 use App\Models\Store;
 use App\Models\StoreSettings;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -26,18 +25,20 @@ function adminStoreSettingsApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminStoreSettingsApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Store settings integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin store settings api shows and updates general settings', function (): void {
     $store = adminStoreSettingsApiStore();
     $user = adminStoreSettingsApiUser();
+    $readToken = adminApiBearerToken($store, ['read-settings'], $user);
+    $writeToken = adminApiBearerToken($store, ['write-settings'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/settings")
         ->assertOk()
         ->assertJsonPath('data.name', 'Acme Fashion')
@@ -45,7 +46,7 @@ test('admin store settings api shows and updates general settings', function ():
         ->assertJsonPath('data.settings_json.announcement.enabled', true)
         ->assertJsonPath('data.domains.0.is_primary', true);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/settings", [
             'name' => 'Acme API Store',
             'default_currency' => 'USD',
@@ -117,7 +118,7 @@ test('admin store settings api enforces token abilities and store scope', functi
 test('admin store settings api validates defaults and settings shape', function (): void {
     $store = adminStoreSettingsApiStore();
 
-    $this->actingAs(adminStoreSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminStoreSettingsApiUser()))
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/settings", [
             'default_currency' => 'BTC',
             'default_locale' => 'es',
@@ -126,14 +127,14 @@ test('admin store settings api validates defaults and settings shape', function 
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['default_currency', 'default_locale', 'timezone']);
 
-    $this->actingAs(adminStoreSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminStoreSettingsApiUser()))
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/settings", [
             'settings_json' => ['invalid-list-value'],
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['settings_json']);
 
-    $this->actingAs(adminStoreSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminStoreSettingsApiUser()))
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/settings", [
             'settings_json' => [
                 'checkout' => [

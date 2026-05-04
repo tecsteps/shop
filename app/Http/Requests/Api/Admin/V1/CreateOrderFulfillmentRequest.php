@@ -2,13 +2,30 @@
 
 namespace App\Http\Requests\Api\Admin\V1;
 
+use App\Models\Order;
+use App\Models\Store;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateOrderFulfillmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $store = $this->route('store');
+        $order = $this->route('order');
+
+        $store = $store instanceof Store ? $store : Store::query()->find($store);
+
+        if (! $store instanceof Store) {
+            return false;
+        }
+
+        app()->instance('current_store', $store);
+
+        if (! $order instanceof Order || (int) $order->store_id !== $store->getKey()) {
+            return true;
+        }
+
+        return $this->user()?->can('createFulfillment', $order) ?? false;
     }
 
     /**

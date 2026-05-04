@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->morphs('tokenable');
             $table->string('name');
             $table->string('token', 64)->unique();
@@ -20,6 +21,8 @@ return new class extends Migration
             $table->timestamp('last_used_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
+
+            $table->index(['store_id', 'tokenable_type', 'tokenable_id']);
         });
     }
 

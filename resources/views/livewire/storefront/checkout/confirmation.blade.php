@@ -9,7 +9,7 @@
 
     <x-storefront.breadcrumbs :items="[
         ['label' => 'Cart', 'url' => route('cart.show')],
-        ['label' => 'Checkout', 'url' => route('checkout.show')],
+        ['label' => 'Checkout', 'url' => $order->checkout_id ? route('checkout.show', ['checkout' => $order->checkout_id]) : route('cart.show')],
         ['label' => 'Confirmation'],
     ]" />
 

@@ -47,6 +47,7 @@ use App\Livewire\Storefront\Home as StorefrontHome;
 use App\Livewire\Storefront\Pages\Show as StorefrontPageShow;
 use App\Livewire\Storefront\Products\Show as StorefrontProductShow;
 use App\Livewire\Storefront\Search\Index as StorefrontSearchIndex;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\NewPasswordController as FortifyNewPasswordController;
@@ -58,8 +59,17 @@ Route::middleware(['storefront'])->group(function (): void {
     Route::livewire('collections/{handle}', StorefrontCollectionShow::class)->name('collections.show');
     Route::livewire('products/{handle}', StorefrontProductShow::class)->name('products.show');
     Route::livewire('cart', StorefrontCartShow::class)->name('cart.show');
-    Route::livewire('checkout', StorefrontCheckoutShow::class)->name('checkout.show');
-    Route::livewire('checkout/confirmation/{order}', StorefrontCheckoutConfirmation::class)->name('checkout.confirmation');
+    Route::livewire('checkout/{checkout}/confirmation', StorefrontCheckoutConfirmation::class)
+        ->whereNumber('checkout')
+        ->name('checkout.confirmation');
+    Route::get('checkout/confirmation/{order}', function (Order $order) {
+        abort_if($order->checkout_id === null, 404);
+
+        return redirect()->route('checkout.confirmation', ['checkout' => $order->checkout_id]);
+    })->whereNumber('order')->name('checkout.confirmation.legacy');
+    Route::livewire('checkout/{checkout?}', StorefrontCheckoutShow::class)
+        ->whereNumber('checkout')
+        ->name('checkout.show');
     Route::livewire('search', StorefrontSearchIndex::class)->name('search.index');
     Route::livewire('pages/{handle}', StorefrontPageShow::class)->name('pages.show');
 

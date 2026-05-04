@@ -15,12 +15,15 @@ use App\Services\FulfillmentService;
 use App\Services\OrderService;
 use App\Services\RefundService;
 use App\Support\Money;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Show extends Component
 {
+    use AuthorizesRequests;
+
     #[Locked]
     public int $storeId;
 
@@ -57,6 +60,8 @@ class Show extends Component
 
         abort_unless($order instanceof Order, 404);
 
+        $this->authorize('view', $order);
+
         $this->storeId = $store->getKey();
         $this->orderId = $order->getKey();
         $this->resetFulfillmentLineQuantities($this->order());
@@ -64,6 +69,8 @@ class Show extends Component
 
     public function confirmBankTransferPayment(OrderService $orders): void
     {
+        $this->authorize('update', $this->order());
+
         try {
             $orders->confirmBankTransferPayment($this->order());
             $this->resetFulfillmentLineQuantities($this->order());
@@ -78,6 +85,8 @@ class Show extends Component
 
     public function processRefund(RefundService $refunds): void
     {
+        $this->authorize('createRefund', $this->order());
+
         $this->validate([
             'refundAmount' => ['nullable', 'numeric', 'min:0.01'],
             'refundReason' => ['nullable', 'string', 'max:500'],
@@ -107,6 +116,8 @@ class Show extends Component
 
     public function createFulfillment(FulfillmentService $fulfillments): void
     {
+        $this->authorize('createFulfillment', $this->order());
+
         $this->validate([
             'fulfillmentLineQuantities' => ['array'],
             'trackingCompany' => ['nullable', 'string', 'max:255'],
@@ -148,6 +159,8 @@ class Show extends Component
 
     public function markFulfillmentShipped(int $fulfillmentId, FulfillmentService $fulfillments): void
     {
+        $this->authorize('update', $this->fulfillment($fulfillmentId));
+
         try {
             $fulfillments->markShipped($this->fulfillment($fulfillmentId));
             $this->actionMessage = __('Fulfillment marked as shipped');
@@ -161,6 +174,8 @@ class Show extends Component
 
     public function markFulfillmentDelivered(int $fulfillmentId, FulfillmentService $fulfillments): void
     {
+        $this->authorize('update', $this->fulfillment($fulfillmentId));
+
         try {
             $fulfillments->markDelivered($this->fulfillment($fulfillmentId));
             $this->actionMessage = __('Fulfillment marked as delivered');

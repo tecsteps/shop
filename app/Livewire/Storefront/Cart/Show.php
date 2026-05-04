@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Models\ShippingRate;
 use App\Models\Store;
 use App\Services\CartService;
+use App\Services\CheckoutService;
 use App\Services\DiscountService;
 use App\Services\ShippingCalculator;
 use App\ValueObjects\DiscountResult;
@@ -145,7 +146,15 @@ class Show extends Component
             return;
         }
 
-        $this->redirectRoute('checkout.show', navigate: true);
+        $cart = $this->cart();
+
+        if (! $cart instanceof Cart) {
+            return;
+        }
+
+        $checkout = app(CheckoutService::class)->createFromCart($cart, $this->customer());
+
+        $this->redirectRoute('checkout.show', ['checkout' => $checkout->getKey()], navigate: true);
     }
 
     public function store(): Store

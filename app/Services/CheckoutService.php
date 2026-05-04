@@ -27,22 +27,38 @@ class CheckoutService
 
     public function createFromCart(Cart $cart, ?Customer $customer = null): Checkout
     {
-        $cart = Cart::withoutGlobalScopes()->findOrFail($cart->getKey());
+        return DB::transaction(function () use ($cart, $customer): Checkout {
+            $cart = Cart::withoutGlobalScopes()
+                ->whereKey($cart->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        if ($cart->status !== CartStatus::Active) {
-            throw InvalidCheckoutTransitionException::because('Checkout can only start from an active cart.');
-        }
+            if ($cart->status !== CartStatus::Active) {
+                throw InvalidCheckoutTransitionException::because('Checkout can only start from an active cart.');
+            }
 
-        if (! CartLine::withoutGlobalScopes()->where('cart_id', $cart->getKey())->exists()) {
-            throw InvalidCheckoutTransitionException::because('Checkout cannot start from an empty cart.');
-        }
+            if (! CartLine::withoutGlobalScopes()->where('cart_id', $cart->getKey())->exists()) {
+                throw InvalidCheckoutTransitionException::because('Checkout cannot start from an empty cart.');
+            }
 
-        return Checkout::withoutGlobalScopes()->create([
-            'store_id' => $cart->store_id,
-            'cart_id' => $cart->getKey(),
-            'customer_id' => $customer?->getKey() ?? $cart->customer_id,
-            'status' => CheckoutStatus::Started,
-        ]);
+            $existingCheckout = Checkout::withoutGlobalScopes()
+                ->where('cart_id', $cart->getKey())
+                ->whereNotIn('status', [CheckoutStatus::Completed->value, CheckoutStatus::Expired->value])
+                ->latest('id')
+                ->lockForUpdate()
+                ->first();
+
+            if ($existingCheckout instanceof Checkout) {
+                return $existingCheckout;
+            }
+
+            return Checkout::withoutGlobalScopes()->create([
+                'store_id' => $cart->store_id,
+                'cart_id' => $cart->getKey(),
+                'customer_id' => $customer?->getKey() ?? $cart->customer_id,
+                'status' => CheckoutStatus::Started,
+            ]);
+        });
     }
 
     /**

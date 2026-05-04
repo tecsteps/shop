@@ -3,7 +3,6 @@
 use App\Models\Page;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -26,11 +25,11 @@ function adminPageApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminPageApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Content integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin page api lists creates updates and deletes pages', function (): void {
@@ -47,14 +46,16 @@ test('admin page api lists creates updates and deletes pages', function (): void
         'handle' => 'other-store-page',
     ]);
     $user = adminPageApiUser();
+    $readToken = adminApiBearerToken($store, ['read-content'], $user);
+    $writeToken = adminApiBearerToken($store, ['write-content'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/pages?status=published&query=API")
         ->assertOk()
         ->assertJsonFragment(['title' => 'API Visible Page'])
         ->assertJsonMissing(['title' => 'Other Store Page']);
 
-    $createResponse = $this->actingAs($user)
+    $createResponse = $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/pages", [
             'title' => 'Shipping Policy API',
             'body_html' => '<h2>Shipping Policy</h2><p>We ship worldwide.</p>',
@@ -69,7 +70,7 @@ test('admin page api lists creates updates and deletes pages', function (): void
 
     expect($page->published_at)->not->toBeNull();
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/pages/{$page->getKey()}", [
             'handle' => 'API Shipping Policy Updated',
             'body_html' => '<p>Updated policy.</p>',
@@ -80,7 +81,7 @@ test('admin page api lists creates updates and deletes pages', function (): void
         ->assertJsonPath('data.body_html', '<p>Updated policy.</p>')
         ->assertJsonPath('data.status', 'draft');
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->deleteJson("/api/admin/v1/stores/{$store->getKey()}/pages/{$page->getKey()}")
         ->assertOk()
         ->assertJsonPath('message', 'Page deleted');
@@ -125,7 +126,7 @@ test('admin page api validates normalized handles and published dates', function
         'handle' => 'existing-api-page',
     ]);
 
-    $this->actingAs(adminPageApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-content'], adminPageApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/pages", [
             'title' => 'Invalid API Page',
             'handle' => str_replace('-', ' ', $existing->handle),
@@ -134,7 +135,7 @@ test('admin page api validates normalized handles and published dates', function
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['handle']);
 
-    $this->actingAs(adminPageApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-content'], adminPageApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/pages", [
             'title' => 'Invalid API Date',
             'status' => 'published',

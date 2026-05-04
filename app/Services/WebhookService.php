@@ -2,15 +2,13 @@
 
 namespace App\Services;
 
-use App\Enums\AppInstallationStatus;
 use App\Enums\WebhookDeliveryStatus;
 use App\Enums\WebhookEventType;
 use App\Enums\WebhookSubscriptionStatus;
 use App\Jobs\DeliverWebhook;
-use App\Models\App as AppModel;
-use App\Models\AppInstallation;
-use App\Models\OauthToken;
+use App\Models\PersonalAccessToken;
 use App\Models\Store;
+use App\Models\User;
 use App\Models\WebhookDelivery;
 use App\Models\WebhookSubscription;
 use Illuminate\Support\Str;
@@ -62,39 +60,31 @@ class WebhookService
 
     /**
      * @param  list<string>  $abilities
-     * @return array{token: OauthToken, plain_text: string}
+     * @return array{token: PersonalAccessToken, plain_text: string}
      */
-    public function createApiToken(Store $store, string $name, array $abilities): array
+    public function createApiToken(Store $store, string $name, array $abilities, ?User $user = null): array
     {
-        $app = AppModel::query()->firstOrCreate(
-            ['name' => 'Admin API'],
-            [
-                'status' => 'active',
-                'created_at' => now(),
-            ],
-        );
-
-        $installation = AppInstallation::withoutGlobalScopes()->firstOrCreate(
-            [
-                'store_id' => $store->getKey(),
-                'app_id' => $app->getKey(),
-            ],
-            [
-                'scopes_json' => $abilities,
-                'status' => AppInstallationStatus::Active,
-                'installed_at' => now(),
-            ],
-        );
-
+        $authenticatedUser = auth()->user();
+        $user ??= $authenticatedUser instanceof User
+            ? $authenticatedUser
+            : $store->users()
+                ->wherePivot('role', 'owner')
+                ->firstOrFail();
         $plainText = 'shop_'.Str::random(48);
-        $token = OauthToken::query()->create([
-            'installation_id' => $installation->getKey(),
+        $token = PersonalAccessToken::query()->create([
+            'store_id' => $store->getKey(),
+            'tokenable_type' => $user->getMorphClass(),
+            'tokenable_id' => $user->getKey(),
             'name' => $name,
-            'access_token_hash' => hash('sha256', $plainText),
-            'refresh_token_hash' => null,
-            'abilities_json' => $abilities,
+            'token' => hash('sha256', $plainText),
+            'abilities' => $abilities,
             'expires_at' => now()->addYear(),
             'created_at' => now(),
+        ]);
+
+        app(AuditLogger::class)->log('api_token.created', userId: $user->getKey(), storeId: $store->getKey(), extra: [
+            'token_name' => $name,
+            'abilities' => $abilities,
         ]);
 
         return [

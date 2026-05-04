@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin\V1;
 
+use App\Actions\SanitizeHtml;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\V1\CollectionResource;
 use App\Models\Collection;
@@ -20,6 +21,7 @@ class CollectionController extends Controller
     public function index(Request $request, Store $store): AnonymousResourceCollection
     {
         $this->authorizeStore($request, $store);
+        abort_unless($request->user()?->can('viewAny', Collection::class), 403);
 
         $validated = $request->validate([
             'status' => ['nullable', Rule::in(['draft', 'active', 'archived'])],
@@ -44,6 +46,7 @@ class CollectionController extends Controller
     public function store(Request $request, Store $store): JsonResponse
     {
         $this->authorizeStore($request, $store);
+        abort_unless($request->user()?->can('create', Collection::class), 403);
 
         $validated = $this->validatePayload($request, $store);
 
@@ -69,6 +72,7 @@ class CollectionController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessCollectionBelongsToStore($collection, $store);
+        abort_unless($request->user()?->can('update', $collection), 403);
 
         $validated = $this->validatePayload($request, $store, $collection);
 
@@ -94,6 +98,7 @@ class CollectionController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessCollectionBelongsToStore($collection, $store);
+        abort_unless($request->user()?->can('delete', $collection), 403);
 
         $collection->delete();
 
@@ -102,7 +107,7 @@ class CollectionController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
-        if (! $request->attributes->has('admin_api_oauth_token')) {
+        if (! $request->attributes->has('sanctum_personal_access_token')) {
             abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
         }
 
@@ -156,7 +161,7 @@ class CollectionController extends Controller
         return [
             'title' => $title,
             'handle' => Str::slug($handle),
-            'description_html' => $validated['description_html'] ?? null,
+            'description_html' => $this->sanitizeHtml($validated['description_html'] ?? null),
             'type' => $validated['type'],
             'status' => $validated['status'] ?? 'active',
         ];
@@ -169,6 +174,10 @@ class CollectionController extends Controller
     private function attributesForUpdate(array $validated): array
     {
         $attributes = Arr::only($validated, ['title', 'description_html', 'type', 'status']);
+
+        if (array_key_exists('description_html', $attributes)) {
+            $attributes['description_html'] = $this->sanitizeHtml($attributes['description_html']);
+        }
 
         if (array_key_exists('handle', $validated) && filled($validated['handle'])) {
             $attributes['handle'] = Str::slug((string) $validated['handle']);
@@ -227,5 +236,12 @@ class CollectionController extends Controller
     private function loadCollection(Collection $collection): Collection
     {
         return $collection->load('products')->loadCount('products');
+    }
+
+    private function sanitizeHtml(?string $html): ?string
+    {
+        $sanitized = app(SanitizeHtml::class)($html);
+
+        return $sanitized === '' ? null : $sanitized;
     }
 }

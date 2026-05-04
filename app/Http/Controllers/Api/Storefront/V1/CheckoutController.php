@@ -20,10 +20,13 @@ use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Order;
 use App\Models\ShippingRate;
+use App\Models\Store;
 use App\Services\CheckoutService;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
+use App\Support\CheckoutAccessToken;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class CheckoutController extends Controller
@@ -31,6 +34,7 @@ class CheckoutController extends Controller
     public function store(StoreCheckoutRequest $request, CheckoutService $checkouts, PricingEngine $pricing): CheckoutResource|JsonResponse
     {
         $cart = Cart::query()->findOrFail($request->validated('cart_id'));
+        abort_unless((int) $cart->store_id === $this->currentStore()->getKey(), 404);
 
         try {
             $checkout = $checkouts->createFromCart($cart);
@@ -47,13 +51,17 @@ class CheckoutController extends Controller
         }
     }
 
-    public function show(Checkout $checkout): CheckoutResource
+    public function show(Request $request, Checkout $checkout): CheckoutResource
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
+
         return CheckoutResource::make($this->loadCheckout($checkout));
     }
 
     public function address(SetCheckoutAddressRequest $request, Checkout $checkout, CheckoutService $checkouts): CheckoutResource|JsonResponse
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
+
         $addressData = $request->validated();
         $addressData['email'] ??= $checkout->email;
 
@@ -66,6 +74,8 @@ class CheckoutController extends Controller
 
     public function shippingMethod(SetCheckoutShippingRequest $request, Checkout $checkout, CheckoutService $checkouts): CheckoutResource|JsonResponse
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
+
         try {
             return CheckoutResource::make($this->loadCheckout($checkouts->setShippingMethod(
                 $checkout,
@@ -78,6 +88,8 @@ class CheckoutController extends Controller
 
     public function applyDiscount(ApplyCheckoutDiscountRequest $request, Checkout $checkout, PricingEngine $pricing): CheckoutResource|JsonResponse
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
+
         $checkout->forceFill([
             'discount_code' => trim((string) $request->validated('code')) ?: null,
         ])->save();
@@ -97,8 +109,9 @@ class CheckoutController extends Controller
         }
     }
 
-    public function destroyDiscount(Checkout $checkout, PricingEngine $pricing): CheckoutResource
+    public function destroyDiscount(Request $request, Checkout $checkout, PricingEngine $pricing): CheckoutResource
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
         abort_if($checkout->discount_code === null, 404);
 
         $checkout->forceFill(['discount_code' => null])->save();
@@ -109,6 +122,8 @@ class CheckoutController extends Controller
 
     public function paymentMethod(SelectCheckoutPaymentRequest $request, Checkout $checkout, CheckoutService $checkouts): CheckoutResource|JsonResponse
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
+
         try {
             return CheckoutResource::make($this->loadCheckout($checkouts->selectPaymentMethod(
                 $checkout,
@@ -121,6 +136,8 @@ class CheckoutController extends Controller
 
     public function pay(CompleteCheckoutPaymentRequest $request, Checkout $checkout, CheckoutService $checkouts): OrderResource|JsonResponse
     {
+        $this->authorizeCheckoutAccess($request, $checkout);
+
         try {
             if ($checkout->payment_method !== $request->validated('payment_method')) {
                 $checkout = $checkouts->selectPaymentMethod($checkout, (string) $request->validated('payment_method'));
@@ -141,6 +158,34 @@ class CheckoutController extends Controller
         } catch (InsufficientInventoryException|InvalidCheckoutTransitionException $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+    }
+
+    private function authorizeCheckoutAccess(Request $request, Checkout $checkout): void
+    {
+        abort_unless((int) $checkout->store_id === $this->currentStore()->getKey(), 404);
+        abort_unless(CheckoutAccessToken::valid($checkout, $this->tokenFromRequest($request)), 404);
+    }
+
+    private function tokenFromRequest(Request $request): ?string
+    {
+        $token = $request->query('token');
+
+        if (is_string($token) && $token !== '') {
+            return $token;
+        }
+
+        $token = $request->header('X-Checkout-Token');
+
+        return is_string($token) && $token !== '' ? $token : null;
+    }
+
+    private function currentStore(): Store
+    {
+        $store = app('current_store');
+
+        abort_unless($store instanceof Store, 404);
+
+        return $store;
     }
 
     private function loadCheckout(Checkout $checkout): Checkout

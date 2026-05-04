@@ -4,7 +4,6 @@ use App\Models\Collection;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -27,11 +26,11 @@ function adminCollectionApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminCollectionApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Collection integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin collection api lists creates updates and deletes collections', function (): void {
@@ -45,13 +44,15 @@ test('admin collection api lists creates updates and deletes collections', funct
         'title' => 'Other Store Collection',
     ]);
     $user = adminCollectionApiUser();
+    $readToken = adminApiBearerToken($store, ['read-collections'], $user);
+    $writeToken = adminApiBearerToken($store, ['write-collections'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/collections?query=New")
         ->assertOk()
         ->assertJsonMissing(['title' => 'Other Store Collection']);
 
-    $createResponse = $this->actingAs($user)
+    $createResponse = $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/collections", [
             'title' => 'API Winter',
             'description_html' => '<p>Cold weather goods.</p>',
@@ -73,7 +74,7 @@ test('admin collection api lists creates updates and deletes collections', funct
             $products[1]->getKey() => 1,
         ]);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/collections/{$collection->getKey()}", [
             'title' => 'API Winter Edit',
             'status' => 'draft',
@@ -88,7 +89,7 @@ test('admin collection api lists creates updates and deletes collections', funct
     expect($collection->refresh()->products()->pluck('products.id')->all())
         ->toBe([$products[1]->getKey(), $products[2]->getKey()]);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->deleteJson("/api/admin/v1/stores/{$store->getKey()}/collections/{$collection->getKey()}")
         ->assertOk()
         ->assertJsonPath('message', 'Collection deleted');
@@ -135,7 +136,7 @@ test('admin collection api validates handles and product store ownership', funct
         ->withDefaultVariant()
         ->create(['store_id' => Store::factory()->create()->getKey()]);
 
-    $this->actingAs(adminCollectionApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-collections'], adminCollectionApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/collections", [
             'title' => 'Invalid API Collection',
             'handle' => $existing->handle,

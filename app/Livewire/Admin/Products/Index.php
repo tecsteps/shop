@@ -7,12 +7,14 @@ use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
 
     public string $search = '';
@@ -120,6 +122,8 @@ class Index extends Component
 
     public function render(): mixed
     {
+        $this->authorize('viewAny', Product::class);
+
         return view('livewire.admin.products.index', [
             'products' => $this->products(),
             'productTypes' => $this->productTypes(),
@@ -135,7 +139,11 @@ class Index extends Component
         Product::query()
             ->whereKey($this->selectedIds)
             ->get()
-            ->each(fn (Product $product) => $service->transitionStatus($product, $status));
+            ->each(function (Product $product) use ($service, $status): void {
+                $this->authorize($status === ProductStatus::Archived ? 'archive' : 'update', $product);
+
+                $service->transitionStatus($product, $status);
+            });
 
         $this->selectedIds = [];
         $this->selectAll = false;

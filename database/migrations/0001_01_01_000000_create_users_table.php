@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('password_hash');
             $table->string('name');
             $table->enum('status', ['active', 'disabled'])->default('active')->index();
+            $table->boolean('is_platform_admin')->default(false)->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->text('two_factor_secret')->nullable();

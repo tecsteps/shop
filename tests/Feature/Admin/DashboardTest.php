@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StoreUserRole;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Models\Order;
 use App\Models\OrderLine;
@@ -98,6 +99,25 @@ test('admin dashboard route requires authentication and renders store scoped met
         ->assertSee('70.00 EUR')
         ->assertSee('Dashboard Jacket')
         ->assertDontSee('Other Store Product');
+});
+
+test('admin dashboard rejects support users', function (): void {
+    $store = adminDashboardStore();
+    $supportUser = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    DB::table('store_users')->insert([
+        'store_id' => $store->getKey(),
+        'user_id' => $supportUser->getKey(),
+        'role' => StoreUserRole::Support->value,
+        'created_at' => now(),
+    ]);
+
+    $this->actingAs($supportUser)
+        ->withSession(['current_store_id' => $store->getKey()])
+        ->get('/admin')
+        ->assertForbidden();
 });
 
 test('admin dashboard recalculates kpis when date range changes', function (): void {

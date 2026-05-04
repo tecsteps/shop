@@ -5,7 +5,6 @@ use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,24 +27,26 @@ function adminShippingSettingsApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminShippingSettingsApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Shipping settings integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin shipping settings api lists creates updates zones and adds rates', function (): void {
     $store = adminShippingSettingsApiStore();
     $user = adminShippingSettingsApiUser();
+    $readToken = adminApiBearerToken($store, ['read-settings'], $user);
+    $writeToken = adminApiBearerToken($store, ['write-settings'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones")
         ->assertOk()
         ->assertJsonPath('data.0.name', 'Domestic')
         ->assertJsonPath('data.0.rates.0.config_json.currency', $store->default_currency);
 
-    $createResponse = $this->actingAs($user)
+    $createResponse = $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones", [
             'name' => 'Nordics API',
             'countries_json' => ['se', 'no'],
@@ -58,7 +59,7 @@ test('admin shipping settings api lists creates updates zones and adds rates', f
 
     $zone = ShippingZone::withoutGlobalScopes()->findOrFail($createResponse->json('data.id'));
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones/{$zone->getKey()}", [
             'name' => 'Nordics and Baltics API',
             'countries_json' => ['SE', 'DK'],
@@ -68,7 +69,7 @@ test('admin shipping settings api lists creates updates zones and adds rates', f
         ->assertJsonPath('data.name', 'Nordics and Baltics API')
         ->assertJsonPath('data.countries_json.1', 'DK');
 
-    $rateResponse = $this->actingAs($user)
+    $rateResponse = $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones/{$zone->getKey()}/rates", [
             'name' => 'API Express',
             'type' => 'flat',
@@ -128,7 +129,7 @@ test('admin shipping settings api validates countries overlaps and rate types', 
     $store = adminShippingSettingsApiStore();
     $zone = ShippingZone::withoutGlobalScopes()->where('store_id', $store->getKey())->firstOrFail();
 
-    $this->actingAs(adminShippingSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminShippingSettingsApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones", [
             'name' => 'Overlap API',
             'countries_json' => ['DE'],
@@ -136,7 +137,7 @@ test('admin shipping settings api validates countries overlaps and rate types', 
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['countries_json']);
 
-    $this->actingAs(adminShippingSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminShippingSettingsApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/shipping/zones/{$zone->getKey()}/rates", [
             'name' => 'Invalid Rate',
             'type' => 'rocket',

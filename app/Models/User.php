@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'status',
+        'is_platform_admin',
         'password',
         'last_login_at',
     ];
@@ -96,6 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'is_platform_admin' => 'boolean',
             'last_login_at' => 'datetime',
             'two_factor_confirmed_at' => 'datetime',
         ];

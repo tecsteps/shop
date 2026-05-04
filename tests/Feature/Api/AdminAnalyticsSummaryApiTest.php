@@ -5,7 +5,6 @@ use App\Models\OrderLine;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -44,11 +43,11 @@ function adminAnalyticsSummaryApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminAnalyticsSummaryApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Analytics integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin analytics summary api returns totals daily rows and top products', function (): void {
@@ -103,7 +102,7 @@ test('admin analytics summary api returns totals daily rows and top products', f
         'total_amount' => 8000,
     ]);
 
-    $this->actingAs(adminAnalyticsSummaryApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-analytics'], adminAnalyticsSummaryApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/analytics/summary?from={$from}&to={$to}")
         ->assertOk()
         ->assertJsonPath('data.period.from', $from)
@@ -149,12 +148,12 @@ test('admin analytics summary api enforces token abilities and store scope', fun
 test('admin analytics summary api validates date ranges', function (): void {
     $store = adminAnalyticsSummaryApiStore();
 
-    $this->actingAs(adminAnalyticsSummaryApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-analytics'], adminAnalyticsSummaryApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/analytics/summary?from=2026-02-10&to=2026-02-01")
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['to']);
 
-    $this->actingAs(adminAnalyticsSummaryApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-analytics'], adminAnalyticsSummaryApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/analytics/summary?from=2025-01-01&to=2026-02-01")
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['to']);

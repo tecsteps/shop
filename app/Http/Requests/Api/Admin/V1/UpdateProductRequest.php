@@ -14,7 +14,16 @@ class UpdateProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $store = $this->routeStore();
+        $product = $this->routeProduct();
+
+        app()->instance('current_store', $store);
+
+        if (! $product instanceof Product || (int) $product->store_id !== $store->getKey()) {
+            return true;
+        }
+
+        return $this->user()?->can('update', $product) ?? false;
     }
 
     /**

@@ -3,6 +3,7 @@
 use App\Enums\FinancialStatus;
 use App\Enums\FulfillmentStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\StoreUserRole;
 use App\Models\Fulfillment;
 use App\Models\InventoryItem;
 use App\Models\Order;
@@ -12,9 +13,9 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
@@ -33,13 +34,27 @@ function adminOrderApiUser(): User
     return User::query()->where('email', 'admin@acme.test')->firstOrFail();
 }
 
+function adminOrderApiUserWithRole(Store $store, StoreUserRole $role): User
+{
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    DB::table('store_users')->insert([
+        'store_id' => $store->getKey(),
+        'user_id' => $user->getKey(),
+        'role' => $role->value,
+        'created_at' => now(),
+    ]);
+
+    return $user;
+}
+
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminOrderApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Order integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 /**
@@ -102,17 +117,18 @@ test('admin order api lists and shows store scoped orders', function (): void {
         'order_number' => '#9001',
         'email' => 'other@example.test',
     ]);
+    $readToken = adminApiBearerToken($store, ['read-orders'], adminOrderApiUser());
 
     $this->getJson("/api/admin/v1/stores/{$store->getKey()}/orders")
         ->assertUnauthorized();
 
-    $this->actingAs(adminOrderApiUser())
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders?query=alpha")
         ->assertOk()
         ->assertJsonPath('data.0.order_number', '#8001')
         ->assertJsonMissing(['order_number' => '#9001']);
 
-    $this->actingAs(adminOrderApiUser())
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}")
         ->assertOk()
         ->assertJsonPath('data.order_number', '#8001')
@@ -123,8 +139,9 @@ test('admin order api creates refunds and fulfillments', function (): void {
     $store = adminOrderApiStore();
     [$order, $line] = adminOrderApiOrder($store, quantity: 2, unitPrice: 2500);
     $user = adminOrderApiUser();
+    $writeToken = adminApiBearerToken($store, ['write-orders'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}/refunds", [
             'amount' => 1000,
             'reason' => 'Customer return',
@@ -135,7 +152,7 @@ test('admin order api creates refunds and fulfillments', function (): void {
 
     expect($order->refresh()->financial_status)->toBe(FinancialStatus::PartiallyRefunded);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}/fulfillments", [
             'line_items' => [
                 ['order_line_id' => $line->getKey(), 'quantity' => 1],
@@ -160,7 +177,7 @@ test('admin order api rejects orders outside the requested store', function (): 
         'order_number' => '#9001',
     ]);
 
-    $this->actingAs(adminOrderApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-orders'], adminOrderApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$otherOrder->getKey()}")
         ->assertNotFound();
 });
@@ -207,6 +224,28 @@ test('admin order api enforces token store scope and abilities', function (): vo
         ])
         ->assertCreated()
         ->assertJsonPath('data.amount', 500);
+});
+
+test('admin order api applies role policies after token abilities pass', function (): void {
+    $store = adminOrderApiStore();
+    [$order, $line] = adminOrderApiOrder($store);
+    $staff = adminOrderApiUserWithRole($store, StoreUserRole::Staff);
+    $staffWriteToken = adminApiBearerToken($store, ['write-orders'], $staff);
+
+    $this->withToken($staffWriteToken)
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}/refunds", [
+            'amount' => 500,
+            'reason' => 'Staff token',
+        ])
+        ->assertForbidden();
+
+    $this->withToken($staffWriteToken)
+        ->postJson("/api/admin/v1/stores/{$store->getKey()}/orders/{$order->getKey()}/fulfillments", [
+            'line_items' => [
+                ['order_line_id' => $line->getKey(), 'quantity' => 1],
+            ],
+        ])
+        ->assertCreated();
 });
 
 test('admin order api rejects expired bearer tokens', function (): void {

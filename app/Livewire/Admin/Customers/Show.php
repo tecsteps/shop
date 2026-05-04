@@ -7,6 +7,7 @@ use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\Store;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -14,6 +15,7 @@ use Livewire\WithPagination;
 
 class Show extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
 
     #[Locked]
@@ -53,6 +55,8 @@ class Show extends Component
 
         abort_unless($customer instanceof Customer, 404);
 
+        $this->authorize('view', $customer);
+
         $this->storeId = $store->getKey();
         $this->customerId = $customer->getKey();
     }
@@ -74,6 +78,8 @@ class Show extends Component
 
     public function saveAddress(): void
     {
+        $this->authorize('update', $this->customer());
+
         $this->validate([
             'addressLabel' => ['nullable', 'string', 'max:255'],
             'addressJson.first_name' => ['nullable', 'string', 'max:255'],
@@ -104,6 +110,8 @@ class Show extends Component
 
     public function deleteAddress(int $addressId): void
     {
+        $this->authorize('update', $this->customer());
+
         $address = $this->address($addressId);
         $wasDefault = $address->is_default;
         $address->delete();
@@ -117,6 +125,8 @@ class Show extends Component
 
     public function setDefaultAddress(int $addressId): void
     {
+        $this->authorize('update', $this->customer());
+
         $address = $this->address($addressId);
 
         DB::transaction(function () use ($address): void {

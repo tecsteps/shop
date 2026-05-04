@@ -144,7 +144,7 @@ test('mobile checkout reaches shipping methods after address entry', function ()
     $page = storefrontResponsiveCartWithClassicOnMobile()
         ->click('main button:has-text("Checkout")')
         ->wait(1)
-        ->assertPathIs('/checkout')
+        ->assertPathBeginsWith('/checkout/')
         ->assertSee('Checkout');
 
     storefrontResponsiveFillAddress($page)

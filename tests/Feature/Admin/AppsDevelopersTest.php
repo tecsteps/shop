@@ -3,7 +3,7 @@
 use App\Enums\StoreUserRole;
 use App\Enums\WebhookEventType;
 use App\Livewire\Admin\Developers\Index as DevelopersIndex;
-use App\Models\OauthToken;
+use App\Models\PersonalAccessToken;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\WebhookSubscription;
@@ -60,8 +60,10 @@ test('developers component generates tokens and manages webhooks', function (): 
     app()->instance('current_store', $store);
     $user = appsDevelopersUser(StoreUserRole::Owner);
 
-    $initialTokenCount = OauthToken::query()
-        ->whereHas('installation', fn ($query) => $query->withoutGlobalScopes()->where('store_id', $store->getKey()))
+    $initialTokenCount = PersonalAccessToken::query()
+        ->where('store_id', $store->getKey())
+        ->where('tokenable_type', (new User)->getMorphClass())
+        ->whereIn('tokenable_id', $store->users()->pluck('users.id'))
         ->count();
 
     Livewire::actingAs($user)
@@ -78,8 +80,10 @@ test('developers component generates tokens and manages webhooks', function (): 
         ->assertHasNoErrors()
         ->assertSee('https://example.com/webhooks/orders');
 
-    expect(OauthToken::query()
-        ->whereHas('installation', fn ($query) => $query->withoutGlobalScopes()->where('store_id', $store->getKey()))
+    expect(PersonalAccessToken::query()
+        ->where('store_id', $store->getKey())
+        ->where('tokenable_type', (new User)->getMorphClass())
+        ->whereIn('tokenable_id', $store->users()->pluck('users.id'))
         ->count())->toBe($initialTokenCount + 1)
         ->and(WebhookSubscription::withoutGlobalScopes()
             ->where('store_id', $store->getKey())

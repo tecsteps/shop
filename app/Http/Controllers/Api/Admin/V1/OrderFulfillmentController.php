@@ -18,6 +18,7 @@ class OrderFulfillmentController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessOrderBelongsToStore($order, $store);
+        abort_unless($request->user()?->can('createFulfillment', $order), 403);
 
         try {
             $fulfillment = $fulfillments->create($order, $request->lineQuantities(), [
@@ -36,7 +37,7 @@ class OrderFulfillmentController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
-        if (! $request->attributes->has('admin_api_oauth_token')) {
+        if (! $request->attributes->has('sanctum_personal_access_token')) {
             abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
         }
 

@@ -61,6 +61,11 @@ function storefrontApiCheckoutAddress(string $country = 'DE'): array
     ];
 }
 
+function storefrontApiCheckoutUrl(int $checkoutId, string $token, string $suffix = ''): string
+{
+    return "/api/storefront/v1/checkouts/{$checkoutId}{$suffix}?token={$token}";
+}
+
 test('storefront checkout api progresses through address shipping discount removal and payment selection', function (): void {
     $store = storefrontApiCheckoutStore();
     $variant = storefrontApiCheckoutVariant($store);
@@ -91,9 +96,10 @@ test('storefront checkout api progresses through address shipping discount remov
         ->assertJsonPath('data.cart.line_count', 2);
 
     $checkoutId = $checkoutResponse['data']['id'];
+    $checkoutToken = $checkoutResponse['data']['access_token'];
 
     $addressResponse = $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/address", [
+        ->putJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/address'), [
             'shipping_address' => storefrontApiCheckoutAddress(),
         ]);
 
@@ -106,7 +112,7 @@ test('storefront checkout api progresses through address shipping discount remov
     $shippingRateId = $addressResponse['data']['available_shipping_rates'][0]['id'];
 
     $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/shipping-method", [
+        ->putJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/shipping-method'), [
             'shipping_rate_id' => $shippingRateId,
         ])
         ->assertOk()
@@ -115,19 +121,19 @@ test('storefront checkout api progresses through address shipping discount remov
         ->assertJsonPath('data.totals.shipping', 499);
 
     $api()
-        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/apply-discount", ['code' => 'SAVE10'])
+        ->postJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/apply-discount'), ['code' => 'SAVE10'])
         ->assertOk()
         ->assertJsonPath('data.discount_code', 'SAVE10')
         ->assertJsonPath('data.totals.discount', 500);
 
     $api()
-        ->deleteJson("/api/storefront/v1/checkouts/{$checkoutId}/discount")
+        ->deleteJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/discount'))
         ->assertOk()
         ->assertJsonPath('data.discount_code', null)
         ->assertJsonPath('data.totals.discount', 0);
 
     $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/payment-method", [
+        ->putJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/payment-method'), [
             'payment_method' => 'credit_card',
         ])
         ->assertOk()
@@ -157,22 +163,24 @@ test('storefront checkout api rejects invalid addresses shipping methods and dis
         ])
         ->assertCreated();
 
-    $checkoutId = $api()
+    $checkoutResponse = $api()
         ->postJson('/api/storefront/v1/checkouts', [
             'cart_id' => $cartId,
             'email' => 'buyer@example.test',
         ])
-        ->assertCreated()['data']['id'];
+        ->assertCreated();
+    $checkoutId = $checkoutResponse['data']['id'];
+    $checkoutToken = $checkoutResponse['data']['access_token'];
 
     $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/address", [
+        ->putJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/address'), [
             'shipping_address' => array_diff_key(storefrontApiCheckoutAddress(), ['first_name' => true]),
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('shipping_address.first_name');
 
     $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/address", [
+        ->putJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/address'), [
             'shipping_address' => storefrontApiCheckoutAddress(),
         ])
         ->assertOk();
@@ -182,13 +190,56 @@ test('storefront checkout api rejects invalid addresses shipping methods and dis
         ->firstOrFail();
 
     $api()
-        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/shipping-method", [
+        ->putJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/shipping-method'), [
             'shipping_rate_id' => $otherStoreRate->getKey(),
         ])
         ->assertUnprocessable();
 
     $api()
-        ->postJson("/api/storefront/v1/checkouts/{$checkoutId}/apply-discount", ['code' => 'NOTREAL'])
+        ->postJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken, '/apply-discount'), ['code' => 'NOTREAL'])
         ->assertUnprocessable()
         ->assertJsonPath('reason', 'discount_not_found');
+});
+
+test('storefront checkout api requires the checkout access token', function (): void {
+    $store = storefrontApiCheckoutStore();
+    $variant = storefrontApiCheckoutVariant($store);
+    $api = fn () => $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.23'])->withHeader('Host', 'shop.test');
+
+    $cartId = $api()
+        ->postJson('/api/storefront/v1/carts')
+        ->assertCreated()['data']['id'];
+
+    $api()
+        ->postJson("/api/storefront/v1/carts/{$cartId}/lines", [
+            'variant_id' => $variant->getKey(),
+            'quantity' => 1,
+        ])
+        ->assertCreated();
+
+    $checkoutResponse = $api()
+        ->postJson('/api/storefront/v1/checkouts', [
+            'cart_id' => $cartId,
+            'email' => 'buyer@example.test',
+        ])
+        ->assertCreated();
+
+    $checkoutId = $checkoutResponse['data']['id'];
+    $checkoutToken = $checkoutResponse['data']['access_token'];
+
+    $api()
+        ->getJson("/api/storefront/v1/checkouts/{$checkoutId}")
+        ->assertNotFound();
+
+    $api()
+        ->putJson("/api/storefront/v1/checkouts/{$checkoutId}/address?token=bad-token", [
+            'shipping_address' => storefrontApiCheckoutAddress(),
+        ])
+        ->assertNotFound();
+
+    $api()
+        ->getJson(storefrontApiCheckoutUrl($checkoutId, $checkoutToken))
+        ->assertOk()
+        ->assertJsonPath('data.id', $checkoutId)
+        ->assertJsonPath('data.email', 'buyer@example.test');
 });

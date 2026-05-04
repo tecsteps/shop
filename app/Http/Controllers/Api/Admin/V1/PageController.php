@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin\V1;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\PageStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\V1\PageResource;
@@ -24,6 +25,7 @@ class PageController extends Controller
     public function index(Request $request, Store $store): AnonymousResourceCollection
     {
         $this->authorizeStore($request, $store);
+        abort_unless($request->user()?->can('viewAny', Page::class), 403);
 
         $validated = $request->validate([
             'status' => ['nullable', Rule::in($this->pageStatusValues())],
@@ -51,6 +53,7 @@ class PageController extends Controller
     public function store(Request $request, Store $store, NavigationService $navigation): JsonResponse
     {
         $this->authorizeStore($request, $store);
+        abort_unless($request->user()?->can('create', Page::class), 403);
 
         $validated = $this->validatePayload($request, $store);
 
@@ -70,6 +73,7 @@ class PageController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessPageBelongsToStore($page, $store);
+        abort_unless($request->user()?->can('update', $page), 403);
 
         $validated = $this->validatePayload($request, $store, $page);
         $attributes = $this->attributesForUpdate($validated, $page);
@@ -86,6 +90,7 @@ class PageController extends Controller
     {
         $this->authorizeStore($request, $store);
         $this->abortUnlessPageBelongsToStore($page, $store);
+        abort_unless($request->user()?->can('delete', $page), 403);
 
         $page->delete();
         $this->forgetNavigation($store, $navigation);
@@ -95,7 +100,7 @@ class PageController extends Controller
 
     private function authorizeStore(Request $request, Store $store): void
     {
-        if (! $request->attributes->has('admin_api_oauth_token')) {
+        if (! $request->attributes->has('sanctum_personal_access_token')) {
             abort_unless($request->user()?->stores()->whereKey($store->getKey())->exists(), 403);
         }
 
@@ -160,7 +165,7 @@ class PageController extends Controller
         return [
             'title' => $validated['title'],
             'handle' => $this->normalizeHandle($validated['handle'] ?? $validated['title']),
-            'body_html' => $validated['body_html'] ?? null,
+            'body_html' => $this->sanitizeHtml($validated['body_html'] ?? null),
             'status' => $status,
             'published_at' => $this->publishedAtForCreate($validated, $status),
         ];
@@ -173,6 +178,10 @@ class PageController extends Controller
     private function attributesForUpdate(array $validated, Page $page): array
     {
         $attributes = Arr::only($validated, ['title', 'body_html']);
+
+        if (array_key_exists('body_html', $attributes)) {
+            $attributes['body_html'] = $this->sanitizeHtml($attributes['body_html']);
+        }
 
         if (array_key_exists('handle', $validated) && filled($validated['handle'])) {
             $attributes['handle'] = $this->normalizeHandle($validated['handle']);
@@ -189,6 +198,13 @@ class PageController extends Controller
         }
 
         return $attributes;
+    }
+
+    private function sanitizeHtml(?string $html): ?string
+    {
+        $sanitized = app(SanitizeHtml::class)($html);
+
+        return $sanitized === '' ? null : $sanitized;
     }
 
     /**

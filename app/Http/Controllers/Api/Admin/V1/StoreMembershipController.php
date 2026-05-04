@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Admin\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\OauthToken;
+use App\Models\PersonalAccessToken;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -13,28 +13,20 @@ class StoreMembershipController extends Controller
 {
     public function show(Request $request, Store $store): JsonResponse
     {
-        $token = $request->attributes->get('admin_api_oauth_token');
-
-        if ($token instanceof OauthToken) {
-            return response()->json([
-                'data' => [
-                    'user_id' => null,
-                    'store_id' => $store->getKey(),
-                    'role' => 'integration',
-                    'email' => null,
-                    'name' => $token->name,
-                    'permissions' => $token->abilities_json ?? [],
-                ],
-            ]);
-        }
-
+        $token = $request->attributes->get('sanctum_personal_access_token');
         $user = $request->user();
 
-        abort_unless($user instanceof User, 401);
+        abort_unless($user instanceof User && $token instanceof PersonalAccessToken, 401);
 
         $role = $user->roleForStore($store);
 
         abort_unless($role !== null, 403);
+
+        $permissions = $this->permissionsForRole($role->value);
+
+        if (! $token->can('*')) {
+            $permissions = array_values(array_intersect($permissions, $token->abilities ?? []));
+        }
 
         return response()->json([
             'data' => [
@@ -43,7 +35,7 @@ class StoreMembershipController extends Controller
                 'role' => $role->value,
                 'email' => $user->email,
                 'name' => $user->name,
-                'permissions' => $this->permissionsForRole($role->value),
+                'permissions' => $permissions,
             ],
         ]);
     }
@@ -84,6 +76,8 @@ class StoreMembershipController extends Controller
                 'read-customers',
                 'read-discounts',
                 'write-discounts',
+                'read-content',
+                'write-content',
                 'read-analytics',
             ],
             default => [

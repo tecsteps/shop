@@ -113,6 +113,19 @@ test('checkout service transitions through address shipping payment and expiry',
         ->and(InventoryItem::withoutGlobalScopes()->where('variant_id', $variant->getKey())->first()?->quantity_reserved)->toBe(0);
 });
 
+test('checkout service reuses the active checkout for a cart', function () {
+    $store = checkoutStore();
+    $variant = checkoutVariant($store);
+    $cart = app(CartService::class)->create($store);
+    app(CartService::class)->addLine($cart, $variant->getKey(), 1);
+
+    $firstCheckout = app(CheckoutService::class)->createFromCart($cart);
+    $secondCheckout = app(CheckoutService::class)->createFromCart($cart);
+
+    expect($secondCheckout->getKey())->toBe($firstCheckout->getKey())
+        ->and(\App\Models\Checkout::withoutGlobalScopes()->where('cart_id', $cart->getKey())->count())->toBe(1);
+});
+
 test('checkout service rejects unserviceable shipping addresses for physical carts', function () {
     $store = checkoutStore();
     $variant = checkoutVariant($store);

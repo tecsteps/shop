@@ -39,7 +39,7 @@ class StoreInviteController extends Controller
 
     private function authorizeInvite(Request $request, Store $store): void
     {
-        if ($request->attributes->has('admin_api_oauth_token')) {
+        if ($request->attributes->has('sanctum_personal_access_token')) {
             return;
         }
 

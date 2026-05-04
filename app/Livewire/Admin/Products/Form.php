@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Products;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\MediaStatus;
 use App\Enums\MediaType;
 use App\Enums\ProductStatus;
@@ -17,6 +18,7 @@ use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Services\ProductService;
 use App\Support\Money;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -27,6 +29,7 @@ use Livewire\WithFileUploads;
 
 class Form extends Component
 {
+    use AuthorizesRequests;
     use WithFileUploads;
 
     public ?Product $product = null;
@@ -79,11 +82,15 @@ class Form extends Component
 
             abort_unless($store instanceof Store && (int) $product->store_id === $store->getKey(), 404);
 
+            $this->authorize('update', $product);
+
             $this->product = $product->load(['options.values', 'variants.inventoryItem', 'variants.optionValues.option', 'collections', 'media']);
             $this->fillFromProduct($this->product);
 
             return;
         }
+
+        $this->authorize('create', Product::class);
 
         $this->variants = [[
             'id' => null,
@@ -166,6 +173,7 @@ class Form extends Component
         $store = app('current_store');
         abort_unless($store instanceof Store, 404);
 
+        $this->authorizeSave();
         $this->ensureVariantMatrixMatchesOptions();
 
         $this->validate([
@@ -220,7 +228,7 @@ class Form extends Component
                 }
             }
 
-            $product->collections()->sync($this->collectionIds);
+            $product->collections()->sync($this->collectionIdsForSync($store));
 
             return $product->refresh();
         });
@@ -347,6 +355,8 @@ class Form extends Component
     {
         abort_unless($this->product instanceof Product, 404);
 
+        $this->authorize('archive', $this->product);
+
         app(ProductService::class)->transitionStatus($this->product, ProductStatus::Archived);
 
         session()->flash('status', 'Product saved');
@@ -355,8 +365,15 @@ class Form extends Component
 
     public function render(): mixed
     {
+        $store = app('current_store');
+
+        abort_unless($store instanceof Store, 404);
+
         return view('livewire.admin.products.form', [
-            'availableCollections' => Collection::query()->orderBy('title')->get(),
+            'availableCollections' => Collection::withoutGlobalScopes()
+                ->where('store_id', $store->getKey())
+                ->orderBy('title')
+                ->get(),
             'isEditing' => $this->product !== null,
         ])->layout('layouts.app', [
             'title' => $this->product ? $this->product->title : __('Add product'),
@@ -417,7 +434,7 @@ class Form extends Component
     {
         return [
             'title' => $this->title,
-            'description_html' => $this->descriptionHtml ?: null,
+            'description_html' => $this->sanitizeHtml($this->descriptionHtml),
             'status' => $this->status,
             'vendor' => $this->vendor ?: null,
             'product_type' => $this->productType ?: null,
@@ -428,6 +445,13 @@ class Form extends Component
                 ->all(),
             'handle' => Str::slug($this->handle),
         ];
+    }
+
+    private function sanitizeHtml(?string $html): ?string
+    {
+        $sanitized = app(SanitizeHtml::class)($html);
+
+        return $sanitized === '' ? null : $sanitized;
     }
 
     /**
@@ -740,6 +764,8 @@ class Form extends Component
 
     private function storeNewMedia(Product $product): void
     {
+        $this->authorize('update', $product);
+
         $maxPosition = ProductMedia::withoutGlobalScopes()
             ->where('product_id', $product->getKey())
             ->max('position');
@@ -774,9 +800,13 @@ class Form extends Component
 
         abort_unless($store instanceof Store && $this->product instanceof Product, 404);
 
-        return Product::withoutGlobalScopes()
+        $product = Product::withoutGlobalScopes()
             ->where('store_id', $store->getKey())
             ->findOrFail($this->product->getKey());
+
+        $this->authorize('update', $product);
+
+        return $product;
     }
 
     private function mediaRecord(int $mediaId): ProductMedia
@@ -799,5 +829,33 @@ class Form extends Component
     {
         $this->product = $this->productForAction()->load(['options.values', 'variants.inventoryItem', 'variants.optionValues.option', 'collections', 'media']);
         $this->fillFromProduct($this->product);
+    }
+
+    private function authorizeSave(): void
+    {
+        if ($this->product instanceof Product) {
+            $this->authorize('update', $this->product);
+
+            return;
+        }
+
+        $this->authorize('create', Product::class);
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function collectionIdsForSync(Store $store): array
+    {
+        if ($this->collectionIds === []) {
+            return [];
+        }
+
+        return Collection::withoutGlobalScopes()
+            ->where('store_id', $store->getKey())
+            ->whereIn('id', $this->collectionIds)
+            ->pluck('id')
+            ->map(fn (int $id): int => $id)
+            ->all();
     }
 }

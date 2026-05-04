@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
                 'name' => 'Acme Admin',
                 'password' => 'password',
                 'status' => 'active',
+                'is_platform_admin' => true,
                 'email_verified_at' => now(),
                 'last_login_at' => now()->subDay(),
             ],

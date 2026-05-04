@@ -5,7 +5,6 @@ use App\Models\SearchSettings;
 use App\Models\Store;
 use App\Models\User;
 use App\Services\SearchService;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -29,11 +28,11 @@ function adminSearchIndexApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminSearchIndexApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Search integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin search index api reports status and rebuilds stale documents', function (): void {
@@ -50,13 +49,13 @@ test('admin search index api reports status and rebuilds stale documents', funct
 
     expect(app(SearchService::class)->search($store, 'api reindex linen', [], 12)->total())->toBe(0);
 
-    $this->actingAs(adminSearchIndexApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-settings'], adminSearchIndexApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/search/status")
         ->assertOk()
         ->assertJsonPath('data.index_status', 'stale')
         ->assertJsonPath('data.pending_updates', 1);
 
-    $this->actingAs(adminSearchIndexApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminSearchIndexApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/search/reindex")
         ->assertAccepted()
         ->assertJsonPath('status', 'completed')
@@ -65,7 +64,7 @@ test('admin search index api reports status and rebuilds stale documents', funct
     expect(app(SearchService::class)->search($store, 'api reindex linen', [], 12)->total())->toBe(1)
         ->and(SearchSettings::withoutGlobalScopes()->where('store_id', $store->getKey())->firstOrFail()->updated_at)->not->toBeNull();
 
-    $this->actingAs(adminSearchIndexApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-settings'], adminSearchIndexApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/search/status")
         ->assertOk()
         ->assertJsonPath('data.index_status', 'ready')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Admin\V1;
 
+use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +14,11 @@ class StoreProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $store = $this->routeStore();
+
+        app()->instance('current_store', $store);
+
+        return $this->user()?->can('create', Product::class) ?? false;
     }
 
     /**

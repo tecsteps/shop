@@ -28,6 +28,7 @@ test('personal access tokens table matches the api token schema', function (): v
     expect(Schema::hasTable('personal_access_tokens'))->toBeTrue()
         ->and(Schema::hasColumns('personal_access_tokens', [
             'id',
+            'store_id',
             'tokenable_type',
             'tokenable_id',
             'name',
@@ -39,5 +40,11 @@ test('personal access tokens table matches the api token schema', function (): v
             'updated_at',
         ]))->toBeTrue()
         ->and(Schema::hasIndex('personal_access_tokens', ['token'], 'unique'))->toBeTrue()
-        ->and(Schema::hasIndex('personal_access_tokens', ['tokenable_type', 'tokenable_id']))->toBeTrue();
+        ->and(Schema::hasIndex('personal_access_tokens', ['tokenable_type', 'tokenable_id']))->toBeTrue()
+        ->and(Schema::hasIndex('personal_access_tokens', ['store_id', 'tokenable_type', 'tokenable_id']))->toBeTrue();
+});
+
+test('users table tracks platform administrators separately from store roles', function (): void {
+    expect(Schema::hasColumn('users', 'is_platform_admin'))->toBeTrue()
+        ->and(Schema::hasIndex('users', ['is_platform_admin']))->toBeTrue();
 });

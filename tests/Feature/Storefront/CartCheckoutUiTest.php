@@ -16,6 +16,7 @@ use App\Models\ProductVariant;
 use App\Models\ShippingRate;
 use App\Models\Store;
 use App\Services\CartService;
+use App\Services\CheckoutService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -128,10 +129,12 @@ test('cart page applies discount estimates shipping and carries discount into ch
         ->and($component->instance()->estimatedShippingAmount())->toBe(499)
         ->and($component->instance()->estimatedTotal())->toBe(4997);
 
-    Livewire::test(CheckoutShow::class)
+    $checkout = app(CheckoutService::class)->createFromCart($cart);
+
+    Livewire::test(CheckoutShow::class, ['checkout' => $checkout])
         ->assertSet('discountCode', 'SAVE10');
 
-    $checkout = Checkout::withoutGlobalScopes()->where('cart_id', $cart->getKey())->firstOrFail();
+    $checkout->refresh();
 
     expect($checkout->discount_code)->toBe('SAVE10')
         ->and($checkout->totals_json['discount'])->toBe(500);
@@ -167,13 +170,14 @@ test('checkout page progresses through address shipping discount and payment sel
     $cart = app(CartService::class)->create($store);
     session(['cart_id' => $cart->getKey()]);
     app(CartService::class)->addLine($cart, $variant->getKey(), 2);
+    $checkout = app(CheckoutService::class)->createFromCart($cart);
 
     $rate = ShippingRate::withoutGlobalScopes()
         ->whereHas('zone', fn ($query) => $query->withoutGlobalScopes()->where('store_id', $store->getKey()))
         ->where('name', 'Standard Shipping')
         ->firstOrFail();
 
-    Livewire::test(CheckoutShow::class)
+    Livewire::test(CheckoutShow::class, ['checkout' => $checkout])
         ->set('email', 'buyer@example.test')
         ->set('shippingAddress.first_name', 'Test')
         ->set('shippingAddress.last_name', 'Buyer')

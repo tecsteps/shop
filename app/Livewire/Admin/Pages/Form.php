@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Pages;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\PageStatus;
 use App\Models\NavigationMenu;
 use App\Models\Page;
@@ -151,10 +152,17 @@ class Form extends Component
             'store_id' => $store->getKey(),
             'title' => $this->title,
             'handle' => $this->handle,
-            'body_html' => $this->bodyHtml,
+            'body_html' => $this->sanitizeHtml($this->bodyHtml),
             'status' => PageStatus::from($this->status),
             'published_at' => $publishedAt,
         ];
+    }
+
+    private function sanitizeHtml(?string $html): ?string
+    {
+        $sanitized = app(SanitizeHtml::class)($html);
+
+        return $sanitized === '' ? null : $sanitized;
     }
 
     private function authorizeSave(): void

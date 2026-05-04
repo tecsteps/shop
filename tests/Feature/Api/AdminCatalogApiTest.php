@@ -11,7 +11,6 @@ use App\Models\ProductMedia;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -34,11 +33,11 @@ function adminCatalogApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminCatalogApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Catalog integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin product api lists and shows store scoped products', function (): void {
@@ -66,6 +65,11 @@ test('admin product api lists and shows store scoped products', function (): voi
         ->assertUnauthorized();
 
     $this->actingAs(adminCatalogApiUser())
+        ->getJson("/api/admin/v1/stores/{$store->getKey()}/products")
+        ->assertUnauthorized();
+
+    $user = adminCatalogApiUser();
+    $this->withToken(adminApiBearerToken($store, ['read-products'], $user))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/products?query={$variant->sku}&sort=title_asc")
         ->assertOk()
         ->assertJsonPath('data.0.title', 'Admin API Jacket')
@@ -73,12 +77,24 @@ test('admin product api lists and shows store scoped products', function (): voi
         ->assertJsonPath('data.0.total_inventory', 50)
         ->assertJsonMissing(['title' => 'Other Store Jacket']);
 
-    $this->actingAs(adminCatalogApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-products'], $user))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}")
         ->assertOk()
         ->assertJsonPath('data.title', 'Admin API Jacket')
         ->assertJsonPath('data.variants.0.price_amount', 3299)
         ->assertJsonPath('data.variants.0.inventory.quantity_on_hand', 50);
+
+    $otherStore = Store::query()->whereKeyNot($store->getKey())->firstOrFail();
+    $otherStore->users()->syncWithoutDetaching([
+        $user->getKey() => [
+            'role' => 'owner',
+            'created_at' => now(),
+        ],
+    ]);
+
+    $this->withToken(adminApiBearerToken($store, ['read-products'], $user))
+        ->getJson("/api/admin/v1/stores/{$otherStore->getKey()}/products")
+        ->assertForbidden();
 });
 
 test('admin product api creates updates and archives products', function (): void {
@@ -90,7 +106,9 @@ test('admin product api creates updates and archives products', function (): voi
     ]);
     $user = adminCatalogApiUser();
 
-    $createResponse = $this->actingAs($user)
+    $writeToken = adminApiBearerToken($store, ['write-products'], $user);
+
+    $createResponse = $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/products", [
             'title' => 'API Cotton T-Shirt',
             'handle' => 'api-cotton-t-shirt',
@@ -159,7 +177,7 @@ test('admin product api creates updates and archives products', function (): voi
         ->and($product->options()->count())->toBe(2)
         ->and($product->variants()->count())->toBe(2);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}", [
             'title' => 'API Cotton T-Shirt Updated',
             'tags' => ['organic', 'bestseller'],
@@ -187,7 +205,7 @@ test('admin product api creates updates and archives products', function (): voi
 
     $this->assertModelMissing($removedVariant);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->deleteJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}")
         ->assertOk()
         ->assertJsonPath('data.status', 'archived');
@@ -202,7 +220,7 @@ test('admin product api presigns media uploads', function (): void {
         'title' => 'API Media Product',
     ]);
 
-    $this->actingAs(adminCatalogApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-products'], adminCatalogApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/products/{$product->getKey()}/media/presign-upload", [
             'filename' => 'front.jpg',
             'content_type' => 'image/jpeg',
@@ -243,7 +261,7 @@ test('admin customer api lists and shows store scoped customers', function (): v
         'email' => 'other-customer@example.test',
     ]);
 
-    $this->actingAs(adminCatalogApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-customers'], adminCatalogApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/customers?query=customer-api")
         ->assertOk()
         ->assertJsonPath('data.0.email', 'customer-api@example.test')
@@ -251,7 +269,7 @@ test('admin customer api lists and shows store scoped customers', function (): v
         ->assertJsonPath('data.0.total_spent_amount', 4400)
         ->assertJsonMissing(['email' => 'other-customer@example.test']);
 
-    $this->actingAs(adminCatalogApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-customers'], adminCatalogApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/customers/{$customer->getKey()}")
         ->assertOk()
         ->assertJsonPath('data.email', 'customer-api@example.test')
@@ -325,11 +343,11 @@ test('admin catalog api rejects resources outside the requested store', function
     $otherProduct = Product::factory()->withDefaultVariant()->create(['store_id' => $otherStore->getKey()]);
     $otherCustomer = Customer::factory()->create(['store_id' => $otherStore->getKey()]);
 
-    $this->actingAs(adminCatalogApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-products'], adminCatalogApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/products/{$otherProduct->getKey()}")
         ->assertNotFound();
 
-    $this->actingAs(adminCatalogApiUser())
+    $this->withToken(adminApiBearerToken($store, ['read-customers'], adminCatalogApiUser()))
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/customers/{$otherCustomer->getKey()}")
         ->assertNotFound();
 });

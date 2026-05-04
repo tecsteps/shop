@@ -34,7 +34,7 @@ function storefrontCheckoutStart(): mixed
         ->wait(1)
         ->click('main button:has-text("Checkout")')
         ->wait(1)
-        ->assertPathIs('/checkout')
+        ->assertPathBeginsWith('/checkout/')
         ->assertSee('Checkout');
 }
 
@@ -120,7 +120,7 @@ test('completes full checkout with credit card', function (): void {
         ->assertSee('29.98')
         ->click('button:has-text("Pay now")')
         ->wait(2)
-        ->assertPathBeginsWith('/checkout/confirmation')
+        ->assertPathIs('/checkout/*/confirmation')
         ->assertSee('Thank you')
         ->assertSee('#1016')
         ->assertNoJavaScriptErrors();
@@ -161,7 +161,7 @@ test('applies discount during checkout', function (): void {
         ->assertSee('FLAT5')
         ->click('main button:has-text("Checkout")')
         ->wait(1)
-        ->assertPathIs('/checkout');
+        ->assertPathBeginsWith('/checkout/');
 
     storefrontCheckoutSubmitAddress(storefrontCheckoutFillAddress($page))
         ->click('button:has-text("Standard Shipping")')
@@ -217,7 +217,7 @@ test('completes checkout with paypal', function (): void {
         ->assertSee('Pay with PayPal')
         ->click('button:has-text("Pay with PayPal")')
         ->wait(2)
-        ->assertPathBeginsWith('/checkout/confirmation')
+        ->assertPathIs('/checkout/*/confirmation')
         ->assertSee('Thank you')
         ->assertSee('PayPal')
         ->assertNoJavaScriptErrors();
@@ -230,7 +230,7 @@ test('completes checkout with bank transfer', function (): void {
         ->assertSee('bank transfer instructions')
         ->click('button:has-text("Place order")')
         ->wait(2)
-        ->assertPathBeginsWith('/checkout/confirmation')
+        ->assertPathIs('/checkout/*/confirmation')
         ->assertSee('Thank you')
         ->assertSee('IBAN')
         ->assertSee('BIC')
@@ -247,7 +247,7 @@ test('shows error for declined credit card', function (): void {
         ->fill('input[wire\\:model="cardCvc"]', '123')
         ->click('button:has-text("Pay now")')
         ->wait(2)
-        ->assertPathIs('/checkout')
+        ->assertPathBeginsWith('/checkout/')
         ->assertSee('declined')
         ->assertNoJavaScriptErrors();
 });
@@ -260,7 +260,7 @@ test('shows error for insufficient funds', function (): void {
         ->fill('input[wire\\:model="cardCvc"]', '123')
         ->click('button:has-text("Pay now")')
         ->wait(2)
-        ->assertPathIs('/checkout')
+        ->assertPathBeginsWith('/checkout/')
         ->assertSee('insufficient')
         ->assertNoJavaScriptErrors();
 });

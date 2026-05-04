@@ -16,6 +16,7 @@ use App\Models\ProductVariant;
 use App\Models\ShippingRate;
 use App\Models\Store;
 use App\Services\CartService;
+use App\Services\CheckoutService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -62,8 +63,9 @@ test('checkout page places an order and redirects to confirmation', function () 
     $cart = app(CartService::class)->create($store);
     session(['cart_id' => $cart->getKey()]);
     app(CartService::class)->addLine($cart, $variant->getKey(), 2);
+    $checkout = app(CheckoutService::class)->createFromCart($cart);
 
-    $component = Livewire::test(CheckoutShow::class)
+    $component = Livewire::test(CheckoutShow::class, ['checkout' => $checkout])
         ->set('email', 'buyer@example.test')
         ->set('shippingAddress.first_name', 'Test')
         ->set('shippingAddress.last_name', 'Buyer')
@@ -85,7 +87,7 @@ test('checkout page places an order and redirects to confirmation', function () 
         ->latest('id')
         ->firstOrFail();
 
-    $component->assertRedirect(route('checkout.confirmation', $order));
+    $component->assertRedirect(route('checkout.confirmation', ['checkout' => $checkout->getKey()]));
 
     expect($order->email)->toBe('buyer@example.test')
         ->and($order->lines)->toHaveCount(1)
@@ -101,8 +103,9 @@ test('checkout page surfaces payment failures and releases reservations', functi
     $cart = app(CartService::class)->create($store);
     session(['cart_id' => $cart->getKey()]);
     app(CartService::class)->addLine($cart, $variant->getKey(), 2);
+    $checkout = app(CheckoutService::class)->createFromCart($cart);
 
-    Livewire::test(CheckoutShow::class)
+    Livewire::test(CheckoutShow::class, ['checkout' => $checkout])
         ->set('email', 'buyer@example.test')
         ->set('shippingAddress.first_name', 'Test')
         ->set('shippingAddress.last_name', 'Buyer')
@@ -133,8 +136,15 @@ test('order confirmation is visible only for the session order or customer order
     $store = orderViewsStore();
     $customer = Customer::withoutGlobalScopes()->where('store_id', $store->getKey())->firstOrFail();
     $otherCustomer = Customer::factory()->create(['store_id' => $store->getKey()]);
+    $cart = app(CartService::class)->create($store, $customer);
+    $checkout = Checkout::factory()->forCustomer($customer)->create([
+        'store_id' => $store->getKey(),
+        'cart_id' => $cart->getKey(),
+        'status' => CheckoutStatus::Completed,
+    ]);
     $order = Order::factory()->forCustomer($customer)->paid()->create([
         'store_id' => $store->getKey(),
+        'checkout_id' => $checkout->getKey(),
         'customer_id' => $customer->getKey(),
         'order_number' => '#7770',
         'email' => $customer->email,
@@ -142,22 +152,22 @@ test('order confirmation is visible only for the session order or customer order
 
     session(['last_order_id' => $order->getKey()]);
 
-    Livewire::test(Confirmation::class, ['order' => $order])
+    Livewire::test(Confirmation::class, ['checkout' => $checkout])
         ->assertSee($order->order_number);
 
     session()->forget('last_order_id');
 
-    Livewire::test(Confirmation::class, ['order' => $order])
+    Livewire::test(Confirmation::class, ['checkout' => $checkout])
         ->assertStatus(404);
 
     $this->actingAs($otherCustomer, 'customer');
 
-    Livewire::test(Confirmation::class, ['order' => $order])
+    Livewire::test(Confirmation::class, ['checkout' => $checkout])
         ->assertStatus(404);
 
     $this->actingAs($customer, 'customer');
 
-    Livewire::test(Confirmation::class, ['order' => $order])
+    Livewire::test(Confirmation::class, ['checkout' => $checkout])
         ->assertSee($order->order_number);
 });
 

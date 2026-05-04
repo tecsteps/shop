@@ -6,7 +6,6 @@ use App\Models\Theme;
 use App\Models\ThemeFile;
 use App\Models\ThemeSettings;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -31,11 +30,11 @@ function adminThemeApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminThemeApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Theme integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 /**
@@ -104,8 +103,9 @@ function adminThemeApiDraftTheme(Store $store): Theme
 test('admin theme api installs uploaded archives', function (): void {
     $store = adminThemeApiStore();
     $user = adminThemeApiUser();
+    $writeToken = adminApiBearerToken($store, ['write-themes'], $user);
 
-    $response = $this->actingAs($user)
+    $response = $this->withToken($writeToken)
         ->post("/api/admin/v1/stores/{$store->getKey()}/themes", [
             'name' => 'Uploaded API Theme',
             'file' => adminThemeApiArchiveUpload(),
@@ -128,8 +128,9 @@ test('admin theme api updates settings and publishes one active theme', function
     $store = adminThemeApiStore();
     $published = Theme::withoutGlobalScopes()->where('store_id', $store->getKey())->where('status', ThemeStatus::Published)->firstOrFail();
     $draft = adminThemeApiDraftTheme($store);
+    $writeToken = adminApiBearerToken($store, ['write-themes'], adminThemeApiUser());
 
-    $this->actingAs(adminThemeApiUser())
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/themes/{$draft->getKey()}/settings", [
             'settings_json' => [
                 'home' => [
@@ -142,7 +143,7 @@ test('admin theme api updates settings and publishes one active theme', function
         ->assertOk()
         ->assertJsonPath('data.settings_json.home.hero.heading', 'API Saved Hero');
 
-    $this->actingAs(adminThemeApiUser())
+    $this->withToken($writeToken)
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/themes/{$draft->getKey()}/publish")
         ->assertOk()
         ->assertJsonPath('data.status', 'published');
@@ -188,7 +189,7 @@ test('admin theme api validates archives settings and publishable files', functi
         'name' => 'Incomplete API Theme',
     ]);
 
-    $this->actingAs(adminThemeApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-themes'], adminThemeApiUser()))
         ->post("/api/admin/v1/stores/{$store->getKey()}/themes", [
             'file' => adminThemeApiArchiveUpload([
                 'sections/hero.blade.php' => null,
@@ -197,14 +198,14 @@ test('admin theme api validates archives settings and publishable files', functi
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['file']);
 
-    $this->actingAs(adminThemeApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-themes'], adminThemeApiUser()))
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/themes/{$draft->getKey()}/settings", [
             'settings_json' => ['invalid-list-value'],
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['settings_json']);
 
-    $this->actingAs(adminThemeApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-themes'], adminThemeApiUser()))
         ->postJson("/api/admin/v1/stores/{$store->getKey()}/themes/{$draft->getKey()}/publish")
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['theme']);

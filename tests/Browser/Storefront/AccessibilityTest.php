@@ -39,7 +39,7 @@ function storefrontAccessibilityCheckoutStart(): mixed
         ->wait(1)
         ->click('main button:has-text("Checkout")')
         ->wait(1)
-        ->assertPathIs('/checkout');
+        ->assertPathBeginsWith('/checkout/');
 }
 
 test('home page has no javascript errors or console warnings', function (): void {

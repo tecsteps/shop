@@ -4,7 +4,6 @@ use App\Enums\TaxMode;
 use App\Models\Store;
 use App\Models\TaxSettings;
 use App\Models\User;
-use App\Services\WebhookService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -27,25 +26,27 @@ function adminTaxSettingsApiUser(): User
 
 /**
  * @param  list<string>  $abilities
- * @return array{token: \App\Models\OauthToken, plain_text: string}
+ * @return array{token: \App\Models\PersonalAccessToken, plain_text: string}
  */
 function adminTaxSettingsApiToken(Store $store, array $abilities): array
 {
-    return app(WebhookService::class)->createApiToken($store, 'Tax settings integration', $abilities);
+    return adminApiToken($store, $abilities);
 }
 
 test('admin tax settings api shows and updates manual settings', function (): void {
     $store = adminTaxSettingsApiStore();
     $user = adminTaxSettingsApiUser();
+    $readToken = adminApiBearerToken($store, ['read-settings'], $user);
+    $writeToken = adminApiBearerToken($store, ['write-settings'], $user);
 
-    $this->actingAs($user)
+    $this->withToken($readToken)
         ->getJson("/api/admin/v1/stores/{$store->getKey()}/tax/settings")
         ->assertOk()
         ->assertJsonPath('data.store_id', $store->getKey())
         ->assertJsonPath('data.mode', 'manual')
         ->assertJsonPath('data.config_json.default_tax_rate', 1900);
 
-    $this->actingAs($user)
+    $this->withToken($writeToken)
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/tax/settings", [
             'mode' => 'manual',
             'provider' => 'none',
@@ -117,7 +118,7 @@ test('admin tax settings api enforces token abilities and store scope', function
 test('admin tax settings api validates provider and rate payloads', function (): void {
     $store = adminTaxSettingsApiStore();
 
-    $this->actingAs(adminTaxSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminTaxSettingsApiUser()))
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/tax/settings", [
             'mode' => 'provider',
             'prices_include_tax' => false,
@@ -126,7 +127,7 @@ test('admin tax settings api validates provider and rate payloads', function ():
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['provider']);
 
-    $this->actingAs(adminTaxSettingsApiUser())
+    $this->withToken(adminApiBearerToken($store, ['write-settings'], adminTaxSettingsApiUser()))
         ->putJson("/api/admin/v1/stores/{$store->getKey()}/tax/settings", [
             'mode' => 'manual',
             'provider' => 'none',

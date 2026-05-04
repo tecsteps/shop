@@ -38,7 +38,7 @@
                 <thead class="border-b border-zinc-200 text-xs uppercase text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
                     <tr>
                         <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">App</th>
+                        <th class="px-4 py-3">Type</th>
                         <th class="px-4 py-3">Last used</th>
                         <th class="px-4 py-3">Created</th>
                         <th class="px-4 py-3 text-right">Actions</th>
@@ -48,7 +48,7 @@
                     @forelse ($tokens as $token)
                         <tr wire:key="developer-token-{{ $token->getKey() }}">
                             <td class="px-4 py-3 font-medium">{{ $token->name ?? 'API token' }}</td>
-                            <td class="px-4 py-3">{{ $token->installation->app->name }}</td>
+                            <td class="px-4 py-3">Admin API</td>
                             <td class="px-4 py-3">{{ $token->last_used_at?->diffForHumans() ?? 'Never' }}</td>
                             <td class="px-4 py-3">{{ $token->created_at?->toFormattedDateString() ?? 'Unknown' }}</td>
                             <td class="px-4 py-3 text-right">

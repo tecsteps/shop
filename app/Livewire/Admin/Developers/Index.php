@@ -4,9 +4,11 @@ namespace App\Livewire\Admin\Developers;
 
 use App\Enums\WebhookEventType;
 use App\Enums\WebhookSubscriptionStatus;
-use App\Models\OauthToken;
+use App\Models\PersonalAccessToken;
 use App\Models\Store;
+use App\Models\User;
 use App\Models\WebhookSubscription;
+use App\Services\AuditLogger;
 use App\Services\WebhookService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Collection;
@@ -41,6 +43,8 @@ class Index extends Component
         'write-orders',
         'read-customers',
         'write-customers',
+        'read-content',
+        'write-content',
         'read-analytics',
     ];
 
@@ -62,7 +66,11 @@ class Index extends Component
             'newTokenName' => 'token name',
         ]);
 
-        $result = $webhooks->createApiToken($this->scopedStore(), $this->newTokenName, $this->tokenAbilities);
+        $user = auth()->user();
+
+        abort_unless($user instanceof User, 403);
+
+        $result = $webhooks->createApiToken($this->scopedStore(), $this->newTokenName, $this->tokenAbilities, $user);
 
         $this->generatedToken = $result['plain_text'];
         $this->newTokenName = '';
@@ -74,7 +82,11 @@ class Index extends Component
     {
         $this->authorize('update', $this->scopedStore());
 
-        $this->token($tokenId)->delete();
+        $token = $this->token($tokenId);
+        app(AuditLogger::class)->log('api_token.revoked', userId: auth()->id(), storeId: $this->storeId, extra: [
+            'token_name' => $token->name,
+        ]);
+        $token->delete();
 
         session()->flash('status', __('API token revoked'));
         $this->dispatch('toast', type: 'success', message: __('API token revoked'));
@@ -136,15 +148,14 @@ class Index extends Component
     }
 
     /**
-     * @return Collection<int, OauthToken>
+     * @return Collection<int, PersonalAccessToken>
      */
     public function tokens(): Collection
     {
-        return OauthToken::query()
-            ->with('installation.app')
-            ->whereHas('installation', function ($query): void {
-                $query->withoutGlobalScopes()->where('store_id', $this->storeId);
-            })
+        return PersonalAccessToken::query()
+            ->where('store_id', $this->storeId)
+            ->where('tokenable_type', (new User)->getMorphClass())
+            ->whereIn('tokenable_id', $this->scopedStore()->users()->pluck('users.id'))
             ->latest('created_at')
             ->get();
     }
@@ -175,12 +186,12 @@ class Index extends Component
         ]);
     }
 
-    private function token(int $tokenId): OauthToken
+    private function token(int $tokenId): PersonalAccessToken
     {
-        return OauthToken::query()
-            ->whereHas('installation', function ($query): void {
-                $query->withoutGlobalScopes()->where('store_id', $this->storeId);
-            })
+        return PersonalAccessToken::query()
+            ->where('store_id', $this->storeId)
+            ->where('tokenable_type', (new User)->getMorphClass())
+            ->whereIn('tokenable_id', $this->scopedStore()->users()->pluck('users.id'))
             ->findOrFail($tokenId);
     }
 

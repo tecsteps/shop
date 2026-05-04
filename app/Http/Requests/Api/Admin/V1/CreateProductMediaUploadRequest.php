@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api\Admin\V1;
 
+use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -10,7 +12,22 @@ class CreateProductMediaUploadRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $store = $this->route('store');
+        $product = $this->route('product');
+
+        $store = $store instanceof Store ? $store : Store::query()->find($store);
+
+        if (! $store instanceof Store) {
+            return false;
+        }
+
+        app()->instance('current_store', $store);
+
+        if (! $product instanceof Product || (int) $product->store_id !== $store->getKey()) {
+            return true;
+        }
+
+        return $this->user()?->can('update', $product) ?? false;
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
+use App\Events\CheckoutCompleted;
 use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
 use App\Events\OrderPaid;
@@ -66,6 +67,8 @@ class OrderService
                     $checkout = $this->freshCheckout($checkout);
                 }
 
+                $store = $this->lockedStore($checkout);
+                $appliedDiscounts = $this->lockedAppliedDiscounts($checkout);
                 $method = $this->paymentMethod($checkout);
                 $paymentResult = $this->payments->charge($checkout, $method, $paymentMethodData);
 
@@ -80,7 +83,7 @@ class OrderService
                     'store_id' => $checkout->store_id,
                     'checkout_id' => $checkout->getKey(),
                     'customer_id' => $checkout->customer_id,
-                    'order_number' => $this->nextOrderNumber($checkout->store),
+                    'order_number' => $this->nextOrderNumber($store),
                     'payment_method' => $method,
                     'status' => $paidImmediately ? OrderStatus::Paid : OrderStatus::Pending,
                     'financial_status' => $paidImmediately ? FinancialStatus::Paid : FinancialStatus::Pending,
@@ -97,7 +100,7 @@ class OrderService
                     'placed_at' => now(),
                 ]);
 
-                $this->createOrderLines($checkout, $order, $this->discountAllocationsByCartLine($checkout));
+                $this->createOrderLines($checkout, $order, $this->discountAllocationsByCartLine($checkout, $appliedDiscounts));
 
                 $order->payments()->create([
                     'provider' => 'mock',
@@ -122,15 +125,17 @@ class OrderService
                     'expires_at' => null,
                 ])->save();
 
-                $this->incrementDiscountUsage($checkout);
+                $this->incrementDiscountUsage($appliedDiscounts);
 
                 if ($paidImmediately) {
                     $this->fulfillments->autoFulfillDigital($order);
                 }
 
                 $order = $order->refresh()->load(['lines', 'payments', 'refunds', 'fulfillments.lines']);
+                $checkout = $checkout->refresh();
 
                 event(new OrderCreated($order));
+                event(new CheckoutCompleted($checkout, $order));
 
                 if ($paidImmediately) {
                     event(new OrderPaid($order));
@@ -202,6 +207,14 @@ class OrderService
         return Checkout::withoutGlobalScopes()
             ->with(['cart', 'store'])
             ->whereKey($checkout->getKey())
+            ->lockForUpdate()
+            ->firstOrFail();
+    }
+
+    private function lockedStore(Checkout $checkout): Store
+    {
+        return Store::withoutGlobalScopes()
+            ->whereKey($checkout->store_id)
             ->lockForUpdate()
             ->firstOrFail();
     }
@@ -286,7 +299,7 @@ class OrderService
     /**
      * @return array<int, list<array{discount_id: int|null, code: string|null, amount: int}>>
      */
-    private function discountAllocationsByCartLine(Checkout $checkout): array
+    private function discountAllocationsByCartLine(Checkout $checkout, ?Collection $discounts = null): array
     {
         $lines = $this->cartLines($checkout)
             ->map(function (CartLine $line): CartLine {
@@ -300,7 +313,7 @@ class OrderService
             });
         $allocations = [];
 
-        foreach ($this->appliedDiscounts($checkout) as $discount) {
+        foreach (($discounts ?? $this->appliedDiscounts($checkout)) as $discount) {
             $result = $this->discounts->calculate($discount, $lines->sum('line_subtotal_amount'), $lines->all());
 
             foreach ($result->allocations as $lineId => $amount) {
@@ -352,6 +365,41 @@ class OrderService
             ->values();
     }
 
+    /**
+     * @return Collection<int, Discount>
+     */
+    private function lockedAppliedDiscounts(Checkout $checkout): Collection
+    {
+        $discountIds = $this->appliedDiscounts($checkout)
+            ->pluck('id')
+            ->filter()
+            ->values();
+
+        if ($discountIds->isEmpty()) {
+            return collect();
+        }
+
+        $lockedDiscounts = Discount::withoutGlobalScopes()
+            ->whereIn('id', $discountIds->all())
+            ->orderBy('id')
+            ->lockForUpdate()
+            ->get()
+            ->keyBy(fn (Discount $discount): int => $discount->getKey());
+
+        $discounts = $discountIds
+            ->map(fn (int $discountId): ?Discount => $lockedDiscounts->get($discountId))
+            ->filter()
+            ->values();
+
+        $discounts->each(function (Discount $discount): void {
+            if ($discount->usage_limit !== null && $discount->usage_count >= $discount->usage_limit) {
+                throw InvalidCheckoutTransitionException::because('Discount usage limit has been reached.');
+            }
+        });
+
+        return $discounts;
+    }
+
     private function commitReservedInventory(Checkout $checkout): void
     {
         $this->cartLines($checkout)->each(function (CartLine $line): void {
@@ -398,18 +446,16 @@ class OrderService
         });
     }
 
-    private function incrementDiscountUsage(Checkout $checkout): void
+    /**
+     * @param  Collection<int, Discount>  $discounts
+     */
+    private function incrementDiscountUsage(Collection $discounts): void
     {
-        $code = trim((string) $checkout->discount_code);
-
-        if ($code === '') {
-            return;
-        }
-
-        Discount::withoutGlobalScopes()
-            ->where('store_id', $checkout->store_id)
-            ->whereRaw('lower(code) = ?', [mb_strtolower($code)])
-            ->increment('usage_count');
+        $discounts->each(function (Discount $discount): void {
+            Discount::withoutGlobalScopes()
+                ->whereKey($discount->getKey())
+                ->increment('usage_count');
+        });
     }
 
     private function assertPendingBankTransfer(Order $order): void
