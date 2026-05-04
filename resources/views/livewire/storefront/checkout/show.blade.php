@@ -164,9 +164,27 @@
                             </flux:select>
                             <flux:error name="paymentMethod" />
 
-                            <flux:button wire:click="selectPaymentMethod" variant="primary" class="w-full">
-                                Reserve items
-                            </flux:button>
+                            @if ($paymentMethod === 'credit_card')
+                                <div class="grid gap-4 sm:grid-cols-2">
+                                    <div class="sm:col-span-2">
+                                        <flux:input wire:model="cardNumber" label="Card number" placeholder="4242 4242 4242 4242" />
+                                        <flux:error name="cardNumber" />
+                                    </div>
+                                    <flux:input wire:model="cardName" label="Name on card" />
+                                    <flux:input wire:model="cardExpiry" label="Expiry" placeholder="12/30" />
+                                    <flux:input wire:model="cardCvc" label="CVC" />
+                                </div>
+                            @endif
+
+                            @if ($step === 'reserved')
+                                <flux:button wire:click="placeOrder" wire:loading.attr="disabled" variant="primary" class="w-full">
+                                    Place order
+                                </flux:button>
+                            @else
+                                <flux:button wire:click="selectPaymentMethod" wire:loading.attr="disabled" variant="primary" class="w-full">
+                                    Reserve items
+                                </flux:button>
+                            @endif
                         </div>
                     @endif
                 </div>

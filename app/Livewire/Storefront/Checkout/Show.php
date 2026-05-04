@@ -5,6 +5,7 @@ namespace App\Livewire\Storefront\Checkout;
 use App\Enums\CheckoutStatus;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\PaymentFailedException;
 use App\Exceptions\UnserviceableShippingAddressException;
 use App\Models\Cart;
 use App\Models\CartLine;
@@ -19,10 +20,12 @@ use App\Services\ShippingCalculator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Show extends Component
 {
+    #[Locked]
     public int $storeId;
 
     public string $step = 'address';
@@ -64,6 +67,14 @@ class Show extends Component
     public string $discountCode = '';
 
     public string $paymentMethod = 'credit_card';
+
+    public string $cardNumber = '';
+
+    public string $cardName = '';
+
+    public string $cardExpiry = '';
+
+    public string $cardCvc = '';
 
     public function mount(): void
     {
@@ -184,6 +195,57 @@ class Show extends Component
         } catch (InvalidCheckoutTransitionException $exception) {
             throw ValidationException::withMessages([
                 'paymentMethod' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    public function placeOrder(): void
+    {
+        $rules = [
+            'paymentMethod' => ['required', 'in:credit_card,paypal,bank_transfer'],
+        ];
+
+        if ($this->paymentMethod === 'credit_card') {
+            $rules = [
+                ...$rules,
+                'cardNumber' => ['required', 'string'],
+                'cardName' => ['nullable', 'string'],
+                'cardExpiry' => ['nullable', 'string'],
+                'cardCvc' => ['nullable', 'string'],
+            ];
+        }
+
+        $this->validate($rules);
+
+        $checkout = $this->checkout();
+
+        if (! $checkout instanceof Checkout) {
+            return;
+        }
+
+        try {
+            if ($checkout->status !== CheckoutStatus::PaymentSelected) {
+                $checkout = app(CheckoutService::class)->selectPaymentMethod($checkout, $this->paymentMethod);
+            }
+
+            $order = app(CheckoutService::class)->completeCheckout($checkout, [
+                'card_number' => $this->cardNumber,
+                'cardholder_name' => $this->cardName,
+                'expiry' => $this->cardExpiry,
+                'cvc' => $this->cardCvc,
+            ]);
+
+            session([
+                'last_order_id' => $order->getKey(),
+            ]);
+            session()->forget(['cart_id', 'cart_discount_code']);
+
+            $this->redirectRoute('checkout.confirmation', ['order' => $order], navigate: true);
+        } catch (InvalidCheckoutTransitionException|PaymentFailedException $exception) {
+            $this->step = 'payment';
+
+            throw ValidationException::withMessages([
+                $this->paymentMethod === 'credit_card' ? 'cardNumber' : 'paymentMethod' => $exception->getMessage(),
             ]);
         }
     }
