@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Order;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
@@ -14,27 +15,27 @@ class OrderPolicy
         return $this->isAnyRole($user);
     }
 
-    public function view(User $user, object $order): bool
+    public function view(User $user, Order $order): bool
     {
         return $this->isAnyRole($user, $this->storeIdForModel($order));
     }
 
-    public function update(User $user, object $order): bool
+    public function update(User $user, Order $order): bool
     {
         return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($order));
     }
 
-    public function cancel(User $user, object $order): bool
+    public function cancel(User $user, Order $order): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($order));
     }
 
-    public function createFulfillment(User $user, object $order): bool
+    public function createFulfillment(User $user, Order $order): bool
     {
         return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($order));
     }
 
-    public function createRefund(User $user, object $order): bool
+    public function createRefund(User $user, Order $order): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($order));
     }

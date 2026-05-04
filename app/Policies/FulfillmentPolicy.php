@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Fulfillment;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
@@ -14,12 +15,12 @@ class FulfillmentPolicy
         return $this->isOwnerAdminOrStaff($user);
     }
 
-    public function update(User $user, object $fulfillment): bool
+    public function update(User $user, Fulfillment $fulfillment): bool
     {
         return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($fulfillment));
     }
 
-    public function cancel(User $user, object $fulfillment): bool
+    public function cancel(User $user, Fulfillment $fulfillment): bool
     {
         return $this->update($user, $fulfillment);
     }

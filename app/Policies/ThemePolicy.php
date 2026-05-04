@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Theme;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
@@ -14,7 +15,7 @@ class ThemePolicy
         return $this->isOwnerOrAdmin($user);
     }
 
-    public function view(User $user, object $theme): bool
+    public function view(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($theme));
     }
@@ -24,17 +25,17 @@ class ThemePolicy
         return $this->isOwnerOrAdmin($user);
     }
 
-    public function update(User $user, object $theme): bool
+    public function update(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($theme));
     }
 
-    public function publish(User $user, object $theme): bool
+    public function publish(User $user, Theme $theme): bool
     {
         return $this->update($user, $theme);
     }
 
-    public function delete(User $user, object $theme): bool
+    public function delete(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($theme));
     }

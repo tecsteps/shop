@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Collection;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
@@ -14,7 +15,7 @@ class CollectionPolicy
         return $this->isAnyRole($user);
     }
 
-    public function view(User $user, object $collection): bool
+    public function view(User $user, Collection $collection): bool
     {
         return $this->isAnyRole($user, $this->storeIdForModel($collection));
     }
@@ -24,12 +25,12 @@ class CollectionPolicy
         return $this->isOwnerAdminOrStaff($user);
     }
 
-    public function update(User $user, object $collection): bool
+    public function update(User $user, Collection $collection): bool
     {
         return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($collection));
     }
 
-    public function delete(User $user, object $collection): bool
+    public function delete(User $user, Collection $collection): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($collection));
     }

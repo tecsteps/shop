@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Customer;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
@@ -14,12 +15,12 @@ class CustomerPolicy
         return $this->isAnyRole($user);
     }
 
-    public function view(User $user, object $customer): bool
+    public function view(User $user, Customer $customer): bool
     {
         return $this->isAnyRole($user, $this->storeIdForModel($customer));
     }
 
-    public function update(User $user, object $customer): bool
+    public function update(User $user, Customer $customer): bool
     {
         return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($customer));
     }

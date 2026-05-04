@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Product;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
@@ -14,7 +15,7 @@ class ProductPolicy
         return $this->isAnyRole($user);
     }
 
-    public function view(User $user, object $product): bool
+    public function view(User $user, Product $product): bool
     {
         return $this->isAnyRole($user, $this->storeIdForModel($product));
     }
@@ -24,22 +25,22 @@ class ProductPolicy
         return $this->isOwnerAdminOrStaff($user);
     }
 
-    public function update(User $user, object $product): bool
+    public function update(User $user, Product $product): bool
     {
         return $this->isOwnerAdminOrStaff($user, $this->storeIdForModel($product));
     }
 
-    public function delete(User $user, object $product): bool
+    public function delete(User $user, Product $product): bool
     {
         return $this->isOwnerOrAdmin($user, $this->storeIdForModel($product));
     }
 
-    public function archive(User $user, object $product): bool
+    public function archive(User $user, Product $product): bool
     {
         return $this->delete($user, $product);
     }
 
-    public function restore(User $user, object $product): bool
+    public function restore(User $user, Product $product): bool
     {
         return $this->delete($user, $product);
     }
