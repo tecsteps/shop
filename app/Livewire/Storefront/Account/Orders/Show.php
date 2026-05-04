@@ -39,6 +39,7 @@ class Show extends Component
     public function render(): mixed
     {
         return view('livewire.storefront.account.orders.show', [
+            'customer' => $this->customer(),
             'order' => $this->order(),
         ])->layout('layouts.storefront', [
             'title' => 'Order details',
@@ -52,5 +53,17 @@ class Show extends Component
             ->where('store_id', $this->storeId)
             ->where('customer_id', Auth::guard('customer')->id())
             ->findOrFail($this->orderId);
+    }
+
+    private function customer(): Customer
+    {
+        $customer = Auth::guard('customer')->user();
+
+        abort_unless($customer instanceof Customer, 403);
+
+        return Customer::withoutGlobalScopes()
+            ->where('store_id', $this->storeId)
+            ->whereKey($customer->getKey())
+            ->firstOrFail();
     }
 }

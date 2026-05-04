@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             ShippingRateSeeder::class,
             DiscountSeeder::class,
             CustomerSeeder::class,
+            CustomerAddressSeeder::class,
             AnalyticsSeeder::class,
         ]);
     }

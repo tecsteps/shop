@@ -15,6 +15,9 @@ class Index extends Component
     #[Locked]
     public int $storeId;
 
+    #[Locked]
+    public bool $isDashboard = false;
+
     public function mount(): void
     {
         $store = app('current_store');
@@ -22,12 +25,15 @@ class Index extends Component
         abort_unless($store instanceof Store, 404);
 
         $this->storeId = $store->getKey();
+        $this->isDashboard = request()->routeIs('account.dashboard');
     }
 
     public function render(): mixed
     {
         return view('livewire.storefront.account.orders.index', [
-            'orders' => $this->orders(),
+            'customer' => $this->customer(),
+            'isDashboard' => $this->isDashboard,
+            'orders' => $this->orders($this->isDashboard),
         ])->layout('layouts.storefront', [
             'title' => 'Account',
         ]);
@@ -36,17 +42,26 @@ class Index extends Component
     /**
      * @return Collection<int, Order>
      */
-    private function orders(): Collection
+    private function orders(bool $isDashboard): Collection
+    {
+        return Order::withoutGlobalScopes()
+            ->where('store_id', $this->storeId)
+            ->where('customer_id', $this->customer()->getKey())
+            ->latest('placed_at')
+            ->latest('id')
+            ->limit($isDashboard ? 5 : 20)
+            ->get();
+    }
+
+    private function customer(): Customer
     {
         $customer = Auth::guard('customer')->user();
 
         abort_unless($customer instanceof Customer, 403);
 
-        return Order::withoutGlobalScopes()
+        return Customer::withoutGlobalScopes()
             ->where('store_id', $this->storeId)
-            ->where('customer_id', $customer->getKey())
-            ->latest('placed_at')
-            ->limit(20)
-            ->get();
+            ->whereKey($customer->getKey())
+            ->firstOrFail();
     }
 }

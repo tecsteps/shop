@@ -1,14 +1,15 @@
-<section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+<x-storefront.account-shell :customer="$customer">
     <x-storefront.breadcrumbs :items="[
         ['label' => 'Account', 'url' => route('account.dashboard')],
+        ['label' => 'Orders', 'url' => route('account.orders.index')],
         ['label' => $order->order_number],
     ]" />
 
     <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_24rem]">
         <div class="space-y-6">
             <div>
-                <h1 class="text-3xl font-semibold tracking-normal text-zinc-950 dark:text-white">{{ $order->order_number }}</h1>
-                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{{ $order->placed_at?->format('M j, Y') }}</p>
+                <h2 class="text-3xl font-semibold tracking-normal text-zinc-950 dark:text-white">Order {{ $order->order_number }}</h2>
+                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Placed on {{ $order->placed_at?->format('F j, Y') }}</p>
             </div>
 
             <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
@@ -26,6 +27,33 @@
                 </div>
             </div>
 
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
+                    <flux:heading size="lg">Shipping Address</flux:heading>
+                    @php($shippingAddress = $order->shipping_address_json ?? [])
+                    <div class="mt-4 space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                        <p>{{ trim(data_get($shippingAddress, 'first_name').' '.data_get($shippingAddress, 'last_name')) }}</p>
+                        <p>{{ data_get($shippingAddress, 'address1') }}</p>
+                        @if (data_get($shippingAddress, 'address2'))
+                            <p>{{ data_get($shippingAddress, 'address2') }}</p>
+                        @endif
+                        <p>{{ trim(data_get($shippingAddress, 'postal_code').' '.data_get($shippingAddress, 'city')) }}</p>
+                        <p>{{ data_get($shippingAddress, 'country') }}</p>
+                    </div>
+                </div>
+
+                <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
+                    <flux:heading size="lg">Payment</flux:heading>
+                    <div class="mt-4 space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
+                        <p>{{ Str::headline($order->payment_method->value) }}</p>
+                        <div class="flex flex-wrap gap-2">
+                            <flux:badge>{{ Str::headline($order->financial_status->value) }}</flux:badge>
+                            <flux:badge>{{ Str::headline($order->fulfillment_status->value) }}</flux:badge>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             @if ($order->fulfillments->isNotEmpty())
                 <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
                     <flux:heading size="lg">Fulfillment</flux:heading>
@@ -33,7 +61,7 @@
                         @foreach ($order->fulfillments as $fulfillment)
                             <div class="rounded-md border border-zinc-200 p-4 dark:border-zinc-800" wire:key="account-fulfillment-{{ $fulfillment->getKey() }}">
                                 <div class="flex items-center justify-between gap-4">
-                                    <span class="font-medium text-zinc-950 dark:text-white">{{ $fulfillment->status->value }}</span>
+                                    <span class="font-medium text-zinc-950 dark:text-white">{{ Str::headline($fulfillment->status->value) }}</span>
                                     @if ($fulfillment->tracking_number)
                                         <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ $fulfillment->tracking_number }}</span>
                                     @endif
@@ -46,10 +74,10 @@
         </div>
 
         <aside class="h-fit rounded-lg border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 class="text-base font-semibold text-zinc-950 dark:text-white">Summary</h2>
+            <h3 class="text-base font-semibold text-zinc-950 dark:text-white">Summary</h3>
             <div class="mt-4 flex flex-wrap gap-2">
-                <flux:badge>{{ $order->financial_status->value }}</flux:badge>
-                <flux:badge>{{ $order->fulfillment_status->value }}</flux:badge>
+                <flux:badge>{{ Str::headline($order->financial_status->value) }}</flux:badge>
+                <flux:badge>{{ Str::headline($order->fulfillment_status->value) }}</flux:badge>
             </div>
             <div class="mt-5 space-y-3 text-sm">
                 <div class="flex justify-between gap-4">
@@ -75,4 +103,4 @@
             </div>
         </aside>
     </div>
-</section>
+</x-storefront.account-shell>

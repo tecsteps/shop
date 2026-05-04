@@ -31,6 +31,7 @@ use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
 use App\Livewire\Admin\Themes\Editor as AdminThemeEditor;
 use App\Livewire\Admin\Themes\Index as AdminThemesIndex;
+use App\Livewire\Storefront\Account\Addresses\Index as CustomerAddressesIndex;
 use App\Livewire\Storefront\Account\Auth\ForgotPassword as CustomerForgotPassword;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
@@ -170,9 +171,26 @@ Route::middleware(['storefront'])->group(function (): void {
         ->middleware('auth:customer')
         ->name('account.dashboard');
 
+    Route::livewire('account/orders', CustomerOrdersIndex::class)
+        ->middleware('auth:customer')
+        ->name('account.orders.index');
+
     Route::livewire('account/orders/{order}', CustomerOrderShow::class)
         ->middleware('auth:customer')
         ->name('account.orders.show');
+
+    Route::livewire('account/addresses', CustomerAddressesIndex::class)
+        ->middleware('auth:customer')
+        ->name('account.addresses.index');
+
+    Route::post('account/logout', function () {
+        Auth::guard('customer')->logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect()->route('account.login');
+    })->middleware('auth:customer')->name('account.logout');
 });
 
 Route::redirect('dashboard', 'admin')
