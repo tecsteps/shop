@@ -6,7 +6,7 @@
 
     <div class="mt-8 grid gap-10 lg:grid-cols-2">
         <div class="lg:sticky lg:top-28 lg:self-start">
-            <div class="flex aspect-square items-center justify-center rounded-lg border border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600">
+            <div class="flex aspect-square items-center justify-center rounded-lg border border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600" role="img" aria-label="{{ $product->title }} image placeholder" data-test="product-image-placeholder">
                 <flux:icon name="shopping-bag" class="size-20" />
             </div>
         </div>

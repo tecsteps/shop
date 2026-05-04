@@ -17,6 +17,8 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3">
+                <h2 class="sr-only">Hero products</h2>
+
                 @foreach ($featuredProducts->take(4) as $product)
                     <div class="rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-950" wire:key="hero-product-{{ $product->getKey() }}">
                         <x-storefront.product-card :product="$product" />

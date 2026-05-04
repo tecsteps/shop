@@ -45,7 +45,7 @@
 
                     <div class="mt-5 grid gap-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
-                            <flux:input wire:model="email" type="email" label="Email" />
+                            <flux:input wire:model="email" type="email" label="Email" aria-describedby="checkout-email-error" error:id="checkout-email-error" />
                             <flux:error name="email" />
                         </div>
 
