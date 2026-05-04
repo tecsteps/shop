@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\Admin\V1\OrderRefundController as AdminOrderRefundC
 use App\Http\Controllers\Api\Admin\V1\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\V1\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\V1\SearchIndexController as AdminSearchIndexController;
+use App\Http\Controllers\Api\Admin\V1\ShippingRateController as AdminShippingRateController;
+use App\Http\Controllers\Api\Admin\V1\ShippingZoneController as AdminShippingZoneController;
 use App\Http\Controllers\Api\Admin\V1\TaxSettingsController as AdminTaxSettingsController;
 use App\Http\Controllers\Api\Apps\V1\DeferredEndpointController as DeferredAppEndpointController;
 use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController as StorefrontAnalyticsEventController;
@@ -100,11 +102,15 @@ Route::middleware('throttle:60,1')
 
         Route::middleware('admin.api:read-settings')->group(function (): void {
             Route::get('search/status', [AdminSearchIndexController::class, 'status'])->name('search.status');
+            Route::get('shipping/zones', [AdminShippingZoneController::class, 'index'])->name('shipping.zones.index');
             Route::get('tax/settings', [AdminTaxSettingsController::class, 'show'])->name('tax.settings.show');
         });
 
         Route::middleware('admin.api:write-settings')->group(function (): void {
             Route::post('search/reindex', [AdminSearchIndexController::class, 'reindex'])->name('search.reindex');
+            Route::post('shipping/zones', [AdminShippingZoneController::class, 'store'])->name('shipping.zones.store');
+            Route::put('shipping/zones/{shippingZone}', [AdminShippingZoneController::class, 'update'])->name('shipping.zones.update');
+            Route::post('shipping/zones/{shippingZone}/rates', [AdminShippingRateController::class, 'store'])->name('shipping.zones.rates.store');
             Route::put('tax/settings', [AdminTaxSettingsController::class, 'update'])->name('tax.settings.update');
         });
 
