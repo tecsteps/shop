@@ -29,15 +29,26 @@ test('customer password reset pages render for the resolved storefront store', f
         'hostname' => 'customer-reset.test',
     ]);
 
-    $this->get('http://customer-reset.test/account/forgot-password')
+    expect(route('customer.password.request', absolute: false))->toBe('/forgot-password')
+        ->and(route('customer.password.reset', ['token' => 'test-token'], false))->toBe('/reset-password/test-token');
+
+    $this->get('http://customer-reset.test/forgot-password')
         ->assertSuccessful()
         ->assertSee('Reset password')
         ->assertSee('Send reset link');
 
-    $this->get('http://customer-reset.test/account/reset-password/test-token?email=customer@example.test')
+    $this->get('http://customer-reset.test/reset-password/test-token?email=customer@example.test')
         ->assertSuccessful()
         ->assertSee('Set a new password')
         ->assertSee('Reset password');
+
+    $this->get('http://customer-reset.test/account/forgot-password')
+        ->assertSuccessful()
+        ->assertSee('Reset password');
+
+    $this->get('http://customer-reset.test/account/reset-password/test-token?email=customer@example.test')
+        ->assertSuccessful()
+        ->assertSee('Set a new password');
 });
 
 test('customer reset links are sent generically and scoped to the current store', function (): void {
@@ -68,7 +79,9 @@ test('customer reset links are sent generically and scoped to the current store'
         $customer,
         CustomerResetPasswordNotification::class,
         fn (CustomerResetPasswordNotification $notification): bool => strlen($notification->token) === 64
-            && $notification->store->is($store),
+            && $notification->store->is($store)
+            && str_contains($notification->toMail($customer)->actionUrl, '/reset-password/'.$notification->token)
+            && ! str_contains($notification->toMail($customer)->actionUrl, '/account/reset-password/'),
     );
 
     Notification::assertNotSentTo($otherCustomer, CustomerResetPasswordNotification::class);
@@ -81,6 +94,56 @@ test('customer reset links are sent generically and scoped to the current store'
     $this->assertDatabaseMissing('customer_password_reset_tokens', [
         'store_id' => $otherStore->getKey(),
         'email' => $otherCustomer->email,
+    ]);
+});
+
+test('customer password reset root post routes send and reset passwords', function (): void {
+    Notification::fake();
+
+    $store = Store::factory()->create();
+    StoreDomain::factory()->create([
+        'store_id' => $store->getKey(),
+        'hostname' => 'customer-reset.test',
+    ]);
+
+    $customer = Customer::factory()->create([
+        'store_id' => $store->getKey(),
+        'email' => 'customer@example.test',
+        'password' => 'old-password',
+    ]);
+
+    $this->post('http://customer-reset.test/forgot-password', [
+        'email' => 'CUSTOMER@example.test',
+    ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect();
+
+    $token = null;
+
+    Notification::assertSentTo(
+        $customer,
+        CustomerResetPasswordNotification::class,
+        function (CustomerResetPasswordNotification $notification) use (&$token): bool {
+            $token = $notification->token;
+
+            return true;
+        },
+    );
+
+    $this->post('http://customer-reset.test/reset-password', [
+        'token' => $token,
+        'email' => $customer->email,
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password',
+    ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect();
+
+    expect(Hash::check('new-password', $customer->refresh()->password_hash))->toBeTrue();
+
+    $this->assertDatabaseMissing('customer_password_reset_tokens', [
+        'store_id' => $store->getKey(),
+        'email' => $customer->email,
     ]);
 });
 

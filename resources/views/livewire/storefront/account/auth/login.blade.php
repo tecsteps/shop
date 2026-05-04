@@ -23,7 +23,7 @@
         />
 
         <div class="-mt-4 text-right text-sm">
-            <flux:link :href="route('account.password.request')" wire:navigate>{{ __('Forgot your password?') }}</flux:link>
+            <flux:link :href="route('customer.password.request')" wire:navigate>{{ __('Forgot your password?') }}</flux:link>
         </div>
 
         <flux:checkbox wire:model="remember" :label="__('Remember me')" />

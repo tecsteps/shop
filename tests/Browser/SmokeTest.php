@@ -104,18 +104,22 @@ test('storefront account auth pages render without javascript errors', function 
     $pages = visit([
         '/account/login',
         '/account/register',
+        '/forgot-password',
+        '/reset-password/test-token?email=customer@example.test',
         '/account/forgot-password',
         '/account/reset-password/test-token?email=customer@example.test',
     ], browserSmokeHost());
 
     $pages->assertNoJavaScriptErrors();
 
-    [$login, $register, $forgotPassword, $resetPassword] = $pages;
+    [$login, $register, $forgotPassword, $resetPassword, $accountForgotPassword, $accountResetPassword] = $pages;
 
     $login->assertSee('Log in');
     $register->assertSee('Create an account');
     $forgotPassword->assertSee('Reset password');
     $resetPassword->assertSee('New password');
+    $accountForgotPassword->assertSee('Reset password');
+    $accountResetPassword->assertSee('New password');
 });
 
 test('storefront home renders on a mobile viewport', function (): void {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\OAuthController;
+use App\Http\Controllers\Storefront\Account\Auth\CustomerPasswordResetController;
 use App\Http\Middleware\EnsureUserEmailIsVerified;
 use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
 use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
@@ -60,6 +61,22 @@ Route::middleware(['storefront'])->group(function (): void {
     Route::livewire('checkout/confirmation/{order}', StorefrontCheckoutConfirmation::class)->name('checkout.confirmation');
     Route::livewire('search', StorefrontSearchIndex::class)->name('search.index');
     Route::livewire('pages/{handle}', StorefrontPageShow::class)->name('pages.show');
+
+    Route::livewire('forgot-password', CustomerForgotPassword::class)
+        ->middleware('guest:customer')
+        ->name('customer.password.request');
+
+    Route::post('forgot-password', [CustomerPasswordResetController::class, 'send'])
+        ->middleware('guest:customer')
+        ->name('customer.password.email');
+
+    Route::livewire('reset-password/{token}', CustomerResetPassword::class)
+        ->middleware('guest:customer')
+        ->name('customer.password.reset');
+
+    Route::post('reset-password', [CustomerPasswordResetController::class, 'update'])
+        ->middleware('guest:customer')
+        ->name('customer.password.update');
 });
 
 Route::livewire('admin/login', AdminLogin::class)

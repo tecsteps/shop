@@ -31,7 +31,7 @@ class CustomerResetPassword extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $resetUrl = route('account.password.reset', [
+        $resetUrl = route('customer.password.reset', [
             'token' => $this->token,
             'email' => $notifiable->email,
         ]);
