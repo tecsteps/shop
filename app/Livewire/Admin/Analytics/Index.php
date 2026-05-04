@@ -47,6 +47,14 @@ class Index extends Component
 
     public float $conversionRate = 0.0;
 
+    public int $visitsCount = 0;
+
+    public int $addToCartCount = 0;
+
+    public int $checkoutStartedCount = 0;
+
+    public int $checkoutCompletedCount = 0;
+
     /**
      * @var list<array{date: string, label: string, revenue: int, orders: int}>
      */
@@ -123,6 +131,10 @@ class Index extends Component
         $this->conversionRate = $totals['visits_count'] > 0
             ? round(($totals['checkout_completed_count'] / $totals['visits_count']) * 100, 2)
             : 0.0;
+        $this->visitsCount = $totals['visits_count'];
+        $this->addToCartCount = $totals['add_to_cart_count'];
+        $this->checkoutStartedCount = $totals['checkout_started_count'];
+        $this->checkoutCompletedCount = $totals['checkout_completed_count'];
 
         $daily = $analytics->getDailyMetrics($store, $start->toDateString(), $end->toDateString())->keyBy('date');
 

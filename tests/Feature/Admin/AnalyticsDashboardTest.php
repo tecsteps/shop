@@ -43,7 +43,8 @@ test('admin analytics route renders metrics for store staff and above', function
         ->get('/admin/analytics')
         ->assertSuccessful()
         ->assertSee('Analytics')
-        ->assertSee('Total sales')
+        ->assertSee('Revenue')
+        ->assertSee('Conversion funnel')
         ->assertSee('Top referrers');
 });
 

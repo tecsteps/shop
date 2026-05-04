@@ -46,7 +46,7 @@
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         @foreach ([
-            ['label' => 'Total sales', 'value' => $this->formattedTotalSales, 'icon' => 'banknotes'],
+            ['label' => 'Revenue', 'value' => $this->formattedTotalSales, 'icon' => 'banknotes'],
             ['label' => 'Orders', 'value' => number_format($ordersCount), 'icon' => 'shopping-bag'],
             ['label' => 'Average order', 'value' => $this->formattedAov, 'icon' => 'receipt-percent'],
             ['label' => 'Conversion', 'value' => number_format($conversionRate, 2).'%', 'icon' => 'chart-bar'],
@@ -85,6 +85,25 @@
                     @if ($loop->first || $loop->last || $loop->iteration % 7 === 0)
                         <div class="hidden text-[11px] text-zinc-500 sm:block">{{ $point['label'] }}</div>
                     @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:heading size="lg">Conversion funnel</flux:heading>
+        <flux:text class="mt-1">Traffic progression through checkout</flux:text>
+
+        <div class="mt-5 grid gap-3 md:grid-cols-4">
+            @foreach ([
+                ['label' => 'Visits', 'value' => $visitsCount],
+                ['label' => 'Add to cart', 'value' => $addToCartCount],
+                ['label' => 'Checkout started', 'value' => $checkoutStartedCount],
+                ['label' => 'Checkout completed', 'value' => $checkoutCompletedCount],
+            ] as $step)
+                <div wire:key="analytics-funnel-{{ $step['label'] }}" class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+                    <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ $step['label'] }}</div>
+                    <div class="mt-2 text-2xl font-semibold text-zinc-950 dark:text-white">{{ number_format($step['value']) }}</div>
                 </div>
             @endforeach
         </div>
