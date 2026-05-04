@@ -27,8 +27,10 @@ use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
 use App\Livewire\Admin\Themes\Editor as AdminThemeEditor;
 use App\Livewire\Admin\Themes\Index as AdminThemesIndex;
+use App\Livewire\Storefront\Account\Auth\ForgotPassword as CustomerForgotPassword;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Account\Auth\ResetPassword as CustomerResetPassword;
 use App\Livewire\Storefront\Account\Orders\Index as CustomerOrdersIndex;
 use App\Livewire\Storefront\Account\Orders\Show as CustomerOrderShow;
 use App\Livewire\Storefront\Cart\Show as StorefrontCartShow;
@@ -108,6 +110,14 @@ Route::middleware(['storefront'])->group(function (): void {
     Route::livewire('account/register', CustomerRegister::class)
         ->middleware('guest:customer')
         ->name('account.register');
+
+    Route::livewire('account/forgot-password', CustomerForgotPassword::class)
+        ->middleware('guest:customer')
+        ->name('account.password.request');
+
+    Route::livewire('account/reset-password/{token}', CustomerResetPassword::class)
+        ->middleware('guest:customer')
+        ->name('account.password.reset');
 
     Route::livewire('account', CustomerOrdersIndex::class)
         ->middleware('auth:customer')
