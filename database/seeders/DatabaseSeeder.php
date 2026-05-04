@@ -34,6 +34,10 @@ class DatabaseSeeder extends Seeder
             DiscountSeeder::class,
             CustomerSeeder::class,
             CustomerAddressSeeder::class,
+            OrderSeeder::class,
+            PaymentSeeder::class,
+            FulfillmentSeeder::class,
+            RefundSeeder::class,
             AnalyticsSeeder::class,
         ]);
     }

@@ -4,7 +4,6 @@ use App\Livewire\Storefront\Account\Addresses\Index as AccountAddressesIndex;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\Order;
-use App\Models\OrderLine;
 use App\Models\Store;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,20 +54,11 @@ test('unauthenticated customers are redirected to login', function (): void {
 test('customer order history and detail are available through account routes', function (): void {
     $store = customerAccountStore();
     $customer = customerAccountCustomer();
-    $orders = collect(['#1001', '#1002', '#1004'])->map(fn (string $orderNumber): Order => Order::factory()
-        ->forCustomer($customer)
-        ->paid()
-        ->create([
-            'store_id' => $store->getKey(),
-            'customer_id' => $customer->getKey(),
-            'order_number' => $orderNumber,
-            'email' => $customer->email,
-        ]));
-
-    OrderLine::factory()->create([
-        'order_id' => $orders->first()->getKey(),
-        'title_snapshot' => 'Classic Cotton T-Shirt',
-    ]);
+    $order = Order::withoutGlobalScopes()
+        ->where('store_id', $store->getKey())
+        ->where('customer_id', $customer->getKey())
+        ->where('order_number', '#1001')
+        ->firstOrFail();
 
     $this->actingAs($customer, 'customer')
         ->get('http://shop.test/account/orders')
@@ -78,7 +68,7 @@ test('customer order history and detail are available through account routes', f
         ->assertSee('#1004');
 
     $this->actingAs($customer, 'customer')
-        ->get('http://shop.test/account/orders/'.$orders->first()->getKey())
+        ->get('http://shop.test/account/orders/'.$order->getKey())
         ->assertOk()
         ->assertSee('#1001')
         ->assertSee('Classic Cotton T-Shirt')
@@ -92,7 +82,7 @@ test('customer can add and update addresses', function (): void {
     $this->actingAs($customer, 'customer');
 
     Livewire::test(AccountAddressesIndex::class)
-        ->assertSee('Main Street 1')
+        ->assertSee('Hauptstrasse 1')
         ->call('openAddressForm')
         ->set('addressLabel', 'Office')
         ->set('address.first_name', 'John')

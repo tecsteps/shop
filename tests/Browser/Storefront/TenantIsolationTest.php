@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Customer;
-use App\Models\Order;
 use App\Models\Store;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,51 +25,6 @@ function tenantIsolationHost(): array
 function tenantIsolationStore(string $handle): Store
 {
     return Store::query()->where('handle', $handle)->firstOrFail();
-}
-
-function tenantIsolationFashionCustomer(): Customer
-{
-    $store = tenantIsolationStore('acme-fashion');
-
-    return Customer::withoutGlobalScopes()
-        ->where('store_id', $store->getKey())
-        ->where('email', 'customer@acme.test')
-        ->firstOrFail();
-}
-
-function tenantIsolationCreateOrders(): void
-{
-    $fashionStore = tenantIsolationStore('acme-fashion');
-    $electronicsStore = tenantIsolationStore('acme-electronics');
-    $fashionCustomer = tenantIsolationFashionCustomer();
-    $electronicsCustomer = Customer::factory()->create([
-        'store_id' => $electronicsStore->getKey(),
-        'email' => 'customer@acme.test',
-        'password' => 'password',
-        'name' => 'Electronics Customer',
-    ]);
-
-    foreach (['#1001', '#1002', '#1004'] as $orderNumber) {
-        Order::factory()
-            ->forCustomer($fashionCustomer)
-            ->paid()
-            ->create([
-                'store_id' => $fashionStore->getKey(),
-                'customer_id' => $fashionCustomer->getKey(),
-                'order_number' => $orderNumber,
-                'email' => $fashionCustomer->email,
-            ]);
-    }
-
-    Order::factory()
-        ->forCustomer($electronicsCustomer)
-        ->paid()
-        ->create([
-            'store_id' => $electronicsStore->getKey(),
-            'customer_id' => $electronicsCustomer->getKey(),
-            'order_number' => '#2001',
-            'email' => $electronicsCustomer->email,
-        ]);
 }
 
 function tenantIsolationAdminLogin(): mixed
@@ -118,8 +71,6 @@ test('storefront collections only contain current store products', function (): 
 });
 
 test('admin cannot see other store products or orders', function (): void {
-    tenantIsolationCreateOrders();
-
     tenantIsolationAdminLogin()
         ->click('a[href$="/admin/products"]')
         ->wait(1)
@@ -131,7 +82,7 @@ test('admin cannot see other store products or orders', function (): void {
         ->wait(1)
         ->assertPathIs('/admin/orders')
         ->assertSee('#1001')
-        ->assertDontSee('#2001')
+        ->assertDontSee('#5001')
         ->assertNoJavaScriptErrors();
 });
 
@@ -148,8 +99,6 @@ test('search only returns current store products', function (): void {
 });
 
 test('customer accounts are scoped to their store', function (): void {
-    tenantIsolationCreateOrders();
-
     tenantIsolationCustomerLogin()
         ->click('nav[aria-label="Account navigation"] a[href$="/account/orders"]')
         ->wait(1)
@@ -157,6 +106,6 @@ test('customer accounts are scoped to their store', function (): void {
         ->assertSee('#1001')
         ->assertSee('#1002')
         ->assertSee('#1004')
-        ->assertDontSee('#2001')
+        ->assertDontSee('#5001')
         ->assertNoJavaScriptErrors();
 });

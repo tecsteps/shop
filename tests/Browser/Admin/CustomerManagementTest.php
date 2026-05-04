@@ -1,16 +1,7 @@
 <?php
 
-use App\Enums\FinancialStatus;
-use App\Enums\FulfillmentStatus;
-use App\Enums\OrderStatus;
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\OrderLine;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -53,56 +44,13 @@ function adminCustomerBrowserCustomer(Store $store): Customer
         ->firstOrFail();
 }
 
-function adminCustomerBrowserCreateOrder(Store $store, Customer $customer): Order
+function adminCustomerBrowserOrder(Store $store, Customer $customer): Order
 {
-    $product = Product::withoutGlobalScopes()
+    return Order::withoutGlobalScopes()
         ->where('store_id', $store->getKey())
-        ->where('handle', 'classic-cotton-t-shirt')
+        ->where('customer_id', $customer->getKey())
+        ->where('order_number', '#1001')
         ->firstOrFail();
-    $variant = ProductVariant::withoutGlobalScopes()
-        ->where('product_id', $product->getKey())
-        ->firstOrFail();
-    $shipping = 499;
-    $total = $variant->price_amount + $shipping;
-
-    $order = Order::factory()->create([
-        'store_id' => $store->getKey(),
-        'customer_id' => $customer->getKey(),
-        'order_number' => '#1001',
-        'payment_method' => PaymentMethod::CreditCard,
-        'status' => OrderStatus::Paid,
-        'financial_status' => FinancialStatus::Paid,
-        'fulfillment_status' => FulfillmentStatus::Unfulfilled,
-        'currency' => $store->default_currency,
-        'subtotal_amount' => $variant->price_amount,
-        'discount_amount' => 0,
-        'shipping_amount' => $shipping,
-        'tax_amount' => 0,
-        'total_amount' => $total,
-        'email' => $customer->email,
-        'placed_at' => now()->subDay(),
-    ]);
-
-    OrderLine::factory()->create([
-        'order_id' => $order->getKey(),
-        'product_id' => $product->getKey(),
-        'variant_id' => $variant->getKey(),
-        'title_snapshot' => 'Classic Cotton T-Shirt',
-        'sku_snapshot' => $variant->sku,
-        'quantity' => 1,
-        'unit_price_amount' => $variant->price_amount,
-        'total_amount' => $variant->price_amount,
-    ]);
-
-    Payment::factory()->create([
-        'order_id' => $order->getKey(),
-        'method' => PaymentMethod::CreditCard,
-        'status' => PaymentStatus::Captured,
-        'amount' => $total,
-        'currency' => $store->default_currency,
-    ]);
-
-    return $order->refresh();
 }
 
 function adminCustomerBrowserOpenCustomers(mixed $testCase): mixed
@@ -136,7 +84,7 @@ test('shows the customer list', function (): void {
 test('shows customer detail with order history', function (): void {
     $store = adminCustomerBrowserAuthenticate($this);
     $customer = adminCustomerBrowserCustomer($store);
-    adminCustomerBrowserCreateOrder($store, $customer);
+    adminCustomerBrowserOrder($store, $customer);
 
     visit('/admin/customers', adminCustomerBrowserHost())
         ->wait(1)

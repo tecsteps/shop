@@ -1,19 +1,7 @@
 <?php
 
-use App\Enums\FinancialStatus;
-use App\Enums\FulfillmentShipmentStatus;
-use App\Enums\FulfillmentStatus;
-use App\Enums\OrderStatus;
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
-use App\Models\Customer;
-use App\Models\Fulfillment;
 use App\Models\InventoryItem;
 use App\Models\Order;
-use App\Models\OrderLine;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -52,144 +40,35 @@ function adminOrderAuthenticate(mixed $testCase): void
 function adminOrderFixtures(): array
 {
     $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
-    $customer = Customer::query()->where('email', 'customer@acme.test')->firstOrFail();
-    $product = Product::withoutGlobalScopes()
+    $orders = Order::withoutGlobalScopes()
         ->where('store_id', $store->getKey())
-        ->where('handle', 'classic-cotton-t-shirt')
+        ->whereIn('order_number', ['#1001', '#1002', '#1005'])
+        ->get()
+        ->keyBy('order_number');
+
+    $bank = $orders->get('#1005');
+
+    if (! $bank instanceof Order) {
+        abort(500, 'Seeded bank transfer order is missing.');
+    }
+
+    $bankLine = $bank->lines()
+        ->whereNotNull('variant_id')
         ->firstOrFail();
-    $variant = ProductVariant::withoutGlobalScopes()
-        ->where('product_id', $product->getKey())
-        ->firstOrFail();
-
-    $paid = adminOrderCreateOrder(
-        store: $store,
-        customer: $customer,
-        product: $product,
-        variant: $variant,
-        orderNumber: '#1001',
-        paymentMethod: PaymentMethod::CreditCard,
-        status: OrderStatus::Paid,
-        financialStatus: FinancialStatus::Paid,
-        fulfillmentStatus: FulfillmentStatus::Unfulfilled,
-        placedAt: now()->subDays(3),
-    );
-
-    $fulfilled = adminOrderCreateOrder(
-        store: $store,
-        customer: $customer,
-        product: $product,
-        variant: $variant,
-        orderNumber: '#1002',
-        paymentMethod: PaymentMethod::CreditCard,
-        status: OrderStatus::Fulfilled,
-        financialStatus: FinancialStatus::Paid,
-        fulfillmentStatus: FulfillmentStatus::Fulfilled,
-        placedAt: now()->subDays(2),
-    );
-
-    adminOrderCreateDeliveredFulfillment($fulfilled);
-
-    $bank = adminOrderCreateOrder(
-        store: $store,
-        customer: $customer,
-        product: $product,
-        variant: $variant,
-        orderNumber: '#1005',
-        paymentMethod: PaymentMethod::BankTransfer,
-        status: OrderStatus::Pending,
-        financialStatus: FinancialStatus::Pending,
-        fulfillmentStatus: FulfillmentStatus::Unfulfilled,
-        placedAt: now()->subDay(),
-    );
 
     InventoryItem::withoutGlobalScopes()
-        ->where('variant_id', $variant->getKey())
+        ->where('variant_id', $bankLine->variant_id)
         ->update([
             'quantity_on_hand' => 20,
-            'quantity_reserved' => 1,
+            'quantity_reserved' => $bankLine->quantity,
         ]);
 
     return [
         'store' => $store,
-        'paid' => $paid,
-        'fulfilled' => $fulfilled,
+        'paid' => $orders->get('#1001'),
+        'fulfilled' => $orders->get('#1002'),
         'bank' => $bank,
     ];
-}
-
-function adminOrderCreateOrder(
-    Store $store,
-    Customer $customer,
-    Product $product,
-    ProductVariant $variant,
-    string $orderNumber,
-    PaymentMethod $paymentMethod,
-    OrderStatus $status,
-    FinancialStatus $financialStatus,
-    FulfillmentStatus $fulfillmentStatus,
-    mixed $placedAt,
-): Order {
-    $subtotal = $variant->price_amount;
-    $shipping = 499;
-    $tax = 0;
-    $total = $subtotal + $shipping + $tax;
-
-    $order = Order::factory()->create([
-        'store_id' => $store->getKey(),
-        'customer_id' => $customer->getKey(),
-        'order_number' => $orderNumber,
-        'payment_method' => $paymentMethod,
-        'status' => $status,
-        'financial_status' => $financialStatus,
-        'fulfillment_status' => $fulfillmentStatus,
-        'currency' => $store->default_currency,
-        'subtotal_amount' => $subtotal,
-        'discount_amount' => 0,
-        'shipping_amount' => $shipping,
-        'tax_amount' => $tax,
-        'total_amount' => $total,
-        'email' => $customer->email,
-        'placed_at' => $placedAt,
-    ]);
-
-    OrderLine::factory()->create([
-        'order_id' => $order->getKey(),
-        'product_id' => $product->getKey(),
-        'variant_id' => $variant->getKey(),
-        'title_snapshot' => 'Classic Cotton T-Shirt',
-        'sku_snapshot' => $variant->sku,
-        'quantity' => 1,
-        'unit_price_amount' => $variant->price_amount,
-        'total_amount' => $variant->price_amount,
-    ]);
-
-    Payment::factory()->create([
-        'order_id' => $order->getKey(),
-        'method' => $paymentMethod,
-        'status' => $financialStatus === FinancialStatus::Pending ? PaymentStatus::Pending : PaymentStatus::Captured,
-        'amount' => $total,
-        'currency' => $store->default_currency,
-    ]);
-
-    return $order->refresh();
-}
-
-function adminOrderCreateDeliveredFulfillment(Order $order): void
-{
-    $line = $order->lines()->firstOrFail();
-    $fulfillment = Fulfillment::query()->create([
-        'order_id' => $order->getKey(),
-        'status' => FulfillmentShipmentStatus::Delivered,
-        'tracking_company' => 'DHL',
-        'tracking_number' => 'DHL1234567890',
-        'shipped_at' => now()->subDay(),
-        'delivered_at' => now(),
-    ]);
-
-    $fulfillment->lines()->create([
-        'order_line_id' => $line->getKey(),
-        'quantity' => $line->quantity,
-    ]);
 }
 
 function adminOrderOpenOrders(mixed $testCase): mixed

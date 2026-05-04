@@ -122,7 +122,7 @@ test('completes full checkout with credit card', function (): void {
         ->wait(2)
         ->assertPathBeginsWith('/checkout/confirmation')
         ->assertSee('Thank you')
-        ->assertSee('#1001')
+        ->assertSee('#1016')
         ->assertNoJavaScriptErrors();
 });
 
@@ -235,7 +235,7 @@ test('completes checkout with bank transfer', function (): void {
         ->assertSee('IBAN')
         ->assertSee('BIC')
         ->assertSee('Reference')
-        ->assertSee('#1001')
+        ->assertSee('#1016')
         ->assertNoJavaScriptErrors();
 });
 

@@ -20,7 +20,21 @@ beforeEach(function (): void {
 
 function adminAnalyticsSummaryApiStore(): Store
 {
-    return Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+    $store = Store::factory()->create();
+    $user = adminAnalyticsSummaryApiUser();
+
+    DB::table('store_users')->updateOrInsert(
+        [
+            'store_id' => $store->getKey(),
+            'user_id' => $user->getKey(),
+        ],
+        [
+            'role' => 'owner',
+            'created_at' => now(),
+        ],
+    );
+
+    return $store;
 }
 
 function adminAnalyticsSummaryApiUser(): User

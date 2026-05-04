@@ -107,20 +107,21 @@ test('storefront order api pays a checkout and exposes token-gated order lookup'
 
     $payResponse
         ->assertOk()
-        ->assertJsonPath('data.order_number', '#1001')
+        ->assertJsonPath('data.order_number', '#1016')
         ->assertJsonPath('data.financial_status', 'paid')
         ->assertJsonCount(1, 'data.lines');
 
     $token = $payResponse['data']['access_token'];
+    $orderNumber = $payResponse['data']['order_number'];
 
     $api()
-        ->getJson('/api/storefront/v1/orders/%231001?token='.$token)
+        ->getJson('/api/storefront/v1/orders/'.rawurlencode($orderNumber).'?token='.$token)
         ->assertOk()
-        ->assertJsonPath('data.order_number', '#1001')
+        ->assertJsonPath('data.order_number', $orderNumber)
         ->assertJsonPath('data.total_amount', $payResponse['data']['total_amount']);
 
     $api()
-        ->getJson('/api/storefront/v1/orders/%231001?token=bad-token')
+        ->getJson('/api/storefront/v1/orders/'.rawurlencode($orderNumber).'?token=bad-token')
         ->assertNotFound();
 });
 

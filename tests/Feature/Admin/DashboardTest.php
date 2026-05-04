@@ -9,6 +9,7 @@ use App\Models\Store;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
@@ -20,7 +21,20 @@ beforeEach(function (): void {
 
 function adminDashboardStore(): Store
 {
-    $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+    $store = Store::factory()->create();
+    $user = adminDashboardUser();
+
+    DB::table('store_users')->updateOrInsert(
+        [
+            'store_id' => $store->getKey(),
+            'user_id' => $user->getKey(),
+        ],
+        [
+            'role' => 'owner',
+            'created_at' => now(),
+        ],
+    );
+
     app()->instance('current_store', $store);
 
     return $store;

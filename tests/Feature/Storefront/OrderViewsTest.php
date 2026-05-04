@@ -79,7 +79,11 @@ test('checkout page places an order and redirects to confirmation', function () 
         ->set('cardNumber', '4242 4242 4242 4242')
         ->call('placeOrder');
 
-    $order = Order::withoutGlobalScopes()->firstOrFail();
+    $order = Order::withoutGlobalScopes()
+        ->where('store_id', $store->getKey())
+        ->where('email', 'buyer@example.test')
+        ->latest('id')
+        ->firstOrFail();
 
     $component->assertRedirect(route('checkout.confirmation', $order));
 
@@ -93,6 +97,7 @@ test('checkout page places an order and redirects to confirmation', function () 
 test('checkout page surfaces payment failures and releases reservations', function () {
     $store = orderViewsStore();
     $variant = orderViewsVariant($store);
+    $ordersCount = Order::withoutGlobalScopes()->count();
     $cart = app(CartService::class)->create($store);
     session(['cart_id' => $cart->getKey()]);
     app(CartService::class)->addLine($cart, $variant->getKey(), 2);
@@ -118,7 +123,8 @@ test('checkout page surfaces payment failures and releases reservations', functi
     $checkout = Checkout::withoutGlobalScopes()->where('cart_id', $cart->getKey())->firstOrFail();
     $inventory = InventoryItem::withoutGlobalScopes()->where('variant_id', $variant->getKey())->firstOrFail();
 
-    expect(Order::withoutGlobalScopes()->count())->toBe(0)
+    expect(Order::withoutGlobalScopes()->count())->toBe($ordersCount)
+        ->and(Order::withoutGlobalScopes()->where('email', 'buyer@example.test')->exists())->toBeFalse()
         ->and($checkout->status)->toBe(CheckoutStatus::ShippingSelected)
         ->and($inventory->quantity_reserved)->toBe(0);
 });
@@ -130,6 +136,7 @@ test('order confirmation is visible only for the session order or customer order
     $order = Order::factory()->forCustomer($customer)->paid()->create([
         'store_id' => $store->getKey(),
         'customer_id' => $customer->getKey(),
+        'order_number' => '#7770',
         'email' => $customer->email,
     ]);
 

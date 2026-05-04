@@ -2,7 +2,6 @@
 
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\OrderLine;
 use App\Models\Store;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -57,40 +56,17 @@ function storefrontAccountCustomer(): Customer
 /**
  * @return Collection<int, Order>
  */
-function storefrontAccountCreateOrders(): Collection
+function storefrontAccountSeededOrders(): Collection
 {
     $store = storefrontAccountStore();
     $customer = storefrontAccountCustomer();
 
-    return collect(['#1001', '#1002', '#1004'])
-        ->map(function (string $orderNumber, int $index) use ($store, $customer): Order {
-            $order = Order::factory()
-                ->forCustomer($customer)
-                ->paid()
-                ->create([
-                    'store_id' => $store->getKey(),
-                    'customer_id' => $customer->getKey(),
-                    'order_number' => $orderNumber,
-                    'email' => $customer->email,
-                    'subtotal_amount' => 2499,
-                    'shipping_amount' => 499,
-                    'tax_amount' => 0,
-                    'total_amount' => 2998,
-                    'placed_at' => now()->subDays($index),
-                ]);
-
-            OrderLine::factory()->create([
-                'order_id' => $order->getKey(),
-                'product_id' => null,
-                'variant_id' => null,
-                'title_snapshot' => 'Classic Cotton T-Shirt',
-                'quantity' => 1,
-                'unit_price_amount' => 2499,
-                'total_amount' => 2499,
-            ]);
-
-            return $order;
-        });
+    return Order::withoutGlobalScopes()
+        ->where('store_id', $store->getKey())
+        ->where('customer_id', $customer->getKey())
+        ->whereIn('order_number', ['#1001', '#1002', '#1004'])
+        ->orderBy('order_number')
+        ->get();
 }
 
 test('can register a new customer', function (): void {
@@ -156,7 +132,7 @@ test('redirects unauthenticated customers to login', function (): void {
 });
 
 test('shows order history for logged in customer', function (): void {
-    storefrontAccountCreateOrders();
+    storefrontAccountSeededOrders();
 
     storefrontAccountLogin()
         ->click('nav[aria-label="Account navigation"] a[href$="/account/orders"]')
@@ -169,7 +145,7 @@ test('shows order history for logged in customer', function (): void {
 });
 
 test('shows order detail for customer order', function (): void {
-    $orders = storefrontAccountCreateOrders();
+    $orders = storefrontAccountSeededOrders();
     $order = $orders->first();
 
     storefrontAccountLogin()
@@ -189,7 +165,7 @@ test('can view addresses', function (): void {
         ->click('nav[aria-label="Account navigation"] a[href$="/account/addresses"]')
         ->wait(1)
         ->assertPathIs('/account/addresses')
-        ->assertSee('Main Street 1')
+        ->assertSee('Hauptstrasse 1')
         ->assertSee('Berlin')
         ->assertNoJavaScriptErrors();
 });
@@ -218,7 +194,7 @@ test('can edit an existing address', function (): void {
     storefrontAccountLogin()
         ->click('nav[aria-label="Account navigation"] a[href$="/account/addresses"]')
         ->wait(1)
-        ->click('article:has-text("Main Street 1") button:has-text("Edit")')
+        ->click('article:has-text("Hauptstrasse 1") button:has-text("Edit")')
         ->wait(1)
         ->fill('input[wire\\:model="address.city"]', 'Frankfurt')
         ->click('form[wire\\:submit="saveAddress"] button[type="submit"]')
