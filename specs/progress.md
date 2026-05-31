@@ -11,18 +11,20 @@
 
 ## Phases
 
-### Phase 1: Foundation (CRITICAL — blocks all)
-- [ ] Config: auth guards (customer), database SQLite tuning, logging JSON channel
-- [ ] Core migrations: organizations, stores, store_domains, users mods, store_users, store_settings
-- [ ] Core models + factories + seeders: Organization, Store, StoreDomain, StoreUser, StoreSettings
-- [ ] Enums: StoreStatus, StoreUserRole, StoreDomainType
-- [ ] Tenant middleware ResolveStore + storefront/admin middleware groups
-- [ ] BelongsToStore trait + StoreScope global scope
-- [ ] Admin auth (Login/Logout, rate limiting, password reset, last_login_at)
-- [ ] Customer auth (customer guard, CustomerUserProvider, per-store uniqueness)
-- [ ] Policies (Product, Order, Collection, Discount, Customer, Store, Page, Theme, Fulfillment, Refund) + role matrix
-- [ ] Pest test helpers (createStoreContext, actingAsAdmin, actingAsCustomer)
-- [ ] Route skeleton (web/storefront/admin/api files) + bootstrap wiring
+### Phase 1: Foundation (CRITICAL — blocks all) ✅ DONE
+- [x] Config: auth guards (web/customer/sanctum-deferred), SQLite tuning (WAL, FK, busy_timeout), logging JSON channel
+- [x] Core migrations: organizations, stores, store_domains, users mods (status/last_login_at/password_hash), store_users, store_settings, customers, customer_addresses
+- [x] Core models + factories + seeders: Organization, Store, StoreDomain, StoreUser, StoreSettings, Customer, CustomerAddress
+- [x] Enums: StoreStatus, StoreUserRole, StoreDomainType
+- [x] Tenant middleware ResolveStore + storefront/admin/api middleware groups + aliases (store.resolve, role.check, auth.customer)
+- [x] BelongsToStore trait + StoreScope global scope (auto-sets store_id)
+- [x] Admin auth (Livewire Login/Logout, 5/min rate limit, last_login_at, session regen, generic error)
+- [x] Customer auth (customer guard, CustomerUserProvider store-scoped, per-store email uniqueness)
+- [x] Policies (Product/Order/Collection/Discount/Customer/Store/Page/Theme/Fulfillment/Refund) + role matrix + gates
+- [x] Pest test helpers (createStoreContext, actingAsAdmin, actingAsCustomer, bindCurrentStore, storefrontUrl)
+- [x] Route skeleton (storefront/admin/api files) + bootstrap wiring; DemoStoreSeeder hook
+- VERIFIED: 31 passed / 1 skipped (cart-merge stub, Phase 4); pint clean; migrate:fresh --seed clean; shop.test storefront HTTP 200; admin login browser-verified.
+- Demo creds: admin@shop.test / password (Owner); customer@shop.test / password. Storefront http://shop.test, admin http://shop.test/admin.
 
 ### Phase 2: Catalog
 - [ ] Migrations + models (Product, ProductOption, ProductOptionValue, ProductVariant, InventoryItem, Collection, ProductMedia)

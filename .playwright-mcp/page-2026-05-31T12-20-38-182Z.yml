@@ -1,0 +1,4 @@
+- main [ref=e2]:
+  - heading "Dashboard" [level=1] [ref=e3]
+  - paragraph [ref=e4]: Acme Fashion
+  - button "Log out" [ref=e6]
