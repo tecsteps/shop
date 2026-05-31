@@ -100,9 +100,13 @@
 - [x] Full Pest suite green: 437 passed / 1036 assertions / 0 failures
 - [x] Pint clean (whole app)
 - [x] migrate:fresh --seed clean (rich demo data verified)
-- [~] Playwright storefront smoke (browse, cart, checkout, account, search, 404)
-- [ ] Playwright admin smoke (login, products, orders, fulfill/refund/confirm-payment)
-- [ ] Review meeting / feature showcase
+- [x] Playwright storefront smoke: home, product (variants/sale/stock), add-to-cart→drawer→badge, checkout (address→shipping→payment 4242)→confirmation Order #1009, search (FTS "cotton"→2), customer login→dashboard→order history (scoped), styled 404 — all 0 console errors (favicon 404 only)
+- [x] Playwright admin smoke: login (session), dashboard (KPIs/chart/8 orders incl #1009), products list (20, filters, images, pagination), order #1003 detail, Confirm bank-transfer payment (→Paid/Captured, guard cleared), Create fulfillment (+tracking→Fulfilled), Analytics (populated funnel) — 0 console errors
+- [x] All 3 browser-found bugs fixed + re-verified live (webhook 500, shipping label, empty analytics)
+- [x] FINAL: 441 passed / 1229 assertions / 0 failed; pint clean; migrate:fresh --seed clean; 105 routes, 239 app classes, 60 test files
+- [x] Review meeting / feature showcase delivered
+
+## ✅ COMPLETE — all 12 phases implemented, tested (Pest), and browser-verified (Playwright).
 
 #### Bugs found in browser verification + fixed (suite green 441):
 1. CRITICAL (platform): checkout completion 500 — OrderCreated→DeliverWebhook ran inline (sync queue) and a ConnectionException to the seeded unreachable webhook propagated through order creation. Fixed: sync-aware handleFailure (records failed delivery + circuit breaker + swallows in sync; preserves async retry/backoff), listener ShouldHandleEventsAfterCommit + try/catch, 5s HTTP timeout. +2 regression tests (non-faked). Browser-verified Order #1009 completes.
