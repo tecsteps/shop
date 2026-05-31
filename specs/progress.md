@@ -61,26 +61,33 @@
 - VERIFIED: full suite 266 passed / 0 failed; pint clean; migrate:fresh --seed clean (20 products, 72 variants, 3 orders, 3 discounts).
 - Storefront routes #6 must add: /cart, /checkout, /checkout/confirmation/{orderId}. Admin #7: order confirm-payment/refund/fulfillment actions.
 
-### Phase 6: Customer Accounts
-- [ ] Account pages (Login, Register, Dashboard, Orders Index/Show, Addresses)
-- [ ] Tests (CustomerAccount, AddressManagement)
+### Phase 3b/6: Storefront shopping UI + Customer Accounts ✅ DONE (storefront)
+- [x] Products\Show (gallery, variant selector, sale price, stock messaging), CartDrawer (in layout), Cart\Show, Checkout\Show (stepper), Checkout\Confirmation
+- [x] Account Dashboard, Orders Index/Show (404 on other customers), Addresses CRUD + default; mergeOnLogin on login
+- [x] Routes: storefront.products.show/cart/checkout/checkout.confirmation/search + account.*; fixed Alpine->Livewire.dispatch event-bus bug
+- [x] Tests (CustomerAccount 7, AddressManagement 8, ProductPage 5) green; full purchase flow browser-verified (Order #1004, totals 41.02 USD)
 
-### Phase 7: Admin Panel
-- [ ] Layout (Sidebar, TopBar, Breadcrumbs) + Dashboard
-- [ ] Products, Orders, Collections, Customers, Discounts, Settings, Themes, Pages, Navigation, Analytics, Search, Apps, Developers
-- [ ] Tests (Dashboard, ProductManagement, OrderManagement, DiscountManagement, Settings)
+### Tenancy fix (#18) ✅ DONE (foundation)
+- [x] ResolveStore registered as Livewire persistent middleware + self-detect mode (host/storefront precedence > stale admin session) — fixes current_store on /livewire/update for nested components; +regression tests, live-verified
 
-### Phase 8: Search
-- [ ] FTS5 migration + SearchService + ProductObserver + UI
-- [ ] Tests (Search, Autocomplete)
+### Phase 7: Admin Panel ✅ DONE (admin)
+- [x] Layout (Flux Sidebar, TopBar w/ store selector, Breadcrumbs, toast host, dark mode) + Dashboard (KPIs/deltas, 30-day chart, recent orders, date range)
+- [x] Products (Index bulk/filter/search + Form variant matrix + MediaManager), Orders (Index tabs + Show timeline/fulfillment/refund/confirm-payment), Collections, Customers, Discounts, Settings (General/Domains/Shipping/Taxes/Checkout/Notifications), Themes Index/Editor, Pages, Navigation (drag), Analytics, Search Settings, Apps, Developers (Sanctum tokens + webhooks) — 31 components
+- [x] Policies enforced (Owner/Admin/Staff/Support matrix); dead starter views removed
+- [x] Tests (Dashboard, ProductManagement, OrderManagement, DiscountManagement, Settings + SmokeTest = 55) green; browser-verified
 
-### Phase 9: Analytics
-- [ ] Migrations + AnalyticsService + AggregateAnalytics job
-- [ ] Tests (EventIngestion, Aggregation)
+### Phase 8: Search ✅ DONE (platform)
+- [x] FTS5 virtual table products_fts + search_settings/search_queries + SearchService (search/autocomplete/sync/reindex) + ProductObserver (SearchServiceProvider)
+- [x] Tests (Search, Autocomplete) green; "cotton" -> correct products verified
 
-### Phase 10: Apps & Webhooks
-- [ ] Migrations + WebhookService + DeliverWebhook job + Sanctum tokens
-- [ ] Tests (WebhookDelivery, WebhookSignature, SanctumToken)
+### Phase 9: Analytics ✅ DONE (platform)
+- [x] analytics_events/analytics_daily migrations + AnalyticsService (track/getDailyMetrics/summarize) + AggregateAnalytics job + RecordOrderAnalytics listener
+- [x] Tests (EventIngestion, Aggregation) green
+
+### Phase 10: Apps & Webhooks + API + Sanctum ✅ DONE (platform)
+- [x] apps/app_installations/oauth_*/webhook_subscriptions/webhook_deliveries + WebhookService (sign/verify HMAC) + DeliverWebhook job (backoff, circuit breaker)
+- [x] Sanctum personal access tokens + ability middleware; REST API: storefront /api/storefront/v1/* (rate-limited) + admin /api/admin/v1/stores/{store}/* (Bearer + abilities) + Eloquent Resources
+- [x] Tests (WebhookDelivery, WebhookSignature, SanctumToken, CartApi, Api/*) green; laravel/sanctum ^4.3 added
 
 ### Phase 11: Polish
 - [ ] Accessibility, responsive, dark mode, error pages, structured logging, demo seeders

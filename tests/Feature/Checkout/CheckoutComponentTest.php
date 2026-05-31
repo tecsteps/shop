@@ -7,19 +7,16 @@ use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Services\CartService;
-use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
 beforeEach(function () {
     $this->context = createStoreContext();
     $this->store = $this->context['store'];
 
-    // Register the storefront cart/checkout routes the components redirect to.
-    // The storefront teammate owns routes/storefront.php; these stand-ins let
-    // the components be exercised in isolation here.
-    Route::get('/cart', fn () => '')->name('cart.show');
-    Route::get('/checkout', fn () => '')->name('checkout.show');
-    Route::get('/checkout/confirmation/{orderId}', fn () => '')->name('checkout.confirmation');
+    // The storefront cart/checkout routes the components redirect to
+    // (storefront.cart / storefront.checkout / storefront.checkout.confirmation)
+    // are defined for real in routes/storefront.php, so no runtime stubs are
+    // needed here.
 });
 
 it('cart drawer adds a variant and emits cart-updated', function () {
@@ -28,11 +25,17 @@ it('cart drawer adds a variant and emits cart-updated', function () {
     Livewire::test(CartDrawer::class)
         ->call('addToCart', $variant->id, 2)
         ->assertSet('open', true)
-        ->assertDispatched('cart-updated')
+        ->assertDispatched('cart-updated', itemCount: 2)
         ->assertSee('25.00 USD'); // 2500 cents per unit
 
     $cart = app(CartService::class)->getOrCreateForSession($this->store);
     expect($cart->lines()->sum('quantity'))->toBe(2);
+});
+
+it('cart drawer opens on the open-cart-drawer event', function () {
+    Livewire::test(CartDrawer::class)
+        ->call('openDrawer')
+        ->assertSet('open', true);
 });
 
 it('cart drawer surfaces an inventory error', function () {

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             StorefrontSeeder::class,
             CommerceSeeder::class,
+            SearchAndAppsSeeder::class,
         ]);
     }
 }

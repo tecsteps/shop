@@ -123,7 +123,7 @@
 
             {{-- Action icons. --}}
             <div class="flex items-center gap-1">
-                <button type="button" x-on:click="$dispatch('open-search-modal')"
+                <button type="button" x-on:click="Livewire.dispatch('open-search-modal')"
                         class="inline-flex size-10 items-center justify-center rounded-lg text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
                         aria-label="{{ __('Search') }}">
                     <flux:icon.magnifying-glass class="size-5" />
@@ -135,7 +135,7 @@
                     <flux:icon.user class="size-5" />
                 </a>
 
-                <button type="button" x-on:click="$dispatch('open-cart-drawer')"
+                <button type="button" x-on:click="Livewire.dispatch('open-cart-drawer')"
                         class="relative inline-flex size-10 items-center justify-center rounded-lg text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
                         aria-label="{{ __('Cart') }}">
                     <flux:icon.shopping-bag class="size-5" />
@@ -265,11 +265,12 @@
         </div>
     </footer>
 
-    {{-- Global cart drawer + search modal slot. The CartDrawer and SearchModal
-         Livewire components are built in the shopping UI phase (task #6) and
-         dropped in here so the header's open-cart-drawer / open-search-modal
-         events have a listener. Until then the slot is empty. --}}
-    {{ $globals ?? '' }}
+    {{-- Always-present global components. The cart drawer listens for the
+         header's `open-cart-drawer` event and emits `cart-updated` after
+         mutations so the header badge refreshes; the search modal listens for
+         `open-search-modal`. --}}
+    <livewire:storefront.cart-drawer />
+    <livewire:storefront.search.modal />
 
     @livewireScripts
     @fluxScripts

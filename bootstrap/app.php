@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Middleware\CheckStoreRole;
+use App\Http\Middleware\CheckTokenAbility;
 use App\Http\Middleware\CustomerAuthenticate;
 use App\Http\Middleware\ResolveStore;
+use App\Http\Middleware\ResolveStoreFromRoute;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -26,8 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // Custom middleware aliases.
         $middleware->alias([
             'store.resolve' => ResolveStore::class,
+            'store.resolve.route' => ResolveStoreFromRoute::class,
             'role.check' => CheckStoreRole::class,
             'auth.customer' => CustomerAuthenticate::class,
+            'ability' => CheckTokenAbility::class,
         ]);
 
         // Route middleware groups for tenant resolution.

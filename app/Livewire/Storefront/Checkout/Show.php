@@ -64,7 +64,7 @@ class Show extends Component
         );
 
         if ($cart->lines()->count() === 0) {
-            $this->redirectRoute('cart.show', navigate: true);
+            $this->redirectRoute('storefront.cart', navigate: true);
 
             return;
         }
@@ -144,9 +144,9 @@ class Show extends Component
             return;
         }
 
-        $this->dispatch('cart-updated');
+        $this->dispatch('cart-updated', itemCount: 0, cartId: $checkout->cart_id);
 
-        return $this->redirectRoute('checkout.confirmation', ['orderId' => $order->id], navigate: true);
+        return $this->redirectRoute('storefront.checkout.confirmation', ['orderId' => $order->id], navigate: true);
     }
 
     public function render()

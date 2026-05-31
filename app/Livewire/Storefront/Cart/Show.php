@@ -21,13 +21,24 @@ class Show extends Component
     public function updateQuantity(int $lineId, int $quantity): void
     {
         app(CartService::class)->updateLineQuantity($this->cart(), $lineId, $quantity);
-        $this->dispatch('cart-updated');
+        $this->announceUpdate();
     }
 
     public function remove(int $lineId): void
     {
         app(CartService::class)->removeLine($this->cart(), $lineId);
-        $this->dispatch('cart-updated');
+        $this->announceUpdate();
+    }
+
+    /**
+     * Re-dispatch `cart-updated` with the item count + cart id the header badge
+     * listens for (see {@see \App\Livewire\Storefront\CartDrawer}).
+     */
+    private function announceUpdate(): void
+    {
+        $cart = $this->cart();
+
+        $this->dispatch('cart-updated', itemCount: (int) $cart->lines()->sum('quantity'), cartId: $cart->id);
     }
 
     public function render()

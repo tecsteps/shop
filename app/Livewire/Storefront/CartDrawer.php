@@ -13,17 +13,37 @@ use Livewire\Component;
  * Slide-out cart drawer: line items, quantity controls, and a checkout link.
  *
  * Resolves the active session cart through {@see CartService} and refreshes
- * whenever a `cart-updated` event is broadcast (for example from a product
- * page's add-to-cart). All mutations go through the service so cart_version,
- * inventory checks, and line recalculation stay centralized; an
- * `add-to-cart`/`cart-updated` round-trip keeps every cart surface in sync.
+ * whenever a `cart-updated` event is broadcast. All mutations go through the
+ * service so cart_version, inventory checks, and line recalculation stay
+ * centralized.
  *
- * Storefront teammate owns final visual polish (task #6); this provides the
- * functional, testable backing component and a minimal view.
+ * Event contract (shared with the storefront layout, owned by the storefront
+ * teammate): the header opens the drawer with the window event `open-cart-drawer`
+ * and reads the cart badge from `cart-updated`'s `detail.itemCount`. Every
+ * mutation here therefore re-dispatches `cart-updated` with
+ * `{ itemCount, cartId }`. Storefront owns final visual polish (task #6).
  */
 class CartDrawer extends Component
 {
     public bool $open = false;
+
+    /**
+     * Open the drawer in response to the header's browser event.
+     */
+    #[On('open-cart-drawer')]
+    public function openDrawer(): void
+    {
+        $this->open = true;
+    }
+
+    /**
+     * Close the drawer (also reachable via the `close-cart-drawer` event).
+     */
+    #[On('close-cart-drawer')]
+    public function closeDrawer(): void
+    {
+        $this->open = false;
+    }
 
     /**
      * Add a variant to the cart and announce the change.
@@ -40,7 +60,7 @@ class CartDrawer extends Component
         }
 
         $this->open = true;
-        $this->dispatch('cart-updated');
+        $this->announceUpdate();
     }
 
     public function increment(int $lineId): void
@@ -50,7 +70,7 @@ class CartDrawer extends Component
 
         if ($line !== null) {
             app(CartService::class)->updateLineQuantity($cart, $lineId, $line->quantity + 1);
-            $this->dispatch('cart-updated');
+            $this->announceUpdate();
         }
     }
 
@@ -61,14 +81,14 @@ class CartDrawer extends Component
 
         if ($line !== null) {
             app(CartService::class)->updateLineQuantity($cart, $lineId, $line->quantity - 1);
-            $this->dispatch('cart-updated');
+            $this->announceUpdate();
         }
     }
 
     public function remove(int $lineId): void
     {
         app(CartService::class)->removeLine($this->cart(), $lineId);
-        $this->dispatch('cart-updated');
+        $this->announceUpdate();
     }
 
     #[On('cart-updated')]
@@ -87,6 +107,17 @@ class CartDrawer extends Component
             'lines' => $cart->lines,
             'subtotal' => $cart->subtotalAmount(),
         ]);
+    }
+
+    /**
+     * Re-dispatch `cart-updated` with the item count + cart id the header badge
+     * listens for.
+     */
+    private function announceUpdate(): void
+    {
+        $cart = $this->cart();
+
+        $this->dispatch('cart-updated', itemCount: (int) $cart->lines()->sum('quantity'), cartId: $cart->id);
     }
 
     /**

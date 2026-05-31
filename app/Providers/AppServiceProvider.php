@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
 use App\Enums\StoreUserRole;
+use App\Http\Middleware\ResolveStore;
 use App\Models\User;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,25 @@ class AppServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
         $this->configureGates();
         $this->configureStorefrontComponents();
+        $this->configureTenancyPersistence();
+    }
+
+    /**
+     * Keep the current store resolved across Livewire update requests.
+     *
+     * ResolveStore runs in the `storefront` / `admin` route-group middleware on
+     * the initial page load, but the shared `/livewire/update` endpoint does
+     * not re-apply those groups. Registering ResolveStore as persistent
+     * middleware re-runs it on every Livewire update so nested/global
+     * components (e.g. the layout CartDrawer) still see `app('current_store')`.
+     * Persistent middleware drops arguments, so ResolveStore self-detects the
+     * storefront-vs-admin surface when invoked without an explicit mode.
+     */
+    protected function configureTenancyPersistence(): void
+    {
+        Livewire::addPersistentMiddleware([
+            ResolveStore::class,
+        ]);
     }
 
     /**
