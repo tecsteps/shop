@@ -9,7 +9,7 @@
     $inlineTabs = ['general' => __('General'), 'domains' => __('Domains'), 'checkout' => __('Checkout'), 'notifications' => __('Notifications')];
 @endphp
 
-<div class="mb-6 flex flex-wrap gap-1 border-b border-zinc-200 dark:border-zinc-700" role="tablist">
+<div class="mb-6 flex flex-wrap gap-1 border-b border-zinc-200 dark:border-zinc-700" role="tablist" aria-label="{{ __('Settings sections') }}">
     @foreach ($inlineTabs as $key => $label)
         @if (request()->routeIs('admin.settings.index'))
             <button

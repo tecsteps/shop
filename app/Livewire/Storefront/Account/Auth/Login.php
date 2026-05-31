@@ -14,7 +14,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-#[Layout('layouts.auth')]
+#[Layout('storefront.layouts.app')]
 class Login extends Component
 {
     #[Validate('required|string|email')]

@@ -10,10 +10,21 @@ beforeEach(function () {
     $this->context = createStoreContext(['hostname' => 'acme-fashion.test']);
 });
 
-it('renders the customer login page', function () {
+it('renders the customer login page within the storefront layout', function () {
     $this->get(storefrontUrl('acme-fashion.test', '/account/login'))
         ->assertOk()
-        ->assertSee('Log in');
+        ->assertSee('Log in to your account')
+        // Storefront-branded layout chrome (skip link + footer), not the bare auth layout.
+        ->assertSee('Skip to main content')
+        ->assertSee('All rights reserved.');
+});
+
+it('renders the customer register page within the storefront layout', function () {
+    $this->get(storefrontUrl('acme-fashion.test', '/account/register'))
+        ->assertOk()
+        ->assertSee('Create an account')
+        ->assertSee('Skip to main content')
+        ->assertSee('All rights reserved.');
 });
 
 it('authenticates a customer with valid credentials', function () {

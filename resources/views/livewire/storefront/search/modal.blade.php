@@ -1,7 +1,8 @@
 @use(App\Support\Storefront\PriceFormatter)
 
 <div>
-    <div x-data x-show="$wire.open" x-cloak
+    <div x-data="storefrontDialog($wire, 'open')" x-show="$wire.open" x-cloak
+         x-on:keydown.tab="trapTab($event)"
          class="relative z-50" role="dialog" aria-modal="true" aria-label="{{ __('Search') }}">
         <div x-show="$wire.open" x-transition.opacity x-on:click="$wire.closeModal()"
              class="fixed inset-0 bg-zinc-900/50"></div>

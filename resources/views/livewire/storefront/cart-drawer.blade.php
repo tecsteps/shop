@@ -3,8 +3,9 @@
 @endphp
 
 <div>
-    <div x-data
+    <div x-data="storefrontDialog($wire, 'open')"
          x-on:keydown.escape.window="$wire.open && $wire.set('open', false)"
+         x-on:keydown.tab="trapTab($event)"
          @class(['fixed inset-0 z-50 flex justify-end', 'hidden' => ! $open])
          role="dialog" aria-modal="true" aria-label="{{ __('Shopping cart') }}">
         {{-- Backdrop. --}}

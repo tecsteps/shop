@@ -29,7 +29,7 @@
     </div>
 
     {{-- Filter tabs. --}}
-    <div class="mb-4 flex flex-wrap gap-1 border-b border-zinc-200 dark:border-zinc-700" role="tablist">
+    <div class="mb-4 flex flex-wrap gap-1 border-b border-zinc-200 dark:border-zinc-700" role="tablist" aria-label="{{ __('Filter orders by status') }}">
         @foreach ($tabs as $value => $label)
             <button
                 type="button"

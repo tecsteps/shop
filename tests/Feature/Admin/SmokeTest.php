@@ -1,9 +1,12 @@
 <?php
 
+use App\Livewire\Admin\Layout\Sidebar;
+use App\Livewire\Admin\Layout\TopBar;
 use App\Models\Customer;
 use App\Models\NavigationMenu;
 use App\Models\Order;
 use App\Models\Theme;
+use Livewire\Livewire;
 
 beforeEach(function (): void {
     $this->context = createStoreContext();
@@ -60,4 +63,15 @@ it('renders the navigation menu editor', function (): void {
     NavigationMenu::factory()->create(['store_id' => $this->store->id, 'handle' => 'main-menu', 'title' => 'Main Menu']);
 
     $this->get('/admin/navigation')->assertOk();
+});
+
+// Regression guard: the layout's nested Livewire components must each render
+// with exactly one root element (Livewire requirement). A multiple-root
+// element here previously 500'd the entire /admin panel.
+it('renders the sidebar component with a single root', function (): void {
+    Livewire::test(Sidebar::class)->assertOk();
+});
+
+it('renders the top bar component with a single root', function (): void {
+    Livewire::test(TopBar::class)->assertOk();
 });

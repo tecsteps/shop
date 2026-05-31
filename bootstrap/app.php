@@ -8,6 +8,9 @@ use App\Http\Middleware\ResolveStoreFromRoute;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -47,5 +50,23 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Render the storefront-branded 404/503 pages for storefront requests only.
+        // Admin (/admin*) and API (/api*) requests fall through to the default handler.
+        $exceptions->render(function (HttpExceptionInterface $e, Request $request): ?Response {
+            $status = $e->getStatusCode();
+
+            if (! in_array($status, [404, 503], true)) {
+                return null;
+            }
+
+            if ($request->expectsJson() || $request->is('api/*') || $request->is('admin', 'admin/*')) {
+                return null;
+            }
+
+            if (! view()->exists("storefront.errors.{$status}")) {
+                return null;
+            }
+
+            return response()->view("storefront.errors.{$status}", ['exception' => $e], $status);
+        });
     })->create();

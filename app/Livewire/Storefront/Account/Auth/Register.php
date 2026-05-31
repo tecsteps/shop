@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.auth')]
+#[Layout('storefront.layouts.app')]
 class Register extends Component
 {
     public string $name = '';

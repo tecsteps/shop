@@ -89,15 +89,19 @@
 - [x] Sanctum personal access tokens + ability middleware; REST API: storefront /api/storefront/v1/* (rate-limited) + admin /api/admin/v1/stores/{store}/* (Bearer + abilities) + Eloquent Resources
 - [x] Tests (WebhookDelivery, WebhookSignature, SanctumToken, CartApi, Api/*) green; laravel/sanctum ^4.3 added
 
-### Phase 11: Polish
-- [ ] Accessibility, responsive, dark mode, error pages, structured logging, demo seeders
+### Phase 11: Polish ✅ DONE (admin #9 + storefront #19)
+- [x] Comprehensive demo seeders: 20 products w/ GD placeholder images (+3 renditions), 4 named customers w/ addresses, 8 orders across ALL statuses (paid/pending/fulfilled/cancelled/refunded/partially_refunded/voided + bank-transfer-pending), 2 refunds, 3 fulfillments
+- [x] Storefront-branded auth (Login/Register on storefront layout); focus management (storefrontDialog helper: trap/escape/return) on cart drawer + search modal
+- [x] Accessibility (skip links, ARIA, tablists, role=img charts), dark mode + responsive verified (375px, off-canvas sidebar, no overflow)
+- [x] Styled 404/503 wired host-aware via bootstrap/app.php render hook (storefront branded; admin/api fall through); structured JSON logging channel (Phase 1)
+- [x] npm run build (ships storefrontDialog JS); storage:link in place
 
-### Phase 12: Full Verification
-- [ ] Full Pest suite green
-- [ ] Pint clean
-- [ ] migrate:fresh --seed clean
-- [ ] Playwright storefront smoke (browse, cart, checkout)
-- [ ] Playwright admin smoke (login, manage products/orders)
+### Phase 12: Full Verification 🔄 IN PROGRESS (team-lead)
+- [x] Full Pest suite green: 437 passed / 1036 assertions / 0 failures
+- [x] Pint clean (whole app)
+- [x] migrate:fresh --seed clean (rich demo data verified)
+- [ ] Playwright storefront smoke (browse, cart, checkout, account, search, 404)
+- [ ] Playwright admin smoke (login, products, orders, fulfill/refund/confirm-payment)
 - [ ] Review meeting / feature showcase
 
 ## Changelog

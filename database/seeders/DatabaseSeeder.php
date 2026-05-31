@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DemoStoreSeeder::class,
             CatalogSeeder::class,
+            MediaSeeder::class,
             StorefrontSeeder::class,
             CommerceSeeder::class,
             SearchAndAppsSeeder::class,
