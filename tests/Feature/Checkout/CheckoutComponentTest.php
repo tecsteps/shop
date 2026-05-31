@@ -81,6 +81,37 @@ it('checkout component drives a full purchase', function () {
     expect(Order::query()->where('store_id', $this->store->id)->count())->toBe(1);
 });
 
+it('shows each shipping rate option at its calculated cost for the cart', function () {
+    // A weight-based rate has no flat `amount` in config; the option label must
+    // show the per-cart calculated cost (899 for 750g), not 0.
+    $variant = makeSellableVariant(['price' => 5000, 'weight_g' => 750]);
+    $cart = app(CartService::class)->getOrCreateForSession($this->store);
+    app(CartService::class)->addLine($cart, $variant->id, 1);
+
+    $zone = App\Models\ShippingZone::factory()->for($this->store)->countries(['DE'])->create();
+    $rate = App\Models\ShippingRate::factory()->for($zone, 'zone')->weight([
+        ['min_g' => 0, 'max_g' => 500, 'amount' => 499],
+        ['min_g' => 501, 'max_g' => 2000, 'amount' => 899],
+    ])->create(['name' => 'International Weight']);
+
+    Livewire::test(CheckoutShow::class)
+        ->set('email', 'buyer@example.com')
+        ->set('address.first_name', 'Anna')
+        ->set('address.last_name', 'Schmidt')
+        ->set('address.address1', 'Hauptstrasse 1')
+        ->set('address.city', 'Berlin')
+        ->set('address.postal_code', '10115')
+        ->set('address.country', 'DE')
+        ->call('saveAddress')
+        ->assertViewHas('rateOptions', function ($options) use ($rate) {
+            $option = $options->firstWhere('id', $rate->id);
+
+            return $option !== null && $option['amount'] === 899;
+        })
+        ->assertSee('International Weight')
+        ->assertSee('8.99 USD'); // calculated cost, not 0.00
+});
+
 it('checkout component surfaces a payment decline', function () {
     $variant = makeSellableVariant(['price' => 5000, 'requires_shipping' => false]);
     $cart = app(CartService::class)->getOrCreateForSession($this->store);

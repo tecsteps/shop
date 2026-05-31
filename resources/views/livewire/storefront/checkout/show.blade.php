@@ -38,19 +38,21 @@
                 <flux:button type="button" wire:click="saveAddress" variant="primary" class="mt-4">{{ __('Continue to shipping') }}</flux:button>
             </section>
 
-            {{-- Step 2: shipping method. --}}
-            @if ($rates->isNotEmpty())
+            {{-- Step 2: shipping method. Each option shows the cost calculated
+                 for this cart (weight/price rates have no flat amount), matching
+                 the order summary and charged total. --}}
+            @if ($rateOptions->isNotEmpty())
                 <section>
                     <h2 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">{{ __('2. Shipping method') }}</h2>
                     <fieldset class="space-y-2">
                         <legend class="sr-only">{{ __('Shipping method') }}</legend>
-                        @foreach ($rates as $rate)
-                            <label class="flex cursor-pointer items-center justify-between rounded-lg border px-4 py-3 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 dark:border-zinc-700 dark:has-[:checked]:bg-blue-950" wire:key="rate-{{ $rate->id }}">
+                        @foreach ($rateOptions as $rateOption)
+                            <label class="flex cursor-pointer items-center justify-between rounded-lg border px-4 py-3 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 dark:border-zinc-700 dark:has-[:checked]:bg-blue-950" wire:key="rate-{{ $rateOption['id'] }}">
                                 <span class="flex items-center gap-3">
-                                    <input type="radio" wire:model="shippingRateId" value="{{ $rate->id }}" class="text-blue-600 focus:ring-blue-500">
-                                    <span class="text-sm text-zinc-900 dark:text-white">{{ $rate->name }}</span>
+                                    <input type="radio" wire:model="shippingRateId" value="{{ $rateOption['id'] }}" class="text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-zinc-900 dark:text-white">{{ $rateOption['name'] }}</span>
                                 </span>
-                                <span class="text-sm font-medium text-zinc-900 dark:text-white">{{ $money($rate->amount ?? 0) }}</span>
+                                <span class="text-sm font-medium text-zinc-900 dark:text-white" data-testid="rate-amount-{{ $rateOption['id'] }}">{{ $money($rateOption['amount']) }}</span>
                             </label>
                         @endforeach
                     </fieldset>

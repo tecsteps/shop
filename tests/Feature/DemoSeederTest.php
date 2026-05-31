@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AnalyticsDaily;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
@@ -94,4 +95,36 @@ it('records refunds for refunded demo orders', function (): void {
     $this->seed(CommerceSeeder::class);
 
     expect(Refund::query()->count())->toBeGreaterThanOrEqual(2);
+});
+
+it('seeds ~30 days of daily analytics that the Analytics service reads', function (): void {
+    $this->seed(\Database\Seeders\DemoStoreSeeder::class);
+    $this->seed(\Database\Seeders\CatalogSeeder::class);
+    $this->seed(CommerceSeeder::class);
+
+    $store = app('current_store');
+    $rows = AnalyticsDaily::query()->where('store_id', $store->id)->get();
+
+    expect($rows->count())->toBe(30);
+
+    // Funnel must narrow: visits >= add_to_cart >= checkout_started >= checkout_completed,
+    // and there must be non-trivial traffic + revenue for the showcase.
+    $rows->each(function (AnalyticsDaily $row): void {
+        expect($row->visits_count)->toBeGreaterThanOrEqual($row->add_to_cart_count);
+        expect($row->add_to_cart_count)->toBeGreaterThanOrEqual($row->checkout_started_count);
+        expect($row->checkout_started_count)->toBeGreaterThanOrEqual($row->checkout_completed_count);
+    });
+
+    expect($rows->sum('visits_count'))->toBeGreaterThan(0);
+    expect($rows->sum('revenue_amount'))->toBeGreaterThan(0);
+
+    // The platform AnalyticsService reads these rows for the admin Analytics page.
+    $summary = app(\App\Services\AnalyticsService::class)->summarize(
+        $store,
+        \Illuminate\Support\Carbon::today()->subDays(29)->toDateString(),
+        \Illuminate\Support\Carbon::today()->toDateString(),
+    );
+
+    expect($summary['visits_count'])->toBe((int) $rows->sum('visits_count'));
+    expect($summary['orders_count'])->toBe((int) $rows->sum('orders_count'));
 });

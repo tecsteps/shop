@@ -100,9 +100,15 @@
 - [x] Full Pest suite green: 437 passed / 1036 assertions / 0 failures
 - [x] Pint clean (whole app)
 - [x] migrate:fresh --seed clean (rich demo data verified)
-- [ ] Playwright storefront smoke (browse, cart, checkout, account, search, 404)
+- [~] Playwright storefront smoke (browse, cart, checkout, account, search, 404)
 - [ ] Playwright admin smoke (login, products, orders, fulfill/refund/confirm-payment)
 - [ ] Review meeting / feature showcase
+
+#### Bugs found in browser verification + fixed (suite green 441):
+1. CRITICAL (platform): checkout completion 500 — OrderCreated→DeliverWebhook ran inline (sync queue) and a ConnectionException to the seeded unreachable webhook propagated through order creation. Fixed: sync-aware handleFailure (records failed delivery + circuit breaker + swallows in sync; preserves async retry/backoff), listener ShouldHandleEventsAfterCommit + try/catch, 5s HTTP timeout. +2 regression tests (non-faked). Browser-verified Order #1009 completes.
+2. MINOR (commerce): shipping rate option labeled "0.00 USD" (read nonexistent $rate->amount) while charging the calculated 12.99. Fixed: rateOptions() uses ShippingCalculator::calculate(rate,cart) per option. +test. Browser-verified.
+3. SHOWCASE (admin): Analytics page empty (no analytics_daily). Fixed: CommerceSeeder seeds 30 days of realistic monotonic-funnel analytics_daily. +test.
+- Note: all 3 escaped the Pest suite because feature tests used Http::fake() and never seeded analytics_daily — live browser verification caught them.
 
 ## Changelog
 - (init) Repo baseline verified: PHP 8.4, Laravel 12, Livewire 4, Flux v2, Pest 4, SQLite. Progress tracker created.

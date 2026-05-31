@@ -153,15 +153,43 @@ class Show extends Component
     {
         $checkout = $this->checkout()->load('cart.lines.variant');
 
-        $rates = $checkout->shipping_address_json
-            ? app(ShippingCalculator::class)->getAvailableRates(app('current_store'), $checkout->shipping_address_json)
-            : collect();
-
         return view('livewire.storefront.checkout.show', [
             'checkout' => $checkout,
             'totals' => $checkout->totals_json ?? [],
-            'rates' => $rates,
+            'rateOptions' => $this->rateOptions($checkout),
         ]);
+    }
+
+    /**
+     * Available shipping rates for the checkout's address, each with the cost
+     * calculated for THIS cart (weight/price rates have no flat `amount`, so the
+     * displayed label must use the per-cart computed cost, not the rate's base
+     * config). Rates that do not apply to the cart (no matching band) are
+     * dropped.
+     *
+     * @return \Illuminate\Support\Collection<int, array{id: int, name: string, amount: int}>
+     */
+    private function rateOptions(Checkout $checkout): \Illuminate\Support\Collection
+    {
+        if (! $checkout->shipping_address_json) {
+            return collect();
+        }
+
+        $calculator = app(ShippingCalculator::class);
+        $cart = $checkout->cart;
+
+        return $calculator->getAvailableRates(app('current_store'), $checkout->shipping_address_json)
+            ->map(function ($rate) use ($calculator, $cart): ?array {
+                $amount = $calculator->calculate($rate, $cart);
+
+                return $amount === null ? null : [
+                    'id' => $rate->id,
+                    'name' => $rate->name,
+                    'amount' => $amount,
+                ];
+            })
+            ->filter()
+            ->values();
     }
 
     private function checkout(): Checkout

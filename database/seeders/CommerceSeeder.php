@@ -14,6 +14,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\RefundStatus;
 use App\Enums\ShippingRateType;
 use App\Enums\TaxMode;
+use App\Models\AnalyticsDaily;
 use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Order;
@@ -55,6 +56,58 @@ class CommerceSeeder extends Seeder
         $this->seedDiscounts($store);
         $customers = $this->seedCustomers($store);
         $this->seedOrders($store, $customers);
+        $this->seedAnalytics($store);
+    }
+
+    /**
+     * Seed ~30 days of pre-aggregated daily analytics so the admin Analytics
+     * page shows a populated chart, KPI tiles, and a non-trivial conversion
+     * funnel for the demo.
+     *
+     * These rows are what {@see \App\Services\AnalyticsService::getDailyMetrics}
+     * and ::summarize read; in production the {@see \App\Jobs\AggregateAnalytics}
+     * job rolls them up from events, but the demo store has no event history, so
+     * we synthesise a believable curve (a gentle weekly rhythm with a mild
+     * upward trend) plus a funnel that narrows visits -> add-to-cart ->
+     * checkout-started -> checkout-completed. Idempotent: skipped if rows exist.
+     */
+    private function seedAnalytics(Store $store): void
+    {
+        if (AnalyticsDaily::query()->where('store_id', $store->id)->exists()) {
+            return;
+        }
+
+        $days = 30;
+
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+
+            // Weekly rhythm (weekends busier) + slight upward trend over the month.
+            $weekendBoost = in_array($date->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY], true) ? 1.4 : 1.0;
+            $trend = 1 + (($days - 1 - $i) / $days) * 0.5;
+
+            $visits = (int) round(random_int(180, 320) * $weekendBoost * $trend);
+            $addToCart = (int) round($visits * (random_int(28, 38) / 100));
+            $checkoutStarted = (int) round($addToCart * (random_int(45, 60) / 100));
+            $checkoutCompleted = (int) round($checkoutStarted * (random_int(55, 75) / 100));
+            $orders = max(0, $checkoutCompleted);
+
+            // ~$45-$140 average order value, in cents.
+            $aov = random_int(4500, 14000);
+            $revenue = $orders * $aov;
+
+            AnalyticsDaily::create([
+                'store_id' => $store->id,
+                'date' => $date->toDateString(),
+                'orders_count' => $orders,
+                'revenue_amount' => $revenue,
+                'aov_amount' => $orders > 0 ? intdiv($revenue, $orders) : 0,
+                'visits_count' => $visits,
+                'add_to_cart_count' => $addToCart,
+                'checkout_started_count' => $checkoutStarted,
+                'checkout_completed_count' => $checkoutCompleted,
+            ]);
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Models\WebhookDelivery;
 use App\Services\WebhookService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\Jobs\SyncJob;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -19,9 +20,15 @@ use Throwable;
  * The JSON body is signed with HMAC-SHA256 and sent with the platform headers
  * (`X-Platform-Signature`, `-Event`, `-Delivery-Id`, `-Timestamp`). Failures
  * (transport errors or non-2xx responses) retry with exponential backoff
- * (1m, 5m, 30m, 2h, 12h — 6 attempts total). After the attempts are exhausted
- * the delivery is marked failed; a circuit breaker pauses the subscription once
- * it accumulates {@see self::CIRCUIT_BREAKER_THRESHOLD} consecutive failures.
+ * (1m, 5m, 30m, 2h, 12h — 6 attempts total) when running on a real async queue;
+ * after the attempts are exhausted the delivery is marked failed and a circuit
+ * breaker pauses the subscription once it accumulates
+ * {@see self::CIRCUIT_BREAKER_THRESHOLD} consecutive failures.
+ *
+ * CRITICAL: webhook delivery MUST NOT break the request that dispatched it. With
+ * `QUEUE_CONNECTION=sync` the job runs inline inside order creation, so a
+ * failure here is handled terminally (recorded + circuit breaker) and swallowed
+ * rather than re-thrown — an unreachable endpoint can never 500 a checkout.
  */
 class DeliverWebhook implements ShouldQueue
 {
@@ -31,6 +38,12 @@ class DeliverWebhook implements ShouldQueue
      * Total attempts (1 initial + 5 retries).
      */
     public int $tries = 6;
+
+    /**
+     * HTTP request timeout in seconds — kept short so a hung endpoint can never
+     * stall the dispatching request (which runs inline under the sync queue).
+     */
+    public const REQUEST_TIMEOUT = 5;
 
     /**
      * Consecutive failed deliveries that trip the circuit breaker.
@@ -90,15 +103,21 @@ class DeliverWebhook implements ShouldQueue
                 'X-Platform-Event' => $this->eventType,
                 'X-Platform-Delivery-Id' => $delivery->event_id,
                 'X-Platform-Timestamp' => $timestamp,
-            ])->withBody($body, 'application/json')->post($subscription->target_url);
+            ])
+                ->timeout(self::REQUEST_TIMEOUT)
+                ->withBody($body, 'application/json')
+                ->post($subscription->target_url);
         } catch (Throwable $exception) {
+            // Transport failure (DNS, connection refused, timeout). Record it,
+            // then either retry on a real queue or terminate inline under sync.
             $delivery->update([
-                'status' => WebhookDeliveryStatus::Pending->value,
                 'response_code' => null,
                 'response_body_snippet' => mb_substr($exception->getMessage(), 0, 1000),
             ]);
 
-            throw $exception;
+            $this->handleFailure($delivery, $exception);
+
+            return;
         }
 
         $delivery->update([
@@ -112,16 +131,65 @@ class DeliverWebhook implements ShouldQueue
             return;
         }
 
-        $delivery->update(['status' => WebhookDeliveryStatus::Pending->value]);
-
-        throw new RuntimeException(
+        $this->handleFailure($delivery, new RuntimeException(
             "Webhook delivery {$delivery->id} failed with HTTP {$response->status()}.",
-        );
+        ));
     }
 
     /**
-     * Invoked after all attempts are exhausted: mark the delivery failed and
-     * apply the circuit breaker to its subscription.
+     * Route a delivery failure.
+     *
+     * On a real async queue with retries remaining: leave the delivery pending
+     * and re-throw so the queue applies backoff and eventually calls
+     * {@see failed()}. Running synchronously (or out of attempts): handle
+     * terminally — mark failed, trip the circuit breaker — and SWALLOW the
+     * exception so the dispatching request (e.g. order creation) still succeeds.
+     */
+    private function handleFailure(WebhookDelivery $delivery, Throwable $exception): void
+    {
+        if ($this->shouldRetry()) {
+            $delivery->update(['status' => WebhookDeliveryStatus::Pending->value]);
+
+            throw $exception;
+        }
+
+        $this->recordTerminalFailure($delivery);
+    }
+
+    /**
+     * Whether this run should re-throw to let the queue retry. Only true on a
+     * real async queue with attempts remaining; never under the sync driver,
+     * where a throw would propagate into the dispatching web request.
+     */
+    private function shouldRetry(): bool
+    {
+        if ($this->runningSynchronously()) {
+            return false;
+        }
+
+        $maxTries = $this->tries ?: 1;
+
+        return $this->attempts() < $maxTries;
+    }
+
+    /**
+     * Whether the job is executing inline rather than on a real async queue, so
+     * a thrown exception would surface in the dispatching request rather than
+     * being retried by the queue.
+     *
+     * True when wrapped in a {@see SyncJob} (the `sync` queue driver — the
+     * production hazard) or when invoked with no queue job attached (e.g. a
+     * direct `->handle()` call). A real async driver attaches a non-sync job, so
+     * the retry/backoff path stays intact there.
+     */
+    private function runningSynchronously(): bool
+    {
+        return $this->job === null || $this->job instanceof SyncJob;
+    }
+
+    /**
+     * Invoked after all async attempts are exhausted: mark failed + circuit
+     * breaker. (Sync failures terminate via {@see handleFailure()} instead.)
      */
     public function failed(?Throwable $exception): void
     {
@@ -131,6 +199,14 @@ class DeliverWebhook implements ShouldQueue
             return;
         }
 
+        $this->recordTerminalFailure($delivery);
+    }
+
+    /**
+     * Mark the delivery failed and apply the circuit breaker. Never throws.
+     */
+    private function recordTerminalFailure(WebhookDelivery $delivery): void
+    {
         $delivery->update(['status' => WebhookDeliveryStatus::Failed->value]);
 
         $this->tripCircuitBreaker($delivery);
