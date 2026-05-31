@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Concerns\BelongsToStore;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ShippingZone extends Model
+{
+    use BelongsToStore;
+
+    /** @use HasFactory<\Database\Factories\ShippingZoneFactory> */
+    use HasFactory;
+
+    /**
+     * The shipping_zones table has no timestamps.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'store_id',
+        'name',
+        'countries_json',
+        'regions_json',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'countries_json' => 'array',
+            'regions_json' => 'array',
+        ];
+    }
+
+    /**
+     * The shipping rates configured for this zone.
+     *
+     * @return HasMany<ShippingRate, $this>
+     */
+    public function rates(): HasMany
+    {
+        return $this->hasMany(ShippingRate::class, 'zone_id');
+    }
+}

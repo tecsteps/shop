@@ -2,14 +2,14 @@
 
 namespace App\Policies;
 
+use App\Models\Page;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
 /**
  * Authorization for CMS pages based on the user's store role.
  *
- * The Page model is introduced in Phase 3. Method parameters are untyped until
- * the model exists; Laravel auto-discovers this as PagePolicy.
+ * Laravel auto-discovers this as the policy for {@see Page}.
  */
 class PagePolicy
 {
@@ -28,7 +28,7 @@ class PagePolicy
     /**
      * View a page (Owner, Admin, or Staff).
      */
-    public function view(User $user, object $page): bool
+    public function view(User $user, Page $page): bool
     {
         return $this->isOwnerAdminOrStaff($user, (int) $page->store_id);
     }
@@ -46,7 +46,7 @@ class PagePolicy
     /**
      * Update a page (Owner, Admin, or Staff).
      */
-    public function update(User $user, object $page): bool
+    public function update(User $user, Page $page): bool
     {
         return $this->isOwnerAdminOrStaff($user, (int) $page->store_id);
     }
@@ -54,7 +54,7 @@ class PagePolicy
     /**
      * Delete a page (Owner or Admin).
      */
-    public function delete(User $user, object $page): bool
+    public function delete(User $user, Page $page): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $page->store_id);
     }

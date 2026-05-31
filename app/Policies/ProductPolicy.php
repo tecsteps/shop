@@ -2,15 +2,14 @@
 
 namespace App\Policies;
 
+use App\Models\Product;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
 /**
  * Authorization for products based on the user's store role.
  *
- * The Product model is introduced in Phase 2 (Catalog). This policy reads
- * `store_id` off the model instance, so its method parameters are intentionally
- * untyped until the model exists; Laravel auto-discovers it as ProductPolicy.
+ * Laravel auto-discovers this as ProductPolicy for the Product model.
  */
 class ProductPolicy
 {
@@ -29,7 +28,7 @@ class ProductPolicy
     /**
      * View a product (any role).
      */
-    public function view(User $user, object $product): bool
+    public function view(User $user, Product $product): bool
     {
         return $this->isAnyRole($user, (int) $product->store_id);
     }
@@ -47,7 +46,7 @@ class ProductPolicy
     /**
      * Update a product (Owner, Admin, or Staff).
      */
-    public function update(User $user, object $product): bool
+    public function update(User $user, Product $product): bool
     {
         return $this->isOwnerAdminOrStaff($user, (int) $product->store_id);
     }
@@ -55,7 +54,7 @@ class ProductPolicy
     /**
      * Delete a product (Owner or Admin).
      */
-    public function delete(User $user, object $product): bool
+    public function delete(User $user, Product $product): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $product->store_id);
     }
@@ -63,7 +62,7 @@ class ProductPolicy
     /**
      * Archive a product (Owner or Admin).
      */
-    public function archive(User $user, object $product): bool
+    public function archive(User $user, Product $product): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $product->store_id);
     }
@@ -71,7 +70,7 @@ class ProductPolicy
     /**
      * Restore a product (Owner or Admin).
      */
-    public function restore(User $user, object $product): bool
+    public function restore(User $user, Product $product): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $product->store_id);
     }

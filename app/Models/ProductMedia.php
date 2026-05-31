@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\MediaStatus;
+use App\Enums\MediaType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class ProductMedia extends Model
+{
+    /** @use HasFactory<\Database\Factories\ProductMediaFactory> */
+    use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'product_media';
+
+    /**
+     * The product_media table only tracks created_at.
+     *
+     * @var string|null
+     */
+    const UPDATED_AT = null;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'product_id',
+        'type',
+        'storage_key',
+        'alt_text',
+        'width',
+        'height',
+        'mime_type',
+        'byte_size',
+        'position',
+        'status',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type' => MediaType::class,
+            'width' => 'integer',
+            'height' => 'integer',
+            'byte_size' => 'integer',
+            'position' => 'integer',
+            'status' => MediaStatus::class,
+        ];
+    }
+
+    /**
+     * The product this media belongs to.
+     *
+     * @return BelongsTo<Product, $this>
+     */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+}

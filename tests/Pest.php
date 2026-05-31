@@ -143,3 +143,133 @@ function actingAsCustomer(Customer $customer): Customer
 
     return $customer;
 }
+
+/**
+ * Insert a minimal order_lines row referencing a variant so catalog
+ * order-reference guards (product delete, status revert, variant archival) can
+ * be exercised in isolation.
+ *
+ * Phase 5 introduced the real order_lines table (with a NOT NULL order_id and
+ * title_snapshot). This helper now creates a minimal backing order for the
+ * variant's store and inserts a real order_lines row carrying the variant_id the
+ * guards inspect.
+ */
+function fakeOrderLineFor(int $variantId): void
+{
+    $storeId = App\Models\ProductVariant::query()
+        ->whereKey($variantId)
+        ->join('products', 'products.id', '=', 'product_variants.product_id')
+        ->value('products.store_id');
+
+    $order = App\Models\Order::withoutGlobalScopes()->create([
+        'store_id' => $storeId,
+        'order_number' => '#'.fake()->unique()->numberBetween(100000, 999999),
+        'payment_method' => 'credit_card',
+        'status' => 'paid',
+        'financial_status' => 'paid',
+        'fulfillment_status' => 'unfulfilled',
+        'currency' => 'USD',
+        'total_amount' => 0,
+        'placed_at' => now(),
+    ]);
+
+    App\Models\OrderLine::query()->create([
+        'order_id' => $order->id,
+        'store_id' => $storeId,
+        'variant_id' => $variantId,
+        'title_snapshot' => 'Test line',
+        'quantity' => 1,
+        'unit_price_amount' => 0,
+        'total_amount' => 0,
+    ]);
+}
+
+/**
+ * Create an active, sellable variant in the current store with stock and a
+ * loaded inventory item.
+ *
+ * @param  array{price?: int, on_hand?: int, policy?: string, requires_shipping?: bool, weight_g?: int, active?: bool}  $attributes
+ */
+function makeSellableVariant(array $attributes = []): App\Models\ProductVariant
+{
+    $store = app('current_store');
+
+    $product = App\Models\Product::factory()->create([
+        'store_id' => $store->id,
+        'status' => ($attributes['active'] ?? true) ? 'active' : 'draft',
+    ]);
+
+    $variant = App\Models\ProductVariant::factory()->create([
+        'product_id' => $product->id,
+        'price_amount' => $attributes['price'] ?? 5000,
+        'requires_shipping' => $attributes['requires_shipping'] ?? true,
+        'weight_g' => $attributes['weight_g'] ?? 500,
+    ]);
+
+    $variant->inventoryItem->update([
+        'quantity_on_hand' => $attributes['on_hand'] ?? 100,
+        'policy' => $attributes['policy'] ?? 'continue',
+    ]);
+
+    return $variant->fresh('inventoryItem');
+}
+
+/**
+ * Build a cart in the current store with the given [price, quantity] lines and
+ * return it with relations loaded.
+ *
+ * @param  list<array{0: int, 1: int}>  $lines
+ * @param  array{requires_shipping?: bool, weight_g?: int}  $variantAttributes
+ */
+function cartWithLines(array $lines, array $variantAttributes = []): App\Models\Cart
+{
+    $store = app('current_store');
+    $cart = App\Models\Cart::factory()->create(['store_id' => $store->id, 'currency' => 'USD']);
+
+    foreach ($lines as [$price, $quantity]) {
+        $variant = makeSellableVariant(array_merge($variantAttributes, ['price' => $price]));
+        $cart->lines()->create([
+            'variant_id' => $variant->id,
+            'quantity' => $quantity,
+            'unit_price_amount' => $price,
+            'line_subtotal_amount' => $price * $quantity,
+            'line_discount_amount' => 0,
+            'line_total_amount' => $price * $quantity,
+        ]);
+    }
+
+    return $cart->load('lines.variant.product');
+}
+
+/**
+ * Start a checkout from a single-line cart in the current store.
+ *
+ * @param  array{price?: int, requires_shipping?: bool, weight_g?: int}  $variantAttributes
+ */
+function startCheckout(array $variantAttributes = []): App\Models\Checkout
+{
+    $cart = cartWithLines([[$variantAttributes['price'] ?? 5000, 1]], $variantAttributes);
+
+    return app(App\Services\CheckoutService::class)->startFromCart($cart);
+}
+
+/**
+ * A valid German shipping address payload for setAddress().
+ *
+ * @return array{email: string, shipping_address: array<string, mixed>}
+ */
+function germanAddressData(string $email = 'buyer@example.com'): array
+{
+    return [
+        'email' => $email,
+        'shipping_address' => [
+            'first_name' => 'Anna',
+            'last_name' => 'Schmidt',
+            'address1' => 'Hauptstrasse 1',
+            'city' => 'Berlin',
+            'country' => 'DE',
+            'postal_code' => '10115',
+            'province_code' => null,
+        ],
+    ];
+}

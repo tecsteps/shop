@@ -2,14 +2,14 @@
 
 namespace App\Policies;
 
+use App\Models\Theme;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
 /**
  * Authorization for themes based on the user's store role.
  *
- * The Theme model is introduced in Phase 3. Method parameters are untyped until
- * the model exists; Laravel auto-discovers this as ThemePolicy.
+ * Laravel auto-discovers this as the policy for {@see Theme}.
  */
 class ThemePolicy
 {
@@ -28,7 +28,7 @@ class ThemePolicy
     /**
      * View a theme (Owner or Admin).
      */
-    public function view(User $user, object $theme): bool
+    public function view(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $theme->store_id);
     }
@@ -46,7 +46,7 @@ class ThemePolicy
     /**
      * Update a theme (Owner or Admin).
      */
-    public function update(User $user, object $theme): bool
+    public function update(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $theme->store_id);
     }
@@ -54,7 +54,7 @@ class ThemePolicy
     /**
      * Delete a theme (Owner or Admin).
      */
-    public function delete(User $user, object $theme): bool
+    public function delete(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $theme->store_id);
     }
@@ -62,7 +62,7 @@ class ThemePolicy
     /**
      * Publish a theme (Owner or Admin).
      */
-    public function publish(User $user, object $theme): bool
+    public function publish(User $user, Theme $theme): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $theme->store_id);
     }

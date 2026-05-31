@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Auth\CustomerUserProvider;
 use App\Enums\StoreUserRole;
 use App\Models\User;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -24,7 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // The storefront and admin read active theme settings through this
+        // shared, request-scoped singleton so settings are loaded and cached
+        // once per request per store.
+        $this->app->singleton(ThemeSettingsService::class);
     }
 
     /**
@@ -36,6 +41,19 @@ class AppServiceProvider extends ServiceProvider
         $this->configureCustomerProvider();
         $this->configureRateLimiting();
         $this->configureGates();
+        $this->configureStorefrontComponents();
+    }
+
+    /**
+     * Register the storefront Blade component path.
+     *
+     * Storefront components live under resources/views/storefront/components and
+     * are used under the `storefront` prefix, e.g. <x-storefront::price /> and
+     * <x-storefront::product-card />.
+     */
+    protected function configureStorefrontComponents(): void
+    {
+        Blade::anonymousComponentPath(resource_path('views/storefront/components'), 'storefront');
     }
 
     /**

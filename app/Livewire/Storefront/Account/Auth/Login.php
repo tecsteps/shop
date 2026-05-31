@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Storefront\Account\Auth;
 
+use App\Enums\CartStatus;
+use App\Models\Cart;
+use App\Services\CartService;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -48,9 +51,50 @@ class Login extends Component
 
         RateLimiter::clear($this->throttleKey());
 
+        $this->mergeGuestCart();
+
         session()->regenerate();
 
         return $this->redirectIntended(default: route('account.dashboard'), navigate: true);
+    }
+
+    /**
+     * Merge a guest session cart into the authenticated customer's cart.
+     *
+     * The session cart's lines are folded into the customer cart (preferring the
+     * higher quantity for duplicate variants) and the guest cart is abandoned.
+     */
+    protected function mergeGuestCart(): void
+    {
+        $guestCartId = session(CartService::SESSION_KEY);
+
+        if ($guestCartId === null) {
+            return;
+        }
+
+        $store = app('current_store');
+        $customer = Auth::guard('customer')->user();
+        $carts = app(CartService::class);
+
+        $guestCart = Cart::query()
+            ->where('store_id', $store->id)
+            ->where('status', CartStatus::Active->value)
+            ->whereNull('customer_id')
+            ->find($guestCartId);
+
+        if ($guestCart === null) {
+            return;
+        }
+
+        $customerCart = $carts->getOrCreateForSession($store, $customer);
+
+        if ($customerCart->id === $guestCart->id) {
+            $guestCart->update(['customer_id' => $customer->id]);
+
+            return;
+        }
+
+        $carts->mergeOnLogin($guestCart->load('lines'), $customerCart->load('lines'));
     }
 
     /**

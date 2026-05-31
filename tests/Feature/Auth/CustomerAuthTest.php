@@ -151,6 +151,50 @@ it('logs out customer and redirects to login', function () {
 });
 
 it('merges guest cart into customer cart on login', function () {
-    // CartService and the carts table are introduced in Phase 4. The guest
-    // cart merge-on-login behavior is covered by Phase 4's tests.
-})->skip('Cart merge depends on CartService (Phase 4).');
+    $store = $this->context['store'];
+    bindCurrentStore($store);
+
+    $customer = Customer::factory()->create([
+        'store_id' => $store->id,
+        'password_hash' => Hash::make('secret-password'),
+    ]);
+
+    $carts = app(App\Services\CartService::class);
+
+    $variantA = App\Models\ProductVariant::factory()->create([
+        'product_id' => App\Models\Product::factory()->create(['store_id' => $store->id, 'status' => 'active']),
+        'price_amount' => 1000,
+    ]);
+    $variantA->inventoryItem->update(['quantity_on_hand' => 100, 'policy' => 'continue']);
+    $variantB = App\Models\ProductVariant::factory()->create([
+        'product_id' => App\Models\Product::factory()->create(['store_id' => $store->id, 'status' => 'active']),
+        'price_amount' => 2000,
+    ]);
+    $variantB->inventoryItem->update(['quantity_on_hand' => 100, 'policy' => 'continue']);
+
+    // Guest cart: variant A qty 2.
+    $guestCart = $carts->create($store);
+    $carts->addLine($guestCart, $variantA->id, 2);
+
+    // Customer cart: variant A qty 1, variant B qty 3.
+    $customerCart = $carts->create($store, $customer);
+    $carts->addLine($customerCart, $variantA->id, 1);
+    $carts->addLine($customerCart->fresh(), $variantB->id, 3);
+
+    // The guest cart is the active session cart at login time.
+    session()->put(App\Services\CartService::SESSION_KEY, $guestCart->id);
+
+    Livewire::test(Login::class)
+        ->set('email', $customer->email)
+        ->set('password', 'secret-password')
+        ->call('login')
+        ->assertHasNoErrors();
+
+    $merged = $customerCart->fresh('lines');
+    $lineA = $merged->lines->firstWhere('variant_id', $variantA->id);
+    $lineB = $merged->lines->firstWhere('variant_id', $variantB->id);
+
+    expect($lineA->quantity)->toBe(2) // max(1, 2)
+        ->and($lineB->quantity)->toBe(3)
+        ->and($guestCart->fresh()->status)->toBe(App\Enums\CartStatus::Abandoned);
+});

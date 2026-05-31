@@ -2,14 +2,14 @@
 
 namespace App\Policies;
 
+use App\Models\Collection;
 use App\Models\User;
 use App\Traits\ChecksStoreRole;
 
 /**
  * Authorization for collections based on the user's store role.
  *
- * The Collection model is introduced in Phase 2. Method parameters are untyped
- * until the model exists; Laravel auto-discovers this as CollectionPolicy.
+ * Laravel auto-discovers this as CollectionPolicy for the Collection model.
  */
 class CollectionPolicy
 {
@@ -28,7 +28,7 @@ class CollectionPolicy
     /**
      * View a collection (any role).
      */
-    public function view(User $user, object $collection): bool
+    public function view(User $user, Collection $collection): bool
     {
         return $this->isAnyRole($user, (int) $collection->store_id);
     }
@@ -46,7 +46,7 @@ class CollectionPolicy
     /**
      * Update a collection (Owner, Admin, or Staff).
      */
-    public function update(User $user, object $collection): bool
+    public function update(User $user, Collection $collection): bool
     {
         return $this->isOwnerAdminOrStaff($user, (int) $collection->store_id);
     }
@@ -54,7 +54,7 @@ class CollectionPolicy
     /**
      * Delete a collection (Owner or Admin).
      */
-    public function delete(User $user, object $collection): bool
+    public function delete(User $user, Collection $collection): bool
     {
         return $this->isOwnerOrAdmin($user, (int) $collection->store_id);
     }
