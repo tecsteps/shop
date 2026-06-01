@@ -1,0 +1,26 @@
+- generic [ref=e3]:
+  - link "Shop" [ref=e4] [cursor=pointer]:
+    - /url: http://shop.test
+    - img [ref=e6]
+    - generic [ref=e8]: Shop
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]: Log in to the admin
+      - generic [ref=e13]: Enter your email and password below to log in
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]: Email address
+        - textbox "Email address" [active] [ref=e18]:
+          - /placeholder: email@example.com
+      - generic [ref=e20]:
+        - generic [ref=e21]: Password
+        - generic [ref=e22]:
+          - textbox "Password" [ref=e23]
+          - button "Toggle password visibility" [ref=e25]:
+            - img [ref=e26]
+      - generic [ref=e29]:
+        - checkbox "Remember me" [ref=e30]
+        - generic [ref=e32]: Remember me
+      - button "Log in" [ref=e34]:
+        - img [ref=e36]
+        - generic [ref=e39]: Log in
