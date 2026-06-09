@@ -80,6 +80,26 @@
 
                 @if ($step === 2)
                     <form wire:submit="saveAddress" class="mt-4 space-y-4">
+                        @if ($savedAddresses !== [])
+                            <div>
+                                <label for="saved-address" class="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                                    {{ __('Select a saved address') }}
+                                </label>
+                                <select
+                                    id="saved-address"
+                                    wire:model.live="savedAddressId"
+                                    class="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+                                >
+                                    <option value="">{{ __('Select a saved address') }}</option>
+                                    @foreach ($savedAddresses as $savedAddress)
+                                        <option value="{{ $savedAddress['id'] }}">
+                                            {{ filled($savedAddress['label']) ? $savedAddress['label'].' - ' : '' }}{{ $savedAddress['summary'] }}
+                                        </option>
+                                    @endforeach
+                                    <option value="new">{{ __('Use a new address') }}</option>
+                                </select>
+                            </div>
+                        @endif
                         <x-storefront.address-form prefix="shipping" :address="$shipping" />
                         <button type="submit" class="{{ $primaryButtonClasses }}" style="background-color: var(--sf-primary, #2563eb);">
                             <span wire:loading.remove wire:target="saveAddress">{{ __('Continue') }}</span>

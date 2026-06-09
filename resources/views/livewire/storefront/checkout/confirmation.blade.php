@@ -128,7 +128,10 @@
             {{ __('Continue shopping') }}
         </a>
         @auth('customer')
-            <a href="{{ route('storefront.account.index') }}" class="text-sm font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400">
+            <a
+                href="{{ route('storefront.account.orders.show', ['orderNumber' => ltrim($order->order_number, '#')]) }}"
+                class="text-sm font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400"
+            >
                 {{ __('View order') }}
             </a>
         @endauth

@@ -10,6 +10,7 @@ use App\Exceptions\InvalidShippingRateException;
 use App\Exceptions\PaymentFailedException;
 use App\Livewire\Storefront\Concerns\InteractsWithCart;
 use App\Models\Checkout;
+use App\Models\CustomerAddress;
 use App\Models\ShippingRate;
 use App\Services\CheckoutService;
 use App\Services\DiscountService;
@@ -47,6 +48,12 @@ class Show extends Component
         'country_code' => '',
         'phone' => '',
     ];
+
+    /**
+     * Saved-address picker for logged-in customers: an address id, "new"
+     * for a blank form, or "" when nothing is selected.
+     */
+    public string $savedAddressId = '';
 
     public ?int $selectedRateId = null;
 
@@ -99,6 +106,8 @@ class Show extends Component
             fn ($value): string => (string) $value,
             $checkout->shipping_address_json ?? [],
         ));
+
+        $this->prefillFromDefaultAddress($checkout);
         $this->selectedRateId = $checkout->shipping_method_id;
         $this->paymentMethod = $checkout->payment_method ?? 'credit_card';
 
@@ -108,6 +117,31 @@ class Show extends Component
             CheckoutStatus::ShippingSelected => 4,
             default => 5,
         };
+    }
+
+    /**
+     * Populate the address form when a saved address is picked from the
+     * dropdown; "new" resets the form to a blank address (spec 04).
+     */
+    public function updatedSavedAddressId(string $value): void
+    {
+        if ($value === '') {
+            return;
+        }
+
+        $blank = array_fill_keys(array_keys($this->shipping), '');
+
+        if ($value === 'new') {
+            $this->shipping = $blank;
+
+            return;
+        }
+
+        $address = $this->currentCustomer()?->addresses()->find((int) $value);
+
+        if ($address !== null) {
+            $this->shipping = array_merge($blank, $address->toCheckoutAddress());
+        }
     }
 
     public function saveContact(): void
@@ -283,12 +317,59 @@ class Show extends Component
             'totals' => $totals,
             'availableRates' => $this->availableRates($checkout),
             'requiresShipping' => $cart?->requiresShipping() ?? false,
+            'savedAddresses' => $this->savedAddresses(),
         ])->title(__('Checkout'));
     }
 
     protected function checkout(): Checkout
     {
         return Checkout::query()->findOrFail($this->checkoutId);
+    }
+
+    /**
+     * Prefill the address step from the logged-in customer's default
+     * address when the checkout has no address yet (spec 04 section 9).
+     */
+    protected function prefillFromDefaultAddress(Checkout $checkout): void
+    {
+        if (($checkout->shipping_address_json ?? []) !== []) {
+            return;
+        }
+
+        $default = $this->currentCustomer()
+            ?->addresses()
+            ->where('is_default', true)
+            ->first();
+
+        if ($default !== null) {
+            $this->shipping = array_merge($this->shipping, $default->toCheckoutAddress());
+            $this->savedAddressId = (string) $default->getKey();
+        }
+    }
+
+    /**
+     * The logged-in customer's saved addresses for the address picker.
+     *
+     * @return list<array{id: int, label: string, summary: string}>
+     */
+    protected function savedAddresses(): array
+    {
+        $customer = $this->currentCustomer();
+
+        if ($customer === null) {
+            return [];
+        }
+
+        return $customer->addresses()
+            ->orderByDesc('is_default')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (CustomerAddress $address): array => [
+                'id' => $address->getKey(),
+                'label' => (string) $address->label,
+                'summary' => $address->summaryLine(),
+            ])
+            ->all();
     }
 
     /**

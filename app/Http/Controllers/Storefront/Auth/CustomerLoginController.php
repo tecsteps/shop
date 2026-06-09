@@ -51,7 +51,7 @@ class CustomerLoginController extends Controller
     {
         Auth::guard('customer')->logout();
 
-        $request->session()->regenerate();
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('storefront.account.login');

@@ -3,6 +3,8 @@
 use App\Livewire\Storefront\Checkout\Confirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutPage;
 use App\Models\Checkout;
+use App\Models\Customer;
+use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
@@ -96,4 +98,40 @@ it('shows bank transfer instructions on the confirmation page for pending orders
         ->assertSee('Bank Transfer Instructions')
         ->assertSee('DE89 3704 0044 0532 0130 00')
         ->assertSee($order->order_number);
+});
+
+it('prefills the checkout address step from the customer default address', function () {
+    $customer = Customer::factory()->for($this->store)->create();
+
+    CustomerAddress::factory()->for($customer)->create([
+        'address_json' => [
+            'first_name' => 'Jane',
+            'last_name' => 'Shopper',
+            'company' => '',
+            'address1' => 'Musterstrasse 1',
+            'address2' => '',
+            'city' => 'Berlin',
+            'province' => '',
+            'province_code' => '',
+            'country' => 'Germany',
+            'country_code' => 'DE',
+            'zip' => '10115',
+            'phone' => '',
+        ],
+        'is_default' => true,
+    ]);
+
+    $variant = createPurchasableVariant($this->store);
+    $cartService = app(CartService::class);
+    $cart = $cartService->create($this->store, $customer);
+    $cartService->addLine($cart, $variant->getKey(), 1);
+
+    actingAsCustomer($customer);
+
+    Livewire::test(CheckoutPage::class)
+        ->assertSet('email', $customer->email)
+        ->assertSet('shipping.first_name', 'Jane')
+        ->assertSet('shipping.address1', 'Musterstrasse 1')
+        ->assertSet('shipping.postal_code', '10115')
+        ->assertSet('shipping.country_code', 'DE');
 });

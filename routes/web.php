@@ -4,8 +4,12 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerLoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerRegisterController;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Storefront\Account\Addresses\Index as AccountAddresses;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Account\Dashboard as AccountDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as AccountOrders;
+use App\Livewire\Storefront\Account\Orders\Show as AccountOrderShow;
 use App\Livewire\Storefront\Cart\Show as CartShow;
 use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
@@ -77,6 +81,9 @@ Route::middleware('storefront')->group(function (): void {
         ->name('storefront.account.logout');
 
     Route::middleware('auth:customer')->group(function (): void {
-        Route::get('/account', fn () => view('storefront.account.index'))->name('storefront.account.index');
+        Route::livewire('/account', AccountDashboard::class)->name('storefront.account.index');
+        Route::livewire('/account/orders', AccountOrders::class)->name('storefront.account.orders.index');
+        Route::livewire('/account/orders/{orderNumber}', AccountOrderShow::class)->name('storefront.account.orders.show');
+        Route::livewire('/account/addresses', AccountAddresses::class)->name('storefront.account.addresses.index');
     });
 });

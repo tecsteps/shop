@@ -14,17 +14,7 @@
     $inputClasses = 'block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 transition focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500';
     $labelClasses = 'mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300';
 
-    $countries = [
-        'DE' => 'Germany',
-        'AT' => 'Austria',
-        'BE' => 'Belgium',
-        'FR' => 'France',
-        'IT' => 'Italy',
-        'NL' => 'Netherlands',
-        'ES' => 'Spain',
-        'GB' => 'United Kingdom',
-        'US' => 'United States',
-    ];
+    $countries = \App\Support\Storefront\Countries::OPTIONS;
 @endphp
 
 <div {{ $attributes->class('grid grid-cols-1 gap-4 sm:grid-cols-2') }}>
