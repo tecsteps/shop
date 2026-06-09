@@ -4,8 +4,8 @@ Tracking implementation of the shop system per `specs/09-IMPLEMENTATION-ROADMAP.
 
 | Phase | Scope | Status | Tests |
 |-------|-------|--------|-------|
-| 1 | Foundation: config, tenancy migrations/models, enums, ResolveStore, BelongsToStore, admin+customer auth, policies, Pest helpers | in progress | Tenancy/*, Auth/AdminAuthTest, Auth/CustomerAuthTest (cart merge deferred to P4) |
-| 2 | Catalog: products, options, variants, inventory, collections, media | pending | Products/* |
+| 1 | Foundation: config, tenancy migrations/models, enums, ResolveStore, BelongsToStore, admin+customer auth, policies, Pest helpers | DONE (commit 5b743cde) | 30 passed, 3 todos |
+| 2 | Catalog: products, options, variants, inventory, collections, media | DONE | full suite 79 passed, 5 todos (4 deferred to P5, 1 to P4) |
 | 3 | Themes, pages, navigation, storefront layout + components | pending | (rendering covered later) |
 | 4 | Cart, checkout, discounts, shipping, taxes + storefront cart/checkout UI | pending | Unit/*, Cart/CartServiceTest, Checkout/* |
 | 5 | Payments (mock PSP), orders, refunds, fulfillments, events | pending | Orders/*, Payments/* |
@@ -21,3 +21,4 @@ Tracking implementation of the shop system per `specs/09-IMPLEMENTATION-ROADMAP.
 ## Log
 
 - 2026-06-09: Project start. Fresh Livewire starter kit (Fortify). Created progress tracker, started Phase 1.
+- 2026-06-09: Phase 2 done. Catalog migrations (9 tables), models, enums, ProductService/VariantMatrixService/InventoryService/MediaService, HandleGenerator, ProcessMediaUpload job (GD), Collection+Product seeders (25 products, 127 variants). Order-reference checks implemented behind Schema::hasTable('order_lines') guard; 3 order-dependent test cases todo'd for Phase 5.
