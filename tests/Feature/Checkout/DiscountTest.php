@@ -71,7 +71,16 @@ it('rejects expired discount at checkout', function () {
     app(DiscountService::class)->validate('OLD20', $this->store, $checkout->cart);
 })->throws(InvalidDiscountException::class);
 
-it('increments usage count on order completion')->todo('Phase 5: order creation via mock PSP');
+it('increments usage count on order completion', function () {
+    $discount = Discount::factory()->for($this->store)->create(['code' => 'SAVE10', 'value_amount' => 10]);
+    expect($discount->usage_count)->toBe(0);
+
+    $checkout = createPaymentSelectedCheckout($this->store, discountCode: 'SAVE10');
+
+    $this->checkoutService->completeCheckout($checkout, ['card_number' => '4242424242424242']);
+
+    expect($discount->refresh()->usage_count)->toBe(1);
+});
 
 it('handles free shipping discount at checkout', function () {
     Discount::factory()->for($this->store)->freeShipping()->create(['code' => 'FREESHIP']);

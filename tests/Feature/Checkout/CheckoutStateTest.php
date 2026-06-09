@@ -4,6 +4,7 @@ use App\Enums\CheckoutStatus;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Exceptions\InvalidShippingRateException;
 use App\Models\Checkout;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Services\CartService;
@@ -133,7 +134,23 @@ it('transitions from shipping_selected to payment_selected', function () {
     expect($reserved)->toBe(2);
 });
 
-it('transitions from payment_selected to completed')->todo('Phase 5: order creation via mock PSP');
+it('transitions from payment_selected to completed', function () {
+    $checkout = startedCheckout($this, quantity: 2);
+    $rate = makeGermanZone($this);
+
+    $checkout = $this->checkoutService->setAddress($checkout, [
+        'email' => 'shopper@example.test',
+        'shipping_address' => validShippingAddress(),
+    ]);
+    $checkout = $this->checkoutService->setShippingMethod($checkout, $rate->getKey());
+    $checkout = $this->checkoutService->selectPaymentMethod($checkout, 'credit_card');
+
+    $order = $this->checkoutService->completeCheckout($checkout, ['card_number' => '4242424242424242']);
+
+    expect($checkout->refresh()->status)->toBe(CheckoutStatus::Completed);
+    expect($order)->toBeInstanceOf(Order::class);
+    expect($order->checkout_id)->toBe($checkout->getKey());
+});
 
 it('rejects invalid state transitions', function () {
     $checkout = startedCheckout($this);

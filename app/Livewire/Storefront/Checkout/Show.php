@@ -4,8 +4,10 @@ namespace App\Livewire\Storefront\Checkout;
 
 use App\Enums\CheckoutStatus;
 use App\Exceptions\InsufficientInventoryException;
+use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\InvalidShippingRateException;
+use App\Exceptions\PaymentFailedException;
 use App\Livewire\Storefront\Concerns\InteractsWithCart;
 use App\Models\Checkout;
 use App\Models\ShippingRate;
@@ -49,6 +51,14 @@ class Show extends Component
     public ?int $selectedRateId = null;
 
     public string $paymentMethod = 'credit_card';
+
+    public string $cardNumber = '';
+
+    public string $cardName = '';
+
+    public string $cardExpiry = '';
+
+    public string $cardCvc = '';
 
     public ?string $shippingError = null;
 
@@ -167,6 +177,45 @@ class Show extends Component
         }
 
         $this->step = 5;
+    }
+
+    /**
+     * Charge the mock PSP and create the order; on success redirect to the
+     * confirmation page. Declines keep the customer on the payment step.
+     */
+    public function payNow(CheckoutService $checkoutService): void
+    {
+        $this->paymentError = null;
+
+        if ($this->paymentMethod === 'credit_card') {
+            $this->validate([
+                'cardNumber' => ['required', 'string', 'regex:/^[\d ]{12,23}$/'],
+                'cardName' => ['required', 'string', 'max:255'],
+                'cardExpiry' => ['required', 'string', 'max:7'],
+                'cardCvc' => ['required', 'string', 'min:3', 'max:4'],
+            ]);
+        }
+
+        try {
+            $order = $checkoutService->completeCheckout($this->checkout(), [
+                'card_number' => $this->cardNumber,
+                'card_name' => $this->cardName,
+                'card_expiry' => $this->cardExpiry,
+                'card_cvc' => $this->cardCvc,
+            ]);
+        } catch (PaymentFailedException $exception) {
+            $this->paymentError = __($exception->getMessage());
+
+            return;
+        } catch (InvalidCheckoutTransitionException) {
+            $this->paymentError = __('This checkout can no longer be completed. Please start over from your cart.');
+
+            return;
+        }
+
+        Session::forget(['checkout_id', 'cart_id', 'cart_discount_code']);
+
+        $this->redirectRoute('storefront.checkout.confirmation', ['checkoutId' => $order->checkout_id]);
     }
 
     public function editStep(int $step): void

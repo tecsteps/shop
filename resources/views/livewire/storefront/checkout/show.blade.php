@@ -205,24 +205,130 @@
                         </button>
                     </form>
                 @elseif ($step === 5)
-                    <div class="mt-4 space-y-4">
+                    @php
+                        $formattedTotal = \App\Support\Storefront\PriceFormatter::format($totals['total'] ?? 0, $currency);
+                        $inputClasses = 'block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-white';
+                        $labelClasses = 'mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300';
+                    @endphp
+                    <form wire:submit="payNow" class="mt-4 space-y-4">
                         <p class="text-sm text-zinc-600 dark:text-zinc-400">
                             {{ __('Payment method:') }}
                             <span class="font-medium text-zinc-900 dark:text-white">
                                 {{ ['credit_card' => __('Credit Card'), 'paypal' => __('PayPal'), 'bank_transfer' => __('Bank Transfer')][$paymentMethod] ?? $paymentMethod }}
                             </span>
                         </p>
-                        {{--
-                            Phase 5 integration point: the payment form (card fields /
-                            PayPal / bank transfer instructions) and the "Pay now"
-                            button mount here. Submitting calls
-                            CheckoutService::completeCheckout() via the mock PSP and
-                            redirects to the confirmation page.
-                        --}}
-                        <div class="rounded-xl border border-dashed border-zinc-300 p-4 text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                            {{ __('Payment processing will be available soon. Your items are reserved for 24 hours.') }}
-                        </div>
-                    </div>
+
+                        @if ($paymentMethod === 'credit_card')
+                            <div class="space-y-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+                                <div>
+                                    <label for="card-number" class="{{ $labelClasses }}">
+                                        {{ __('Card number') }} <span class="text-red-600" aria-hidden="true">*</span>
+                                    </label>
+                                    <input
+                                        id="card-number"
+                                        type="text"
+                                        wire:model="cardNumber"
+                                        inputmode="numeric"
+                                        autocomplete="cc-number"
+                                        placeholder="4242 4242 4242 4242"
+                                        required
+                                        class="{{ $inputClasses }}"
+                                        @error('cardNumber') aria-invalid="true" aria-describedby="card-number-error" @enderror
+                                    />
+                                    @error('cardNumber')
+                                        <p id="card-number-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="card-name" class="{{ $labelClasses }}">
+                                        {{ __('Cardholder name') }} <span class="text-red-600" aria-hidden="true">*</span>
+                                    </label>
+                                    <input
+                                        id="card-name"
+                                        type="text"
+                                        wire:model="cardName"
+                                        autocomplete="cc-name"
+                                        required
+                                        class="{{ $inputClasses }}"
+                                        @error('cardName') aria-invalid="true" aria-describedby="card-name-error" @enderror
+                                    />
+                                    @error('cardName')
+                                        <p id="card-name-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="card-expiry" class="{{ $labelClasses }}">
+                                            {{ __('Expiry') }} <span class="text-red-600" aria-hidden="true">*</span>
+                                        </label>
+                                        <input
+                                            id="card-expiry"
+                                            type="text"
+                                            wire:model="cardExpiry"
+                                            placeholder="MM/YY"
+                                            autocomplete="cc-exp"
+                                            required
+                                            class="{{ $inputClasses }}"
+                                            @error('cardExpiry') aria-invalid="true" aria-describedby="card-expiry-error" @enderror
+                                        />
+                                        @error('cardExpiry')
+                                            <p id="card-expiry-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div>
+                                        <label for="card-cvc" class="{{ $labelClasses }}">
+                                            {{ __('CVC') }} <span class="text-red-600" aria-hidden="true">*</span>
+                                        </label>
+                                        <input
+                                            id="card-cvc"
+                                            type="text"
+                                            wire:model="cardCvc"
+                                            inputmode="numeric"
+                                            placeholder="123"
+                                            autocomplete="cc-csc"
+                                            required
+                                            class="{{ $inputClasses }}"
+                                            @error('cardCvc') aria-invalid="true" aria-describedby="card-cvc-error" @enderror
+                                        />
+                                        @error('cardCvc')
+                                            <p id="card-cvc-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif ($paymentMethod === 'paypal')
+                            <p class="rounded-xl border border-zinc-200 p-4 text-sm text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
+                                {{ __('Your PayPal payment will be processed securely.') }}
+                            </p>
+                        @else
+                            <p class="rounded-xl border border-zinc-200 p-4 text-sm text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
+                                {{ __('After placing your order, you will receive bank transfer instructions. Your order will be held for 7 days while we await your payment.') }}
+                            </p>
+                        @endif
+
+                        @if ($paymentError !== null)
+                            <p class="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-400" role="alert">
+                                {{ $paymentError }}
+                            </p>
+                        @endif
+
+                        <button
+                            type="submit"
+                            class="{{ $primaryButtonClasses }} w-full text-base"
+                            style="background-color: var(--sf-primary, #2563eb);"
+                        >
+                            <span wire:loading.remove wire:target="payNow">
+                                @if ($paymentMethod === 'paypal')
+                                    {{ __('Pay with PayPal') }} - {{ $formattedTotal }}
+                                @elseif ($paymentMethod === 'bank_transfer')
+                                    {{ __('Place order') }} - {{ $formattedTotal }}
+                                @else
+                                    {{ __('Pay now') }} - {{ $formattedTotal }}
+                                @endif
+                            </span>
+                            <span wire:loading wire:target="payNow">{{ __('Processing...') }}</span>
+                        </button>
+                    </form>
                 @endif
             </section>
         </div>

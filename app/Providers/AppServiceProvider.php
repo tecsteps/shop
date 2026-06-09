@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Contracts\PaymentProvider;
 use App\Http\Middleware\ResolveStore;
 use App\Services\NavigationService;
+use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ThemeSettingsService::class);
         $this->app->singleton(NavigationService::class);
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
     }
 
     /**

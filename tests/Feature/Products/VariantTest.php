@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\VariantStatus;
+use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\ProductService;
@@ -52,8 +55,32 @@ it('preserves existing variants when adding an option value', function () {
     expect($product->variants->find($originalVariants[1]->getKey())->price_amount)->toBe(1200);
 });
 
-it('archives orphaned variants with order references')
-    ->todo('Phase 5: order_lines table does not exist yet; VariantMatrixService already archives referenced orphans once it does');
+it('archives orphaned variants with order references', function () {
+    $context = createStoreContext();
+
+    $product = app(ProductService::class)->create($context['store'], [
+        'title' => 'Referenced Tee',
+        'options' => [
+            ['name' => 'Size', 'values' => ['S', 'M', 'L']],
+        ],
+    ]);
+
+    $removedValue = $product->options->first()->values->firstWhere('value', 'L');
+    $orphanedVariant = $product->variants
+        ->first(fn ($variant) => $variant->optionValues->contains('id', $removedValue->getKey()));
+
+    OrderLine::factory()
+        ->for(Order::factory()->paid()->for($context['store']))
+        ->forVariant($orphanedVariant)
+        ->create();
+
+    $removedValue->delete();
+
+    app(VariantMatrixService::class)->rebuildMatrix($product);
+
+    $this->assertDatabaseHas('product_variants', ['id' => $orphanedVariant->getKey()]);
+    expect($orphanedVariant->refresh()->status)->toBe(VariantStatus::Archived);
+});
 
 it('deletes orphaned variants without order references', function () {
     $context = createStoreContext();

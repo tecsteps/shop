@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Scopes\StoreScope;
 use App\Models\Store;
@@ -18,7 +19,18 @@ it('scopes product queries to the current store', function () {
     expect(Product::query()->count())->toBe(3);
 });
 
-it('scopes order queries to the current store')->todo('Phase 5: Order model does not exist yet');
+it('scopes order queries to the current store', function () {
+    $storeA = Store::factory()->create();
+    $storeB = Store::factory()->create();
+
+    Order::factory()->count(2)->for($storeA)->create();
+    Order::factory()->count(3)->for($storeB)->create();
+
+    app()->instance('current_store', $storeA);
+
+    expect(Order::all())->toHaveCount(2);
+    expect(Order::query()->count())->toBe(2);
+});
 
 it('automatically sets store_id on product creation', function () {
     $context = createStoreContext();

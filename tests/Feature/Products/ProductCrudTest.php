@@ -2,6 +2,9 @@
 
 use App\Enums\ProductStatus;
 use App\Exceptions\InvalidProductTransitionException;
+use App\Exceptions\ProductDeletionException;
+use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\ProductService;
@@ -132,8 +135,26 @@ it('transitions product from active to archived', function () {
     expect($product->refresh()->status)->toBe(ProductStatus::Archived);
 });
 
-it('prevents active to draft when order lines exist')
-    ->todo('Phase 5: order_lines table does not exist yet; ProductService already enforces the check once it does');
+it('prevents active to draft when order lines exist', function () {
+    $context = createStoreContext();
+    $service = app(ProductService::class);
+
+    $product = $service->create($context['store'], [
+        'title' => 'Ordered Product',
+        'status' => ProductStatus::Active,
+        'price_amount' => 1500,
+    ]);
+
+    OrderLine::factory()
+        ->for(Order::factory()->paid()->for($context['store']))
+        ->forVariant($product->variants->first())
+        ->create();
+
+    expect(fn () => $service->transitionStatus($product, ProductStatus::Draft))
+        ->toThrow(InvalidProductTransitionException::class);
+
+    expect($product->refresh()->status)->toBe(ProductStatus::Active);
+});
 
 it('hard deletes a draft product with no order references', function () {
     $context = createStoreContext();
@@ -149,8 +170,22 @@ it('hard deletes a draft product with no order references', function () {
     $this->assertDatabaseMissing('inventory_items', ['variant_id' => $variantId]);
 });
 
-it('prevents deletion of product with order references')
-    ->todo('Phase 5: order_lines table does not exist yet; ProductService already enforces the check once it does');
+it('prevents deletion of product with order references', function () {
+    $context = createStoreContext();
+    $service = app(ProductService::class);
+
+    $product = $service->create($context['store'], ['title' => 'Referenced Draft']);
+
+    OrderLine::factory()
+        ->for(Order::factory()->paid()->for($context['store']))
+        ->forVariant($product->variants->first())
+        ->create();
+
+    expect(fn () => $service->delete($product))
+        ->toThrow(ProductDeletionException::class);
+
+    $this->assertDatabaseHas('products', ['id' => $product->getKey()]);
+});
 
 it('filters products by status', function () {
     $context = createStoreContext();

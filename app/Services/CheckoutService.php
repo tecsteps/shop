@@ -2,20 +2,24 @@
 
 namespace App\Services;
 
+use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
+use App\Enums\PaymentMethod;
+use App\Events\CheckoutCompleted;
 use App\Exceptions\InsufficientInventoryException;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Exceptions\InvalidShippingRateException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\CartLine;
 use App\Models\Checkout;
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use App\ValueObjects\PricingResult;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use LogicException;
 
 class CheckoutService
 {
@@ -28,6 +32,8 @@ class CheckoutService
         protected PricingEngine $pricingEngine,
         protected ShippingCalculator $shippingCalculator,
         protected InventoryService $inventoryService,
+        protected PaymentProvider $paymentProvider,
+        protected OrderService $orderService,
     ) {}
 
     /**
@@ -186,25 +192,51 @@ class CheckoutService
 
     /**
      * Transition payment_selected -> completed: charges the mock PSP and
-     * creates the order. Must be idempotent.
+     * creates the order. Idempotent: when an order already exists for this
+     * checkout it is returned without charging again (spec 05 section 6.2).
      *
      * @param  array<string, mixed>  $paymentMethodData
      *
      * @throws InvalidCheckoutTransitionException
+     * @throws PaymentFailedException
      */
-    public function completeCheckout(Checkout $checkout, array $paymentMethodData = []): never
+    public function completeCheckout(Checkout $checkout, array $paymentMethodData = []): Order
     {
+        $existingOrder = Order::query()
+            ->withoutGlobalScopes()
+            ->where('checkout_id', $checkout->getKey())
+            ->first();
+
+        if ($existingOrder !== null) {
+            return $existingOrder;
+        }
+
         $this->assertStatusIn($checkout, [CheckoutStatus::PaymentSelected], 'complete');
 
-        /*
-         * Phase 5 integration point: charge via MockPaymentProvider, create
-         * the order (sequential number, line snapshots, payment record),
-         * commit or keep reserved inventory by payment method, increment the
-         * discount usage_count, mark the cart converted and the checkout
-         * completed, and dispatch OrderCreated. Idempotency: return the
-         * existing order when one was already created for this checkout.
-         */
-        throw new LogicException('Phase 5: order creation is not implemented yet.');
+        $result = $this->paymentProvider->charge(
+            $checkout,
+            PaymentMethod::from($checkout->payment_method),
+            $paymentMethodData,
+        );
+
+        if (! $result->success) {
+            /*
+             * The reservation made at payment selection is kept so a retry
+             * with corrected details stays consistent; the 24 hour checkout
+             * expiry releases it if the customer abandons the checkout.
+             */
+            throw new PaymentFailedException($result->errorCode ?? 'payment_failed');
+        }
+
+        return DB::transaction(function () use ($checkout, $result): Order {
+            $order = $this->orderService->createFromCheckout($checkout, $result);
+
+            $checkout->forceFill(['status' => CheckoutStatus::Completed])->save();
+
+            event(new CheckoutCompleted($checkout, $order));
+
+            return $order;
+        });
     }
 
     /**

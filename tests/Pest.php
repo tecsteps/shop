@@ -2,15 +2,20 @@
 
 use App\Enums\InventoryPolicy;
 use App\Enums\StoreUserRole;
+use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\InventoryItem;
 use App\Models\Organization;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\ShippingRate;
+use App\Models\ShippingZone;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\StoreUser;
 use App\Models\User;
+use App\Services\CartService;
+use App\Services\CheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -106,6 +111,49 @@ function validShippingAddress(array $overrides = []): array
         'postal_code' => '10115',
         'country_code' => 'DE',
     ], $overrides);
+}
+
+/**
+ * Drive a checkout for one purchasable variant through the full state
+ * machine up to payment_selected (DE address, flat 499 shipping rate when
+ * shipping is required). Used by the Phase 5 order and payment tests.
+ *
+ * @param  array<string, mixed>  $variantAttributes
+ */
+function createPaymentSelectedCheckout(
+    Store $store,
+    string $paymentMethod = 'credit_card',
+    int $quantity = 1,
+    int $priceAmount = 2500,
+    int $quantityOnHand = 100,
+    array $variantAttributes = [],
+    ?Customer $customer = null,
+    string $email = 'shopper@example.test',
+    ?string $discountCode = null,
+): Checkout {
+    $variant = createPurchasableVariant($store, $priceAmount, $quantityOnHand, $variantAttributes);
+
+    $cartService = app(CartService::class);
+    $cart = $cartService->create($store);
+    $cartService->addLine($cart, $variant->getKey(), $quantity);
+
+    $checkoutService = app(CheckoutService::class);
+    $checkout = $checkoutService->createFromCart($cart, $customer, $discountCode);
+
+    $checkout = $checkoutService->setAddress($checkout, [
+        'email' => $email,
+        'shipping_address' => validShippingAddress(),
+    ]);
+
+    if ($cart->requiresShipping()) {
+        $zone = ShippingZone::factory()->for($store)->create(['countries_json' => ['DE']]);
+        $rate = ShippingRate::factory()->for($zone, 'zone')->flatAmount(499)->create();
+        $checkout = $checkoutService->setShippingMethod($checkout, $rate->getKey());
+    } else {
+        $checkout = $checkoutService->setShippingMethod($checkout);
+    }
+
+    return $checkoutService->selectPaymentMethod($checkout, $paymentMethod);
 }
 
 /**

@@ -7,6 +7,7 @@ use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
 use App\Livewire\Storefront\Cart\Show as CartShow;
+use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Livewire\Storefront\Collections\Index as CollectionsIndex;
 use App\Livewire\Storefront\Collections\Show as CollectionsShow;
@@ -59,6 +60,9 @@ Route::middleware('storefront')->group(function (): void {
 
     Route::livewire('/cart', CartShow::class)->name('storefront.cart');
     Route::livewire('/checkout', CheckoutShow::class)->name('storefront.checkout');
+    Route::livewire('/checkout/{checkoutId}/confirmation', CheckoutConfirmation::class)
+        ->whereNumber('checkoutId')
+        ->name('storefront.checkout.confirmation');
 
     Route::livewire('/account/login', CustomerLogin::class)->name('storefront.account.login');
     Route::post('/account/login', [CustomerLoginController::class, 'store'])

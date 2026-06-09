@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             ThemeSeeder::class,
             PageSeeder::class,
             NavigationSeeder::class,
+            CustomerSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }
