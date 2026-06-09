@@ -36,6 +36,99 @@
     }
 }
 
+[x-cloak] {
+    display: none !important;
+}
+
+/* Storefront rich-text (CMS pages, product/collection descriptions, theme rich-text sections) */
+.sf-prose {
+    color: var(--color-zinc-600);
+    font-size: var(--text-base);
+    line-height: 1.75;
+}
+
+.dark .sf-prose {
+    color: var(--color-zinc-400);
+}
+
+.sf-prose :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--color-zinc-900);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-block: 1.5em 0.5em;
+}
+
+.dark .sf-prose :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--color-white);
+}
+
+.sf-prose :is(h1, h2, h3, h4, h5, h6):first-child {
+    margin-block-start: 0;
+}
+
+.sf-prose h1 {
+    font-size: var(--text-2xl);
+}
+
+.sf-prose h2 {
+    font-size: var(--text-xl);
+}
+
+.sf-prose h3 {
+    font-size: var(--text-lg);
+}
+
+.sf-prose p {
+    margin-block: 0.75em;
+}
+
+.sf-prose :is(ul, ol) {
+    margin-block: 0.75em;
+    padding-inline-start: 1.5em;
+}
+
+.sf-prose ul {
+    list-style-type: disc;
+}
+
+.sf-prose ol {
+    list-style-type: decimal;
+}
+
+.sf-prose li {
+    margin-block: 0.25em;
+}
+
+.sf-prose a {
+    color: var(--color-blue-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.dark .sf-prose a {
+    color: var(--color-blue-400);
+}
+
+.sf-prose blockquote {
+    border-inline-start: 3px solid var(--color-zinc-200);
+    font-style: italic;
+    margin-block: 1em;
+    padding-inline-start: 1em;
+}
+
+.dark .sf-prose blockquote {
+    border-inline-start-color: var(--color-zinc-700);
+}
+
+.sf-prose strong {
+    color: var(--color-zinc-900);
+    font-weight: 600;
+}
+
+.dark .sf-prose strong {
+    color: var(--color-white);
+}
+
 @layer base {
 
     *,

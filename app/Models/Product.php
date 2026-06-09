@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ProductStatus;
 use App\Models\Concerns\BelongsToStore;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -43,6 +44,17 @@ class Product extends Model
             'tags' => 'array',
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Scope the query to published (active) products.
+     *
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', ProductStatus::Active);
     }
 
     public function options(): HasMany

@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Http\Middleware\ResolveStore;
+use App\Services\NavigationService;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -12,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ThemeSettingsService::class);
+        $this->app->singleton(NavigationService::class);
     }
 
     /**
@@ -31,6 +36,19 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureAuth();
         $this->configureRateLimiting();
+        $this->configureLivewire();
+    }
+
+    /**
+     * Keep the current store resolved on Livewire update requests so that
+     * store-scoped queries inside interactive storefront components stay
+     * tenant-isolated between page loads.
+     */
+    protected function configureLivewire(): void
+    {
+        Livewire::addPersistentMiddleware([
+            ResolveStore::class,
+        ]);
     }
 
     /**
