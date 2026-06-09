@@ -6,6 +6,8 @@ use App\Http\Controllers\Storefront\Auth\CustomerRegisterController;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Cart\Show as CartShow;
+use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Livewire\Storefront\Collections\Index as CollectionsIndex;
 use App\Livewire\Storefront\Collections\Show as CollectionsShow;
 use App\Livewire\Storefront\Home;
@@ -54,6 +56,9 @@ Route::middleware('storefront')->group(function (): void {
     Route::livewire('/collections/{handle}', CollectionsShow::class)->name('storefront.collections.show');
     Route::livewire('/products/{handle}', ProductsShow::class)->name('storefront.products.show');
     Route::livewire('/pages/{handle}', PagesShow::class)->name('storefront.pages.show');
+
+    Route::livewire('/cart', CartShow::class)->name('storefront.cart');
+    Route::livewire('/checkout', CheckoutShow::class)->name('storefront.checkout');
 
     Route::livewire('/account/login', CustomerLogin::class)->name('storefront.account.login');
     Route::post('/account/login', [CustomerLoginController::class, 'store'])

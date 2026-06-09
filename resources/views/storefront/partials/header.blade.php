@@ -69,15 +69,26 @@
                 </svg>
             </a>
 
-            {{-- Cart (Phase 4 integration point: opens the cart drawer and shows the live item count) --}}
+            {{-- Cart: opens the cart drawer; the badge updates from "cart-updated" browser events --}}
             <button
                 type="button"
+                x-data="{ count: {{ (int) ($cartItemCount ?? 0) }} }"
+                x-on:cart-updated.window="count = $event.detail.itemCount ?? count"
+                x-on:click="$dispatch('open-cart')"
                 class="relative rounded-lg p-2 text-zinc-700 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 aria-label="{{ __('Open cart') }}"
             >
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z" />
                 </svg>
+                <span
+                    x-show="count > 0"
+                    x-text="count > 99 ? '99+' : count"
+                    x-cloak
+                    class="absolute -top-0.5 -right-0.5 flex min-w-5 items-center justify-center rounded-full px-1 py-0.5 text-[10px] leading-none font-semibold text-white"
+                    style="background-color: var(--sf-primary, #2563eb);"
+                    aria-hidden="true"
+                ></span>
             </button>
         </div>
     </div>

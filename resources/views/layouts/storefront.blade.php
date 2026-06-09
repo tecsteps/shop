@@ -3,6 +3,9 @@
     $mainMenu = app(\App\Services\NavigationService::class)->tree('main-menu');
     $footerMenu = app(\App\Services\NavigationService::class)->tree('footer-menu');
     $storeName = $currentStore->name ?? config('app.name');
+    $cartItemCount = isset($currentStore)
+        ? (app(\App\Services\CartService::class)->findFor($currentStore, auth('customer')->user())?->itemCount() ?? 0)
+        : 0;
 @endphp
 <!DOCTYPE html>
 <html
@@ -34,11 +37,7 @@
 
         @include('storefront.partials.footer')
 
-        {{--
-            Phase 4 integration point: the global cart drawer Livewire component
-            mounts here (<livewire:storefront.cart-drawer />). It listens for the
-            "cart-updated" browser event dispatched by add-to-cart actions.
-        --}}
+        <livewire:storefront.cart-drawer />
 
         @fluxScripts
     </body>

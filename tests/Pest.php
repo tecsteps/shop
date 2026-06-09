@@ -1,8 +1,12 @@
 <?php
 
+use App\Enums\InventoryPolicy;
 use App\Enums\StoreUserRole;
 use App\Models\Customer;
+use App\Models\InventoryItem;
 use App\Models\Organization;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use App\Models\StoreUser;
@@ -55,6 +59,53 @@ function createStoreContext(array $storeAttributes = []): array
         'domain' => $domain,
         'user' => $user,
     ];
+}
+
+/**
+ * Create an active product with a single active default variant (and an
+ * inventory item) for the given store. Used by cart and checkout tests.
+ *
+ * @param  array<string, mixed>  $variantAttributes
+ */
+function createPurchasableVariant(
+    Store $store,
+    int $priceAmount = 2500,
+    int $quantityOnHand = 100,
+    array $variantAttributes = [],
+    InventoryPolicy $policy = InventoryPolicy::Deny,
+): ProductVariant {
+    $product = Product::factory()->active()->for($store)->create();
+
+    $variant = ProductVariant::factory()
+        ->asDefault()
+        ->priced($priceAmount)
+        ->for($product)
+        ->create($variantAttributes);
+
+    InventoryItem::factory()
+        ->forVariant($variant)
+        ->withStock($quantityOnHand)
+        ->create(['policy' => $policy]);
+
+    return $variant;
+}
+
+/**
+ * A complete, valid checkout shipping address (Germany by default).
+ *
+ * @param  array<string, string>  $overrides
+ * @return array<string, string>
+ */
+function validShippingAddress(array $overrides = []): array
+{
+    return array_merge([
+        'first_name' => 'Erika',
+        'last_name' => 'Mustermann',
+        'address1' => 'Musterstrasse 1',
+        'city' => 'Berlin',
+        'postal_code' => '10115',
+        'country_code' => 'DE',
+    ], $overrides);
 }
 
 /**

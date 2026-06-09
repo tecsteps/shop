@@ -3,8 +3,10 @@
 namespace App\Livewire\Storefront\Products;
 
 use App\Enums\InventoryPolicy;
+use App\Exceptions\InsufficientInventoryException;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use App\Services\ThemeSettingsService;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
@@ -104,7 +106,7 @@ class Show extends Component
         return $inventory->availableQuantity() > 0 || $inventory->policy === InventoryPolicy::Continue;
     }
 
-    public function addToCart(): void
+    public function addToCart(CartService $cartService): void
     {
         $variant = $this->selectedVariant();
 
@@ -114,14 +116,17 @@ class Show extends Component
 
         $this->quantity = max(1, $this->quantity);
 
-        /*
-         * Phase 4 integration point: replace this stub with the CartService
-         * (create or resolve the session cart, add a cart line for the
-         * selected variant and quantity, and return the real item count).
-         * The "cart-updated" browser event below is the contract the cart
-         * drawer and header badge listen for.
-         */
-        $this->dispatch('cart-updated', variantId: $variant->getKey(), itemCount: $this->quantity);
+        $cart = $cartService->getOrCreateForSession(app('current_store'), auth('customer')->user());
+
+        try {
+            $cartService->addLine($cart, $variant->getKey(), $this->quantity);
+        } catch (InsufficientInventoryException) {
+            $this->addError('quantity', __('Not enough stock available for the requested quantity.'));
+
+            return;
+        }
+
+        $this->dispatch('cart-updated', cartId: $cart->getKey(), itemCount: $cart->itemCount());
 
         $this->addedToCart = true;
     }

@@ -1,8 +1,12 @@
 <?php
 
+use App\Enums\CartStatus;
+use App\Models\Cart;
+use App\Models\CartLine;
 use App\Models\Customer;
 use App\Models\Store;
 use App\Models\StoreDomain;
+use App\Services\CartService;
 
 beforeEach(function () {
     $this->store = Store::factory()->create();
@@ -136,4 +140,30 @@ it('logs out customer and redirects to login', function () {
     $this->assertGuest('customer');
 });
 
-it('merges guest cart into customer cart on login')->todo('Phase 4: carts do not exist yet');
+it('merges guest cart into customer cart on login', function () {
+    $customer = Customer::factory()->for($this->store)->create();
+
+    $variantA = createPurchasableVariant($this->store, 2500);
+    $variantB = createPurchasableVariant($this->store, 3500);
+
+    $guestCart = Cart::factory()->for($this->store)->create();
+    CartLine::factory()->for($guestCart)->priced(2500, 2)->create(['variant_id' => $variantA->getKey()]);
+
+    $customerCart = Cart::factory()->for($this->store)->create(['customer_id' => $customer->getKey()]);
+    CartLine::factory()->for($customerCart)->priced(2500, 1)->create(['variant_id' => $variantA->getKey()]);
+    CartLine::factory()->for($customerCart)->priced(3500, 3)->create(['variant_id' => $variantB->getKey()]);
+
+    $response = $this->withSession([CartService::SESSION_KEY => $guestCart->getKey()])
+        ->post($this->baseUrl.'/account/login', [
+            'email' => $customer->email,
+            'password' => 'password',
+        ]);
+
+    $response->assertRedirect('/account');
+
+    expect($customerCart->lines()->count())->toBe(2);
+    expect($customerCart->lines()->where('variant_id', $variantA->getKey())->first()->quantity)->toBe(3);
+    expect($customerCart->lines()->where('variant_id', $variantB->getKey())->first()->quantity)->toBe(3);
+    expect($guestCart->refresh()->status)->toBe(CartStatus::Abandoned);
+    expect(session(CartService::SESSION_KEY))->toBe($customerCart->getKey());
+});

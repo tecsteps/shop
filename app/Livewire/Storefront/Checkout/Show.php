@@ -1,0 +1,277 @@
+<?php
+
+namespace App\Livewire\Storefront\Checkout;
+
+use App\Enums\CheckoutStatus;
+use App\Exceptions\InsufficientInventoryException;
+use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\InvalidShippingRateException;
+use App\Livewire\Storefront\Concerns\InteractsWithCart;
+use App\Models\Checkout;
+use App\Models\ShippingRate;
+use App\Services\CheckoutService;
+use App\Services\DiscountService;
+use App\Services\ShippingCalculator;
+use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use RuntimeException;
+
+#[Layout('layouts::storefront')]
+class Show extends Component
+{
+    use InteractsWithCart;
+
+    public ?int $checkoutId = null;
+
+    /**
+     * 1 = contact, 2 = address, 3 = shipping method, 4 = payment method,
+     * 5 = payment method selected (pay step ships in Phase 5).
+     */
+    public int $step = 1;
+
+    public string $email = '';
+
+    /** @var array<string, string> */
+    public array $shipping = [
+        'first_name' => '',
+        'last_name' => '',
+        'address1' => '',
+        'address2' => '',
+        'city' => '',
+        'province' => '',
+        'postal_code' => '',
+        'country_code' => '',
+        'phone' => '',
+    ];
+
+    public ?int $selectedRateId = null;
+
+    public string $paymentMethod = 'credit_card';
+
+    public ?string $shippingError = null;
+
+    public ?string $paymentError = null;
+
+    public function mount(): void
+    {
+        $cart = $this->currentCart();
+
+        if ($cart === null || ! $cart->lines()->exists()) {
+            $this->redirectRoute('storefront.cart');
+
+            return;
+        }
+
+        $checkout = null;
+
+        if (Session::has('checkout_id')) {
+            $checkout = Checkout::query()
+                ->where('cart_id', $cart->getKey())
+                ->whereNotIn('status', [CheckoutStatus::Completed, CheckoutStatus::Expired])
+                ->find(Session::get('checkout_id'));
+        }
+
+        if ($checkout === null) {
+            $checkout = app(CheckoutService::class)->createFromCart(
+                $cart,
+                $this->currentCustomer(),
+                Session::get('cart_discount_code'),
+            );
+
+            Session::put('checkout_id', $checkout->getKey());
+        }
+
+        $this->checkoutId = $checkout->getKey();
+        $this->email = $checkout->email ?? $this->currentCustomer()?->email ?? '';
+        $this->shipping = array_merge($this->shipping, array_map(
+            fn ($value): string => (string) $value,
+            $checkout->shipping_address_json ?? [],
+        ));
+        $this->selectedRateId = $checkout->shipping_method_id;
+        $this->paymentMethod = $checkout->payment_method ?? 'credit_card';
+
+        $this->step = match ($checkout->status) {
+            CheckoutStatus::Started => 1,
+            CheckoutStatus::Addressed => 3,
+            CheckoutStatus::ShippingSelected => 4,
+            default => 5,
+        };
+    }
+
+    public function saveContact(): void
+    {
+        $this->validate(['email' => ['required', 'email']]);
+
+        $this->step = max($this->step, 2);
+    }
+
+    public function saveAddress(CheckoutService $checkoutService): void
+    {
+        $this->validate([
+            'email' => ['required', 'email'],
+            'shipping.first_name' => ['required', 'string', 'max:255'],
+            'shipping.last_name' => ['required', 'string', 'max:255'],
+            'shipping.address1' => ['required', 'string', 'max:255'],
+            'shipping.city' => ['required', 'string', 'max:255'],
+            'shipping.postal_code' => ['required', 'string', 'max:32'],
+            'shipping.country_code' => ['required', 'string', 'size:2'],
+        ]);
+
+        $checkout = $checkoutService->setAddress($this->checkout(), [
+            'email' => $this->email,
+            'shipping_address' => array_filter($this->shipping, fn (string $value): bool => $value !== ''),
+        ]);
+
+        $this->shippingError = null;
+        $this->selectedRateId = null;
+
+        $cart = $this->currentCart();
+
+        if ($cart !== null && ! $cart->requiresShipping()) {
+            $checkoutService->setShippingMethod($checkout);
+            $this->step = 4;
+
+            return;
+        }
+
+        $this->step = 3;
+    }
+
+    public function saveShipping(CheckoutService $checkoutService): void
+    {
+        $this->shippingError = null;
+
+        try {
+            $checkoutService->setShippingMethod($this->checkout(), $this->selectedRateId);
+        } catch (InvalidShippingRateException) {
+            $this->shippingError = __('Please choose one of the available shipping methods.');
+
+            return;
+        }
+
+        $this->step = 4;
+    }
+
+    public function selectPayment(CheckoutService $checkoutService): void
+    {
+        $this->paymentError = null;
+
+        try {
+            $checkoutService->selectPaymentMethod($this->checkout(), $this->paymentMethod);
+        } catch (InsufficientInventoryException) {
+            $this->paymentError = __('Some items in your cart are no longer in stock.');
+
+            return;
+        }
+
+        $this->step = 5;
+    }
+
+    public function editStep(int $step): void
+    {
+        if ($step >= 1 && $step < $this->step && $this->step < 5) {
+            $this->step = $step;
+        }
+    }
+
+    /**
+     * Apply a discount code directly to the checkout and recalculate.
+     */
+    public function applyDiscount(): void
+    {
+        $this->discountError = null;
+
+        $cart = $this->currentCart();
+        $code = trim($this->discountCode);
+
+        if ($cart === null || $code === '') {
+            return;
+        }
+
+        try {
+            $discount = app(DiscountService::class)->validate($code, $this->currentStore(), $cart);
+        } catch (InvalidDiscountException $exception) {
+            $this->discountError = $exception->getMessage();
+
+            return;
+        }
+
+        Session::put('cart_discount_code', $discount->code);
+
+        $checkout = $this->checkout();
+        $checkout->forceFill(['discount_code' => $discount->code])->save();
+
+        app(CheckoutService::class)->recalculate($checkout);
+
+        $this->discountCode = '';
+    }
+
+    /**
+     * Remove the applied discount code and recalculate.
+     */
+    public function removeDiscount(): void
+    {
+        Session::forget('cart_discount_code');
+
+        $checkout = $this->checkout();
+        $checkout->forceFill(['discount_code' => null])->save();
+
+        app(CheckoutService::class)->recalculate($checkout);
+    }
+
+    public function render(): View
+    {
+        $checkout = $this->checkout();
+        $cart = $this->currentCart();
+        $totals = $checkout->totals_json ?? [];
+
+        return view('livewire.storefront.checkout.show', [
+            'checkout' => $checkout,
+            'lines' => $this->cartLineData($cart),
+            'currency' => $totals['currency'] ?? $cart?->currency ?? $this->currentStore()->default_currency,
+            'totals' => $totals,
+            'availableRates' => $this->availableRates($checkout),
+            'requiresShipping' => $cart?->requiresShipping() ?? false,
+        ])->title(__('Checkout'));
+    }
+
+    protected function checkout(): Checkout
+    {
+        return Checkout::query()->findOrFail($this->checkoutId);
+    }
+
+    /**
+     * Available shipping rates for the checkout address with calculated costs.
+     *
+     * @return list<array{id: int, name: string, amount: int}>
+     */
+    protected function availableRates(Checkout $checkout): array
+    {
+        $cart = $this->currentCart();
+
+        if ($cart === null || $checkout->shipping_address_json === null) {
+            return [];
+        }
+
+        $calculator = app(ShippingCalculator::class);
+
+        return $calculator
+            ->getAvailableRates($this->currentStore(), $checkout->shipping_address_json)
+            ->map(function (ShippingRate $rate) use ($calculator, $cart): ?array {
+                try {
+                    return [
+                        'id' => $rate->getKey(),
+                        'name' => $rate->name,
+                        'amount' => $calculator->calculate($rate, $cart),
+                    ];
+                } catch (RuntimeException) {
+                    return null;
+                }
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+}

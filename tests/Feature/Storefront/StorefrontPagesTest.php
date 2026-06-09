@@ -176,7 +176,7 @@ it('renders navigation menu items in the header and footer', function () {
     $response->assertSee('/collections/best-sellers');
 });
 
-it('updates the price when a different variant is selected and stubs add to cart', function () {
+it('updates the price when a different variant is selected and adds it to the cart', function () {
     $context = createStoreContext();
 
     $product = Product::factory()->active()->for($context['store'])->create(['handle' => 'tee']);
@@ -196,8 +196,14 @@ it('updates the price when a different variant is selected and stubs add to cart
         ->set('selectedOptions.Size', 'M')
         ->assertSee('34.99 EUR')
         ->call('addToCart')
-        ->assertDispatched('cart-updated', variantId: $mediumVariant->getKey())
+        ->assertDispatched('cart-updated', itemCount: 1)
         ->assertSee('Added to cart');
+
+    test()->assertDatabaseHas('cart_lines', [
+        'variant_id' => $mediumVariant->getKey(),
+        'quantity' => 1,
+        'unit_price_amount' => 3499,
+    ]);
 });
 
 it('does not leak products from another store on the storefront', function () {
