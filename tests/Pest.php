@@ -1,47 +1,78 @@
 <?php
 
+use App\Enums\StoreUserRole;
+use App\Models\Customer;
+use App\Models\Organization;
+use App\Models\Store;
+use App\Models\StoreDomain;
+use App\Models\StoreUser;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
 |--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
-|
 */
 
-pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
 
 /*
 |--------------------------------------------------------------------------
 | Functions
 |--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
 */
 
-function something()
+/**
+ * Create a full store context: Organization, Store, StoreDomain, and a User
+ * with the Owner role. Binds the store in the container as "current_store".
+ *
+ * @param  array<string, mixed>  $storeAttributes
+ * @return array{organization: Organization, store: Store, domain: StoreDomain, user: User}
+ */
+function createStoreContext(array $storeAttributes = []): array
 {
-    // ..
+    $organization = Organization::factory()->create();
+    $store = Store::factory()->for($organization)->create($storeAttributes);
+    $domain = StoreDomain::factory()->for($store)->create();
+
+    $user = User::factory()->create();
+
+    StoreUser::query()->create([
+        'store_id' => $store->getKey(),
+        'user_id' => $user->getKey(),
+        'role' => StoreUserRole::Owner,
+    ]);
+
+    app()->instance('current_store', $store);
+
+    return [
+        'organization' => $organization,
+        'store' => $store,
+        'domain' => $domain,
+        'user' => $user,
+    ];
+}
+
+/**
+ * Authenticate as an admin user and put their store in the session.
+ */
+function actingAsAdmin(User $user, ?Store $store = null): TestCase
+{
+    $store ??= $user->stores()->first();
+
+    return test()
+        ->actingAs($user)
+        ->withSession(['current_store_id' => $store?->getKey()]);
+}
+
+/**
+ * Authenticate as a storefront customer via the customer guard.
+ */
+function actingAsCustomer(Customer $customer): TestCase
+{
+    return test()->actingAs($customer, 'customer');
 }
