@@ -198,7 +198,7 @@ class Show extends Component
 
         $this->reset('refundAmount', 'refundReason', 'refundRestock');
         $this->refreshOrder();
-        $this->toast(__('Refund issued'));
+        $this->toast(__('Refund processed'));
     }
 
     public function cancelOrder(): void

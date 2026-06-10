@@ -16,6 +16,8 @@ class Index extends Component
 {
     public bool $showForm = false;
 
+    public ?string $statusMessage = null;
+
     public ?int $editingId = null;
 
     public string $label = '';
@@ -42,6 +44,7 @@ class Index extends Component
     public function create(): void
     {
         $this->resetValidation();
+        $this->statusMessage = null;
         $this->editingId = null;
         $this->label = '';
         $this->form = self::BLANK_FORM;
@@ -56,6 +59,7 @@ class Index extends Component
         $address = $this->findAddress($addressId);
 
         $this->resetValidation();
+        $this->statusMessage = null;
         $this->editingId = $address->getKey();
         $this->label = (string) $address->label;
         $this->form = array_merge(self::BLANK_FORM, $address->toCheckoutAddress());
@@ -110,6 +114,7 @@ class Index extends Component
 
         $this->showForm = false;
         $this->editingId = null;
+        $this->statusMessage = __('Address saved');
     }
 
     /**

@@ -244,7 +244,7 @@ class Shipping extends Component
         Flux::modal('rate-form')->close();
 
         $this->editingRateId = null;
-        $this->toast(__('Settings saved'));
+        $this->toast(__('Shipping rate saved'));
     }
 
     public function deleteRate(int $rateId): void

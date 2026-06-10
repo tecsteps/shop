@@ -61,7 +61,7 @@
                         type="number"
                         step="{{ $valueType === 'percent' ? '1' : '0.01' }}"
                         min="0"
-                        @if ($valueType === 'percent') max="100" @endif
+                        :max="$valueType === 'percent' ? '100' : null"
                         placeholder="{{ $valueType === 'percent' ? '10' : '5.00' }}"
                         data-test="discount-value-input"
                     />

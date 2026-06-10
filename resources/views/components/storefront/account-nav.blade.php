@@ -8,7 +8,7 @@
 
 @php
     $tabs = [
-        'dashboard' => ['label' => __('Account'), 'url' => route('storefront.account.index')],
+        'dashboard' => ['label' => __('My Account'), 'url' => route('storefront.account.index')],
         'orders' => ['label' => __('Orders'), 'url' => route('storefront.account.orders.index')],
         'addresses' => ['label' => __('Addresses'), 'url' => route('storefront.account.addresses.index')],
     ];

@@ -17,7 +17,9 @@ use App\Models\User;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Pest\Browser\Api\AwaitableWebpage;
 use Pest\Browser\Api\PendingAwaitablePage;
 use Tests\TestCase;
 
@@ -70,6 +72,22 @@ function registerBrowserTestDomain(): void
 }
 
 /**
+ * Re-point the browser test hostname (127.0.0.1) at another seeded store so
+ * subsequent requests resolve that tenant through the real ResolveStore
+ * middleware. Used by the tenant isolation browser tests.
+ */
+function switchBrowserTestDomainToStore(string $handle): void
+{
+    $store = Store::query()->where('handle', $handle)->firstOrFail();
+
+    StoreDomain::query()
+        ->where('hostname', '127.0.0.1')
+        ->update(['store_id' => $store->getKey()]);
+
+    Cache::forget('store_domain:127.0.0.1');
+}
+
+/**
  * Browser test helper: log in to the admin panel as the seeded admin user
  * and land on the dashboard.
  */
@@ -81,6 +99,66 @@ function browserLoginAsAdmin(): PendingAwaitablePage
         ->fill('password', 'password')
         ->click('@admin-login-button')
         ->assertSee('Dashboard');
+
+    return $page;
+}
+
+/**
+ * Browser test helper: log in to the storefront account as the seeded
+ * customer (customer@acme.test) and land on the account dashboard.
+ */
+function browserLoginAsCustomer(): PendingAwaitablePage
+{
+    $page = visit('/account/login');
+
+    $page->fill('email', 'customer@acme.test')
+        ->fill('password', 'password')
+        ->click('@customer-login-button')
+        ->assertSee('My Account');
+
+    return $page;
+}
+
+/**
+ * Browser test helper: log in to the admin panel and open the detail page
+ * of the given seeded order.
+ */
+function browserOpenAdminOrder(string $orderNumber): PendingAwaitablePage
+{
+    $page = browserLoginAsAdmin();
+
+    $page->click('aside a:has-text("Orders")')
+        ->assertSeeIn('h1[data-flux-heading]', 'Orders')
+        ->click('a:has-text("'.$orderNumber.'")')
+        ->assertSee('Timeline');
+
+    return $page;
+}
+
+/**
+ * Browser test helper: create a fulfillment with tracking details for the
+ * single line of the currently open admin order detail page.
+ */
+function browserCreateFulfillment(
+    PendingAwaitablePage $page,
+    string $orderNumber,
+    string $trackingCompany = 'DHL',
+    string $trackingNumber = 'DHL123456789',
+): PendingAwaitablePage {
+    $order = \App\Models\Order::query()
+        ->withoutGlobalScopes()
+        ->where('order_number', $orderNumber)
+        ->firstOrFail();
+
+    $lineId = $order->lines()->first()->getKey();
+
+    $page->click('@create-fulfillment-button')
+        ->assertSee('Tracking company')
+        ->click('@fulfill-line-checkbox-'.$lineId)
+        ->fill('trackingCompany', $trackingCompany)
+        ->fill('trackingNumber', $trackingNumber)
+        ->click('@submit-fulfillment-button')
+        ->assertSee('Fulfillment created');
 
     return $page;
 }
@@ -107,14 +185,14 @@ function browserAddClassicTeeToCart(): PendingAwaitablePage
  * German address and submit it.
  */
 function browserFillCheckoutAddress(
-    PendingAwaitablePage $page,
+    PendingAwaitablePage|AwaitableWebpage $page,
     string $firstName = 'Test',
     string $lastName = 'Buyer',
     string $address1 = 'Teststrasse 1',
     string $city = 'Berlin',
     string $postalCode = '10115',
     string $countryCode = 'DE',
-): PendingAwaitablePage {
+): PendingAwaitablePage|AwaitableWebpage {
     $page->assertSee('First name')
         ->fill('[id="shipping.first_name"]', $firstName)
         ->fill('[id="shipping.last_name"]', $lastName)

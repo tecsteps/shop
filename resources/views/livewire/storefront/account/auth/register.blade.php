@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <h1 class="text-xl font-semibold">{{ __('Register') }}</h1>
+    <h1 class="text-xl font-semibold">{{ __('Create an account') }}</h1>
 
     <form method="POST" action="{{ route('storefront.account.register.attempt') }}" class="flex flex-col gap-4">
         @csrf
@@ -46,7 +46,7 @@
         <flux:checkbox name="marketing_opt_in" :label="__('Send me product news and offers')" />
 
         <flux:button variant="primary" type="submit" class="w-full" data-test="customer-register-button">
-            {{ __('Register') }}
+            {{ __('Create account') }}
         </flux:button>
     </form>
 </div>

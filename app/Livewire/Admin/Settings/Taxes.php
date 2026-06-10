@@ -87,7 +87,7 @@ class Taxes extends Component
             ],
         );
 
-        $this->toast(__('Settings saved'));
+        $this->toast(__('Tax settings saved'));
     }
 
     public function render(): View

@@ -14,6 +14,12 @@
 
     <x-storefront.account-nav current="addresses" class="mt-6" />
 
+    @if ($statusMessage !== null)
+        <p class="mt-6 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/50 dark:text-green-400" role="status">
+            {{ $statusMessage }}
+        </p>
+    @endif
+
     @if ($addresses->isEmpty())
         <div class="flex flex-col items-center justify-center py-24 text-center">
             <svg class="size-20 text-zinc-300 dark:text-zinc-700" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" aria-hidden="true">

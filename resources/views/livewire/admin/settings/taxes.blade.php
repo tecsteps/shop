@@ -8,6 +8,8 @@
 
     <x-admin.settings-tabs active="taxes" />
 
+    <flux:heading size="lg">{{ __('Tax Settings') }}</flux:heading>
+
     <form wire:submit="save" class="space-y-6">
         <x-admin.card :heading="__('Tax calculation')" class="space-y-4">
             <flux:radio.group wire:model.live="mode">
