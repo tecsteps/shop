@@ -6,6 +6,7 @@ use App\Enums\InventoryPolicy;
 use App\Exceptions\InsufficientInventoryException;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\AnalyticsService;
 use App\Services\CartService;
 use App\Services\ThemeSettingsService;
 use Illuminate\View\View;
@@ -26,13 +27,25 @@ class Show extends Component
 
     public bool $addedToCart = false;
 
-    public function mount(string $handle): void
+    public function mount(string $handle, AnalyticsService $analytics): void
     {
         $this->product = Product::query()
             ->published()
             ->where('handle', $handle)
             ->with(['options.values', 'variants.optionValues', 'variants.inventoryItem', 'media'])
             ->firstOrFail();
+
+        $analytics->track(
+            app('current_store'),
+            'product_view',
+            [
+                'product_id' => $this->product->getKey(),
+                'product_title' => $this->product->title,
+                'url' => '/products/'.$this->product->handle,
+            ],
+            session()->isStarted() ? session()->getId() : null,
+            auth('customer')->id(),
+        );
 
         $initialVariant = $this->defaultVariant();
 
@@ -106,7 +119,7 @@ class Show extends Component
         return $inventory->availableQuantity() > 0 || $inventory->policy === InventoryPolicy::Continue;
     }
 
-    public function addToCart(CartService $cartService): void
+    public function addToCart(CartService $cartService, AnalyticsService $analytics): void
     {
         $variant = $this->selectedVariant();
 
@@ -125,6 +138,19 @@ class Show extends Component
 
             return;
         }
+
+        $analytics->track(
+            app('current_store'),
+            'add_to_cart',
+            [
+                'product_id' => $this->product->getKey(),
+                'variant_id' => $variant->getKey(),
+                'quantity' => $this->quantity,
+                'price_amount' => $variant->price_amount,
+            ],
+            session()->isStarted() ? session()->getId() : null,
+            auth('customer')->id(),
+        );
 
         $this->dispatch('cart-updated', cartId: $cart->getKey(), itemCount: $cart->itemCount());
 

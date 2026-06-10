@@ -47,11 +47,14 @@
 
         {{-- Action icons --}}
         <div class="flex items-center gap-1">
-            {{-- Search placeholder (search modal ships in Phase 8) --}}
+            {{-- Search: opens the search modal --}}
             <button
                 type="button"
-                class="hidden rounded-lg p-2 text-zinc-700 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:block dark:text-zinc-300 dark:hover:bg-zinc-800"
+                x-data
+                x-on:click="$dispatch('open-search-modal')"
+                class="rounded-lg p-2 text-zinc-700 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 aria-label="{{ __('Search') }}"
+                aria-haspopup="dialog"
             >
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />

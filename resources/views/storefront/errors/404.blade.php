@@ -8,7 +8,24 @@
             <p class="mx-auto mt-3 max-w-md text-sm text-zinc-600 dark:text-zinc-400">
                 {{ __("The page you're looking for doesn't exist or has been moved.") }}
             </p>
-            <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <form action="{{ route('storefront.search') }}" method="get" class="mx-auto mt-8 flex max-w-sm items-center gap-2">
+                <label class="relative block w-full">
+                    <span class="sr-only">{{ __('Search products') }}</span>
+                    <input
+                        type="search"
+                        name="q"
+                        placeholder="{{ __('Search products...') }}"
+                        class="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+                    />
+                </label>
+                <button
+                    type="submit"
+                    class="shrink-0 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                >
+                    {{ __('Search') }}
+                </button>
+            </form>
+            <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a
                     href="{{ route('home') }}"
                     class="inline-flex items-center justify-center rounded-lg bg-(--sf-primary,#1d4ed8) px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"

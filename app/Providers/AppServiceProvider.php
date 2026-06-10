@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
 use App\Http\Middleware\ResolveStore;
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use App\Services\NavigationService;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
@@ -42,6 +44,16 @@ class AppServiceProvider extends ServiceProvider
         $this->configureAuth();
         $this->configureRateLimiting();
         $this->configureLivewire();
+        $this->configureObservers();
+    }
+
+    /**
+     * Model observers: products are mirrored into the FTS5 search index
+     * (spec 05 section 16.2).
+     */
+    protected function configureObservers(): void
+    {
+        Product::observe(ProductObserver::class);
     }
 
     /**

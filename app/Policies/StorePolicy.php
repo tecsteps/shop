@@ -15,6 +15,15 @@ class StorePolicy
         return $this->isOwnerOrAdmin($user, $store->getKey());
     }
 
+    /**
+     * View analytics (spec 05 section 2 role matrix: Owner, Admin, and
+     * Staff may view analytics; Support may not).
+     */
+    public function viewAnalytics(User $user, Store $store): bool
+    {
+        return $this->isOwnerAdminOrStaff($user, $store->getKey());
+    }
+
     public function updateSettings(User $user, Store $store): bool
     {
         return $this->isOwnerOrAdmin($user, $store->getKey());

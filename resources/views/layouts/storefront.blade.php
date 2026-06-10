@@ -39,6 +39,42 @@
 
         <livewire:storefront.cart-drawer />
 
+        <livewire:storefront.search.modal />
+
+        {{-- Analytics: page_view tracking via the batch ingestion API (spec 02 section 2.6) --}}
+        <script>
+            (() => {
+                try {
+                    let sessionId = sessionStorage.getItem('sf_session_id');
+
+                    if (! sessionId) {
+                        sessionId = 'sess_' + crypto.randomUUID();
+                        sessionStorage.setItem('sf_session_id', sessionId);
+                    }
+
+                    fetch('/api/storefront/v1/analytics/events', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        keepalive: true,
+                        body: JSON.stringify({
+                            events: [{
+                                type: 'page_view',
+                                session_id: sessionId,
+                                client_event_id: 'evt_' + crypto.randomUUID(),
+                                occurred_at: new Date().toISOString(),
+                                properties: {
+                                    url: location.pathname + location.search,
+                                    referrer: document.referrer || null,
+                                },
+                            }],
+                        }),
+                    }).catch(() => {});
+                } catch (error) {
+                    /* Analytics must never break the storefront. */
+                }
+            })();
+        </script>
+
         @fluxScripts
     </body>
 </html>

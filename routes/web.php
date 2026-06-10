@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerLoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerRegisterController;
+use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionsForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
@@ -20,6 +21,7 @@ use App\Livewire\Admin\Pages\Form as AdminPagesForm;
 use App\Livewire\Admin\Pages\Index as AdminPagesIndex;
 use App\Livewire\Admin\Products\Form as AdminProductsForm;
 use App\Livewire\Admin\Products\Index as AdminProductsIndex;
+use App\Livewire\Admin\Search\Settings as AdminSearchSettings;
 use App\Livewire\Admin\Settings\Index as AdminSettingsIndex;
 use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
 use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
@@ -39,6 +41,7 @@ use App\Livewire\Storefront\Collections\Show as CollectionsShow;
 use App\Livewire\Storefront\Home;
 use App\Livewire\Storefront\Pages\Show as PagesShow;
 use App\Livewire\Storefront\Products\Show as ProductsShow;
+use App\Livewire\Storefront\Search\Index as SearchIndex;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -115,6 +118,10 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
 
     Route::livewire('/admin/navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
 
+    Route::livewire('/admin/analytics', AdminAnalyticsIndex::class)->name('admin.analytics.index');
+
+    Route::livewire('/admin/search/settings', AdminSearchSettings::class)->name('admin.search.settings');
+
     Route::livewire('/admin/developers', AdminDevelopersIndex::class)->name('admin.developers.index');
 });
 
@@ -131,6 +138,7 @@ Route::middleware('storefront')->group(function (): void {
     Route::livewire('/collections/{handle}', CollectionsShow::class)->name('storefront.collections.show');
     Route::livewire('/products/{handle}', ProductsShow::class)->name('storefront.products.show');
     Route::livewire('/pages/{handle}', PagesShow::class)->name('storefront.pages.show');
+    Route::livewire('/search', SearchIndex::class)->name('storefront.search');
 
     Route::livewire('/cart', CartShow::class)->name('storefront.cart');
     Route::livewire('/checkout', CheckoutShow::class)->name('storefront.checkout');

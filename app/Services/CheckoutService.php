@@ -34,6 +34,7 @@ class CheckoutService
         protected InventoryService $inventoryService,
         protected PaymentProvider $paymentProvider,
         protected OrderService $orderService,
+        protected AnalyticsService $analytics,
     ) {}
 
     /**
@@ -59,6 +60,18 @@ class CheckoutService
         ]);
 
         $this->pricingEngine->calculate($checkout);
+
+        $this->analytics->track(
+            $checkout->store,
+            'checkout_started',
+            [
+                'checkout_id' => $checkout->getKey(),
+                'cart_id' => $cart->getKey(),
+                'item_count' => $cart->itemCount(),
+            ],
+            session()->isStarted() ? session()->getId() : null,
+            $checkout->customer_id,
+        );
 
         return $checkout->refresh();
     }

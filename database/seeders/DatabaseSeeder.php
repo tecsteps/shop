@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             NavigationSeeder::class,
             CustomerSeeder::class,
             OrderSeeder::class,
+            AnalyticsSeeder::class,
+            SearchSettingsSeeder::class,
         ]);
     }
 }

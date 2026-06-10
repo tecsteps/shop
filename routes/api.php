@@ -4,8 +4,10 @@ use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\OrderFulfillmentController as AdminOrderFulfillmentController;
 use App\Http\Controllers\Api\Admin\OrderRefundController as AdminOrderRefundController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Storefront\AnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
+use App\Http\Controllers\Api\Storefront\SearchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +42,15 @@ Route::prefix('storefront/v1')
                 ->whereNumber('lineId')
                 ->name('carts.lines.destroy');
         });
+
+        Route::middleware('throttle:search')->group(function (): void {
+            Route::get('/search', [SearchController::class, 'index'])->name('search');
+            Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
+        });
+
+        Route::post('/analytics/events', [AnalyticsEventController::class, 'store'])
+            ->middleware('throttle:analytics')
+            ->name('analytics.events');
 
         Route::middleware('throttle:checkout')->whereNumber('checkoutId')->group(function (): void {
             Route::post('/checkouts', [CheckoutController::class, 'store'])->name('checkouts.store');

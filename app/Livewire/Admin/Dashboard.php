@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Enums\OrderStatus;
+use App\Models\AnalyticsDaily;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Support\Storefront\PriceFormatter;
@@ -51,9 +52,10 @@ class Dashboard extends Component
      * Aggregate order KPIs for the half-open interval [start, end).
      * Cancelled orders are excluded from revenue figures.
      *
-     * The conversion rate is approximated as orders placed / carts created
-     * until session-based analytics land in Phase 9 (integration point:
-     * replace the cart count with tracked storefront visits).
+     * The conversion rate uses tracked storefront visits from the Phase 9
+     * analytics pipeline (sum of analytics_daily.visits_count for the
+     * range). Stores without analytics data fall back to the Phase 7a
+     * approximation of orders placed / carts created.
      *
      * @return array{total_sales: int, orders_count: int, average_order_value: int, conversion_rate: float}
      */
@@ -67,16 +69,24 @@ class Dashboard extends Component
         $ordersCount = (clone $orders)->count();
         $totalSales = (int) (clone $orders)->sum('total_amount');
 
-        $cartsCount = Cart::query()
-            ->where('created_at', '>=', $start)
-            ->where('created_at', '<', $end)
-            ->count();
+        $visitsCount = (int) AnalyticsDaily::query()
+            ->where('store_id', app('current_store')->getKey())
+            ->where('date', '>=', $start->toDateString())
+            ->where('date', '<', $end->toDateString())
+            ->sum('visits_count');
+
+        if ($visitsCount === 0) {
+            $visitsCount = Cart::query()
+                ->where('created_at', '>=', $start)
+                ->where('created_at', '<', $end)
+                ->count();
+        }
 
         return [
             'total_sales' => $totalSales,
             'orders_count' => $ordersCount,
             'average_order_value' => $ordersCount > 0 ? intdiv($totalSales, $ordersCount) : 0,
-            'conversion_rate' => $cartsCount > 0 ? round($ordersCount / $cartsCount * 100, 1) : 0.0,
+            'conversion_rate' => $visitsCount > 0 ? round($ordersCount / $visitsCount * 100, 1) : 0.0,
         ];
     }
 

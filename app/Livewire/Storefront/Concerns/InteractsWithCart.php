@@ -8,6 +8,7 @@ use App\Models\Cart;
 use App\Models\CartLine;
 use App\Models\Customer;
 use App\Models\Store;
+use App\Services\AnalyticsService;
 use App\Services\CartService;
 use App\Services\DiscountService;
 use Illuminate\Support\Facades\Session;
@@ -54,7 +55,19 @@ trait InteractsWithCart
             return;
         }
 
+        $line = $cart->lines()->whereKey($lineId)->first();
+
         app(CartService::class)->removeLine($cart, $lineId);
+
+        if ($line !== null) {
+            app(AnalyticsService::class)->track(
+                $this->currentStore(),
+                'remove_from_cart',
+                ['variant_id' => $line->variant_id, 'quantity' => $line->quantity],
+                session()->isStarted() ? session()->getId() : null,
+                $this->currentCustomer()?->getKey(),
+            );
+        }
 
         $this->dispatchCartUpdated($cart);
     }
