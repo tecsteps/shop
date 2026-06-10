@@ -4,6 +4,13 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerLoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerRegisterController;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
+use App\Livewire\Admin\Customers\Show as AdminCustomersShow;
+use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
+use App\Livewire\Admin\Orders\Show as AdminOrdersShow;
+use App\Livewire\Admin\Products\Form as AdminProductsForm;
+use App\Livewire\Admin\Products\Index as AdminProductsIndex;
 use App\Livewire\Storefront\Account\Addresses\Index as AccountAddresses;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
@@ -45,7 +52,23 @@ Route::post('/admin/logout', [LoginController::class, 'destroy'])
 */
 
 Route::middleware(['auth', 'admin'])->group(function (): void {
-    Route::get('/admin', fn () => view('admin.dashboard'))->name('admin.dashboard');
+    Route::livewire('/admin', AdminDashboard::class)->name('admin.dashboard');
+
+    Route::livewire('/admin/products', AdminProductsIndex::class)->name('admin.products.index');
+    Route::livewire('/admin/products/create', AdminProductsForm::class)->name('admin.products.create');
+    Route::livewire('/admin/products/{productId}/edit', AdminProductsForm::class)
+        ->whereNumber('productId')
+        ->name('admin.products.edit');
+
+    Route::livewire('/admin/orders', AdminOrdersIndex::class)->name('admin.orders.index');
+    Route::livewire('/admin/orders/{order}', AdminOrdersShow::class)
+        ->whereNumber('order')
+        ->name('admin.orders.show');
+
+    Route::livewire('/admin/customers', AdminCustomersIndex::class)->name('admin.customers.index');
+    Route::livewire('/admin/customers/{customer}', AdminCustomersShow::class)
+        ->whereNumber('customer')
+        ->name('admin.customers.show');
 });
 
 /*

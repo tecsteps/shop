@@ -157,6 +157,22 @@ function createPaymentSelectedCheckout(
 }
 
 /**
+ * Create an additional user with the given role on the store.
+ */
+function createStoreMember(Store $store, StoreUserRole $role): User
+{
+    $user = User::factory()->create();
+
+    StoreUser::query()->create([
+        'store_id' => $store->getKey(),
+        'user_id' => $user->getKey(),
+        'role' => $role,
+    ]);
+
+    return $user;
+}
+
+/**
  * Authenticate as an admin user and put their store in the session.
  */
 function actingAsAdmin(User $user, ?Store $store = null): TestCase
