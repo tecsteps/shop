@@ -4,13 +4,26 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerLoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerRegisterController;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
+use App\Livewire\Admin\Collections\Form as AdminCollectionsForm;
+use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
 use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
 use App\Livewire\Admin\Customers\Show as AdminCustomersShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Discounts\Form as AdminDiscountsForm;
+use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
+use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
+use App\Livewire\Admin\Navigation\Index as AdminNavigationIndex;
 use App\Livewire\Admin\Orders\Index as AdminOrdersIndex;
 use App\Livewire\Admin\Orders\Show as AdminOrdersShow;
+use App\Livewire\Admin\Pages\Form as AdminPagesForm;
+use App\Livewire\Admin\Pages\Index as AdminPagesIndex;
 use App\Livewire\Admin\Products\Form as AdminProductsForm;
 use App\Livewire\Admin\Products\Index as AdminProductsIndex;
+use App\Livewire\Admin\Settings\Index as AdminSettingsIndex;
+use App\Livewire\Admin\Settings\Shipping as AdminSettingsShipping;
+use App\Livewire\Admin\Settings\Taxes as AdminSettingsTaxes;
+use App\Livewire\Admin\Themes\Editor as AdminThemesEditor;
+use App\Livewire\Admin\Themes\Index as AdminThemesIndex;
 use App\Livewire\Storefront\Account\Addresses\Index as AccountAddresses;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
@@ -69,6 +82,37 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
     Route::livewire('/admin/customers/{customer}', AdminCustomersShow::class)
         ->whereNumber('customer')
         ->name('admin.customers.show');
+
+    Route::livewire('/admin/collections', AdminCollectionsIndex::class)->name('admin.collections.index');
+    Route::livewire('/admin/collections/create', AdminCollectionsForm::class)->name('admin.collections.create');
+    Route::livewire('/admin/collections/{collectionId}/edit', AdminCollectionsForm::class)
+        ->whereNumber('collectionId')
+        ->name('admin.collections.edit');
+
+    Route::livewire('/admin/inventory', AdminInventoryIndex::class)->name('admin.inventory.index');
+
+    Route::livewire('/admin/discounts', AdminDiscountsIndex::class)->name('admin.discounts.index');
+    Route::livewire('/admin/discounts/create', AdminDiscountsForm::class)->name('admin.discounts.create');
+    Route::livewire('/admin/discounts/{discountId}/edit', AdminDiscountsForm::class)
+        ->whereNumber('discountId')
+        ->name('admin.discounts.edit');
+
+    Route::livewire('/admin/settings', AdminSettingsIndex::class)->name('admin.settings.index');
+    Route::livewire('/admin/settings/shipping', AdminSettingsShipping::class)->name('admin.settings.shipping');
+    Route::livewire('/admin/settings/taxes', AdminSettingsTaxes::class)->name('admin.settings.taxes');
+
+    Route::livewire('/admin/themes', AdminThemesIndex::class)->name('admin.themes.index');
+    Route::livewire('/admin/themes/{themeId}/editor', AdminThemesEditor::class)
+        ->whereNumber('themeId')
+        ->name('admin.themes.editor');
+
+    Route::livewire('/admin/pages', AdminPagesIndex::class)->name('admin.pages.index');
+    Route::livewire('/admin/pages/create', AdminPagesForm::class)->name('admin.pages.create');
+    Route::livewire('/admin/pages/{pageId}/edit', AdminPagesForm::class)
+        ->whereNumber('pageId')
+        ->name('admin.pages.edit');
+
+    Route::livewire('/admin/navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
 });
 
 /*
