@@ -1,5 +1,6 @@
 <header
     x-data="{ mobileNavOpen: false }"
+    x-init="$watch('mobileNavOpen', (value) => { if (value) $nextTick(() => $refs.mobileNavClose?.focus()) })"
     x-on:keydown.escape.window="mobileNavOpen = false"
     class="{{ $themeSettings['sticky_header'] ? 'sticky top-0 z-40 border-b border-zinc-200/80 bg-white/90 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/90' : 'border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950' }}"
 >
@@ -92,6 +93,7 @@
                     style="background-color: var(--sf-primary, #2563eb);"
                     aria-hidden="true"
                 ></span>
+                <span class="sr-only" aria-live="polite" x-text="count + ' {{ __('items in cart') }}'"></span>
             </button>
         </div>
     </div>
@@ -120,6 +122,7 @@
                 <button
                     type="button"
                     x-on:click="mobileNavOpen = false"
+                    x-ref="mobileNavClose"
                     class="rounded-lg p-2 text-zinc-700 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
                     aria-label="{{ __('Close navigation menu') }}"
                 >

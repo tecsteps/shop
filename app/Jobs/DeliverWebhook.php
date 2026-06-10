@@ -104,6 +104,19 @@ class DeliverWebhook implements ShouldQueue
 
         $this->recordFailure($subscription);
 
+        if ($exhausted) {
+            Log::channel('structured')->warning('webhook.delivery_failed', [
+                'event' => 'business',
+                'delivery_id' => $delivery->getKey(),
+                'subscription_id' => $subscription->getKey(),
+                'store_id' => $subscription->store_id,
+                'event_type' => $subscription->event_type,
+                'target_url' => $subscription->target_url,
+                'attempt_count' => $attempt,
+                'response_code' => $responseCode,
+            ]);
+        }
+
         if (! $exhausted) {
             throw new RuntimeException(sprintf(
                 'Webhook delivery %d to %s failed with status %s.',

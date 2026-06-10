@@ -616,7 +616,7 @@ class ProductSeeder extends Seeder
                 'tags' => ['trending'],
                 'description_html' => '<p>Full-size mechanical keyboard with hot-swappable switches.</p>',
                 'published_at' => now(),
-                'collections' => [],
+                'collections' => ['featured'],
                 'options' => [
                     ['name' => 'Switch Type', 'values' => ['Red', 'Blue', 'Brown']],
                 ],

@@ -1,5 +1,6 @@
 <div
     x-data="{ open: $wire.entangle('open') }"
+    x-init="$watch('open', (value) => { if (value) $nextTick(() => $refs.closeButton?.focus()) })"
     x-on:keydown.escape.window="open = false"
     x-effect="document.body.classList.toggle('overflow-hidden', open)"
 >

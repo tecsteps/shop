@@ -18,6 +18,7 @@ use App\Models\Order;
 use App\Models\ShippingRate;
 use App\ValueObjects\PricingResult;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -233,6 +234,14 @@ class CheckoutService
         );
 
         if (! $result->success) {
+            Log::channel('structured')->warning('payment.failed', [
+                'event' => 'business',
+                'checkout_id' => $checkout->getKey(),
+                'store_id' => $checkout->store_id,
+                'payment_method' => $checkout->payment_method,
+                'error_code' => $result->errorCode ?? 'payment_failed',
+            ]);
+
             /*
              * The reservation made at payment selection is kept so a retry
              * with corrected details stays consistent; the 24 hour checkout

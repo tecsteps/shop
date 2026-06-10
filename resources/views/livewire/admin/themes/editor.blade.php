@@ -123,6 +123,7 @@
                                         <flux:label>{{ $field['label'] }}</flux:label>
                                         <input
                                             type="color"
+                                            aria-label="{{ $field['label'] }}"
                                             wire:model.live.debounce.500ms="settings.{{ $field['key'] }}"
                                             class="h-9 w-16 cursor-pointer rounded border border-zinc-200 bg-white p-1 dark:border-zinc-600 dark:bg-zinc-800"
                                             data-test="setting-{{ $field['key'] }}"

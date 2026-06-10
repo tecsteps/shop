@@ -4,12 +4,19 @@
         @include('partials.head', ['title' => isset($title) && filled($title) ? $title.' - '.__('Admin') : __('Admin')])
     </head>
     <body class="min-h-screen bg-zinc-100 antialiased dark:bg-zinc-950">
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[80] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-zinc-900 focus:shadow-lg focus:ring-2 focus:ring-blue-600 dark:focus:bg-zinc-900 dark:focus:text-white"
+        >
+            {{ __('Skip to main content') }}
+        </a>
+
         <livewire:admin.layout.sidebar />
 
         <div class="flex min-h-screen flex-col lg:pl-64">
             <livewire:admin.layout.top-bar />
 
-            <main class="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">
+            <main id="main-content" tabindex="-1" class="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8 focus:outline-none">
                 {{ $slot }}
             </main>
         </div>

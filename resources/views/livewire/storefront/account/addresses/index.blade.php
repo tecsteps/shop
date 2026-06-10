@@ -95,6 +95,7 @@
             aria-modal="true"
             aria-labelledby="address-form-heading"
             x-data
+            x-init="$nextTick(() => $el.querySelector('input, select, textarea, button')?.focus())"
             x-on:keydown.escape.window="$wire.set('showForm', false)"
         >
             <div class="fixed inset-0 bg-zinc-950/50" wire:click="$set('showForm', false)" aria-hidden="true"></div>

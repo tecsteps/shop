@@ -96,6 +96,7 @@
                                         x-model="alt"
                                         x-on:keydown.enter.prevent="$wire.updateMediaAlt({{ $media->id }}, alt); editingAlt = false"
                                         placeholder="{{ __('Alt text') }}"
+                                        aria-label="{{ __('Alt text') }}"
                                         class="w-full rounded border-0 bg-white/90 px-1.5 py-0.5 text-xs text-zinc-900"
                                     />
                                     <button
