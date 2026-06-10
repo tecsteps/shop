@@ -38,6 +38,15 @@ class StorePolicy
         return $this->isOwnerOrAdmin($user, $store->getKey());
     }
 
+    /**
+     * Install and uninstall apps (spec 05 section 1.3 role matrix: manage
+     * apps is granted to Owner and Admin).
+     */
+    public function manageApps(User $user, Store $store): bool
+    {
+        return $this->isOwnerOrAdmin($user, $store->getKey());
+    }
+
     public function delete(User $user, Store $store): bool
     {
         return $this->isOwner($user, $store->getKey());

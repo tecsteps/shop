@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
             AnalyticsSeeder::class,
             SearchSettingsSeeder::class,
+            AppSeeder::class,
         ]);
     }
 }

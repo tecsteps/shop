@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerLoginController;
 use App\Http\Controllers\Storefront\Auth\CustomerRegisterController;
 use App\Livewire\Admin\Analytics\Index as AdminAnalyticsIndex;
+use App\Livewire\Admin\Apps\Index as AdminAppsIndex;
+use App\Livewire\Admin\Apps\Show as AdminAppsShow;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Collections\Form as AdminCollectionsForm;
 use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
@@ -123,6 +125,11 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
     Route::livewire('/admin/search/settings', AdminSearchSettings::class)->name('admin.search.settings');
 
     Route::livewire('/admin/developers', AdminDevelopersIndex::class)->name('admin.developers.index');
+
+    Route::livewire('/admin/apps', AdminAppsIndex::class)->name('admin.apps.index');
+    Route::livewire('/admin/apps/{installation}', AdminAppsShow::class)
+        ->whereNumber('installation')
+        ->name('admin.apps.show');
 });
 
 /*
