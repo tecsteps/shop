@@ -116,7 +116,7 @@ it('shows an error for an invalid discount code', function () {
     Livewire::test(CartPage::class)
         ->set('discountCode', 'NOPE')
         ->call('applyDiscount')
-        ->assertSet('discountError', 'This discount code does not exist.');
+        ->assertSet('discountError', 'Invalid discount code.');
 });
 
 it('serves the cart page over http with the storefront layout', function () {

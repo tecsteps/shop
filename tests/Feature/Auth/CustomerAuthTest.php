@@ -17,7 +17,7 @@ beforeEach(function () {
 it('renders the customer login page', function () {
     $this->get($this->baseUrl.'/account/login')
         ->assertOk()
-        ->assertSee('Login')
+        ->assertSee('Log in')
         ->assertSee('Email');
 });
 

@@ -17,6 +17,8 @@ use App\Models\User;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use Pest\Browser\Api\PendingAwaitablePage;
 use Tests\TestCase;
 
 /*
@@ -29,11 +31,126 @@ pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature');
 
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
+    ->beforeEach(function (): void {
+        $this->seed();
+
+        registerBrowserTestDomain();
+
+        // The demo seed includes webhook subscriptions; the sync queue would
+        // deliver them inline during checkout and fail on real HTTP calls.
+        Http::fake();
+    })
+    ->in('Browser');
+
 /*
 |--------------------------------------------------------------------------
 | Functions
 |--------------------------------------------------------------------------
 */
+
+/**
+ * Map the browser test server hostname (127.0.0.1) to the demo store so the
+ * ResolveStore middleware resolves the tenant exactly as it would for the
+ * seeded acme-fashion.test domain. Pest's browser plugin serves the app
+ * in-process on 127.0.0.1, which cannot be resolved via Herd's dnsmasq.
+ */
+function registerBrowserTestDomain(): void
+{
+    $store = Store::query()->where('handle', 'acme-fashion')->firstOrFail();
+
+    StoreDomain::query()->create([
+        'store_id' => $store->getKey(),
+        'hostname' => '127.0.0.1',
+        'type' => 'storefront',
+        'is_primary' => false,
+        'tls_mode' => 'managed',
+    ]);
+}
+
+/**
+ * Browser test helper: log in to the admin panel as the seeded admin user
+ * and land on the dashboard.
+ */
+function browserLoginAsAdmin(): PendingAwaitablePage
+{
+    $page = visit('/admin/login');
+
+    $page->fill('email', 'admin@acme.test')
+        ->fill('password', 'password')
+        ->click('@admin-login-button')
+        ->assertSee('Dashboard');
+
+    return $page;
+}
+
+/**
+ * Browser test helper: add the seeded Classic Cotton T-Shirt (size M,
+ * color Black) to the cart through the storefront product page.
+ */
+function browserAddClassicTeeToCart(): PendingAwaitablePage
+{
+    $page = visit('/products/classic-cotton-t-shirt');
+
+    $page->assertSee('Classic Cotton T-Shirt')
+        ->click('M')
+        ->click('label[title="Black"]')
+        ->click('Add to cart')
+        ->assertSee('Added to cart');
+
+    return $page;
+}
+
+/**
+ * Browser test helper: fill the checkout shipping address form with a
+ * German address and submit it.
+ */
+function browserFillCheckoutAddress(
+    PendingAwaitablePage $page,
+    string $firstName = 'Test',
+    string $lastName = 'Buyer',
+    string $address1 = 'Teststrasse 1',
+    string $city = 'Berlin',
+    string $postalCode = '10115',
+    string $countryCode = 'DE',
+): PendingAwaitablePage {
+    $page->assertSee('First name')
+        ->fill('[id="shipping.first_name"]', $firstName)
+        ->fill('[id="shipping.last_name"]', $lastName)
+        ->fill('[id="shipping.address1"]', $address1)
+        ->fill('[id="shipping.city"]', $city)
+        ->fill('[id="shipping.postal_code"]', $postalCode)
+        ->select('[id="shipping.country_code"]', $countryCode)
+        ->click('Continue');
+
+    return $page;
+}
+
+/**
+ * Browser test helper: drive a fresh cart with the Classic Cotton T-Shirt
+ * through checkout steps 1-3 (contact, DE address, Standard Shipping) so
+ * the payment step is visible.
+ */
+function browserReachCheckoutPaymentStep(string $email = 'test@example.com'): PendingAwaitablePage
+{
+    $page = browserAddClassicTeeToCart();
+
+    $page->navigate('/cart')
+        ->click('Checkout')
+        ->assertSee('Contact information')
+        ->fill('checkout-email', $email)
+        ->click('Continue');
+
+    browserFillCheckoutAddress($page);
+
+    $page->assertSee('Standard Shipping')
+        ->click('Standard Shipping')
+        ->click('Continue')
+        ->assertSee('Select a payment method');
+
+    return $page;
+}
 
 /**
  * Create a full store context: Organization, Store, StoreDomain, and a User

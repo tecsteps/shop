@@ -1,7 +1,7 @@
 <div class="space-y-6">
     <x-admin.breadcrumbs :items="[['label' => __('Settings')]]" />
 
-    <flux:heading size="xl" level="1">{{ __('Settings') }}</flux:heading>
+    <flux:heading size="xl" level="1">{{ __('Store Settings') }}</flux:heading>
 
     <x-admin.settings-tabs :active="$tab" />
 

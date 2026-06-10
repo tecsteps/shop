@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 it('renders the admin login page', function () {
     $this->get('/admin/login')
         ->assertOk()
-        ->assertSee('Login');
+        ->assertSee('Sign in');
 });
 
 it('authenticates an admin user with valid credentials', function () {

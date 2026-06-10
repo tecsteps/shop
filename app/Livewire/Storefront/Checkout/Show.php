@@ -71,6 +71,23 @@ class Show extends Component
 
     public ?string $paymentError = null;
 
+    /**
+     * Human-readable attribute names for validation messages.
+     *
+     * @return array<string, string>
+     */
+    protected function validationAttributes(): array
+    {
+        return [
+            'shipping.first_name' => __('first name'),
+            'shipping.last_name' => __('last name'),
+            'shipping.address1' => __('address'),
+            'shipping.city' => __('city'),
+            'shipping.postal_code' => __('postal code'),
+            'shipping.country_code' => __('country'),
+        ];
+    }
+
     public function mount(): void
     {
         $cart = $this->currentCart();
@@ -153,15 +170,24 @@ class Show extends Component
 
     public function saveAddress(CheckoutService $checkoutService): void
     {
-        $this->validate([
-            'email' => ['required', 'email'],
-            'shipping.first_name' => ['required', 'string', 'max:255'],
-            'shipping.last_name' => ['required', 'string', 'max:255'],
-            'shipping.address1' => ['required', 'string', 'max:255'],
-            'shipping.city' => ['required', 'string', 'max:255'],
-            'shipping.postal_code' => ['required', 'string', 'max:32'],
-            'shipping.country_code' => ['required', 'string', 'size:2'],
-        ]);
+        $postalCodeRules = ['required', 'string', 'max:32'];
+
+        if (($this->shipping['country_code'] ?? '') === 'DE') {
+            $postalCodeRules[] = 'regex:/^\d{5}$/';
+        }
+
+        $this->validate(
+            [
+                'email' => ['required', 'email'],
+                'shipping.first_name' => ['required', 'string', 'max:255'],
+                'shipping.last_name' => ['required', 'string', 'max:255'],
+                'shipping.address1' => ['required', 'string', 'max:255'],
+                'shipping.city' => ['required', 'string', 'max:255'],
+                'shipping.postal_code' => $postalCodeRules,
+                'shipping.country_code' => ['required', 'string', 'size:2'],
+            ],
+            ['shipping.postal_code.regex' => __('The postal code format is invalid for the selected country.')],
+        );
 
         $checkout = $checkoutService->setAddress($this->checkout(), [
             'email' => $this->email,
@@ -198,24 +224,11 @@ class Show extends Component
         $this->step = 4;
     }
 
-    public function selectPayment(CheckoutService $checkoutService): void
-    {
-        $this->paymentError = null;
-
-        try {
-            $checkoutService->selectPaymentMethod($this->checkout(), $this->paymentMethod);
-        } catch (InsufficientInventoryException) {
-            $this->paymentError = __('Some items in your cart are no longer in stock.');
-
-            return;
-        }
-
-        $this->step = 5;
-    }
-
     /**
      * Charge the mock PSP and create the order; on success redirect to the
      * confirmation page. Declines keep the customer on the payment step.
+     * The selected payment method is persisted to the checkout first, so
+     * switching the radio buttons right before paying always takes effect.
      */
     public function payNow(CheckoutService $checkoutService): void
     {
@@ -228,6 +241,20 @@ class Show extends Component
                 'cardExpiry' => ['required', 'string', 'max:7'],
                 'cardCvc' => ['required', 'string', 'min:3', 'max:4'],
             ]);
+        }
+
+        $checkout = $this->checkout();
+
+        try {
+            if ($checkout->status === CheckoutStatus::ShippingSelected) {
+                $checkoutService->selectPaymentMethod($checkout, $this->paymentMethod);
+            } elseif ($checkout->payment_method !== $this->paymentMethod) {
+                $checkout->forceFill(['payment_method' => $this->paymentMethod])->save();
+            }
+        } catch (InsufficientInventoryException) {
+            $this->paymentError = __('Some items in your cart are no longer in stock.');
+
+            return;
         }
 
         try {

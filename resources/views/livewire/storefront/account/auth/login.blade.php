@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <h1 class="text-xl font-semibold">{{ __('Login') }}</h1>
+    <h1 class="text-xl font-semibold">{{ __('Log in') }}</h1>
 
     <form method="POST" action="{{ route('storefront.account.login.attempt') }}" class="flex flex-col gap-4">
         @csrf
@@ -27,7 +27,7 @@
         />
 
         <flux:button variant="primary" type="submit" class="w-full" data-test="customer-login-button">
-            {{ __('Login') }}
+            {{ __('Log in') }}
         </flux:button>
     </form>
 

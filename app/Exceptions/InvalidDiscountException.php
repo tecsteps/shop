@@ -15,7 +15,7 @@ class InvalidDiscountException extends Exception
 
     public static function notFound(): self
     {
-        return new self('not_found', 'This discount code does not exist.');
+        return new self('not_found', 'Invalid discount code.');
     }
 
     public static function expired(): self

@@ -36,7 +36,7 @@
                 </div>
 
                 @if ($step === 1)
-                    <form wire:submit="saveContact" class="mt-4 space-y-4">
+                    <form wire:submit="saveContact" class="mt-4 space-y-4" novalidate>
                         <div>
                             <label for="checkout-email" class="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                 {{ __('Email') }} <span class="text-red-600" aria-hidden="true">*</span>
@@ -79,7 +79,7 @@
                 </div>
 
                 @if ($step === 2)
-                    <form wire:submit="saveAddress" class="mt-4 space-y-4">
+                    <form wire:submit="saveAddress" class="mt-4 space-y-4" novalidate>
                         @if ($savedAddresses !== [])
                             <div>
                                 <label for="saved-address" class="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -194,8 +194,13 @@
                     <h2 id="step-payment" class="{{ $step >= 4 ? $stepTitleClasses : $futureTitleClasses }}">4. {{ __('Payment') }}</h2>
                 </div>
 
-                @if ($step === 4)
-                    <form wire:submit="selectPayment" class="mt-4 space-y-4">
+                @if ($step >= 4)
+                    @php
+                        $formattedTotal = \App\Support\Storefront\PriceFormatter::format($totals['total'] ?? 0, $currency);
+                        $inputClasses = 'block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-white';
+                        $labelClasses = 'mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300';
+                    @endphp
+                    <form wire:submit="payNow" class="mt-4 space-y-4">
                         <fieldset>
                             <legend class="text-sm font-medium text-zinc-700 dark:text-zinc-300">{{ __('Select a payment method') }}</legend>
                             <div class="mt-3 space-y-3">
@@ -216,27 +221,6 @@
                                 @endforeach
                             </div>
                         </fieldset>
-                        @if ($paymentError !== null)
-                            <p class="text-xs text-red-600 dark:text-red-400" role="alert">{{ $paymentError }}</p>
-                        @endif
-                        <button type="submit" class="{{ $primaryButtonClasses }}" style="background-color: var(--sf-primary, #2563eb);">
-                            <span wire:loading.remove wire:target="selectPayment">{{ __('Continue to payment') }}</span>
-                            <span wire:loading wire:target="selectPayment">{{ __('Processing...') }}</span>
-                        </button>
-                    </form>
-                @elseif ($step === 5)
-                    @php
-                        $formattedTotal = \App\Support\Storefront\PriceFormatter::format($totals['total'] ?? 0, $currency);
-                        $inputClasses = 'block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-white';
-                        $labelClasses = 'mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300';
-                    @endphp
-                    <form wire:submit="payNow" class="mt-4 space-y-4">
-                        <p class="text-sm text-zinc-600 dark:text-zinc-400">
-                            {{ __('Payment method:') }}
-                            <span class="font-medium text-zinc-900 dark:text-white">
-                                {{ ['credit_card' => __('Credit Card'), 'paypal' => __('PayPal'), 'bank_transfer' => __('Bank Transfer')][$paymentMethod] ?? $paymentMethod }}
-                            </span>
-                        </p>
 
                         @if ($paymentMethod === 'credit_card')
                             <div class="space-y-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">

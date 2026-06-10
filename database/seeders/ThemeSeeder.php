@@ -24,6 +24,7 @@ class ThemeSeeder extends Seeder
                 'hero_cta_text' => 'Shop New Arrivals',
                 'hero_cta_link' => '/collections/new-arrivals',
                 'featured_collection_handles' => ['new-arrivals', 't-shirts', 'sale'],
+                'featured_products_collection_handle' => 'new-arrivals',
                 'footer_text' => '2025 Acme Fashion. All rights reserved.',
                 'show_announcement_bar' => true,
                 'announcement_text' => 'Free shipping on orders over 50 EUR - Use code FREESHIP',

@@ -1,9 +1,9 @@
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Login')" :description="__('Enter your email and password below to log in')" />
+    <x-auth-header :title="__('Sign in')" :description="__('Enter your email and password below to log in')" />
 
     <x-auth-session-status class="text-center" :status="session('status')" />
 
-    <form method="POST" action="{{ route('admin.login.attempt') }}" class="flex flex-col gap-6">
+    <form method="POST" action="{{ route('admin.login.attempt') }}" class="flex flex-col gap-6" novalidate>
         @csrf
 
         <flux:input
@@ -31,10 +31,14 @@
             viewable
         />
 
+        @error('password')
+            <flux:text class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
+        @enderror
+
         <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" />
 
         <flux:button variant="primary" type="submit" class="w-full" data-test="admin-login-button">
-            {{ __('Login') }}
+            {{ __('Sign in') }}
         </flux:button>
     </form>
 </div>
