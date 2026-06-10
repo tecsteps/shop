@@ -1,0 +1,111 @@
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: 0 items in cart
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - heading "Create an account" [level=1] [ref=e37]
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: Name
+          - textbox "Name" [active] [ref=e42]
+        - generic [ref=e43]:
+          - generic [ref=e44]: Email address
+          - textbox "Email address" [ref=e46]
+        - generic [ref=e47]:
+          - generic [ref=e48]: Password
+          - textbox "Password" [ref=e50]
+        - generic [ref=e51]:
+          - generic [ref=e52]: Confirm password
+          - textbox "Confirm password" [ref=e54]
+        - generic [ref=e55]:
+          - checkbox "Send me product news and offers" [ref=e56]
+          - generic [ref=e58]: Send me product news and offers
+        - button "Create account" [ref=e59]:
+          - img [ref=e61]
+          - generic [ref=e64]: Create account
+  - contentinfo [ref=e65]:
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - heading "Shop" [level=2] [ref=e69]
+          - list [ref=e70]:
+            - listitem [ref=e71]:
+              - link "All collections" [ref=e72] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e73]:
+              - link "Home" [ref=e74] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e75]:
+              - link "New Arrivals" [ref=e76] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e77]:
+              - link "T-Shirts" [ref=e78] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e79]:
+              - link "Pants & Jeans" [ref=e80] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e81]:
+              - link "Sale" [ref=e82] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e83]:
+          - heading "Information" [level=2] [ref=e84]
+          - list [ref=e85]:
+            - listitem [ref=e86]:
+              - link "About Us" [ref=e87] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e88]:
+              - link "FAQ" [ref=e89] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e90]:
+              - link "Shipping & Returns" [ref=e91] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e92]:
+              - link "Privacy Policy" [ref=e93] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e94]:
+              - link "Terms of Service" [ref=e95] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e96]:
+          - heading "Acme Fashion" [level=2] [ref=e97]
+          - paragraph [ref=e98]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e99]:
+        - paragraph [ref=e100]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e101]:
+          - listitem [ref=e102]: Visa
+          - listitem [ref=e103]: Mastercard
+          - listitem [ref=e104]: Amex
+          - listitem [ref=e105]: PayPal

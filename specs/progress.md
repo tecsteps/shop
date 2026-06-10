@@ -19,6 +19,12 @@ Tracking implementation of the shop system per `specs/09-IMPLEMENTATION-ROADMAP.
 | 11 | Polish: seeder audit vs spec 07, a11y (skip links, focus management, aria-live, labels), responsive + dark mode pass, error pages (404/419/500/503), structured business-event logging, SmokeTest | DONE | full suite 450 passed, 0 todos; Orders/StructuredLoggingTest (3), SmokeTest (3 tests, ~50 routes) |
 | 12 | Full suite + browser tests (spec 08) + Playwright MCP acceptance verification | DONE: all 18 suites, 143 browser tests complete | full suite 593 passed (2054 assertions), 0 todos; Browser: SmokeTest (10), Admin/AuthenticationTest (10), Admin/ProductManagementTest (7), Admin/OrderManagementTest (11), Admin/DiscountManagementTest (6), Admin/SettingsTest (7), Admin/CollectionManagementTest (3), Admin/CustomerManagementTest (3), Admin/PageManagementTest (3), Admin/AnalyticsTest (3), Storefront/BrowsingTest (15), CartTest (12), CheckoutTest (13), CustomerAccountTest (12), InventoryTest (4), TenantIsolationTest (5), ResponsiveTest (8), AccessibilityTest (11) |
 
+## Final status (2026-06-10)
+
+ALL PHASES COMPLETE. Full suite: 594 passed (2057 assertions), 0 todos - 451 unit/feature + 143 browser tests.
+Live Playwright MCP acceptance simulation on shop.test completed: storefront browse, variant selection, cart drawer + discount (WELCOME10), full checkout with mock credit card -> order #1016 confirmed (idempotency verified, single order), search autocomplete, customer registration + account dashboard, admin dashboard/order detail (fulfillment with DHL tracking), bank-transfer confirmation (#1005 -> paid/captured), products, product form, discounts, shipping settings, analytics, theme editor, developers. Zero console errors after fix.
+One production bug found during live simulation and fixed: DeliverWebhook threw on the sync queue when a webhook target was unreachable, which 500'd checkout completion (browser tests had masked it with Http::fake). Fix: inline (sync) execution dead-letters after the first failed attempt instead of throwing; background queues keep retry-by-throwing with backoff. Regression test added (WebhookDeliveryTest, 6 cases now).
+
 ## Log
 
 - 2026-06-09: Project start. Fresh Livewire starter kit (Fortify). Created progress tracker, started Phase 1.

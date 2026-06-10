@@ -1,0 +1,183 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e3]:
+    - link "Shop" [ref=e5] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e8]
+      - generic [ref=e10]: Shop
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e13]
+        - text: Dashboard
+      - paragraph [ref=e15]: Products
+      - link "Products" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e17]
+        - text: Products
+      - link "Collections" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e20]
+        - text: Collections
+      - link "Inventory" [ref=e22] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e23]
+        - text: Inventory
+      - paragraph [ref=e25]: Orders
+      - link "Orders" [ref=e26] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e27]
+        - text: Orders
+      - paragraph [ref=e29]: Customers
+      - link "Customers" [ref=e30] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e31]
+        - text: Customers
+      - paragraph [ref=e33]: Discounts
+      - link "Discounts" [ref=e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e35]
+        - text: Discounts
+      - paragraph [ref=e38]: Content
+      - link "Pages" [ref=e39] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e40]
+        - text: Pages
+      - link "Navigation" [ref=e42] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e43]
+        - text: Navigation
+      - link "Themes" [ref=e45] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e46]
+        - text: Themes
+      - link "Analytics" [ref=e48] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e49]
+        - text: Analytics
+      - link "Settings" [ref=e52] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e53]
+        - text: Settings
+      - link "Apps" [ref=e56] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e57]
+        - text: Apps
+      - link "Developers" [ref=e59] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e60]
+        - text: Developers
+  - generic [ref=e62]:
+    - banner [ref=e63]:
+      - button "Acme Fashion" [ref=e65]:
+        - generic [ref=e66]: Acme Fashion
+        - img [ref=e67]
+      - button "AU Admin User" [ref=e70]:
+        - generic [ref=e73]: AU
+        - generic [ref=e74]: Admin User
+        - img [ref=e76]
+    - main [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - link "Home" [ref=e82] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e83]
+          - generic [ref=e85]:
+            - link "Orders" [ref=e86] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders
+            - img [ref=e87]
+          - generic [ref=e90]: "#1005"
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - generic [ref=e94]:
+                - heading "#1005" [level=1] [ref=e95]
+                - generic [ref=e96]: Pending
+                - generic [ref=e97]: Unfulfilled
+              - paragraph [ref=e98]: Jun 10, 2026 6:32 AM
+            - generic [ref=e99]:
+              - button "Confirm payment" [ref=e100]:
+                - img [ref=e102]
+                - generic [ref=e105]: Confirm payment
+              - button "Cancel order" [ref=e107]
+            - generic [ref=e108]:
+              - img [ref=e110]
+              - generic [ref=e113]:
+                - generic [ref=e114]: Cannot create fulfillment.
+                - generic [ref=e115]: "Payment must be confirmed before items can be fulfilled. Current financial status: pending."
+            - generic [ref=e116]:
+              - generic [ref=e117]: Timeline
+              - list [ref=e118]:
+                - listitem [ref=e119]:
+                  - paragraph [ref=e121]: Order placed
+                  - paragraph [ref=e122]: Jun 10, 2026 6:32 AM
+            - generic [ref=e123]:
+              - generic [ref=e125]: Order lines
+              - table [ref=e127]:
+                - rowgroup [ref=e128]:
+                  - row "Image Product Fulfillment Qty Unit price Total" [ref=e129]:
+                    - columnheader "Image" [ref=e130]
+                    - columnheader "Product" [ref=e131]
+                    - columnheader "Fulfillment" [ref=e132]
+                    - columnheader "Qty" [ref=e133]
+                    - columnheader "Unit price" [ref=e134]
+                    - columnheader "Total" [ref=e135]
+                - rowgroup [ref=e136]:
+                  - 'row "Leather Belt (S/M / Black) SKU: ACME-BELT-SM-BLACK Unfulfilled 1 34.99 EUR 34.99 EUR" [ref=e137]':
+                    - cell [ref=e138]:
+                      - img [ref=e140]
+                    - 'cell "Leather Belt (S/M / Black) SKU: ACME-BELT-SM-BLACK" [ref=e142]':
+                      - paragraph [ref=e143]: Leather Belt (S/M / Black)
+                      - paragraph [ref=e144]: "SKU: ACME-BELT-SM-BLACK"
+                    - cell "Unfulfilled" [ref=e145]:
+                      - generic [ref=e146]: Unfulfilled
+                    - cell "1" [ref=e147]
+                    - cell "34.99 EUR" [ref=e148]
+                    - cell "34.99 EUR" [ref=e149]
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - term [ref=e153]: Subtotal
+                  - definition [ref=e154]: 34.99 EUR
+                - generic [ref=e155]:
+                  - term [ref=e156]: Shipping
+                  - definition [ref=e157]: 4.99 EUR
+                - generic [ref=e158]:
+                  - term [ref=e159]: Tax
+                  - definition [ref=e160]: 5.59 EUR
+                - generic [ref=e161]:
+                  - term [ref=e162]: Total
+                  - definition [ref=e163]: 39.98 EUR
+            - generic [ref=e164]:
+              - generic [ref=e165]: Payment details
+              - generic [ref=e166]:
+                - generic [ref=e167]:
+                  - generic [ref=e168]:
+                    - paragraph [ref=e169]: Bank Transfer
+                    - paragraph [ref=e170]: "39.98 EUR - Ref: mock_test_order1005"
+                  - generic [ref=e171]: Pending
+                - button "Confirm payment" [ref=e172]:
+                  - img [ref=e174]
+                  - generic [ref=e177]: Confirm payment
+          - generic [ref=e178]:
+            - generic [ref=e179]:
+              - generic [ref=e180]: Customer
+              - paragraph [ref=e181]: Jane Smith
+              - paragraph [ref=e182]: jane@example.com
+              - link "View customer" [ref=e183] [cursor=pointer]:
+                - /url: http://shop.test/admin/customers/2
+            - generic [ref=e184]:
+              - generic [ref=e185]: Shipping address
+              - generic [ref=e186]:
+                - paragraph [ref=e187]: Jane Smith
+                - paragraph [ref=e188]: Schillerstrasse 45
+                - paragraph [ref=e189]: 80336 Munich , Bavaria
+                - paragraph [ref=e190]: Germany
+            - generic [ref=e191]:
+              - generic [ref=e192]: Billing address
+              - generic [ref=e193]:
+                - paragraph [ref=e194]: Jane Smith
+                - paragraph [ref=e195]: Schillerstrasse 45
+                - paragraph [ref=e196]: 80336 Munich , Bavaria
+                - paragraph [ref=e197]: Germany

@@ -11,6 +11,7 @@ use App\Services\WebhookService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Queue\Jobs\SyncJob;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +83,7 @@ class DeliverWebhook implements ShouldQueue
 
         $attempt = $delivery->attempt_count + 1;
         $succeeded = $responseCode !== null && $responseCode >= 200 && $responseCode < 300;
-        $exhausted = $attempt >= self::MAX_ATTEMPTS;
+        $exhausted = $attempt >= self::MAX_ATTEMPTS || ! $this->supportsBackgroundRetries();
 
         $delivery->update([
             'attempt_count' => $attempt,
@@ -125,6 +126,17 @@ class DeliverWebhook implements ShouldQueue
                 $responseCode ?? 'connection error',
             ));
         }
+    }
+
+    /**
+     * Retry-by-throwing only works on a real background queue. On the sync
+     * queue the exception would propagate into the request that triggered
+     * the webhook (e.g. a customer checkout), so inline execution
+     * dead-letters after the first failed attempt instead.
+     */
+    protected function supportsBackgroundRetries(): bool
+    {
+        return ! ($this->job instanceof SyncJob);
     }
 
     /**

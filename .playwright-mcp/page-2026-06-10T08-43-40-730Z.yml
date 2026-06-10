@@ -1,0 +1,173 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e3]:
+    - link "Shop" [ref=e5] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e8]
+      - generic [ref=e10]: Shop
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e13]
+        - text: Dashboard
+      - paragraph [ref=e15]: Products
+      - link "Products" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e17]
+        - text: Products
+      - link "Collections" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e20]
+        - text: Collections
+      - link "Inventory" [ref=e22] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e23]
+        - text: Inventory
+      - paragraph [ref=e25]: Orders
+      - link "Orders" [ref=e26] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e27]
+        - text: Orders
+      - paragraph [ref=e29]: Customers
+      - link "Customers" [ref=e30] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e31]
+        - text: Customers
+      - paragraph [ref=e33]: Discounts
+      - link "Discounts" [ref=e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e35]
+        - text: Discounts
+      - paragraph [ref=e38]: Content
+      - link "Pages" [ref=e39] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e40]
+        - text: Pages
+      - link "Navigation" [ref=e42] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e43]
+        - text: Navigation
+      - link "Themes" [ref=e45] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e46]
+        - text: Themes
+      - link "Analytics" [ref=e48] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e49]
+        - text: Analytics
+      - link "Settings" [ref=e52] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e53]
+        - text: Settings
+      - link "Apps" [ref=e56] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e57]
+        - text: Apps
+      - link "Developers" [ref=e59] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e60]
+        - text: Developers
+  - generic [ref=e62]:
+    - banner [ref=e63]:
+      - button "Acme Fashion" [ref=e65]:
+        - generic [ref=e66]: Acme Fashion
+        - img [ref=e67]
+      - button "AU Admin User" [ref=e70]:
+        - generic [ref=e73]: AU
+        - generic [ref=e74]: Admin User
+        - img [ref=e76]
+    - main [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - link "Home" [ref=e82] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e83]
+          - generic [ref=e86]: Discounts
+        - generic [ref=e87]:
+          - heading "Discounts" [level=1] [ref=e88]
+          - link "Create discount" [ref=e89] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts/create
+            - img [ref=e90]
+            - generic [ref=e92]: Create discount
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic:
+              - img
+            - textbox "Search by code..." [ref=e95]
+          - combobox [ref=e97]:
+            - 'option "Status: All" [selected]'
+            - option "Active"
+            - option "Scheduled"
+            - option "Expired"
+            - option "Disabled"
+          - combobox [ref=e98]:
+            - 'option "Type: All" [selected]'
+            - option "Code"
+            - option "Automatic"
+        - table [ref=e101]:
+          - rowgroup [ref=e102]:
+            - row "Code Type Value Usage Status Dates" [ref=e103]:
+              - columnheader "Code" [ref=e104]
+              - columnheader "Type" [ref=e105]
+              - columnheader "Value" [ref=e106]
+              - columnheader "Usage" [ref=e107]
+              - columnheader "Status" [ref=e108]
+              - columnheader "Dates" [ref=e109]
+          - rowgroup [ref=e110]:
+            - row "WELCOME10 Code 10% 4 / unlimited Active Jan 1, 2025 - Dec 31, 2027" [ref=e111]:
+              - cell "WELCOME10" [ref=e112]:
+                - link "WELCOME10" [ref=e113] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/1/edit
+              - cell "Code" [ref=e114]:
+                - generic [ref=e115]: Code
+              - cell "10%" [ref=e116]
+              - cell "4 / unlimited" [ref=e117]
+              - cell "Active" [ref=e118]:
+                - generic [ref=e119]: Active
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=e120]
+            - row "FLAT5 Code 5.00 EUR 0 / unlimited Active Jan 1, 2025 - Dec 31, 2027" [ref=e121]:
+              - cell "FLAT5" [ref=e122]:
+                - link "FLAT5" [ref=e123] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/2/edit
+              - cell "Code" [ref=e124]:
+                - generic [ref=e125]: Code
+              - cell "5.00 EUR" [ref=e126]
+              - cell "0 / unlimited" [ref=e127]
+              - cell "Active" [ref=e128]:
+                - generic [ref=e129]: Active
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=e130]
+            - row "FREESHIP Code Free shipping 1 / unlimited Active Jan 1, 2025 - Dec 31, 2027" [ref=e131]:
+              - cell "FREESHIP" [ref=e132]:
+                - link "FREESHIP" [ref=e133] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/3/edit
+              - cell "Code" [ref=e134]:
+                - generic [ref=e135]: Code
+              - cell "Free shipping" [ref=e136]
+              - cell "1 / unlimited" [ref=e137]
+              - cell "Active" [ref=e138]:
+                - generic [ref=e139]: Active
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=e140]
+            - row "EXPIRED20 Code 20% 0 / unlimited Expired Jan 1, 2024 - Dec 31, 2024" [ref=e141]:
+              - cell "EXPIRED20" [ref=e142]:
+                - link "EXPIRED20" [ref=e143] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/4/edit
+              - cell "Code" [ref=e144]:
+                - generic [ref=e145]: Code
+              - cell "20%" [ref=e146]
+              - cell "0 / unlimited" [ref=e147]
+              - cell "Expired" [ref=e148]:
+                - generic [ref=e149]: Expired
+              - cell "Jan 1, 2024 - Dec 31, 2024" [ref=e150]
+            - row "MAXED Code 10% 5 / 5 Active Jan 1, 2025 - Dec 31, 2027" [ref=e151]:
+              - cell "MAXED" [ref=e152]:
+                - link "MAXED" [ref=e153] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/5/edit
+              - cell "Code" [ref=e154]:
+                - generic [ref=e155]: Code
+              - cell "10%" [ref=e156]
+              - cell "5 / 5" [ref=e157]
+              - cell "Active" [ref=e158]:
+                - generic [ref=e159]: Active
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=e160]

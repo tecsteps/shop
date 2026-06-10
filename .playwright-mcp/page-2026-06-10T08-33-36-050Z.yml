@@ -1,0 +1,157 @@
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: 0 items in cart
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - navigation "Breadcrumb" [ref=e37]:
+        - list [ref=e38]:
+          - listitem [ref=e39]:
+            - link "Home" [ref=e40] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e41]
+          - listitem [ref=e43]:
+            - link "New Arrivals" [ref=e44] [cursor=pointer]:
+              - /url: http://shop.test/collections/new-arrivals
+            - img [ref=e45]
+          - listitem [ref=e47]:
+            - generic [ref=e48]: Classic Cotton T-Shirt
+      - generic [ref=e49]:
+        - region "Product images" [ref=e50]:
+          - img [ref=e53]
+        - region "Product information" [ref=e55]:
+          - heading "Classic Cotton T-Shirt" [level=1] [ref=e56]
+          - paragraph [ref=e57]: Acme Basics
+          - generic [ref=e60]: 24.99 EUR
+          - generic [ref=e61]:
+            - group "Size" [ref=e62]:
+              - generic [ref=e63]: Size
+              - generic [ref=e64]:
+                - generic [ref=e65] [cursor=pointer]:
+                  - radio "S" [ref=e66]
+                  - generic [ref=e67]: S
+                - generic [ref=e68] [cursor=pointer]:
+                  - radio "M" [checked] [active] [ref=e69]
+                  - generic [ref=e70]: M
+                - generic [ref=e71] [cursor=pointer]:
+                  - radio "L" [ref=e72]
+                  - generic [ref=e73]: L
+                - generic [ref=e74] [cursor=pointer]:
+                  - radio "XL" [ref=e75]
+                  - generic [ref=e76]: XL
+            - group "Color" [ref=e77]:
+              - generic [ref=e78]: Color
+              - generic [ref=e79]:
+                - generic "White" [ref=e80] [cursor=pointer]:
+                  - radio "White" [checked] [ref=e81]
+                  - generic [ref=e83]: White
+                - generic "Black" [ref=e84] [cursor=pointer]:
+                  - radio "Black" [ref=e85]
+                  - generic [ref=e87]: Black
+                - generic "Navy" [ref=e88] [cursor=pointer]:
+                  - radio "Navy" [ref=e89]
+                  - generic [ref=e91]: Navy
+          - paragraph [ref=e93]:
+            - img [ref=e94]
+            - text: In stock
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: Quantity
+              - generic [ref=e99]:
+                - button "Decrease quantity" [disabled] [ref=e100]:
+                  - img [ref=e101]
+                - spinbutton "Quantity" [ref=e102]: "1"
+                - button "Increase quantity" [ref=e103]:
+                  - img [ref=e104]
+            - button "Add to cart" [ref=e106]:
+              - generic [ref=e107]: Add to cart
+          - separator [ref=e108]
+          - paragraph [ref=e110]: A timeless classic cotton t-shirt. Comfortable, breathable, and perfect for everyday wear.
+          - generic [ref=e111]:
+            - generic [ref=e112]: new
+            - generic [ref=e113]: popular
+  - contentinfo [ref=e114]:
+    - generic [ref=e115]:
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - heading "Shop" [level=2] [ref=e118]
+          - list [ref=e119]:
+            - listitem [ref=e120]:
+              - link "All collections" [ref=e121] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e122]:
+              - link "Home" [ref=e123] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e124]:
+              - link "New Arrivals" [ref=e125] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e126]:
+              - link "T-Shirts" [ref=e127] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e128]:
+              - link "Pants & Jeans" [ref=e129] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e130]:
+              - link "Sale" [ref=e131] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e132]:
+          - heading "Information" [level=2] [ref=e133]
+          - list [ref=e134]:
+            - listitem [ref=e135]:
+              - link "About Us" [ref=e136] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e137]:
+              - link "FAQ" [ref=e138] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e139]:
+              - link "Shipping & Returns" [ref=e140] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e141]:
+              - link "Privacy Policy" [ref=e142] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e143]:
+              - link "Terms of Service" [ref=e144] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e145]:
+          - heading "Acme Fashion" [level=2] [ref=e146]
+          - paragraph [ref=e147]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e148]:
+        - paragraph [ref=e149]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e150]:
+          - listitem [ref=e151]: Visa
+          - listitem [ref=e152]: Mastercard
+          - listitem [ref=e153]: Amex
+          - listitem [ref=e154]: PayPal

@@ -156,3 +156,24 @@ it('pauses subscription after circuit breaker threshold', function () {
 
     expect(WebhookDelivery::query()->count())->toBe($deliveriesBefore);
 });
+
+it('does not break the triggering request when sync-queue delivery fails', function () {
+    Http::fake(['*' => Http::response('Internal Server Error', 500)]);
+
+    $subscription = WebhookSubscription::factory()->for($this->store)->create([
+        'event_type' => 'order.created',
+    ]);
+
+    // On the sync queue the job runs inline inside the dispatching request;
+    // a delivery failure must dead-letter instead of throwing into it.
+    app(WebhookService::class)->dispatch($this->store, 'order.created', ['id' => 7]);
+
+    $delivery = WebhookDelivery::query()
+        ->where('subscription_id', $subscription->getKey())
+        ->latest('id')
+        ->first();
+
+    expect($delivery->status)->toBe(WebhookDeliveryStatus::Failed)
+        ->and($delivery->attempt_count)->toBe(1)
+        ->and($subscription->refresh()->consecutive_failures)->toBe(1);
+});

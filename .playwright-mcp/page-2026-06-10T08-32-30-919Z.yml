@@ -1,0 +1,188 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: 0 items in cart
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e39]:
+        - heading "Welcome to Acme Fashion" [level=1] [ref=e40]
+        - paragraph [ref=e41]: Discover our curated collection of modern essentials
+        - link "Shop New Arrivals" [ref=e42] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+      - region "Shop by collection" [ref=e43]:
+        - heading "Shop by collection" [level=2] [ref=e44]
+        - generic [ref=e45]:
+          - link "New Arrivals Shop now →" [ref=e46] [cursor=pointer]:
+            - /url: http://shop.test/collections/new-arrivals
+            - generic [ref=e49]:
+              - heading "New Arrivals" [level=3] [ref=e50]
+              - generic [ref=e51]: Shop now →
+          - link "T-Shirts Shop now →" [ref=e52] [cursor=pointer]:
+            - /url: http://shop.test/collections/t-shirts
+            - generic [ref=e55]:
+              - heading "T-Shirts" [level=3] [ref=e56]
+              - generic [ref=e57]: Shop now →
+          - link "Sale Shop now →" [ref=e58] [cursor=pointer]:
+            - /url: http://shop.test/collections/sale
+            - generic [ref=e61]:
+              - heading "Sale" [level=3] [ref=e62]
+              - generic [ref=e63]: Shop now →
+      - region "Featured products" [ref=e64]:
+        - heading "Featured products" [level=2] [ref=e65]
+        - generic [ref=e66]:
+          - article [ref=e67]:
+            - img [ref=e70]
+            - generic [ref=e72]:
+              - heading "Classic Cotton T-Shirt" [level=3] [ref=e73]:
+                - link "Classic Cotton T-Shirt" [ref=e74] [cursor=pointer]:
+                  - /url: http://shop.test/products/classic-cotton-t-shirt
+              - generic [ref=e76]: 24.99 EUR
+              - generic [ref=e77]: Choose options
+          - article [ref=e78]:
+            - generic [ref=e79]:
+              - img [ref=e81]
+              - generic "On sale" [ref=e84]: Sale
+            - generic [ref=e85]:
+              - heading "Premium Slim Fit Jeans" [level=3] [ref=e86]:
+                - link "Premium Slim Fit Jeans" [ref=e87] [cursor=pointer]:
+                  - /url: http://shop.test/products/premium-slim-fit-jeans
+              - generic [ref=e88]:
+                - generic [ref=e89]: 79.99 EUR
+                - generic [ref=e90]:
+                  - generic [ref=e91]: "Original price:"
+                  - text: 99.99 EUR
+              - generic [ref=e92]: Choose options
+          - article [ref=e93]:
+            - img [ref=e96]
+            - generic [ref=e98]:
+              - heading "Organic Hoodie" [level=3] [ref=e99]:
+                - link "Organic Hoodie" [ref=e100] [cursor=pointer]:
+                  - /url: http://shop.test/products/organic-hoodie
+              - generic [ref=e102]: 59.99 EUR
+              - generic [ref=e103]: Choose options
+          - article [ref=e104]:
+            - img [ref=e107]
+            - generic [ref=e109]:
+              - heading "Running Sneakers" [level=3] [ref=e110]:
+                - link "Running Sneakers" [ref=e111] [cursor=pointer]:
+                  - /url: http://shop.test/products/running-sneakers
+              - generic [ref=e113]: 119.99 EUR
+              - generic [ref=e114]: Choose options
+          - article [ref=e115]:
+            - img [ref=e118]
+            - generic [ref=e120]:
+              - heading "Chino Shorts" [level=3] [ref=e121]:
+                - link "Chino Shorts" [ref=e122] [cursor=pointer]:
+                  - /url: http://shop.test/products/chino-shorts
+              - generic [ref=e124]: 39.99 EUR
+              - generic [ref=e125]: Choose options
+          - article [ref=e126]:
+            - img [ref=e129]
+            - generic [ref=e131]:
+              - heading "Bucket Hat" [level=3] [ref=e132]:
+                - link "Bucket Hat" [ref=e133] [cursor=pointer]:
+                  - /url: http://shop.test/products/bucket-hat
+              - generic [ref=e135]: 24.99 EUR
+              - generic [ref=e136]: Choose options
+          - article [ref=e137]:
+            - img [ref=e140]
+            - generic [ref=e142]:
+              - heading "Cashmere Overcoat" [level=3] [ref=e143]:
+                - link "Cashmere Overcoat" [ref=e144] [cursor=pointer]:
+                  - /url: http://shop.test/products/cashmere-overcoat
+              - generic [ref=e146]: 499.99 EUR
+              - generic [ref=e147]: Choose options
+      - region "Stay in the loop" [ref=e148]:
+        - generic [ref=e149]:
+          - heading "Stay in the loop" [level=2] [ref=e150]
+          - paragraph [ref=e151]: Subscribe for exclusive offers and updates.
+          - generic [ref=e153]:
+            - generic [ref=e154]: Email address
+            - textbox "Email address" [ref=e155]:
+              - /placeholder: Enter your email
+            - button "Subscribe" [ref=e156]
+  - contentinfo [ref=e157]:
+    - generic [ref=e158]:
+      - generic [ref=e159]:
+        - generic [ref=e160]:
+          - heading "Shop" [level=2] [ref=e161]
+          - list [ref=e162]:
+            - listitem [ref=e163]:
+              - link "All collections" [ref=e164] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e165]:
+              - link "Home" [ref=e166] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e167]:
+              - link "New Arrivals" [ref=e168] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e169]:
+              - link "T-Shirts" [ref=e170] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e171]:
+              - link "Pants & Jeans" [ref=e172] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e173]:
+              - link "Sale" [ref=e174] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e175]:
+          - heading "Information" [level=2] [ref=e176]
+          - list [ref=e177]:
+            - listitem [ref=e178]:
+              - link "About Us" [ref=e179] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e180]:
+              - link "FAQ" [ref=e181] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e182]:
+              - link "Shipping & Returns" [ref=e183] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e184]:
+              - link "Privacy Policy" [ref=e185] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e186]:
+              - link "Terms of Service" [ref=e187] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e188]:
+          - heading "Acme Fashion" [level=2] [ref=e189]
+          - paragraph [ref=e190]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e191]:
+        - paragraph [ref=e192]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e193]:
+          - listitem [ref=e194]: Visa
+          - listitem [ref=e195]: Mastercard
+          - listitem [ref=e196]: Amex
+          - listitem [ref=e197]: PayPal

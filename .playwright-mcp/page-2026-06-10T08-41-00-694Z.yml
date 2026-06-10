@@ -1,0 +1,138 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "My account" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: 0 items in cart
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - heading "Welcome back, Erika Musterfrau!" [level=1] [ref=e37]
+      - navigation "Account navigation" [ref=e38]:
+        - generic [ref=e39]:
+          - list [ref=e40]:
+            - listitem [ref=e41]:
+              - link "My Account" [ref=e42] [cursor=pointer]:
+                - /url: http://shop.test/account
+            - listitem [ref=e43]:
+              - link "Orders" [ref=e44] [cursor=pointer]:
+                - /url: http://shop.test/account/orders
+            - listitem [ref=e45]:
+              - link "Addresses" [ref=e46] [cursor=pointer]:
+                - /url: http://shop.test/account/addresses
+          - button "Log out" [ref=e48]:
+            - img [ref=e49]
+            - text: Log out
+      - generic [ref=e51]:
+        - link "Order history View all your orders" [ref=e52] [cursor=pointer]:
+          - /url: http://shop.test/account/orders
+          - img [ref=e53]
+          - generic [ref=e55]: Order history
+          - generic [ref=e56]: View all your orders
+        - link "Addresses Manage your addresses" [ref=e57] [cursor=pointer]:
+          - /url: http://shop.test/account/addresses
+          - img [ref=e58]
+          - generic [ref=e61]: Addresses
+          - generic [ref=e62]: Manage your addresses
+        - button "Log out End your session securely" [ref=e64] [cursor=pointer]:
+          - img [ref=e65]
+          - generic [ref=e67]: Log out
+          - generic [ref=e68]: End your session securely
+      - region "Recent Orders" [ref=e69]:
+        - heading "Recent Orders" [level=2] [ref=e71]
+        - paragraph [ref=e72]: You haven't placed any orders yet.
+      - region "Profile" [ref=e73]:
+        - heading "Profile" [level=2] [ref=e74]
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]: Name *
+            - textbox "Name" [ref=e78]: Erika Musterfrau
+          - generic [ref=e79]:
+            - paragraph [ref=e80]: Email
+            - paragraph [ref=e81]: erika.musterfrau@example.com
+          - generic [ref=e82]:
+            - checkbox "Subscribe to marketing emails" [ref=e83]
+            - text: Subscribe to marketing emails
+          - button "Save changes" [ref=e84]
+  - contentinfo [ref=e85]:
+    - generic [ref=e86]:
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - heading "Shop" [level=2] [ref=e89]
+          - list [ref=e90]:
+            - listitem [ref=e91]:
+              - link "All collections" [ref=e92] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e93]:
+              - link "Home" [ref=e94] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e95]:
+              - link "New Arrivals" [ref=e96] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e97]:
+              - link "T-Shirts" [ref=e98] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e99]:
+              - link "Pants & Jeans" [ref=e100] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e101]:
+              - link "Sale" [ref=e102] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e103]:
+          - heading "Information" [level=2] [ref=e104]
+          - list [ref=e105]:
+            - listitem [ref=e106]:
+              - link "About Us" [ref=e107] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e108]:
+              - link "FAQ" [ref=e109] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e110]:
+              - link "Shipping & Returns" [ref=e111] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e112]:
+              - link "Privacy Policy" [ref=e113] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e114]:
+              - link "Terms of Service" [ref=e115] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e116]:
+          - heading "Acme Fashion" [level=2] [ref=e117]
+          - paragraph [ref=e118]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e119]:
+        - paragraph [ref=e120]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e121]:
+          - listitem [ref=e122]: Visa
+          - listitem [ref=e123]: Mastercard
+          - listitem [ref=e124]: Amex
+          - listitem [ref=e125]: PayPal

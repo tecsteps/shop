@@ -1,0 +1,256 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e3]:
+    - link "Shop" [ref=e5] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e8]
+      - generic [ref=e10]: Shop
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e13]
+        - text: Dashboard
+      - paragraph [ref=e15]: Products
+      - link "Products" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e17]
+        - text: Products
+      - link "Collections" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e20]
+        - text: Collections
+      - link "Inventory" [ref=e22] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e23]
+        - text: Inventory
+      - paragraph [ref=e25]: Orders
+      - link "Orders" [ref=e26] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e27]
+        - text: Orders
+      - paragraph [ref=e29]: Customers
+      - link "Customers" [ref=e30] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e31]
+        - text: Customers
+      - paragraph [ref=e33]: Discounts
+      - link "Discounts" [ref=e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e35]
+        - text: Discounts
+      - paragraph [ref=e38]: Content
+      - link "Pages" [ref=e39] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e40]
+        - text: Pages
+      - link "Navigation" [ref=e42] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e43]
+        - text: Navigation
+      - link "Themes" [ref=e45] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e46]
+        - text: Themes
+      - link "Analytics" [ref=e48] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e49]
+        - text: Analytics
+      - link "Settings" [ref=e52] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e53]
+        - text: Settings
+      - link "Apps" [ref=e56] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e57]
+        - text: Apps
+      - link "Developers" [ref=e59] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e60]
+        - text: Developers
+  - generic [ref=e62]:
+    - banner [ref=e63]:
+      - button "Acme Fashion" [ref=e65]:
+        - generic [ref=e66]: Acme Fashion
+        - img [ref=e67]
+      - button "AU Admin User" [ref=e70]:
+        - generic [ref=e73]: AU
+        - generic [ref=e74]: Admin User
+        - img [ref=e76]
+    - main [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - link "Home" [ref=e82] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e83]
+          - generic [ref=e86]: Dashboard
+        - generic [ref=e87]:
+          - heading "Dashboard" [level=1] [ref=e88]
+          - combobox [ref=e89]:
+            - option "Last 7 days"
+            - option "Last 30 days" [selected]
+            - option "Last 90 days"
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - paragraph [ref=e92]: Total sales
+            - generic [ref=e93]: 1,537.12 EUR
+            - generic [ref=e94]:
+              - generic [ref=e95]: +100.0%
+              - img [ref=e96]
+              - paragraph [ref=e98]: vs previous period
+          - generic [ref=e99]:
+            - paragraph [ref=e100]: Orders
+            - generic [ref=e101]: "15"
+            - generic [ref=e102]:
+              - generic [ref=e103]: +100.0%
+              - img [ref=e104]
+              - paragraph [ref=e106]: vs previous period
+          - generic [ref=e107]:
+            - paragraph [ref=e108]: Average order value
+            - generic [ref=e109]: 102.47 EUR
+            - generic [ref=e110]:
+              - generic [ref=e111]: +100.0%
+              - img [ref=e112]
+              - paragraph [ref=e114]: vs previous period
+          - generic [ref=e115]:
+            - paragraph [ref=e116]: Conversion rate
+            - generic [ref=e117]: 0.5%
+            - generic [ref=e118]:
+              - generic [ref=e119]: +100.0%
+              - img [ref=e120]
+              - paragraph [ref=e122]: vs previous period
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: Orders over time
+            - paragraph [ref=e126]: "Peak: 3 orders/day"
+          - generic [ref=e127]:
+            - img "Daily order counts" [ref=e128]
+            - generic [ref=e131]:
+              - generic [ref=e132]: May 12
+              - generic [ref=e133]: Jun 10
+        - generic [ref=e134]:
+          - generic [ref=e135]:
+            - generic [ref=e136]: Recent orders
+            - link "View all" [ref=e137] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders
+          - table [ref=e139]:
+            - rowgroup [ref=e140]:
+              - row "Order Date Customer Payment Fulfillment Total" [ref=e141]:
+                - columnheader "Order" [ref=e142]
+                - columnheader "Date" [ref=e143]
+                - columnheader "Customer" [ref=e144]
+                - columnheader "Payment" [ref=e145]
+                - columnheader "Fulfillment" [ref=e146]
+                - columnheader "Total" [ref=e147]
+            - rowgroup [ref=e148]:
+              - row "#1016 Jun 10, 8:39 AM Guest Paid Unfulfilled 49.98 EUR" [ref=e149]:
+                - cell "#1016" [ref=e150]:
+                  - link "#1016" [ref=e151] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/19
+                - cell "Jun 10, 8:39 AM" [ref=e152]
+                - cell "Guest" [ref=e153]
+                - cell "Paid" [ref=e154]:
+                  - generic [ref=e155]: Paid
+                - cell "Unfulfilled" [ref=e156]:
+                  - generic [ref=e157]: Unfulfilled
+                - cell "49.98 EUR" [ref=e158]
+              - row "#1015 Jun 10, 8:32 AM John Doe Paid Unfulfilled 54.47 EUR" [ref=e159]:
+                - cell "#1015" [ref=e160]:
+                  - link "#1015" [ref=e161] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/15
+                - cell "Jun 10, 8:32 AM" [ref=e162]
+                - cell "John Doe" [ref=e163]
+                - cell "Paid" [ref=e164]:
+                  - generic [ref=e165]: Paid
+                - cell "Unfulfilled" [ref=e166]:
+                  - generic [ref=e167]: Unfulfilled
+                - cell "54.47 EUR" [ref=e168]
+              - row "#1005 Jun 10, 6:32 AM Jane Smith Pending Unfulfilled 39.98 EUR" [ref=e169]:
+                - cell "#1005" [ref=e170]:
+                  - link "#1005" [ref=e171] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/5
+                - cell "Jun 10, 6:32 AM" [ref=e172]
+                - cell "Jane Smith" [ref=e173]
+                - cell "Pending" [ref=e174]:
+                  - generic [ref=e175]: Pending
+                - cell "Unfulfilled" [ref=e176]:
+                  - generic [ref=e177]: Unfulfilled
+                - cell "39.98 EUR" [ref=e178]
+              - row "#1013 Jun 9, 8:32 AM Robert Martinez Paid Unfulfilled 84.97 EUR" [ref=e179]:
+                - cell "#1013" [ref=e180]:
+                  - link "#1013" [ref=e181] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/13
+                - cell "Jun 9, 8:32 AM" [ref=e182]
+                - cell "Robert Martinez" [ref=e183]
+                - cell "Paid" [ref=e184]:
+                  - generic [ref=e185]: Paid
+                - cell "Unfulfilled" [ref=e186]:
+                  - generic [ref=e187]: Unfulfilled
+                - cell "84.97 EUR" [ref=e188]
+              - row "#1010 Jun 9, 8:32 AM John Doe Paid Unfulfilled 504.98 EUR" [ref=e189]:
+                - cell "#1010" [ref=e190]:
+                  - link "#1010" [ref=e191] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/10
+                - cell "Jun 9, 8:32 AM" [ref=e192]
+                - cell "John Doe" [ref=e193]
+                - cell "Paid" [ref=e194]:
+                  - generic [ref=e195]: Paid
+                - cell "Unfulfilled" [ref=e196]:
+                  - generic [ref=e197]: Unfulfilled
+                - cell "504.98 EUR" [ref=e198]
+              - row "#1006 Jun 9, 8:32 AM Michael Brown Paid Unfulfilled 124.98 EUR" [ref=e199]:
+                - cell "#1006" [ref=e200]:
+                  - link "#1006" [ref=e201] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/6
+                - cell "Jun 9, 8:32 AM" [ref=e202]
+                - cell "Michael Brown" [ref=e203]
+                - cell "Paid" [ref=e204]:
+                  - generic [ref=e205]: Paid
+                - cell "Unfulfilled" [ref=e206]:
+                  - generic [ref=e207]: Unfulfilled
+                - cell "124.98 EUR" [ref=e208]
+              - row "#1001 Jun 8, 8:32 AM John Doe Paid Unfulfilled 54.97 EUR" [ref=e209]:
+                - cell "#1001" [ref=e210]:
+                  - link "#1001" [ref=e211] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/1
+                - cell "Jun 8, 8:32 AM" [ref=e212]
+                - cell "John Doe" [ref=e213]
+                - cell "Paid" [ref=e214]:
+                  - generic [ref=e215]: Paid
+                - cell "Unfulfilled" [ref=e216]:
+                  - generic [ref=e217]: Unfulfilled
+                - cell "54.97 EUR" [ref=e218]
+              - row "#1009 Jun 7, 8:32 AM Emma Garcia Paid Unfulfilled 49.97 EUR" [ref=e219]:
+                - cell "#1009" [ref=e220]:
+                  - link "#1009" [ref=e221] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/9
+                - cell "Jun 7, 8:32 AM" [ref=e222]
+                - cell "Emma Garcia" [ref=e223]
+                - cell "Paid" [ref=e224]:
+                  - generic [ref=e225]: Paid
+                - cell "Unfulfilled" [ref=e226]:
+                  - generic [ref=e227]: Unfulfilled
+                - cell "49.97 EUR" [ref=e228]
+              - row "#1012 Jun 6, 8:32 AM Lisa Anderson Paid Unfulfilled 84.97 EUR" [ref=e229]:
+                - cell "#1012" [ref=e230]:
+                  - link "#1012" [ref=e231] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/12
+                - cell "Jun 6, 8:32 AM" [ref=e232]
+                - cell "Lisa Anderson" [ref=e233]
+                - cell "Paid" [ref=e234]:
+                  - generic [ref=e235]: Paid
+                - cell "Unfulfilled" [ref=e236]:
+                  - generic [ref=e237]: Unfulfilled
+                - cell "84.97 EUR" [ref=e238]
+              - row "#1003 Jun 5, 8:32 AM Jane Smith Paid Partial 119.97 EUR" [ref=e239]:
+                - cell "#1003" [ref=e240]:
+                  - link "#1003" [ref=e241] [cursor=pointer]:
+                    - /url: http://shop.test/admin/orders/3
+                - cell "Jun 5, 8:32 AM" [ref=e242]
+                - cell "Jane Smith" [ref=e243]
+                - cell "Paid" [ref=e244]:
+                  - generic [ref=e245]: Paid
+                - cell "Partial" [ref=e246]:
+                  - generic [ref=e247]: Partial
+                - cell "119.97 EUR" [ref=e248]

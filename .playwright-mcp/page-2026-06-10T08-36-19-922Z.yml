@@ -1,0 +1,488 @@
+- generic [active] [ref=e1]:
+  - dialog [ref=e223]:
+    - iframe [ref=e224]:
+      - generic [ref=f4e2]:
+        - generic [ref=f4e4]:
+          - generic [ref=f4e5]:
+            - img [ref=f4e7]
+            - generic [ref=f4e10]: Internal Server Error
+          - button "Copy as Markdown" [ref=f4e11] [cursor=pointer]:
+            - img [ref=f4e12]
+            - generic [ref=f4e15]: Copy as Markdown
+        - generic [ref=f4e18]:
+          - generic [ref=f4e19]:
+            - heading "RuntimeException" [level=1] [ref=f4e20]
+            - generic [ref=f4e22]: app/Jobs/DeliverWebhook.php:121
+            - paragraph [ref=f4e23]: Webhook delivery 5 to https://loyalty-rewards.example.test/webhooks/orders failed with status connection error.
+          - generic [ref=f4e24]:
+            - generic [ref=f4e25]:
+              - generic [ref=f4e26]:
+                - generic [ref=f4e27]: LARAVEL
+                - generic [ref=f4e28]: 12.51.0
+              - generic [ref=f4e29]:
+                - generic [ref=f4e30]: PHP
+                - generic [ref=f4e31]: 8.4.17
+            - generic [ref=f4e32]:
+              - img [ref=f4e33]
+              - text: UNHANDLED
+            - generic [ref=f4e36]: CODE 0
+          - generic [ref=f4e38]:
+            - generic [ref=f4e39]:
+              - img [ref=f4e40]
+              - text: "500"
+            - generic [ref=f4e43]:
+              - img [ref=f4e44]
+              - text: POST
+            - generic [ref=f4e47]: http://shop.test/livewire-6701cc17/update
+            - button [ref=f4e48] [cursor=pointer]:
+              - img [ref=f4e49]
+        - generic [ref=f4e53]:
+          - generic [ref=f4e54]:
+            - generic [ref=f4e55]:
+              - img [ref=f4e57]
+              - heading "Exception trace" [level=3] [ref=f4e60]
+            - generic [ref=f4e61]:
+              - generic [ref=f4e62]:
+                - generic [ref=f4e63] [cursor=pointer]:
+                  - generic [ref=f4e66]:
+                    - code [ref=f4e70]:
+                      - generic [ref=f4e71]: App\Jobs\DeliverWebhook->handle(object(App\Services\WebhookService))
+                    - generic [ref=f4e73]: app/Jobs/DeliverWebhook.php:121
+                  - button [ref=f4e75]:
+                    - img [ref=f4e76]
+                - code [ref=f4e84]:
+                  - generic [ref=f4e85]: 116 'response_code' => $responseCode,
+                  - generic [ref=f4e86]: 117 ]);
+                  - generic [ref=f4e87]: "118 }"
+                  - generic [ref=f4e88]: "119"
+                  - generic [ref=f4e89]: "120 if (! $exhausted) {"
+                  - generic [ref=f4e90]: 121 throw new RuntimeException(sprintf(
+                  - generic [ref=f4e91]: 122 'Webhook delivery %d to %s failed with status %s.',
+                  - generic [ref=f4e92]: 123 $delivery->getKey(),
+                  - generic [ref=f4e93]: 124 $subscription->target_url,
+                  - generic [ref=f4e94]: 125 $responseCode ?? 'connection error',
+                  - generic [ref=f4e95]: 126 ));
+                  - generic [ref=f4e96]: "127 }"
+                  - generic [ref=f4e97]: "128 }"
+                  - generic [ref=f4e98]: "129"
+                  - generic [ref=f4e99]: 130 /**
+                  - generic [ref=f4e100]: 131 * POST the signed payload and normalize the outcome to a response code
+                  - generic [ref=f4e101]: 132 * (null on connection failure) and a truncated body snippet.
+                  - generic [ref=f4e102]: "133"
+              - generic [ref=f4e104] [cursor=pointer]:
+                - img [ref=f4e105]
+                - generic [ref=f4e109]: 22 vendor frames
+                - button [ref=f4e110]:
+                  - img [ref=f4e111]
+              - generic [ref=f4e116] [cursor=pointer]:
+                - generic [ref=f4e119]:
+                  - code [ref=f4e123]:
+                    - generic [ref=f4e124]: App\Services\WebhookService->dispatch(object(App\Models\Store), string, array)
+                  - generic [ref=f4e126]: app/Services/WebhookService.php:81
+                - button [ref=f4e128]:
+                  - img [ref=f4e129]
+              - generic [ref=f4e134] [cursor=pointer]:
+                - generic [ref=f4e137]:
+                  - code [ref=f4e141]:
+                    - generic [ref=f4e142]: App\Listeners\DispatchWebhooks->dispatchOrderEvent(string, object(App\Models\Order))
+                  - generic [ref=f4e144]: app/Listeners/DispatchWebhooks.php:54
+                - button [ref=f4e146]:
+                  - img [ref=f4e147]
+              - generic [ref=f4e152] [cursor=pointer]:
+                - generic [ref=f4e155]:
+                  - code [ref=f4e159]:
+                    - generic [ref=f4e160]: App\Listeners\DispatchWebhooks->handle(object(App\Events\OrderCreated))
+                  - generic [ref=f4e162]: app/Listeners/DispatchWebhooks.php:28
+                - button [ref=f4e164]:
+                  - img [ref=f4e165]
+              - generic [ref=f4e170] [cursor=pointer]:
+                - img [ref=f4e171]
+                - generic [ref=f4e175]: 4 vendor frames
+                - button [ref=f4e176]:
+                  - img [ref=f4e177]
+              - generic [ref=f4e182] [cursor=pointer]:
+                - generic [ref=f4e185]:
+                  - code [ref=f4e189]:
+                    - generic [ref=f4e190]: "App\\Services\\OrderService->{closure:App\\Services\\OrderService::createFromCheckout():48}(object(Illuminate\\Database\\SQLiteConnection))"
+                  - generic [ref=f4e192]: app/Services/OrderService.php:104
+                - button [ref=f4e194]:
+                  - img [ref=f4e195]
+              - generic [ref=f4e200] [cursor=pointer]:
+                - img [ref=f4e201]
+                - generic [ref=f4e205]: 3 vendor frames
+                - button [ref=f4e206]:
+                  - img [ref=f4e207]
+              - generic [ref=f4e212] [cursor=pointer]:
+                - generic [ref=f4e215]:
+                  - code [ref=f4e219]:
+                    - generic [ref=f4e220]: App\Services\OrderService->createFromCheckout(object(App\Models\Checkout), object(App\ValueObjects\PaymentResult))
+                  - generic [ref=f4e222]: app/Services/OrderService.php:48
+                - button [ref=f4e224]:
+                  - img [ref=f4e225]
+              - generic [ref=f4e230] [cursor=pointer]:
+                - generic [ref=f4e233]:
+                  - code [ref=f4e237]:
+                    - generic [ref=f4e238]: "App\\Services\\CheckoutService->{closure:App\\Services\\CheckoutService::completeCheckout():253}(object(Illuminate\\Database\\SQLiteConnection))"
+                  - generic [ref=f4e240]: app/Services/CheckoutService.php:254
+                - button [ref=f4e242]:
+                  - img [ref=f4e243]
+              - generic [ref=f4e248] [cursor=pointer]:
+                - img [ref=f4e249]
+                - generic [ref=f4e253]: 3 vendor frames
+                - button [ref=f4e254]:
+                  - img [ref=f4e255]
+              - generic [ref=f4e260] [cursor=pointer]:
+                - generic [ref=f4e263]:
+                  - code [ref=f4e267]:
+                    - generic [ref=f4e268]: App\Services\CheckoutService->completeCheckout(object(App\Models\Checkout), array)
+                  - generic [ref=f4e270]: app/Services/CheckoutService.php:253
+                - button [ref=f4e272]:
+                  - img [ref=f4e273]
+              - generic [ref=f4e278] [cursor=pointer]:
+                - generic [ref=f4e281]:
+                  - code [ref=f4e285]:
+                    - generic [ref=f4e286]: App\Livewire\Storefront\Checkout\Show->payNow(object(App\Services\CheckoutService))
+                  - generic [ref=f4e288]: app/Livewire/Storefront/Checkout/Show.php:261
+                - button [ref=f4e290]:
+                  - img [ref=f4e291]
+              - generic [ref=f4e296] [cursor=pointer]:
+                - img [ref=f4e297]
+                - generic [ref=f4e301]: 58 vendor frames
+                - button [ref=f4e302]:
+                  - img [ref=f4e303]
+              - generic [ref=f4e308] [cursor=pointer]:
+                - generic [ref=f4e311]:
+                  - code [ref=f4e315]:
+                    - generic [ref=f4e316]: public/index.php
+                  - generic [ref=f4e318]: public/index.php:20
+                - button [ref=f4e320]:
+                  - img [ref=f4e321]
+              - generic [ref=f4e326] [cursor=pointer]:
+                - img [ref=f4e327]
+                - generic [ref=f4e331]: 1 vendor frame
+                - button [ref=f4e332]:
+                  - img [ref=f4e333]
+          - generic [ref=f4e337]:
+            - generic [ref=f4e338]:
+              - generic [ref=f4e339]:
+                - img [ref=f4e341]
+                - heading "Queries" [level=3] [ref=f4e343]
+              - generic [ref=f4e345]: 1-7 of 7
+            - generic [ref=f4e346]:
+              - generic [ref=f4e347]:
+                - generic [ref=f4e348]:
+                  - generic [ref=f4e349]:
+                    - img [ref=f4e350]
+                    - generic [ref=f4e352]: sqlite
+                  - code [ref=f4e356]:
+                    - generic [ref=f4e357]: select * from "webhook_deliveries" where "webhook_deliveries"."id" = 5 limit 1
+                - generic [ref=f4e358]: 0.05ms
+              - generic [ref=f4e359]:
+                - generic [ref=f4e360]:
+                  - generic [ref=f4e361]:
+                    - img [ref=f4e362]
+                    - generic [ref=f4e364]: sqlite
+                  - code [ref=f4e368]:
+                    - generic [ref=f4e369]: select * from "webhook_deliveries" where "id" = 5 limit 1
+                - generic [ref=f4e370]: 0.02ms
+              - generic [ref=f4e371]:
+                - generic [ref=f4e372]:
+                  - generic [ref=f4e373]:
+                    - img [ref=f4e374]
+                    - generic [ref=f4e376]: sqlite
+                  - code [ref=f4e380]:
+                    - generic [ref=f4e381]: select * from "webhook_subscriptions" where "webhook_subscriptions"."id" = 1 limit 1
+                - generic [ref=f4e382]: 0.04ms
+              - generic [ref=f4e383]:
+                - generic [ref=f4e384]:
+                  - generic [ref=f4e385]:
+                    - img [ref=f4e386]
+                    - generic [ref=f4e388]: sqlite
+                  - code [ref=f4e392]:
+                    - generic [ref=f4e393]: "update \"webhook_deliveries\" set \"attempt_count\" = 1, \"last_attempt_at\" = '2026-06-10 08:36:17', \"response_body_snippet\" = 'cURL error 7: Failed to connect to loyalty-rewards.example.test port 443 after 4 ms: Could not connect to server (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://loyalty-rewards.example.test/webhooks/orders' where \"id\" = 5"
+                - generic [ref=f4e394]: 0.05ms
+              - generic [ref=f4e395]:
+                - generic [ref=f4e396]:
+                  - generic [ref=f4e397]:
+                    - img [ref=f4e398]
+                    - generic [ref=f4e400]: sqlite
+                  - code [ref=f4e404]:
+                    - generic [ref=f4e405]: update "webhook_subscriptions" set "consecutive_failures" = 1 where "id" = 1
+                - generic [ref=f4e406]: 0.05ms
+              - generic [ref=f4e407]:
+                - generic [ref=f4e408]:
+                  - generic [ref=f4e409]:
+                    - img [ref=f4e410]
+                    - generic [ref=f4e412]: sqlite
+                  - code [ref=f4e416]:
+                    - generic [ref=f4e417]: select * from "webhook_deliveries" where "webhook_deliveries"."id" = 5 limit 1
+                - generic [ref=f4e418]: 0.02ms
+              - generic [ref=f4e419]:
+                - generic [ref=f4e420]:
+                  - generic [ref=f4e421]:
+                    - img [ref=f4e422]
+                    - generic [ref=f4e424]: sqlite
+                  - code [ref=f4e428]:
+                    - generic [ref=f4e429]: select * from "users" where "id" = 1 limit 1
+                - generic [ref=f4e430]: 0.05ms
+        - generic [ref=f4e432]:
+          - generic [ref=f4e433]:
+            - heading "Headers" [level=2] [ref=f4e434]
+            - generic [ref=f4e435]:
+              - generic [ref=f4e436]:
+                - generic [ref=f4e437]: cookie
+                - generic [ref=f4e439]: XSRF-TOKEN=eyJpdiI6IlZpdWNGWVd1ODFWRDB2VXQ0VTMwTUE9PSIsInZhbHVlIjoiNjJicDRyWThoY0ZhZkFIRG8yb3BpSmx6YWxzL1BJMThNSWpSTEQ0ODhwUmQ2Ym5TVkdkR2swMUJ1UmNKWTBYN0xYVnJRdnJuRGFScTZMTXlxRHVjcmpabUw2bTAvUmJqVElZTkpkWGVsTU9tbkkyQ1BYdDJNMmZLdDZ2am9lZXciLCJtYWMiOiIwMWI1NzcxZDdlMDExMmFmNDhmNDU5M2U2MjIwZTkxNTg1ODkwYWI1ODYyNjUzMmYwZDIxOTM5MGZiY2JhYmNkIiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6Ikl5ZlJ0ck1kc0JUU29wcEhuNmc4aGc9PSIsInZhbHVlIjoidG1LOVRoZ0QzTm5VYWxCV0ZENmRmNWtRWkxUdStvbTZTYkZkNEwxeFpRaU5aNVI5d09tTHkyN1hSM1JvYnJaenlIV1VVV3VWU3A0MmhOSVl2cXk3dU1mQTVPL2ZZZnVzdU1yMzNsZk9SNkI0T0lMRW5WZWFEQ1RSOThkcGpLajAiLCJtYWMiOiIwMjUwMDg2Njg3MTZhN2YzMDkxZTI0ZTJjMDdlZTU4OGFjZWY4NzM0YmFlYWEzOTA4ZmQ0ODkzNGFhYzMxMDA3IiwidGFnIjoiIn0%3D
+              - generic [ref=f4e440]:
+                - generic [ref=f4e441]: accept-language
+                - generic [ref=f4e443]: en-GB,en-US;q=0.9,en;q=0.8
+              - generic [ref=f4e444]:
+                - generic [ref=f4e445]: accept-encoding
+                - generic [ref=f4e447]: gzip, deflate
+              - generic [ref=f4e448]:
+                - generic [ref=f4e449]: referer
+                - generic [ref=f4e451]: http://shop.test/checkout
+              - generic [ref=f4e452]:
+                - generic [ref=f4e453]: origin
+                - generic [ref=f4e455]: http://shop.test
+              - generic [ref=f4e456]:
+                - generic [ref=f4e457]: accept
+                - generic [ref=f4e459]: "*/*"
+              - generic [ref=f4e460]:
+                - generic [ref=f4e461]: x-livewire
+                - generic [ref=f4e463]: "1"
+              - generic [ref=f4e464]:
+                - generic [ref=f4e465]: content-type
+                - generic [ref=f4e467]: application/json
+              - generic [ref=f4e468]:
+                - generic [ref=f4e469]: user-agent
+                - generic [ref=f4e471]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36
+              - generic [ref=f4e472]:
+                - generic [ref=f4e473]: content-length
+                - generic [ref=f4e475]: "1157"
+              - generic [ref=f4e476]:
+                - generic [ref=f4e477]: connection
+                - generic [ref=f4e479]: keep-alive
+              - generic [ref=f4e480]:
+                - generic [ref=f4e481]: host
+                - generic [ref=f4e483]: shop.test
+          - generic [ref=f4e484]:
+            - heading "Body" [level=2] [ref=f4e485]
+            - code [ref=f4e490]:
+              - generic [ref=f4e491]: "{"
+              - generic [ref=f4e492]: "\"_token\": \"o3vYJFxePP6moAD4FpsNFN09adJ61xsr4WN4oEVC\","
+              - generic [ref=f4e493]: "\"components\": ["
+              - generic [ref=f4e494]: "{"
+              - generic [ref=f4e495]: "\"snapshot\": \"{\"data\":{\"checkoutId\":1,\"step\":4,\"email\":\"erika.musterfrau@example.com\",\"shipping\":[{\"first_name\":\"Erika\",\"last_name\":\"Musterfrau\",\"address1\":\"Musterstrasse 12\",\"address2\":\"\",\"city\":\"Berlin\",\"province\":\"\",\"postal_code\":\"10115\",\"country_code\":\"DE\",\"phone\":\"\"},{\"s\":\"arr\"}],\"savedAddressId\":\"\",\"selectedRateId\":1,\"paymentMethod\":\"credit_card\",\"cardNumber\":\"\",\"cardName\":\"\",\"cardExpiry\":\"\",\"cardCvc\":\"\",\"shippingError\":null,\"paymentError\":null,\"discountCode\":\"\",\"discountError\":null,\"cartError\":null},\"memo\":{\"id\":\"PNG7TqFAp3JsarQtudg4\",\"name\":\"storefront.checkout.show\",\"path\":\"checkout\",\"method\":\"GET\",\"release\":\"a-a-a\",\"children\":[],\"scripts\":[],\"assets\":[],\"errors\":[],\"locale\":\"en\",\"islands\":[]},\"checksum\":\"f01ca0c874a9fbe7523d6e77fc90457dc31e4f0b3c7bf09bdd8599756c03690a\"}\","
+              - generic [ref=f4e496]: "\"updates\": {"
+              - generic [ref=f4e497]: "\"cardNumber\": \"4242424242424242\","
+              - generic [ref=f4e498]: "\"cardName\": \"Erika Musterfrau\","
+              - generic [ref=f4e499]: "\"cardExpiry\": \"12/28\","
+              - generic [ref=f4e500]: "\"cardCvc\": \"123\""
+              - generic [ref=f4e501]: "},"
+              - generic [ref=f4e502]: "\"calls\": ["
+              - generic [ref=f4e503]: "{"
+              - generic [ref=f4e504]: "\"method\": \"payNow\","
+              - generic [ref=f4e505]: "\"params\": [],"
+              - generic [ref=f4e506]: "\"metadata\": []"
+              - generic [ref=f4e507]: "}"
+              - generic [ref=f4e508]: "]"
+              - generic [ref=f4e509]: "}"
+              - generic [ref=f4e510]: "]"
+              - generic [ref=f4e511]: "}"
+          - generic [ref=f4e512]:
+            - heading "Routing" [level=2] [ref=f4e513]
+            - generic [ref=f4e514]:
+              - generic [ref=f4e515]:
+                - generic [ref=f4e516]: controller
+                - generic [ref=f4e518]: Livewire\Mechanisms\HandleRequests\HandleRequests@handleUpdate
+              - generic [ref=f4e519]:
+                - generic [ref=f4e520]: route name
+                - generic [ref=f4e522]: default-livewire.update
+              - generic [ref=f4e523]:
+                - generic [ref=f4e524]: middleware
+                - generic [ref=f4e526]: web
+          - generic [ref=f4e527]:
+            - heading "Routing parameters" [level=2] [ref=f4e528]
+            - generic [ref=f4e529]: // No routing parameters
+        - generic [ref=f4e532]:
+          - img [ref=f4e534]
+          - img [ref=f4e3572]
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: "2"
+          - generic [ref=e35]: 2 items in cart
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - heading "Checkout" [level=1] [ref=e38]
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - region "1. Contact information" [ref=e41]:
+            - generic [ref=e42]:
+              - heading "1. Contact information" [level=2] [ref=e43]
+              - button "Edit" [ref=e134]
+            - paragraph [ref=e135]: erika.musterfrau@example.com
+          - region "2. Shipping address" [ref=e51]:
+            - generic [ref=e52]:
+              - heading "2. Shipping address" [level=2] [ref=e53]
+              - button "Edit" [ref=e166]
+            - paragraph [ref=e167]: Erika Musterfrau, Musterstrasse 12, 10115 Berlin, DE
+          - region "3. Shipping method" [ref=e54]:
+            - generic [ref=e55]:
+              - heading "3. Shipping method" [level=2] [ref=e56]
+              - button "Edit" [ref=e190]
+            - paragraph [ref=e191]: Standard Shipping
+          - region "4. Payment" [ref=e57]:
+            - heading "4. Payment" [level=2] [ref=e59]
+            - generic [ref=e192]:
+              - group "Select a payment method" [ref=e193]:
+                - generic [ref=e194]: Select a payment method
+                - generic [ref=e195]:
+                  - generic [ref=e196] [cursor=pointer]:
+                    - radio "Credit Card" [checked] [ref=e197]
+                    - generic [ref=e198]: Credit Card
+                  - generic [ref=e199] [cursor=pointer]:
+                    - radio "PayPal" [ref=e200]
+                    - generic [ref=e201]: PayPal
+                  - generic [ref=e202] [cursor=pointer]:
+                    - radio "Bank Transfer" [ref=e203]
+                    - generic [ref=e204]: Bank Transfer
+              - generic [ref=e205]:
+                - generic [ref=e206]:
+                  - generic [ref=e207]: Card number *
+                  - textbox "Card number" [ref=e208]:
+                    - /placeholder: 4242 4242 4242 4242
+                    - text: "4242424242424242"
+                - generic [ref=e209]:
+                  - generic [ref=e210]: Cardholder name *
+                  - textbox "Cardholder name" [ref=e211]: Erika Musterfrau
+                - generic [ref=e212]:
+                  - generic [ref=e213]:
+                    - generic [ref=e214]: Expiry *
+                    - textbox "Expiry" [ref=e215]:
+                      - /placeholder: MM/YY
+                      - text: 12/28
+                  - generic [ref=e216]:
+                    - generic [ref=e217]: CVC *
+                    - textbox "CVC" [ref=e218]:
+                      - /placeholder: "123"
+                      - text: "123"
+              - button "Pay now - 49.98 EUR" [ref=e219]:
+                - generic [ref=e220]: Pay now - 49.98 EUR
+        - generic [ref=e60]:
+          - complementary "Order summary" [ref=e61]:
+            - heading "Order Summary" [level=2] [ref=e62]
+            - list [ref=e63]:
+              - listitem [ref=e64]:
+                - generic [ref=e66]: "2"
+                - generic [ref=e67]:
+                  - paragraph [ref=e68]: Classic Cotton T-Shirt
+                  - paragraph [ref=e69]: M / Navy
+                - generic [ref=e71]: 49.98 EUR
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - term [ref=e74]: Subtotal
+                - definition [ref=e75]:
+                  - generic [ref=e77]: 49.98 EUR
+              - generic [ref=e78]:
+                - term [ref=e79]: Discount (WELCOME10)
+                - definition [ref=e80]: "-4.99 EUR"
+              - generic [ref=e81]:
+                - term [ref=e82]: Shipping
+                - definition [ref=e83]:
+                  - generic [ref=e222]: 4.99 EUR
+              - generic [ref=e185]:
+                - term [ref=e186]: Tax
+                - definition [ref=e187]:
+                  - generic [ref=e189]: 7.98 EUR
+              - generic [ref=e84]:
+                - term [ref=e85]: Total
+                - definition [ref=e86]:
+                  - generic [ref=e88]: 49.98 EUR
+          - generic [ref=e90]:
+            - generic [ref=e91]: WELCOME10
+            - button "Remove" [ref=e92]
+  - contentinfo [ref=e93]:
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - heading "Shop" [level=2] [ref=e97]
+          - list [ref=e98]:
+            - listitem [ref=e99]:
+              - link "All collections" [ref=e100] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e101]:
+              - link "Home" [ref=e102] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e103]:
+              - link "New Arrivals" [ref=e104] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e105]:
+              - link "T-Shirts" [ref=e106] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e107]:
+              - link "Pants & Jeans" [ref=e108] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e109]:
+              - link "Sale" [ref=e110] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e111]:
+          - heading "Information" [level=2] [ref=e112]
+          - list [ref=e113]:
+            - listitem [ref=e114]:
+              - link "About Us" [ref=e115] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e116]:
+              - link "FAQ" [ref=e117] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e118]:
+              - link "Shipping & Returns" [ref=e119] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e120]:
+              - link "Privacy Policy" [ref=e121] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e122]:
+              - link "Terms of Service" [ref=e123] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e124]:
+          - heading "Acme Fashion" [level=2] [ref=e125]
+          - paragraph [ref=e126]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e127]:
+        - paragraph [ref=e128]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e129]:
+          - listitem [ref=e130]: Visa
+          - listitem [ref=e131]: Mastercard
+          - listitem [ref=e132]: Amex
+          - listitem [ref=e133]: PayPal
