@@ -9,6 +9,7 @@ use App\Livewire\Admin\Collections\Index as AdminCollectionsIndex;
 use App\Livewire\Admin\Customers\Index as AdminCustomersIndex;
 use App\Livewire\Admin\Customers\Show as AdminCustomersShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Developers\Index as AdminDevelopersIndex;
 use App\Livewire\Admin\Discounts\Form as AdminDiscountsForm;
 use App\Livewire\Admin\Discounts\Index as AdminDiscountsIndex;
 use App\Livewire\Admin\Inventory\Index as AdminInventoryIndex;
@@ -113,6 +114,8 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
         ->name('admin.pages.edit');
 
     Route::livewire('/admin/navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
+
+    Route::livewire('/admin/developers', AdminDevelopersIndex::class)->name('admin.developers.index');
 });
 
 /*

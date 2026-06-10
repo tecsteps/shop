@@ -13,14 +13,17 @@ use Symfony\Component\HttpFoundation\Response;
 class ResolveStore
 {
     /**
-     * Resolve the current store from the hostname (storefront) or session (admin)
-     * and bind it to the service container as "current_store".
+     * Resolve the current store from the hostname (storefront), session (admin),
+     * or {storeId} route parameter (api-admin) and bind it to the service
+     * container as "current_store".
      */
     public function handle(Request $request, Closure $next, string $context = 'storefront'): Response
     {
-        $store = $context === 'admin'
-            ? $this->resolveFromSession($request)
-            : $this->resolveFromHostname($request);
+        $store = match ($context) {
+            'admin' => $this->resolveFromSession($request),
+            'api-admin' => $this->resolveFromRouteParameter($request),
+            default => $this->resolveFromHostname($request),
+        };
 
         app()->instance('current_store', $store);
         View::share('currentStore', $store);
@@ -53,6 +56,32 @@ class ResolveStore
 
         if ($store->isSuspended()) {
             abort(503, 'This store is currently unavailable.');
+        }
+
+        return $store;
+    }
+
+    /**
+     * Resolve the store from the {storeId} route parameter for admin API
+     * requests (spec 02 section 6.2) and verify the Sanctum-authenticated
+     * user is a member of that store.
+     */
+    protected function resolveFromRouteParameter(Request $request): Store
+    {
+        $store = Store::query()->find((int) $request->route('storeId'));
+
+        if ($store === null) {
+            abort(404, 'The requested resource was not found.');
+        }
+
+        $user = $request->user();
+
+        if ($user === null || ! $user->stores()->whereKey($store->getKey())->exists()) {
+            abort(403, 'You do not have permission to perform this action.');
+        }
+
+        if ($store->isSuspended() && ! $request->isMethodSafe()) {
+            abort(403, 'This store is currently suspended.');
         }
 
         return $store;

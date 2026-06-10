@@ -20,6 +20,15 @@ class StorePolicy
         return $this->isOwnerOrAdmin($user, $store->getKey());
     }
 
+    /**
+     * Create and revoke API tokens (spec 06 section 2.3: manage-developers
+     * is granted to Owner and Admin).
+     */
+    public function manageDevelopers(User $user, Store $store): bool
+    {
+        return $this->isOwnerOrAdmin($user, $store->getKey());
+    }
+
     public function delete(User $user, Store $store): bool
     {
         return $this->isOwner($user, $store->getKey());
