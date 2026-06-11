@@ -32,6 +32,7 @@
                     wire:click="setStatusFilter('{{ $value }}')"
                     role="tab"
                     aria-selected="{{ $statusFilter === $value ? 'true' : 'false' }}"
+                    data-test="product-status-tab-{{ $value }}"
                     class="-mb-px cursor-pointer border-b-2 px-4 py-2 text-sm whitespace-nowrap transition {{ $statusFilter === $value
                         ? 'border-blue-600 font-semibold text-zinc-900 dark:border-blue-400 dark:text-white'
                         : 'border-transparent font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200' }}"
