@@ -1,0 +1,156 @@
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: 0 items in cart
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - img [ref=e39]
+        - heading "Thank you for your order!" [level=1] [ref=e41]
+        - paragraph [ref=e42]: "Order #1016"
+        - paragraph [ref=e43]: We've sent a confirmation to erika.musterfrau@example.com
+      - region "Order summary" [ref=e44]:
+        - heading "Order summary" [level=2] [ref=e45]
+        - list [ref=e46]:
+          - listitem [ref=e47]:
+            - img [ref=e49]
+            - generic [ref=e51]:
+              - generic [ref=e52]: Classic Cotton T-Shirt (M / Navy)
+              - text: "Qty: 2"
+            - generic [ref=e54]: 44.99 EUR
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "Shipping address" [level=2] [ref=e57]
+          - paragraph [ref=e58]:
+            - text: Erika Musterfrau
+            - text: Musterstrasse 12
+            - text: 10115 Berlin, DE
+        - generic [ref=e59]:
+          - heading "Payment method" [level=2] [ref=e60]
+          - paragraph [ref=e61]: Credit Card
+      - region "Order totals" [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - term [ref=e65]: Subtotal
+            - definition [ref=e66]:
+              - generic [ref=e68]: 49.98 EUR
+          - generic [ref=e69]:
+            - term [ref=e70]: Discount
+            - definition [ref=e71]: "-4.99 EUR"
+          - generic [ref=e72]:
+            - term [ref=e73]: Shipping
+            - definition [ref=e74]:
+              - generic [ref=e76]: 4.99 EUR
+          - generic [ref=e77]:
+            - term [ref=e78]: Tax
+            - definition [ref=e79]:
+              - generic [ref=e81]: 7.98 EUR
+          - generic [ref=e82]:
+            - term [ref=e83]: Total
+            - definition [ref=e84]:
+              - generic [ref=e86]: 49.98 EUR
+      - link "Continue shopping" [ref=e88] [cursor=pointer]:
+        - /url: http://shop.test
+  - contentinfo [ref=e89]:
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - heading "Shop" [level=2] [ref=e93]
+          - list [ref=e94]:
+            - listitem [ref=e95]:
+              - link "All collections" [ref=e96] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e97]:
+              - link "Home" [ref=e98] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e99]:
+              - link "New Arrivals" [ref=e100] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e101]:
+              - link "T-Shirts" [ref=e102] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e103]:
+              - link "Pants & Jeans" [ref=e104] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e105]:
+              - link "Sale" [ref=e106] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e107]:
+          - heading "Information" [level=2] [ref=e108]
+          - list [ref=e109]:
+            - listitem [ref=e110]:
+              - link "About Us" [ref=e111] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e112]:
+              - link "FAQ" [ref=e113] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e114]:
+              - link "Shipping & Returns" [ref=e115] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e116]:
+              - link "Privacy Policy" [ref=e117] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e118]:
+              - link "Terms of Service" [ref=e119] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e120]:
+          - heading "Acme Fashion" [level=2] [ref=e121]
+          - paragraph [ref=e122]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e123]:
+        - paragraph [ref=e124]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e125]:
+          - listitem [ref=e126]: Visa
+          - listitem [ref=e127]: Mastercard
+          - listitem [ref=e128]: Amex
+          - listitem [ref=e129]: PayPal
+  - generic:
+    - dialog "Search":
+      - generic [ref=e132]:
+        - generic [ref=e133]:
+          - img [ref=e134]
+          - searchbox "Search products" [active] [ref=e136]: hoodie
+          - button "Close search" [ref=e137]:
+            - img [ref=e138]
+        - listbox "Search results" [ref=e140]:
+          - generic [ref=e141]:
+            - paragraph [ref=e143]: Products
+            - option "Organic Hoodie 59.99 EUR" [ref=e144] [cursor=pointer]:
+              - img [ref=e146]
+              - generic [ref=e148]: Organic Hoodie
+              - generic [ref=e149]: 59.99 EUR
+            - option "View all 1 result" [ref=e151] [cursor=pointer]:
+              - text: View all 1 result
+              - img [ref=e152]

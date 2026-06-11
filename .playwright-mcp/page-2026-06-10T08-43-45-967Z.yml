@@ -1,0 +1,282 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e3]:
+    - link "Shop" [ref=e5] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e8]
+      - generic [ref=e10]: Shop
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e13]
+        - text: Dashboard
+      - paragraph [ref=e15]: Products
+      - link "Products" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e17]
+        - text: Products
+      - link "Collections" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e20]
+        - text: Collections
+      - link "Inventory" [ref=e22] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e23]
+        - text: Inventory
+      - paragraph [ref=e25]: Orders
+      - link "Orders" [ref=e26] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e27]
+        - text: Orders
+      - paragraph [ref=e29]: Customers
+      - link "Customers" [ref=e30] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e31]
+        - text: Customers
+      - paragraph [ref=e33]: Discounts
+      - link "Discounts" [ref=e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e35]
+        - text: Discounts
+      - paragraph [ref=e38]: Content
+      - link "Pages" [ref=e39] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e40]
+        - text: Pages
+      - link "Navigation" [ref=e42] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e43]
+        - text: Navigation
+      - link "Themes" [ref=e45] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e46]
+        - text: Themes
+      - link "Analytics" [ref=e48] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e49]
+        - text: Analytics
+      - link "Settings" [ref=e52] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e53]
+        - text: Settings
+      - link "Apps" [ref=e56] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e57]
+        - text: Apps
+      - link "Developers" [ref=e59] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e60]
+        - text: Developers
+  - generic [ref=e62]:
+    - banner [ref=e63]:
+      - button "Acme Fashion" [ref=e65]:
+        - generic [ref=e66]: Acme Fashion
+        - img [ref=e67]
+      - button "AU Admin User" [ref=e70]:
+        - generic [ref=e73]: AU
+        - generic [ref=e74]: Admin User
+        - img [ref=e76]
+    - main [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - link "Home" [ref=e82] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e83]
+          - generic [ref=e85]:
+            - link "Settings" [ref=e86] [cursor=pointer]:
+              - /url: http://shop.test/admin/settings
+            - img [ref=e87]
+          - generic [ref=e90]: Shipping
+        - heading "Settings" [level=1] [ref=e91]
+        - tablist [ref=e92]:
+          - tab "General" [ref=e93] [cursor=pointer]
+          - tab "Domains" [ref=e94] [cursor=pointer]
+          - tab "Shipping" [selected] [ref=e95] [cursor=pointer]
+          - tab "Taxes" [ref=e96] [cursor=pointer]
+          - tab "Checkout" [ref=e97] [cursor=pointer]
+          - tab "Notifications" [ref=e98] [cursor=pointer]
+        - generic [ref=e99]:
+          - generic [ref=e100]: Shipping
+          - button "Add zone" [ref=e101]:
+            - img [ref=e103]
+            - img [ref=e106]
+            - generic [ref=e108]: Add zone
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]:
+              - generic [ref=e112]: Domestic
+              - paragraph [ref=e113]: "Countries: DE"
+            - generic [ref=e114]:
+              - button "Edit" [ref=e115]:
+                - img [ref=e117]
+                - generic [ref=e120]: Edit
+              - button "Delete zone Domestic" [ref=e121]:
+                - img [ref=e123]
+                - img [ref=e126]
+          - table [ref=e129]:
+            - rowgroup [ref=e130]:
+              - row "Name Type Config Active Actions" [ref=e131]:
+                - columnheader "Name" [ref=e132]
+                - columnheader "Type" [ref=e133]
+                - columnheader "Config" [ref=e134]
+                - columnheader "Active" [ref=e135]
+                - columnheader "Actions" [ref=e136]
+            - rowgroup [ref=e137]:
+              - row "Standard Shipping flat 4.99 EUR Toggle Standard Shipping Edit Delete rate Standard Shipping" [ref=e138]:
+                - cell "Standard Shipping" [ref=e139]
+                - cell "flat" [ref=e140]:
+                  - generic [ref=e141]: flat
+                - cell "4.99 EUR" [ref=e142]
+                - cell "Toggle Standard Shipping" [ref=e143]:
+                  - switch "Toggle Standard Shipping" [checked] [ref=e144]
+                - cell "Edit Delete rate Standard Shipping" [ref=e146]:
+                  - generic [ref=e147]:
+                    - button "Edit" [ref=e148]:
+                      - img [ref=e150]
+                      - generic [ref=e153]: Edit
+                    - button "Delete rate Standard Shipping" [ref=e154]:
+                      - img [ref=e156]
+                      - img [ref=e159]
+              - row "Express Shipping flat 9.99 EUR Toggle Express Shipping Edit Delete rate Express Shipping" [ref=e161]:
+                - cell "Express Shipping" [ref=e162]
+                - cell "flat" [ref=e163]:
+                  - generic [ref=e164]: flat
+                - cell "9.99 EUR" [ref=e165]
+                - cell "Toggle Express Shipping" [ref=e166]:
+                  - switch "Toggle Express Shipping" [checked] [ref=e167]
+                - cell "Edit Delete rate Express Shipping" [ref=e169]:
+                  - generic [ref=e170]:
+                    - button "Edit" [ref=e171]:
+                      - img [ref=e173]
+                      - generic [ref=e176]: Edit
+                    - button "Delete rate Express Shipping" [ref=e177]:
+                      - img [ref=e179]
+                      - img [ref=e182]
+          - button "Add rate" [ref=e184]:
+            - img [ref=e186]
+            - img [ref=e189]
+            - generic [ref=e191]: Add rate
+        - generic [ref=e192]:
+          - generic [ref=e193]:
+            - generic [ref=e194]:
+              - generic [ref=e195]: EU
+              - paragraph [ref=e196]: "Countries: AT, FR, IT, ES, NL, BE, PL"
+            - generic [ref=e197]:
+              - button "Edit" [ref=e198]:
+                - img [ref=e200]
+                - generic [ref=e203]: Edit
+              - button "Delete zone EU" [ref=e204]:
+                - img [ref=e206]
+                - img [ref=e209]
+          - table [ref=e212]:
+            - rowgroup [ref=e213]:
+              - row "Name Type Config Active Actions" [ref=e214]:
+                - columnheader "Name" [ref=e215]
+                - columnheader "Type" [ref=e216]
+                - columnheader "Config" [ref=e217]
+                - columnheader "Active" [ref=e218]
+                - columnheader "Actions" [ref=e219]
+            - rowgroup [ref=e220]:
+              - row "EU Standard flat 8.99 EUR Toggle EU Standard Edit Delete rate EU Standard" [ref=e221]:
+                - cell "EU Standard" [ref=e222]
+                - cell "flat" [ref=e223]:
+                  - generic [ref=e224]: flat
+                - cell "8.99 EUR" [ref=e225]
+                - cell "Toggle EU Standard" [ref=e226]:
+                  - switch "Toggle EU Standard" [checked] [ref=e227]
+                - cell "Edit Delete rate EU Standard" [ref=e229]:
+                  - generic [ref=e230]:
+                    - button "Edit" [ref=e231]:
+                      - img [ref=e233]
+                      - generic [ref=e236]: Edit
+                    - button "Delete rate EU Standard" [ref=e237]:
+                      - img [ref=e239]
+                      - img [ref=e242]
+          - button "Add rate" [ref=e244]:
+            - img [ref=e246]
+            - img [ref=e249]
+            - generic [ref=e251]: Add rate
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - generic [ref=e254]:
+              - generic [ref=e255]: Rest of World
+              - paragraph [ref=e256]: "Countries: US, GB, CA, AU"
+            - generic [ref=e257]:
+              - button "Edit" [ref=e258]:
+                - img [ref=e260]
+                - generic [ref=e263]: Edit
+              - button "Delete zone Rest of World" [ref=e264]:
+                - img [ref=e266]
+                - img [ref=e269]
+          - table [ref=e272]:
+            - rowgroup [ref=e273]:
+              - row "Name Type Config Active Actions" [ref=e274]:
+                - columnheader "Name" [ref=e275]
+                - columnheader "Type" [ref=e276]
+                - columnheader "Config" [ref=e277]
+                - columnheader "Active" [ref=e278]
+                - columnheader "Actions" [ref=e279]
+            - rowgroup [ref=e280]:
+              - row "International flat 14.99 EUR Toggle International Edit Delete rate International" [ref=e281]:
+                - cell "International" [ref=e282]
+                - cell "flat" [ref=e283]:
+                  - generic [ref=e284]: flat
+                - cell "14.99 EUR" [ref=e285]
+                - cell "Toggle International" [ref=e286]:
+                  - switch "Toggle International" [checked] [ref=e287]
+                - cell "Edit Delete rate International" [ref=e289]:
+                  - generic [ref=e290]:
+                    - button "Edit" [ref=e291]:
+                      - img [ref=e293]
+                      - generic [ref=e296]: Edit
+                    - button "Delete rate International" [ref=e297]:
+                      - img [ref=e299]
+                      - img [ref=e302]
+          - button "Add rate" [ref=e304]:
+            - img [ref=e306]
+            - img [ref=e309]
+            - generic [ref=e311]: Add rate
+        - generic [ref=e312]:
+          - generic [ref=e313]: Test shipping address
+          - paragraph [ref=e314]: Enter an address to see which shipping zone and rates match.
+          - generic [ref=e315]:
+            - generic [ref=e316]:
+              - generic [ref=e317]: Country
+              - combobox "Country" [ref=e318]:
+                - option "Austria"
+                - option "Australia"
+                - option "Belgium"
+                - option "Canada"
+                - option "Switzerland"
+                - option "Czechia"
+                - option "Germany" [selected]
+                - option "Denmark"
+                - option "Spain"
+                - option "Finland"
+                - option "France"
+                - option "United Kingdom"
+                - option "Ireland"
+                - option "Italy"
+                - option "Japan"
+                - option "Luxembourg"
+                - option "Netherlands"
+                - option "Norway"
+                - option "Poland"
+                - option "Portugal"
+                - option "Sweden"
+                - option "United States"
+            - generic [ref=e319]:
+              - generic [ref=e320]: State / Region
+              - textbox "State / Region" [ref=e322]:
+                - /placeholder: CA
+            - generic [ref=e323]:
+              - generic [ref=e324]: City
+              - textbox "City" [ref=e326]
+            - generic [ref=e327]:
+              - generic [ref=e328]: ZIP / Postal code
+              - textbox "ZIP / Postal code" [ref=e330]
+          - button "Test" [ref=e331]:
+            - img [ref=e333]
+            - generic [ref=e336]: Test

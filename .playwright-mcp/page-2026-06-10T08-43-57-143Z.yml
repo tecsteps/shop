@@ -1,0 +1,333 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e3]:
+    - link "Shop" [ref=e5] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e8]
+      - generic [ref=e10]: Shop
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e13]
+        - text: Dashboard
+      - paragraph [ref=e15]: Products
+      - link "Products" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e17]
+        - text: Products
+      - link "Collections" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e20]
+        - text: Collections
+      - link "Inventory" [ref=e22] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e23]
+        - text: Inventory
+      - paragraph [ref=e25]: Orders
+      - link "Orders" [ref=e26] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e27]
+        - text: Orders
+      - paragraph [ref=e29]: Customers
+      - link "Customers" [ref=e30] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e31]
+        - text: Customers
+      - paragraph [ref=e33]: Discounts
+      - link "Discounts" [ref=e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e35]
+        - text: Discounts
+      - paragraph [ref=e38]: Content
+      - link "Pages" [ref=e39] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e40]
+        - text: Pages
+      - link "Navigation" [ref=e42] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e43]
+        - text: Navigation
+      - link "Themes" [ref=e45] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e46]
+        - text: Themes
+      - link "Analytics" [ref=e48] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e49]
+        - text: Analytics
+      - link "Settings" [ref=e52] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e53]
+        - text: Settings
+      - link "Apps" [ref=e56] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e57]
+        - text: Apps
+      - link "Developers" [ref=e59] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e60]
+        - text: Developers
+  - generic [ref=e62]:
+    - banner [ref=e63]:
+      - button "Acme Fashion" [ref=e65]:
+        - generic [ref=e66]: Acme Fashion
+        - img [ref=e67]
+      - button "AU Admin User" [ref=e70]:
+        - generic [ref=e73]: AU
+        - generic [ref=e74]: Admin User
+        - img [ref=e76]
+    - main [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - link "Home" [ref=e82] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e83]
+          - generic [ref=e85]:
+            - link "Themes" [ref=e86] [cursor=pointer]:
+              - /url: http://shop.test/admin/themes
+            - img [ref=e87]
+          - generic [ref=e90]: Default Theme
+        - generic [ref=e91]:
+          - link "Back to themes" [ref=e92] [cursor=pointer]:
+            - /url: http://shop.test/admin/themes
+            - img [ref=e93]
+            - generic [ref=e95]: Back to themes
+          - generic [ref=e96]:
+            - generic [ref=e97]: Published
+            - button "Save" [ref=e98]:
+              - img [ref=e100]
+              - generic [ref=e103]: Save
+            - button "Save & publish" [ref=e104]:
+              - img [ref=e106]
+              - generic [ref=e109]: Save & publish
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - generic [ref=e112]: Theme settings
+            - generic [ref=e113]:
+              - button "Header" [ref=e114] [cursor=pointer]
+              - button "Colors & typography" [ref=e115] [cursor=pointer]
+              - button "Product catalog" [ref=e116] [cursor=pointer]
+              - button "Footer" [ref=e117] [cursor=pointer]
+            - generic [ref=e118]: Home page sections
+            - paragraph [ref=e119]: Drag to reorder, toggle to show or hide.
+            - generic [ref=e120]:
+              - generic [ref=e121]:
+                - img [ref=e122]
+                - button "Hero" [ref=e124] [cursor=pointer]
+                - button "Toggle Hero" [ref=e125] [cursor=pointer]:
+                  - img [ref=e126]
+              - generic [ref=e129]:
+                - img [ref=e130]
+                - button "Featured collections" [ref=e132] [cursor=pointer]
+                - button "Toggle Featured collections" [ref=e133] [cursor=pointer]:
+                  - img [ref=e134]
+              - generic [ref=e137]:
+                - img [ref=e138]
+                - button "Featured products" [ref=e140] [cursor=pointer]
+                - button "Toggle Featured products" [ref=e141] [cursor=pointer]:
+                  - img [ref=e142]
+              - generic [ref=e145]:
+                - img [ref=e146]
+                - button "Newsletter" [ref=e148] [cursor=pointer]
+                - button "Toggle Newsletter" [ref=e149] [cursor=pointer]:
+                  - img [ref=e150]
+              - generic [ref=e153]:
+                - img [ref=e154]
+                - button "Rich text" [ref=e156] [cursor=pointer]
+                - button "Toggle Rich text" [ref=e157] [cursor=pointer]:
+                  - img [ref=e158]
+          - iframe [ref=e162]:
+            - generic [active] [ref=f5e1]:
+              - link "Skip to main content" [ref=f5e2] [cursor=pointer]:
+                - /url: "#main-content"
+              - generic [ref=f5e4]:
+                - paragraph [ref=f5e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+                - button "Dismiss announcement" [ref=f5e6]:
+                  - img [ref=f5e7]
+              - banner [ref=f5e9]:
+                - generic [ref=f5e10]:
+                  - button "Open navigation menu" [ref=f5e11]:
+                    - img [ref=f5e12]
+                  - link "Acme Fashion" [ref=f5e14] [cursor=pointer]:
+                    - /url: http://acme-fashion.test
+                  - generic [ref=f5e15]:
+                    - button "Search" [ref=f5e16]:
+                      - img [ref=f5e17]
+                    - button "Open cart" [ref=f5e19]:
+                      - img [ref=f5e20]
+                      - generic [ref=f5e22]: 0 items in cart
+              - main [ref=f5e23]:
+                - generic [ref=f5e24]:
+                  - generic [ref=f5e27]:
+                    - heading "Welcome to Acme Fashion" [level=1] [ref=f5e28]
+                    - paragraph [ref=f5e29]: Discover our curated collection of modern essentials
+                    - link "Shop New Arrivals" [ref=f5e30] [cursor=pointer]:
+                      - /url: /collections/new-arrivals
+                  - region "Shop by collection" [ref=f5e31]:
+                    - heading "Shop by collection" [level=2] [ref=f5e32]
+                    - generic [ref=f5e33]:
+                      - link "New Arrivals Shop now →" [ref=f5e34] [cursor=pointer]:
+                        - /url: http://acme-fashion.test/collections/new-arrivals
+                        - generic [ref=f5e37]:
+                          - heading "New Arrivals" [level=3] [ref=f5e38]
+                          - generic [ref=f5e39]: Shop now →
+                      - link "T-Shirts Shop now →" [ref=f5e40] [cursor=pointer]:
+                        - /url: http://acme-fashion.test/collections/t-shirts
+                        - generic [ref=f5e43]:
+                          - heading "T-Shirts" [level=3] [ref=f5e44]
+                          - generic [ref=f5e45]: Shop now →
+                      - link "Sale Shop now →" [ref=f5e46] [cursor=pointer]:
+                        - /url: http://acme-fashion.test/collections/sale
+                        - generic [ref=f5e49]:
+                          - heading "Sale" [level=3] [ref=f5e50]
+                          - generic [ref=f5e51]: Shop now →
+                  - region "Featured products" [ref=f5e52]:
+                    - heading "Featured products" [level=2] [ref=f5e53]
+                    - generic [ref=f5e54]:
+                      - article [ref=f5e55]:
+                        - img [ref=f5e58]
+                        - generic [ref=f5e60]:
+                          - heading "Classic Cotton T-Shirt" [level=3] [ref=f5e61]:
+                            - link "Classic Cotton T-Shirt" [ref=f5e62] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+                          - generic [ref=f5e64]: 24.99 EUR
+                          - generic [ref=f5e65]: Choose options
+                      - article [ref=f5e66]:
+                        - generic [ref=f5e67]:
+                          - img [ref=f5e69]
+                          - generic "On sale" [ref=f5e72]: Sale
+                        - generic [ref=f5e73]:
+                          - heading "Premium Slim Fit Jeans" [level=3] [ref=f5e74]:
+                            - link "Premium Slim Fit Jeans" [ref=f5e75] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+                          - generic [ref=f5e76]:
+                            - generic [ref=f5e77]: 79.99 EUR
+                            - generic [ref=f5e78]:
+                              - generic [ref=f5e79]: "Original price:"
+                              - text: 99.99 EUR
+                          - generic [ref=f5e80]: Choose options
+                      - article [ref=f5e81]:
+                        - img [ref=f5e84]
+                        - generic [ref=f5e86]:
+                          - heading "Organic Hoodie" [level=3] [ref=f5e87]:
+                            - link "Organic Hoodie" [ref=f5e88] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/organic-hoodie
+                          - generic [ref=f5e90]: 59.99 EUR
+                          - generic [ref=f5e91]: Choose options
+                      - article [ref=f5e92]:
+                        - img [ref=f5e95]
+                        - generic [ref=f5e97]:
+                          - heading "Running Sneakers" [level=3] [ref=f5e98]:
+                            - link "Running Sneakers" [ref=f5e99] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/running-sneakers
+                          - generic [ref=f5e101]: 119.99 EUR
+                          - generic [ref=f5e102]: Choose options
+                      - article [ref=f5e103]:
+                        - img [ref=f5e106]
+                        - generic [ref=f5e108]:
+                          - heading "Chino Shorts" [level=3] [ref=f5e109]:
+                            - link "Chino Shorts" [ref=f5e110] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/chino-shorts
+                          - generic [ref=f5e112]: 39.99 EUR
+                          - generic [ref=f5e113]: Choose options
+                      - article [ref=f5e114]:
+                        - img [ref=f5e117]
+                        - generic [ref=f5e119]:
+                          - heading "Bucket Hat" [level=3] [ref=f5e120]:
+                            - link "Bucket Hat" [ref=f5e121] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/bucket-hat
+                          - generic [ref=f5e123]: 24.99 EUR
+                          - generic [ref=f5e124]: Choose options
+                      - article [ref=f5e125]:
+                        - img [ref=f5e128]
+                        - generic [ref=f5e130]:
+                          - heading "Cashmere Overcoat" [level=3] [ref=f5e131]:
+                            - link "Cashmere Overcoat" [ref=f5e132] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/cashmere-overcoat
+                          - generic [ref=f5e134]: 499.99 EUR
+                          - generic [ref=f5e135]: Choose options
+                  - region "Stay in the loop" [ref=f5e136]:
+                    - generic [ref=f5e137]:
+                      - heading "Stay in the loop" [level=2] [ref=f5e138]
+                      - paragraph [ref=f5e139]: Subscribe for exclusive offers and updates.
+                      - generic [ref=f5e141]:
+                        - generic [ref=f5e142]: Email address
+                        - textbox "Email address" [ref=f5e143]:
+                          - /placeholder: Enter your email
+                        - button "Subscribe" [ref=f5e144]
+              - contentinfo [ref=f5e145]:
+                - generic [ref=f5e146]:
+                  - generic [ref=f5e147]:
+                    - generic [ref=f5e148]:
+                      - heading "Shop" [level=2] [ref=f5e149]
+                      - list [ref=f5e150]:
+                        - listitem [ref=f5e151]:
+                          - link "All collections" [ref=f5e152] [cursor=pointer]:
+                            - /url: http://acme-fashion.test/collections
+                        - listitem [ref=f5e153]:
+                          - link "Home" [ref=f5e154] [cursor=pointer]:
+                            - /url: /
+                        - listitem [ref=f5e155]:
+                          - link "New Arrivals" [ref=f5e156] [cursor=pointer]:
+                            - /url: /collections/new-arrivals
+                        - listitem [ref=f5e157]:
+                          - link "T-Shirts" [ref=f5e158] [cursor=pointer]:
+                            - /url: /collections/t-shirts
+                        - listitem [ref=f5e159]:
+                          - link "Pants & Jeans" [ref=f5e160] [cursor=pointer]:
+                            - /url: /collections/pants-jeans
+                        - listitem [ref=f5e161]:
+                          - link "Sale" [ref=f5e162] [cursor=pointer]:
+                            - /url: /collections/sale
+                    - generic [ref=f5e163]:
+                      - heading "Information" [level=2] [ref=f5e164]
+                      - list [ref=f5e165]:
+                        - listitem [ref=f5e166]:
+                          - link "About Us" [ref=f5e167] [cursor=pointer]:
+                            - /url: /pages/about
+                        - listitem [ref=f5e168]:
+                          - link "FAQ" [ref=f5e169] [cursor=pointer]:
+                            - /url: /pages/faq
+                        - listitem [ref=f5e170]:
+                          - link "Shipping & Returns" [ref=f5e171] [cursor=pointer]:
+                            - /url: /pages/shipping-returns
+                        - listitem [ref=f5e172]:
+                          - link "Privacy Policy" [ref=f5e173] [cursor=pointer]:
+                            - /url: /pages/privacy-policy
+                        - listitem [ref=f5e174]:
+                          - link "Terms of Service" [ref=f5e175] [cursor=pointer]:
+                            - /url: /pages/terms
+                    - generic [ref=f5e176]:
+                      - heading "Acme Fashion" [level=2] [ref=f5e177]
+                      - paragraph [ref=f5e178]: 2025 Acme Fashion. All rights reserved.
+                  - generic [ref=f5e179]:
+                    - paragraph [ref=f5e180]: © 2026 Acme Fashion. All rights reserved.
+                    - list "Accepted payment methods" [ref=f5e181]:
+                      - listitem [ref=f5e182]: Visa
+                      - listitem [ref=f5e183]: Mastercard
+                      - listitem [ref=f5e184]: Amex
+                      - listitem [ref=f5e185]: PayPal
+          - generic [ref=e163]:
+            - generic [ref=e164]: Colors & typography settings
+            - generic [ref=e165]:
+              - generic [ref=e167]:
+                - generic [ref=e168]: Primary color
+                - textbox "Primary color" [ref=e169] [cursor=pointer]: "#1a1a2e"
+              - generic [ref=e171]:
+                - generic [ref=e172]: Secondary color
+                - textbox "Secondary color" [ref=e173] [cursor=pointer]: "#e94560"
+              - generic [ref=e175]:
+                - generic [ref=e176]: Font family
+                - combobox "Font family" [ref=e177]:
+                  - option "Instrument Sans"
+                  - option "Inter" [selected]
+                  - option "Georgia"
+                  - option "Menlo"
+              - generic [ref=e179]:
+                - generic [ref=e180]: Dark mode
+                - combobox "Dark mode" [ref=e181]:
+                  - option "Follow system" [selected]
+                  - option "Light"
+                  - option "Dark"

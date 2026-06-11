@@ -1,0 +1,351 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e3]:
+    - link "Shop" [ref=e5] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e8]
+      - generic [ref=e10]: Shop
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e13]
+        - text: Dashboard
+      - paragraph [ref=e15]: Products
+      - link "Products" [ref=e16] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e17]
+        - text: Products
+      - link "Collections" [ref=e19] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e20]
+        - text: Collections
+      - link "Inventory" [ref=e22] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e23]
+        - text: Inventory
+      - paragraph [ref=e25]: Orders
+      - link "Orders" [ref=e26] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e27]
+        - text: Orders
+      - paragraph [ref=e29]: Customers
+      - link "Customers" [ref=e30] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e31]
+        - text: Customers
+      - paragraph [ref=e33]: Discounts
+      - link "Discounts" [ref=e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e35]
+        - text: Discounts
+      - paragraph [ref=e38]: Content
+      - link "Pages" [ref=e39] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e40]
+        - text: Pages
+      - link "Navigation" [ref=e42] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e43]
+        - text: Navigation
+      - link "Themes" [ref=e45] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e46]
+        - text: Themes
+      - link "Analytics" [ref=e48] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e49]
+        - text: Analytics
+      - link "Settings" [ref=e52] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e53]
+        - text: Settings
+      - link "Apps" [ref=e56] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e57]
+        - text: Apps
+      - link "Developers" [ref=e59] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e60]
+        - text: Developers
+  - generic [ref=e62]:
+    - banner [ref=e63]:
+      - button "Acme Fashion" [ref=e65]:
+        - generic [ref=e66]: Acme Fashion
+        - img [ref=e67]
+      - button "AU Admin User" [ref=e70]:
+        - generic [ref=e73]: AU
+        - generic [ref=e74]: Admin User
+        - img [ref=e76]
+    - main [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - link "Home" [ref=e82] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e83]
+          - generic [ref=e86]: Products
+        - generic [ref=e87]:
+          - heading "Products" [level=1] [ref=e88]
+          - link "Add product" [ref=e89] [cursor=pointer]:
+            - /url: http://shop.test/admin/products/create
+            - img [ref=e90]
+            - generic [ref=e92]: Add product
+        - tablist [ref=e93]:
+          - tab "All" [selected] [ref=e94] [cursor=pointer]
+          - tab "Draft" [ref=e95] [cursor=pointer]
+          - tab "Active" [ref=e96] [cursor=pointer]
+          - tab "Archived" [ref=e97] [cursor=pointer]
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic:
+              - img
+            - textbox "Search products..." [ref=e100]
+          - combobox [ref=e102]:
+            - 'option "Type: All" [selected]'
+            - option "Accessories"
+            - option "Gift Cards"
+            - option "Hoodies"
+            - option "Jackets"
+            - option "Pants"
+            - option "Shoes"
+            - option "T-Shirts"
+        - generic [ref=e103]:
+          - table [ref=e105]:
+            - rowgroup [ref=e106]:
+              - row "Select all Image Title Status Inventory Type Vendor Updated" [ref=e107]:
+                - columnheader "Select all" [ref=e108]:
+                  - checkbox "Select all" [ref=e109]
+                - columnheader "Image" [ref=e111]
+                - columnheader "Title" [ref=e112]:
+                  - button "Title" [ref=e113] [cursor=pointer]
+                - columnheader "Status" [ref=e114]
+                - columnheader "Inventory" [ref=e115]:
+                  - button "Inventory" [ref=e116] [cursor=pointer]
+                - columnheader "Type" [ref=e117]
+                - columnheader "Vendor" [ref=e118]
+                - columnheader "Updated" [ref=e119]:
+                  - button "Updated" [ref=e120] [cursor=pointer]:
+                    - text: Updated
+                    - img [ref=e121]
+            - rowgroup [ref=e123]:
+              - row "Select Leather Belt Leather Belt Active 99 Accessories Acme Accessories 11m ago" [ref=e124]:
+                - cell "Select Leather Belt" [ref=e125]:
+                  - checkbox "Select Leather Belt" [ref=e126]
+                - cell [ref=e128]:
+                  - img [ref=e130]
+                - cell "Leather Belt" [ref=e132]:
+                  - link "Leather Belt" [ref=e133] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/4/edit
+                - cell "Active" [ref=e134]:
+                  - generic [ref=e135]: Active
+                - cell "99" [ref=e136]
+                - cell "Accessories" [ref=e137]
+                - cell "Acme Accessories" [ref=e138]
+                - cell "11m ago" [ref=e139]
+              - row "Select Wool Scarf Wool Scarf Active 90 Accessories Acme Accessories 11m ago" [ref=e140]:
+                - cell "Select Wool Scarf" [ref=e141]:
+                  - checkbox "Select Wool Scarf" [ref=e142]
+                - cell [ref=e144]:
+                  - img [ref=e146]
+                - cell "Wool Scarf" [ref=e148]:
+                  - link "Wool Scarf" [ref=e149] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/12/edit
+                - cell "Active" [ref=e150]:
+                  - generic [ref=e151]: Active
+                - cell "90" [ref=e152]
+                - cell "Accessories" [ref=e153]
+                - cell "Acme Accessories" [ref=e154]
+                - cell "11m ago" [ref=e155]
+              - row "Select Canvas Tote Bag Canvas Tote Bag Active 80 Accessories Acme Accessories 11m ago" [ref=e156]:
+                - cell "Select Canvas Tote Bag" [ref=e157]:
+                  - checkbox "Select Canvas Tote Bag" [ref=e158]
+                - cell [ref=e160]:
+                  - img [ref=e162]
+                - cell "Canvas Tote Bag" [ref=e164]:
+                  - link "Canvas Tote Bag" [ref=e165] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/13/edit
+                - cell "Active" [ref=e166]:
+                  - generic [ref=e167]: Active
+                - cell "80" [ref=e168]
+                - cell "Accessories" [ref=e169]
+                - cell "Acme Accessories" [ref=e170]
+                - cell "11m ago" [ref=e171]
+              - row "Select Bucket Hat Bucket Hat Active 132 Accessories Acme Accessories 11m ago" [ref=e172]:
+                - cell "Select Bucket Hat" [ref=e173]:
+                  - checkbox "Select Bucket Hat" [ref=e174]
+                - cell [ref=e176]:
+                  - img [ref=e178]
+                - cell "Bucket Hat" [ref=e180]:
+                  - link "Bucket Hat" [ref=e181] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/14/edit
+                - cell "Active" [ref=e182]:
+                  - generic [ref=e183]: Active
+                - cell "132" [ref=e184]
+                - cell "Accessories" [ref=e185]
+                - cell "Acme Accessories" [ref=e186]
+                - cell "11m ago" [ref=e187]
+              - row "Select Gift Card Gift Card Active 29,997 Gift Cards Acme Fashion 11m ago" [ref=e188]:
+                - cell "Select Gift Card" [ref=e189]:
+                  - checkbox "Select Gift Card" [ref=e190]
+                - cell [ref=e192]:
+                  - img [ref=e194]
+                - cell "Gift Card" [ref=e196]:
+                  - link "Gift Card" [ref=e197] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/19/edit
+                - cell "Active" [ref=e198]:
+                  - generic [ref=e199]: Active
+                - cell "29,997" [ref=e200]
+                - cell "Gift Cards" [ref=e201]
+                - cell "Acme Fashion" [ref=e202]
+                - cell "11m ago" [ref=e203]
+              - row "Select Organic Hoodie Organic Hoodie Active 80 Hoodies Acme Basics 11m ago" [ref=e204]:
+                - cell "Select Organic Hoodie" [ref=e205]:
+                  - checkbox "Select Organic Hoodie" [ref=e206]
+                - cell [ref=e208]:
+                  - img [ref=e210]
+                - cell "Organic Hoodie" [ref=e212]:
+                  - link "Organic Hoodie" [ref=e213] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/3/edit
+                - cell "Active" [ref=e214]:
+                  - generic [ref=e215]: Active
+                - cell "80" [ref=e216]
+                - cell "Hoodies" [ref=e217]
+                - cell "Acme Basics" [ref=e218]
+                - cell "11m ago" [ref=e219]
+              - row "Select Unreleased Winter Jacket Unreleased Winter Jacket Draft 0 Jackets Acme Outerwear 11m ago" [ref=e220]:
+                - cell "Select Unreleased Winter Jacket" [ref=e221]:
+                  - checkbox "Select Unreleased Winter Jacket" [ref=e222]
+                - cell [ref=e224]:
+                  - img [ref=e226]
+                - cell "Unreleased Winter Jacket" [ref=e228]:
+                  - link "Unreleased Winter Jacket" [ref=e229] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/15/edit
+                - cell "Draft" [ref=e230]:
+                  - generic [ref=e231]: Draft
+                - cell "0" [ref=e232]
+                - cell "Jackets" [ref=e233]
+                - cell "Acme Outerwear" [ref=e234]
+                - cell "11m ago" [ref=e235]
+              - row "Select Discontinued Raincoat Discontinued Raincoat Archived 6 Jackets Acme Outerwear 11m ago" [ref=e236]:
+                - cell "Select Discontinued Raincoat" [ref=e237]:
+                  - checkbox "Select Discontinued Raincoat" [ref=e238]
+                - cell [ref=e240]:
+                  - img [ref=e242]
+                - cell "Discontinued Raincoat" [ref=e244]:
+                  - link "Discontinued Raincoat" [ref=e245] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/16/edit
+                - cell "Archived" [ref=e246]:
+                  - generic [ref=e247]: Archived
+                - cell "6" [ref=e248]
+                - cell "Jackets" [ref=e249]
+                - cell "Acme Outerwear" [ref=e250]
+                - cell "11m ago" [ref=e251]
+              - row "Select Backorder Denim Jacket Backorder Denim Jacket Active 0 Jackets Acme Denim 11m ago" [ref=e252]:
+                - cell "Select Backorder Denim Jacket" [ref=e253]:
+                  - checkbox "Select Backorder Denim Jacket" [ref=e254]
+                - cell [ref=e256]:
+                  - img [ref=e258]
+                - cell "Backorder Denim Jacket" [ref=e260]:
+                  - link "Backorder Denim Jacket" [ref=e261] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/18/edit
+                - cell "Active" [ref=e262]:
+                  - generic [ref=e263]: Active
+                - cell "0" [ref=e264]
+                - cell "Jackets" [ref=e265]
+                - cell "Acme Denim" [ref=e266]
+                - cell "11m ago" [ref=e267]
+              - row "Select Cashmere Overcoat Cashmere Overcoat Active 18 Jackets Acme Premium 11m ago" [ref=e268]:
+                - cell "Select Cashmere Overcoat" [ref=e269]:
+                  - checkbox "Select Cashmere Overcoat" [ref=e270]
+                - cell [ref=e272]:
+                  - img [ref=e274]
+                - cell "Cashmere Overcoat" [ref=e276]:
+                  - link "Cashmere Overcoat" [ref=e277] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/20/edit
+                - cell "Active" [ref=e278]:
+                  - generic [ref=e279]: Active
+                - cell "18" [ref=e280]
+                - cell "Jackets" [ref=e281]
+                - cell "Acme Premium" [ref=e282]
+                - cell "11m ago" [ref=e283]
+              - row "Select Premium Slim Fit Jeans Premium Slim Fit Jeans Active 80 Pants Acme Denim 11m ago" [ref=e284]:
+                - cell "Select Premium Slim Fit Jeans" [ref=e285]:
+                  - checkbox "Select Premium Slim Fit Jeans" [ref=e286]
+                - cell [ref=e288]:
+                  - img [ref=e290]
+                - cell "Premium Slim Fit Jeans" [ref=e292]:
+                  - link "Premium Slim Fit Jeans" [ref=e293] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/2/edit
+                - cell "Active" [ref=e294]:
+                  - generic [ref=e295]: Active
+                - cell "80" [ref=e296]
+                - cell "Pants" [ref=e297]
+                - cell "Acme Denim" [ref=e298]
+                - cell "11m ago" [ref=e299]
+              - row "Select Cargo Pants Cargo Pants Active 168 Pants Acme Workwear 11m ago" [ref=e300]:
+                - cell "Select Cargo Pants" [ref=e301]:
+                  - checkbox "Select Cargo Pants" [ref=e302]
+                - cell [ref=e304]:
+                  - img [ref=e306]
+                - cell "Cargo Pants" [ref=e308]:
+                  - link "Cargo Pants" [ref=e309] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/9/edit
+                - cell "Active" [ref=e310]:
+                  - generic [ref=e311]: Active
+                - cell "168" [ref=e312]
+                - cell "Pants" [ref=e313]
+                - cell "Acme Workwear" [ref=e314]
+                - cell "11m ago" [ref=e315]
+              - row "Select Chino Shorts Chino Shorts Active 128 Pants Acme Basics 11m ago" [ref=e316]:
+                - cell "Select Chino Shorts" [ref=e317]:
+                  - checkbox "Select Chino Shorts" [ref=e318]
+                - cell [ref=e320]:
+                  - img [ref=e322]
+                - cell "Chino Shorts" [ref=e324]:
+                  - link "Chino Shorts" [ref=e325] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/10/edit
+                - cell "Active" [ref=e326]:
+                  - generic [ref=e327]: Active
+                - cell "128" [ref=e328]
+                - cell "Pants" [ref=e329]
+                - cell "Acme Basics" [ref=e330]
+                - cell "11m ago" [ref=e331]
+              - row "Select Wide Leg Trousers Wide Leg Trousers Active 21 Pants Acme Denim 11m ago" [ref=e332]:
+                - cell "Select Wide Leg Trousers" [ref=e333]:
+                  - checkbox "Select Wide Leg Trousers" [ref=e334]
+                - cell [ref=e336]:
+                  - img [ref=e338]
+                - cell "Wide Leg Trousers" [ref=e340]:
+                  - link "Wide Leg Trousers" [ref=e341] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/11/edit
+                - cell "Active" [ref=e342]:
+                  - generic [ref=e343]: Active
+                - cell "21" [ref=e344]
+                - cell "Pants" [ref=e345]
+                - cell "Acme Denim" [ref=e346]
+                - cell "11m ago" [ref=e347]
+              - row "Select Running Sneakers Running Sneakers Active 70 Shoes Acme Sport 11m ago" [ref=e348]:
+                - cell "Select Running Sneakers" [ref=e349]:
+                  - checkbox "Select Running Sneakers" [ref=e350]
+                - cell [ref=e352]:
+                  - img [ref=e354]
+                - cell "Running Sneakers" [ref=e356]:
+                  - link "Running Sneakers" [ref=e357] [cursor=pointer]:
+                    - /url: http://shop.test/admin/products/5/edit
+                - cell "Active" [ref=e358]:
+                  - generic [ref=e359]: Active
+                - cell "70" [ref=e360]
+                - cell "Shoes" [ref=e361]
+                - cell "Acme Sport" [ref=e362]
+                - cell "11m ago" [ref=e363]
+          - navigation "Pagination Navigation" [ref=e366]:
+            - generic [ref=e367]:
+              - paragraph [ref=e369]: Showing 1 to 15 of 20 results
+              - generic [ref=e371]:
+                - generic "&laquo; Previous" [ref=e373]:
+                  - img [ref=e375]
+                - generic [ref=e379]: "1"
+                - button "Go to page 2" [ref=e381]: "2"
+                - button "Next &raquo;" [ref=e383]:
+                  - img [ref=e384]

@@ -1,0 +1,190 @@
+- generic [active] [ref=e249]:
+  - link "Skip to main content" [ref=e250] [cursor=pointer]:
+    - /url: "#main-content"
+  - complementary "Admin navigation" [ref=e251]:
+    - link "Shop" [ref=e253] [cursor=pointer]:
+      - /url: http://shop.test/admin
+      - img [ref=e256]
+      - generic [ref=e258]: Shop
+    - navigation [ref=e259]:
+      - link "Dashboard" [ref=e260] [cursor=pointer]:
+        - /url: http://shop.test/admin
+        - img [ref=e261]
+        - text: Dashboard
+      - paragraph [ref=e263]: Products
+      - link "Products" [ref=e264] [cursor=pointer]:
+        - /url: http://shop.test/admin/products
+        - img [ref=e265]
+        - text: Products
+      - link "Collections" [ref=e267] [cursor=pointer]:
+        - /url: http://shop.test/admin/collections
+        - img [ref=e268]
+        - text: Collections
+      - link "Inventory" [ref=e270] [cursor=pointer]:
+        - /url: http://shop.test/admin/inventory
+        - img [ref=e271]
+        - text: Inventory
+      - paragraph [ref=e273]: Orders
+      - link "Orders" [ref=e274] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+        - img [ref=e275]
+        - text: Orders
+      - paragraph [ref=e277]: Customers
+      - link "Customers" [ref=e278] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+        - img [ref=e279]
+        - text: Customers
+      - paragraph [ref=e281]: Discounts
+      - link "Discounts" [ref=e282] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+        - img [ref=e283]
+        - text: Discounts
+      - paragraph [ref=e286]: Content
+      - link "Pages" [ref=e287] [cursor=pointer]:
+        - /url: http://shop.test/admin/pages
+        - img [ref=e288]
+        - text: Pages
+      - link "Navigation" [ref=e290] [cursor=pointer]:
+        - /url: http://shop.test/admin/navigation
+        - img [ref=e291]
+        - text: Navigation
+      - link "Themes" [ref=e293] [cursor=pointer]:
+        - /url: http://shop.test/admin/themes
+        - img [ref=e294]
+        - text: Themes
+      - link "Analytics" [ref=e296] [cursor=pointer]:
+        - /url: http://shop.test/admin/analytics
+        - img [ref=e297]
+        - text: Analytics
+      - link "Settings" [ref=e300] [cursor=pointer]:
+        - /url: http://shop.test/admin/settings
+        - img [ref=e301]
+        - text: Settings
+      - link "Apps" [ref=e304] [cursor=pointer]:
+        - /url: http://shop.test/admin/apps
+        - img [ref=e305]
+        - text: Apps
+      - link "Developers" [ref=e307] [cursor=pointer]:
+        - /url: http://shop.test/admin/developers
+        - img [ref=e308]
+        - text: Developers
+  - generic [ref=e310]:
+    - banner [ref=e311]:
+      - button "Acme Fashion" [ref=e313]:
+        - generic [ref=e314]: Acme Fashion
+        - img [ref=e315]
+      - button "AU Admin User" [ref=e318]:
+        - generic [ref=e321]: AU
+        - generic [ref=e322]: Admin User
+        - img [ref=e324]
+    - main [ref=e326]:
+      - generic [ref=e327]:
+        - generic [ref=e328]:
+          - generic [ref=e329]:
+            - link "Home" [ref=e330] [cursor=pointer]:
+              - /url: http://shop.test/admin
+            - img [ref=e331]
+          - generic [ref=e333]:
+            - link "Orders" [ref=e334] [cursor=pointer]:
+              - /url: http://shop.test/admin/orders
+            - img [ref=e335]
+          - generic [ref=e338]: "#1016"
+        - generic [ref=e339]:
+          - generic [ref=e340]:
+            - generic [ref=e341]:
+              - generic [ref=e342]:
+                - heading "#1016" [level=1] [ref=e343]
+                - generic [ref=e344]: Paid
+                - generic [ref=e345]: Fulfilled
+              - paragraph [ref=e346]: Jun 10, 2026 8:39 AM
+            - button "Refund" [ref=e351]
+            - generic [ref=e354]:
+              - generic [ref=e355]: Timeline
+              - list [ref=e356]:
+                - listitem [ref=e357]:
+                  - paragraph [ref=e359]: Order placed
+                  - paragraph [ref=e360]: Jun 10, 2026 8:39 AM
+                - listitem [ref=e361]:
+                  - paragraph [ref=e363]: Payment received
+                  - paragraph [ref=e364]: Paid via credit card
+                  - paragraph [ref=e365]: Jun 10, 2026 8:39 AM
+                - listitem [ref=e477]:
+                  - paragraph [ref=e479]: Fulfillment created
+                  - paragraph [ref=e480]: "Tracking: DHL JD014600003828332174"
+                  - paragraph [ref=e481]: Jun 10, 2026 8:42 AM
+            - generic [ref=e482]:
+              - generic [ref=e483]:
+                - generic [ref=e484]:
+                  - generic [ref=e485]: "Fulfillment #8"
+                  - generic [ref=e486]: Pending
+                - button "Mark as shipped" [ref=e488]:
+                  - img [ref=e490]
+                  - generic [ref=e493]: Mark as shipped
+              - paragraph [ref=e494]: DHL JD014600003828332174
+              - list [ref=e495]:
+                - listitem [ref=e496]: 2 x Classic Cotton T-Shirt (M / Navy)
+            - generic [ref=e366]:
+              - generic [ref=e368]: Order lines
+              - table [ref=e370]:
+                - rowgroup [ref=e371]:
+                  - row "Image Product Fulfillment Qty Unit price Total" [ref=e372]:
+                    - columnheader "Image" [ref=e373]
+                    - columnheader "Product" [ref=e374]
+                    - columnheader "Fulfillment" [ref=e375]
+                    - columnheader "Qty" [ref=e376]
+                    - columnheader "Unit price" [ref=e377]
+                    - columnheader "Total" [ref=e378]
+                - rowgroup [ref=e379]:
+                  - 'row "Classic Cotton T-Shirt (M / Navy) SKU: ACME-CTSH-M-NAVY Fulfilled 2 24.99 EUR 44.99 EUR" [ref=e497]':
+                    - cell [ref=e381]:
+                      - img [ref=e383]
+                    - 'cell "Classic Cotton T-Shirt (M / Navy) SKU: ACME-CTSH-M-NAVY" [ref=e385]':
+                      - paragraph [ref=e386]: Classic Cotton T-Shirt (M / Navy)
+                      - paragraph [ref=e387]: "SKU: ACME-CTSH-M-NAVY"
+                    - cell "Fulfilled" [ref=e498]:
+                      - generic [ref=e389]: Fulfilled
+                    - cell "2" [ref=e390]
+                    - cell "24.99 EUR" [ref=e391]
+                    - cell "44.99 EUR" [ref=e392]
+              - generic [ref=e394]:
+                - generic [ref=e395]:
+                  - term [ref=e396]: Subtotal
+                  - definition [ref=e397]: 49.98 EUR
+                - generic [ref=e398]:
+                  - term [ref=e399]: Discount
+                  - definition [ref=e400]: "-4.99 EUR"
+                - generic [ref=e401]:
+                  - term [ref=e402]: Shipping
+                  - definition [ref=e403]: 4.99 EUR
+                - generic [ref=e404]:
+                  - term [ref=e405]: Tax
+                  - definition [ref=e406]: 7.98 EUR
+                - generic [ref=e407]:
+                  - term [ref=e408]: Total
+                  - definition [ref=e409]: 49.98 EUR
+            - generic [ref=e410]:
+              - generic [ref=e411]: Payment details
+              - generic [ref=e413]:
+                - generic [ref=e414]:
+                  - paragraph [ref=e415]: Credit Card
+                  - paragraph [ref=e416]: "49.98 EUR - Ref: mock_kfkqps3gwqkjvtny"
+                - generic [ref=e417]: Captured
+          - generic [ref=e418]:
+            - generic [ref=e419]:
+              - generic [ref=e420]: Customer
+              - paragraph [ref=e421]: Guest
+              - paragraph [ref=e422]: erika.musterfrau@example.com
+            - generic [ref=e423]:
+              - generic [ref=e424]: Shipping address
+              - generic [ref=e425]:
+                - paragraph [ref=e426]: Erika Musterfrau
+                - paragraph [ref=e427]: Musterstrasse 12
+                - paragraph [ref=e428]: 10115 Berlin
+                - paragraph [ref=e429]: Germany
+            - generic [ref=e430]:
+              - generic [ref=e431]: Billing address
+              - generic [ref=e432]:
+                - paragraph [ref=e433]: Erika Musterfrau
+                - paragraph [ref=e434]: Musterstrasse 12
+                - paragraph [ref=e435]: 10115 Berlin
+                - paragraph [ref=e436]: Germany

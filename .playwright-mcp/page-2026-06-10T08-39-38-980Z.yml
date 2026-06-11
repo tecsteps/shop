@@ -1,0 +1,171 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: "2"
+          - generic [ref=e35]: 2 items in cart
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - heading "Checkout" [level=1] [ref=e38]
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - region "1. Contact information" [ref=e41]:
+            - heading "1. Contact information" [level=2] [ref=e43]
+            - paragraph [ref=e44]: erika.musterfrau@example.com
+          - region "2. Shipping address" [ref=e45]:
+            - heading "2. Shipping address" [level=2] [ref=e47]
+            - paragraph [ref=e48]: Erika Musterfrau, Musterstrasse 12, 10115 Berlin, DE
+          - region "3. Shipping method" [ref=e49]:
+            - heading "3. Shipping method" [level=2] [ref=e51]
+            - paragraph [ref=e52]: Standard Shipping
+          - region "4. Payment" [ref=e53]:
+            - heading "4. Payment" [level=2] [ref=e55]
+            - generic [ref=e56]:
+              - group "Select a payment method" [ref=e57]:
+                - generic [ref=e58]: Select a payment method
+                - generic [ref=e59]:
+                  - generic [ref=e60] [cursor=pointer]:
+                    - radio "Credit Card" [checked] [ref=e61]
+                    - generic [ref=e62]: Credit Card
+                  - generic [ref=e63] [cursor=pointer]:
+                    - radio "PayPal" [ref=e64]
+                    - generic [ref=e65]: PayPal
+                  - generic [ref=e66] [cursor=pointer]:
+                    - radio "Bank Transfer" [ref=e67]
+                    - generic [ref=e68]: Bank Transfer
+              - generic [ref=e69]:
+                - generic [ref=e70]:
+                  - generic [ref=e71]: Card number *
+                  - textbox "Card number" [ref=e72]:
+                    - /placeholder: 4242 4242 4242 4242
+                - generic [ref=e73]:
+                  - generic [ref=e74]: Cardholder name *
+                  - textbox "Cardholder name" [ref=e75]
+                - generic [ref=e76]:
+                  - generic [ref=e77]:
+                    - generic [ref=e78]: Expiry *
+                    - textbox "Expiry" [ref=e79]:
+                      - /placeholder: MM/YY
+                  - generic [ref=e80]:
+                    - generic [ref=e81]: CVC *
+                    - textbox "CVC" [ref=e82]:
+                      - /placeholder: "123"
+              - button "Pay now - 49.98 EUR" [ref=e83]:
+                - generic [ref=e84]: Pay now - 49.98 EUR
+        - generic [ref=e85]:
+          - complementary "Order summary" [ref=e86]:
+            - heading "Order Summary" [level=2] [ref=e87]
+            - list [ref=e88]:
+              - listitem [ref=e89]:
+                - generic [ref=e91]: "2"
+                - generic [ref=e92]:
+                  - paragraph [ref=e93]: Classic Cotton T-Shirt
+                  - paragraph [ref=e94]: M / Navy
+                - generic [ref=e96]: 49.98 EUR
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - term [ref=e99]: Subtotal
+                - definition [ref=e100]:
+                  - generic [ref=e102]: 49.98 EUR
+              - generic [ref=e103]:
+                - term [ref=e104]: Discount (WELCOME10)
+                - definition [ref=e105]: "-4.99 EUR"
+              - generic [ref=e106]:
+                - term [ref=e107]: Shipping
+                - definition [ref=e108]:
+                  - generic [ref=e110]: 4.99 EUR
+              - generic [ref=e111]:
+                - term [ref=e112]: Tax
+                - definition [ref=e113]:
+                  - generic [ref=e115]: 7.98 EUR
+              - generic [ref=e116]:
+                - term [ref=e117]: Total
+                - definition [ref=e118]:
+                  - generic [ref=e120]: 49.98 EUR
+          - generic [ref=e122]:
+            - generic [ref=e123]: WELCOME10
+            - button "Remove" [ref=e124]
+  - contentinfo [ref=e125]:
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - heading "Shop" [level=2] [ref=e129]
+          - list [ref=e130]:
+            - listitem [ref=e131]:
+              - link "All collections" [ref=e132] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e133]:
+              - link "Home" [ref=e134] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e135]:
+              - link "New Arrivals" [ref=e136] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e137]:
+              - link "T-Shirts" [ref=e138] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e139]:
+              - link "Pants & Jeans" [ref=e140] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e141]:
+              - link "Sale" [ref=e142] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e143]:
+          - heading "Information" [level=2] [ref=e144]
+          - list [ref=e145]:
+            - listitem [ref=e146]:
+              - link "About Us" [ref=e147] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e148]:
+              - link "FAQ" [ref=e149] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e150]:
+              - link "Shipping & Returns" [ref=e151] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e152]:
+              - link "Privacy Policy" [ref=e153] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e154]:
+              - link "Terms of Service" [ref=e155] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e156]:
+          - heading "Acme Fashion" [level=2] [ref=e157]
+          - paragraph [ref=e158]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e159]:
+        - paragraph [ref=e160]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e161]:
+          - listitem [ref=e162]: Visa
+          - listitem [ref=e163]: Mastercard
+          - listitem [ref=e164]: Amex
+          - listitem [ref=e165]: PayPal

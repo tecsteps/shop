@@ -1,0 +1,192 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e6]:
+      - img [ref=e7]
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Acme Fashion" [ref=e11] [cursor=pointer]:
+        - /url: http://shop.test
+      - navigation "Main navigation" [ref=e12]:
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Home" [ref=e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e16]:
+            - link "New Arrivals" [ref=e17] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=e18]:
+            - link "T-Shirts" [ref=e19] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=e20]:
+            - link "Pants & Jeans" [ref=e21] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=e22]:
+            - link "Sale" [ref=e23] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=e24]:
+        - button "Search" [ref=e25]:
+          - img [ref=e26]
+        - link "Log in" [ref=e28] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+          - img [ref=e29]
+        - button "Open cart" [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e34]: 0 items in cart
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - navigation "Breadcrumb" [ref=e37]:
+        - list [ref=e38]:
+          - listitem [ref=e39]:
+            - link "Home" [ref=e40] [cursor=pointer]:
+              - /url: http://shop.test
+            - img [ref=e41]
+          - listitem [ref=e43]:
+            - link "Collections" [ref=e44] [cursor=pointer]:
+              - /url: http://shop.test/collections
+            - img [ref=e45]
+          - listitem [ref=e47]:
+            - generic [ref=e48]: T-Shirts
+      - generic [ref=e49]:
+        - heading "T-Shirts" [level=1] [ref=e50]
+        - paragraph [ref=e52]: Premium cotton tees for every occasion.
+      - generic [ref=e53]:
+        - paragraph [ref=e54]: 4 products
+        - generic [ref=e55]:
+          - generic [ref=e56]: Sort by
+          - combobox "Sort by" [ref=e57]:
+            - option "Featured" [selected]
+            - 'option "Price: Low to High"'
+            - 'option "Price: High to Low"'
+            - option "Newest"
+      - generic [ref=e58]:
+        - complementary "Product filters" [ref=e59]:
+          - generic [ref=e60]:
+            - group "Availability" [ref=e61]:
+              - button "Availability" [expanded] [ref=e63]:
+                - text: Availability
+                - img [ref=e64]
+              - generic [ref=e67] [cursor=pointer]:
+                - checkbox "In stock" [ref=e68]
+                - text: In stock
+            - group "Price" [ref=e69]:
+              - button "Price" [expanded] [ref=e71]:
+                - text: Price
+                - img [ref=e72]
+              - generic [ref=e74]:
+                - generic [ref=e75]:
+                  - generic [ref=e76]: Minimum price
+                  - generic: €
+                  - spinbutton "Minimum price" [ref=e77]
+                - generic [ref=e78]: –
+                - generic [ref=e79]:
+                  - generic [ref=e80]: Maximum price
+                  - generic: €
+                  - spinbutton "Maximum price" [ref=e81]
+            - group "Product type" [ref=e82]:
+              - button "Product type" [expanded] [ref=e84]:
+                - text: Product type
+                - img [ref=e85]
+              - generic [ref=e88] [cursor=pointer]:
+                - checkbox "T-Shirts" [ref=e89]
+                - text: T-Shirts
+            - group "Vendor" [ref=e90]:
+              - button "Vendor" [expanded] [ref=e92]:
+                - text: Vendor
+                - img [ref=e93]
+              - generic [ref=e96] [cursor=pointer]:
+                - checkbox "Acme Basics" [ref=e97]
+                - text: Acme Basics
+        - generic [ref=e99]:
+          - article [ref=e100]:
+            - img [ref=e103]
+            - generic [ref=e105]:
+              - heading "Classic Cotton T-Shirt" [level=3] [ref=e106]:
+                - link "Classic Cotton T-Shirt" [ref=e107] [cursor=pointer]:
+                  - /url: http://shop.test/products/classic-cotton-t-shirt
+              - generic [ref=e109]: 24.99 EUR
+              - generic [ref=e110]: Choose options
+          - article [ref=e111]:
+            - img [ref=e114]
+            - generic [ref=e116]:
+              - heading "Graphic Print Tee" [level=3] [ref=e117]:
+                - link "Graphic Print Tee" [ref=e118] [cursor=pointer]:
+                  - /url: http://shop.test/products/graphic-print-tee
+              - generic [ref=e120]: 29.99 EUR
+              - generic [ref=e121]: Choose options
+          - article [ref=e122]:
+            - img [ref=e125]
+            - generic [ref=e127]:
+              - heading "V-Neck Linen Tee" [level=3] [ref=e128]:
+                - link "V-Neck Linen Tee" [ref=e129] [cursor=pointer]:
+                  - /url: http://shop.test/products/v-neck-linen-tee
+              - generic [ref=e131]: 34.99 EUR
+              - generic [ref=e132]: Choose options
+          - article [ref=e133]:
+            - generic [ref=e134]:
+              - img [ref=e136]
+              - generic "On sale" [ref=e139]: Sale
+            - generic [ref=e140]:
+              - heading "Striped Polo Shirt" [level=3] [ref=e141]:
+                - link "Striped Polo Shirt" [ref=e142] [cursor=pointer]:
+                  - /url: http://shop.test/products/striped-polo-shirt
+              - generic [ref=e143]:
+                - generic [ref=e144]: 27.99 EUR
+                - generic [ref=e145]:
+                  - generic [ref=e146]: "Original price:"
+                  - text: 39.99 EUR
+              - generic [ref=e147]: Choose options
+  - contentinfo [ref=e148]:
+    - generic [ref=e149]:
+      - generic [ref=e150]:
+        - generic [ref=e151]:
+          - heading "Shop" [level=2] [ref=e152]
+          - list [ref=e153]:
+            - listitem [ref=e154]:
+              - link "All collections" [ref=e155] [cursor=pointer]:
+                - /url: http://shop.test/collections
+            - listitem [ref=e156]:
+              - link "Home" [ref=e157] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e158]:
+              - link "New Arrivals" [ref=e159] [cursor=pointer]:
+                - /url: /collections/new-arrivals
+            - listitem [ref=e160]:
+              - link "T-Shirts" [ref=e161] [cursor=pointer]:
+                - /url: /collections/t-shirts
+            - listitem [ref=e162]:
+              - link "Pants & Jeans" [ref=e163] [cursor=pointer]:
+                - /url: /collections/pants-jeans
+            - listitem [ref=e164]:
+              - link "Sale" [ref=e165] [cursor=pointer]:
+                - /url: /collections/sale
+        - generic [ref=e166]:
+          - heading "Information" [level=2] [ref=e167]
+          - list [ref=e168]:
+            - listitem [ref=e169]:
+              - link "About Us" [ref=e170] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=e171]:
+              - link "FAQ" [ref=e172] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=e173]:
+              - link "Shipping & Returns" [ref=e174] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=e175]:
+              - link "Privacy Policy" [ref=e176] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=e177]:
+              - link "Terms of Service" [ref=e178] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=e179]:
+          - heading "Acme Fashion" [level=2] [ref=e180]
+          - paragraph [ref=e181]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=e182]:
+        - paragraph [ref=e183]: © 2026 Acme Fashion. All rights reserved.
+        - list "Accepted payment methods" [ref=e184]:
+          - listitem [ref=e185]: Visa
+          - listitem [ref=e186]: Mastercard
+          - listitem [ref=e187]: Amex
+          - listitem [ref=e188]: PayPal
