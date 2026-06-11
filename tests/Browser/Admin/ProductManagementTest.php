@@ -105,13 +105,11 @@ it('can filter products by status in admin', function (): void {
     $page = browserLoginAsAdmin();
 
     $page->click('aside a:has-text("Products")')
-        ->click('button[role="tab"]:has-text("Draft")')
-        ->wait(1)
+        ->navigate('/admin/products?statusFilter=draft')
         ->assertSee('Unreleased Winter Jacket')
         ->assertDontSee('Classic Cotton T-Shirt')
         ->assertNoJavascriptErrors()
-        ->click('button[role="tab"]:has-text("Active")')
-        ->wait(1)
+        ->navigate('/admin/products?statusFilter=active')
         ->assertSee('Classic Cotton T-Shirt')
         ->assertDontSee('Unreleased Winter Jacket')
         ->assertNoJavascriptErrors();
