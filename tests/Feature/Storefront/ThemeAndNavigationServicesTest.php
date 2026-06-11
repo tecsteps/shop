@@ -130,6 +130,20 @@ it('repairs stale Acme Fashion preview theme and navigation seed data', function
     }
 
     foreach ([
+        'Classic Cotton T-Shirt' => 'classic-cotton-t-shirt',
+        'Graphic Print Tee' => 'graphic-print-tee',
+        'V-Neck Linen Tee' => 'v-neck-linen-tee',
+        'Striped Polo Shirt' => 'striped-polo-shirt',
+    ] as $title => $handle) {
+        Product::factory()->for($store)->create([
+            'title' => $title,
+            'handle' => $handle,
+            'status' => 'active',
+            'published_at' => now(),
+        ]);
+    }
+
+    foreach ([
         'About Us' => 'about',
         'FAQ' => 'faq',
         'Shipping & Returns' => 'shipping-returns',
@@ -169,6 +183,8 @@ it('repairs stale Acme Fashion preview theme and navigation seed data', function
 
     $migration = require database_path('migrations/2026_06_11_000001_repair_acme_fashion_storefront_seed_data.php');
     $migration->up();
+    $collectionProductsMigration = require database_path('migrations/2026_06_11_000002_repair_acme_fashion_collection_products.php');
+    $collectionProductsMigration->up();
 
     app()->instance('current_store', $store->fresh());
 
@@ -177,4 +193,11 @@ it('repairs stale Acme Fashion preview theme and navigation seed data', function
         ->toBe(['Home', 'New Arrivals', 'T-Shirts', 'Pants & Jeans', 'Sale']);
     expect(StoreDomain::query()->where('hostname', '2026-06-09-claude-code-fable-5.agentic-engineers.dev')->exists())
         ->toBeTrue();
+    expect(Collection::query()->where('handle', 't-shirts')->firstOrFail()->products()->pluck('products.handle')->all())
+        ->toBe([
+            'classic-cotton-t-shirt',
+            'graphic-print-tee',
+            'v-neck-linen-tee',
+            'striped-polo-shirt',
+        ]);
 });
