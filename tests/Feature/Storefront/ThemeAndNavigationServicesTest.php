@@ -1,14 +1,17 @@
 <?php
 
+use App\Enums\NavigationItemType;
 use App\Models\Collection;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\StoreDomain;
 use App\Models\Theme;
 use App\Models\ThemeSettings;
 use App\Services\NavigationService;
 use App\Services\ThemeSettingsService;
+use Illuminate\Support\Facades\Cache;
 
 it('returns defaults when the store has no published theme', function () {
     createStoreContext();
@@ -95,4 +98,83 @@ it('resolves a single navigation item url', function () {
     $item = NavigationItem::factory()->for($menu, 'menu')->page($page->getKey())->create();
 
     expect(app(NavigationService::class)->resolveUrl($item))->toBe('/pages/faq');
+});
+
+it('repairs stale Acme Fashion preview theme and navigation seed data', function () {
+    $context = createStoreContext([
+        'name' => 'Acme Fashion',
+        'handle' => 'acme-fashion',
+    ]);
+    $store = $context['store'];
+
+    $theme = Theme::factory()->for($store)->create(['name' => 'Default Theme']);
+    ThemeSettings::factory()
+        ->for($theme)
+        ->withSettings([
+            'primary_color' => '#1a1a2e',
+            'secondary_color' => '#0f45e6',
+            'hero_heading' => 'Welcome to Acme Fashion',
+        ])
+        ->create();
+
+    foreach ([
+        'New Arrivals' => 'new-arrivals',
+        'T-Shirts' => 't-shirts',
+        'Pants & Jeans' => 'pants-jeans',
+        'Sale' => 'sale',
+    ] as $title => $handle) {
+        Collection::factory()->for($store)->create([
+            'title' => $title,
+            'handle' => $handle,
+        ]);
+    }
+
+    foreach ([
+        'About Us' => 'about',
+        'FAQ' => 'faq',
+        'Shipping & Returns' => 'shipping-returns',
+        'Privacy Policy' => 'privacy-policy',
+        'Terms of Service' => 'terms',
+    ] as $title => $handle) {
+        Page::factory()->for($store)->create([
+            'title' => $title,
+            'handle' => $handle,
+        ]);
+    }
+
+    $menu = NavigationMenu::factory()->for($store)->create([
+        'handle' => 'main-menu',
+        'title' => 'Main Menu',
+    ]);
+
+    NavigationItem::factory()->for($menu, 'menu')->create([
+        'label' => 'Home',
+        'type' => NavigationItemType::Link,
+        'url' => '/',
+        'position' => 0,
+    ]);
+
+    foreach (['New Arrivals', 'T-Shirts', 'Pants & Jeans', 'Sale'] as $position => $label) {
+        NavigationItem::factory()->for($menu, 'menu')->create([
+            'label' => $label,
+            'type' => NavigationItemType::Collection,
+            'url' => null,
+            'resource_id' => null,
+            'position' => $position + 1,
+        ]);
+    }
+
+    Cache::put("theme_settings:{$store->getKey()}", ['secondary_color' => '#0f45e6'], now()->addMinutes(5));
+    Cache::put("navigation_tree:{$store->getKey()}:main-menu", [['label' => 'Home']], now()->addMinutes(5));
+
+    $migration = require database_path('migrations/2026_06_11_000001_repair_acme_fashion_storefront_seed_data.php');
+    $migration->up();
+
+    app()->instance('current_store', $store->fresh());
+
+    expect(app(ThemeSettingsService::class)->all($store)['secondary_color'])->toBe('#e94560');
+    expect(array_column(app(NavigationService::class)->tree('main-menu'), 'label'))
+        ->toBe(['Home', 'New Arrivals', 'T-Shirts', 'Pants & Jeans', 'Sale']);
+    expect(StoreDomain::query()->where('hostname', '2026-06-09-claude-code-fable-5.agentic-engineers.dev')->exists())
+        ->toBeTrue();
 });
