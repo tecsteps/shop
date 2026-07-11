@@ -11,7 +11,7 @@
 | Blade | `php artisan view:cache` | All templates compile |
 | Frontend | `npm run build` | Vite production build succeeds |
 | Routes | `php artisan route:list --except-vendor` | Storefront, customer, admin, and v1 API routes are registered |
-| Scheduler | `php artisan schedule:list` | Checkout expiry, analytics rollup, and webhook retry jobs are registered |
+| Scheduler | `php artisan schedule:list` | Checkout expiry, cart cleanup, bank-transfer cancellation, and analytics rollup jobs are registered |
 
 ## Functional Coverage
 

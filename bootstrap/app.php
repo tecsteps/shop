@@ -18,9 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn (Request $request): string => $request->is('account', 'account/*')
-            ? route('storefront.account.login')
-            : route('login'));
+        $middleware->redirectGuestsTo(fn (Request $request): string => match (true) {
+            $request->is('admin', 'admin/*') => route('admin.login'),
+            $request->is('account', 'account/*') => route('storefront.account.login'),
+            default => route('login'),
+        });
 
         $middleware->alias([
             'role.check' => CheckStoreRole::class,
