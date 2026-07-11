@@ -79,6 +79,15 @@ it('seeds the complete deterministic demo scenario idempotently', function (): v
         ->and(Order::withoutGlobalScopes()->where('store_id', $fashion->id)->where('order_number', '#1015')->value('discount_amount'))->toBe(550)
         ->and(Order::withoutGlobalScopes()->where('store_id', $electronics->id)->pluck('order_number')->all())->toBe(['#5001', '#5002', '#5003']);
 
+    $pendingBankTransfer = Order::withoutGlobalScopes()
+        ->with('lines.variant.inventoryItem')
+        ->where('store_id', $fashion->id)
+        ->where('order_number', '#1005')
+        ->sole();
+    expect($pendingBankTransfer->lines->every(
+        fn ($line): bool => $line->variant->inventoryItem->quantity_reserved >= $line->quantity,
+    ))->toBeTrue();
+
     $countsBeforeSecondRun = collect($expectedCounts)->mapWithKeys(fn (int $count, string $table): array => [$table => DB::table($table)->count()]);
     $this->seed(DatabaseSeeder::class);
     $countsAfterSecondRun = collect($expectedCounts)->mapWithKeys(fn (int $count, string $table): array => [$table => DB::table($table)->count()]);

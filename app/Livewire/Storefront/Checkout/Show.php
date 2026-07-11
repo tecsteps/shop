@@ -4,12 +4,12 @@ namespace App\Livewire\Storefront\Checkout;
 
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Checkout;
 use App\Services\CheckoutService;
 use App\Services\PricingEngine;
 use App\Services\ShippingCalculator;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
 
 class Show extends Component
@@ -74,12 +74,19 @@ class Show extends Component
         session()->flash('storefront_status', 'Discount applied');
     }
 
-    public function pay(CheckoutService $checkouts): RedirectResponse
+    public function pay(CheckoutService $checkouts): void
     {
         $details = $this->paymentMethod === PaymentMethod::CreditCard->value ? ['card_number' => $this->cardNumber] : [];
-        $order = $checkouts->completeCheckout($this->checkout, $details);
 
-        return redirect()->route('storefront.checkout.confirmation', ['checkoutId' => $this->checkout->id, 'order' => $order->id]);
+        try {
+            $order = $checkouts->completeCheckout($this->checkout, $details);
+        } catch (PaymentFailedException $exception) {
+            $this->addError('cardNumber', $exception->getMessage());
+
+            return;
+        }
+
+        $this->redirectRoute('storefront.checkout.confirmation', ['checkoutId' => $this->checkout->id, 'order' => $order->id]);
     }
 
     public function render(ShippingCalculator $shipping): View

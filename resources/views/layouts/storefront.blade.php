@@ -14,7 +14,7 @@
 
         <div class="bg-zinc-950 px-4 py-2 text-center text-sm text-white dark:bg-white dark:text-zinc-950">Free shipping available with code FREESHIP</div>
         <header class="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
-            <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
+            <div class="mx-auto flex max-w-7xl items-center justify-between gap-1 px-4 py-4 sm:gap-6 sm:px-6 lg:px-8">
                 <a href="{{ route('storefront.home') }}" class="text-xl font-semibold tracking-tight" wire:navigate>{{ $currentStore->name }}</a>
                 <nav aria-label="Main navigation" class="hidden items-center gap-6 text-sm font-medium lg:flex">
                     <a href="{{ route('storefront.home') }}" wire:navigate>Home</a>

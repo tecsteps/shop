@@ -6,7 +6,6 @@ use App\Models\Cart;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
 
 class Show extends Component
@@ -31,11 +30,11 @@ class Show extends Component
         $this->dispatch('cart-updated');
     }
 
-    public function checkout(CheckoutService $checkouts): RedirectResponse
+    public function checkout(CheckoutService $checkouts): void
     {
         $checkout = $checkouts->create($this->cart());
 
-        return redirect()->route('storefront.checkout.show', $checkout->id);
+        $this->redirectRoute('storefront.checkout.show', $checkout->id);
     }
 
     public function render(): View

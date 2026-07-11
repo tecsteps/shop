@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
 use App\Enums\StoreUserRole;
+use App\Http\Middleware\ResolveStore;
 use App\Models\Product;
 use App\Observers\ProductObserver;
 use App\Services\Payments\MockPaymentProvider;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureAuthentication();
+        $this->configureLivewire();
         $this->configureRateLimiters();
         $this->configureGates();
         Product::observe(ProductObserver::class);
@@ -44,6 +47,13 @@ class AppServiceProvider extends ServiceProvider
     private function configureAuthentication(): void
     {
         Auth::provider('store-customers', fn ($app, array $config): CustomerUserProvider => new CustomerUserProvider($app['hash'], $config['model']));
+    }
+
+    private function configureLivewire(): void
+    {
+        Livewire::addPersistentMiddleware([
+            ResolveStore::class,
+        ]);
     }
 
     private function configureRateLimiters(): void

@@ -4,6 +4,7 @@ use App\Livewire\Storefront\Account\Addresses\Index as Addresses;
 use App\Livewire\Storefront\Account\Auth\Login;
 use App\Livewire\Storefront\Account\Auth\Register;
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Store;
 use App\Models\StoreDomain;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,4 +54,19 @@ it('creates and updates only the signed in customers addresses', function () {
         ->call('save')->assertSee('Main Street 1');
 
     $this->assertDatabaseHas('customer_addresses', ['customer_id' => $customer->id, 'label' => 'Home', 'is_default' => true]);
+});
+
+it('links customer orders by database id while displaying the public order number', function () {
+    $customer = Customer::factory()->for($this->store)->create();
+    $order = Order::factory()->for($this->store)->for($customer)->create(['order_number' => '#1001']);
+    $this->actingAs($customer, 'customer');
+
+    $this->withHeader('Host', 'acme-fashion.test')->get('/account')
+        ->assertOk()
+        ->assertSee('/account/orders/'.$order->id, false)
+        ->assertSee('#1001');
+
+    $this->withHeader('Host', 'acme-fashion.test')->get('/account/orders/'.$order->id)
+        ->assertOk()
+        ->assertSee('Order #1001');
 });

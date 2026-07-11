@@ -82,6 +82,11 @@ class OrderSeeder extends Seeder
                     'discount_allocations_json' => $allocations,
                 ],
             );
+
+            if ($definition['method'] === 'bank_transfer' && $definition['financial'] === 'pending') {
+                $variant->inventoryItem()->update(['quantity_reserved' => $lineDefinition[2]]);
+            }
+
             $lines[] = $line;
         }
 

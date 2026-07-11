@@ -110,7 +110,7 @@ Route::middleware('storefront')->group(function (): void {
     Route::middleware('customer.auth')->group(function (): void {
         Route::get('/account', AccountDashboard::class)->name('storefront.account.dashboard');
         Route::get('/account/orders', AccountOrders::class)->name('storefront.account.orders.index');
-        Route::get('/account/orders/{orderNumber}', AccountOrder::class)->name('storefront.account.orders.show');
+        Route::get('/account/orders/{orderId}', AccountOrder::class)->name('storefront.account.orders.show');
         Route::get('/account/addresses', AccountAddresses::class)->name('storefront.account.addresses.index');
         Route::post('/account/logout', function (Request $request) {
             Auth::guard('customer')->logout();

@@ -36,3 +36,17 @@ it('progresses a digital checkout through address and shipping', function () {
         ->call('saveAddress')->assertSee('Shipping method')
         ->call('selectShipping')->assertSee('Payment');
 });
+
+it('shows declined card failures inline without leaving checkout', function () {
+    Livewire::test(CheckoutShow::class, ['checkoutId' => $this->checkout->id])
+        ->set('email', 'buyer@example.com')->set('shipping.first_name', 'Buyer')->set('shipping.last_name', 'Person')
+        ->set('shipping.address1', 'Main Street 1')->set('shipping.city', 'Berlin')->set('shipping.country', 'DE')->set('shipping.postal_code', '10115')
+        ->call('saveAddress')
+        ->call('selectShipping')
+        ->call('selectPayment')
+        ->set('cardNumber', '4000 0000 0000 0002')
+        ->call('pay')
+        ->assertHasErrors(['cardNumber'])
+        ->assertSee('The payment was declined.')
+        ->assertNoRedirect();
+});

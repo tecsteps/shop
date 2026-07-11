@@ -11,10 +11,10 @@ class Show extends Component
 {
     public Order $order;
 
-    public function mount(string $orderNumber): void
+    public function mount(int $orderId): void
     {
         $this->order = Auth::guard('customer')->user()->orders()
-            ->where('order_number', $orderNumber)->with(['lines', 'payments', 'fulfillments'])->firstOrFail();
+            ->whereKey($orderId)->with(['lines', 'payments', 'fulfillments'])->firstOrFail();
     }
 
     public function render(): View
