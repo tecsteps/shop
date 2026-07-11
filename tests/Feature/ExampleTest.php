@@ -1,7 +1,15 @@
 <?php
 
-it('returns a successful response', function () {
-    $response = $this->get('/');
+use App\Models\Store;
+use App\Models\StoreDomain;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-    $response->assertStatus(200);
+uses(RefreshDatabase::class);
+
+it('returns a successful response', function () {
+    $store = Store::factory()->create();
+    StoreDomain::factory()->for($store)->create(['hostname' => 'acme-fashion.test']);
+    $response = $this->withServerVariables(['HTTP_HOST' => 'acme-fashion.test'])->get('/');
+
+    $response->assertSuccessful();
 });

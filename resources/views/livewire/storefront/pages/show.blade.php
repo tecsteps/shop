@@ -1,0 +1,1 @@
+<article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8"><x-storefront.breadcrumbs :items="[['label' => 'Home', 'url' => route('storefront.home')], ['label' => $page->title]]" /><h1 class="mt-6 text-4xl font-semibold">{{ $page->title }}</h1><div class="prose prose-zinc mt-8 max-w-none dark:prose-invert">{!! $page->body_html !!}</div></article>

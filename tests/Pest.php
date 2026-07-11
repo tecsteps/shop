@@ -12,8 +12,13 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
+
+pest()->extend(Tests\BrowserTestCase::class)
+    ->use(Illuminate\Foundation\Testing\DatabaseTruncation::class)
+    ->in('Browser');
+
+pest()->browser()->withHost('127.0.0.1');
 
 /*
 |--------------------------------------------------------------------------
@@ -44,4 +49,28 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+function seedBrowserShop(Tests\BrowserTestCase $test): void
+{
+    $test->seed(Database\Seeders\DatabaseSeeder::class);
+
+    App\Models\StoreDomain::query()->create([
+        'store_id' => App\Models\Store::query()->where('handle', 'acme-fashion')->valueOrFail('id'),
+        'hostname' => '127.0.0.1',
+        'type' => App\Enums\StoreDomainType::Storefront,
+        'is_primary' => false,
+        'tls_mode' => 'managed',
+    ]);
+
+    Illuminate\Support\Facades\Cache::forget('store_domain:127.0.0.1');
+}
+
+function loginBrowserAdmin(): mixed
+{
+    return visit('/admin/login')
+        ->fill('email', 'admin@acme.test')
+        ->fill('password', 'password')
+        ->click('form button[type="submit"]')
+        ->waitForText('Dashboard');
 }
