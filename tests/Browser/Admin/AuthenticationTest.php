@@ -29,3 +29,11 @@ it('signs an owner into the selected store dashboard', function (): void {
         ->assertSee('Top products')
         ->assertNoJavaScriptErrors();
 });
+
+it('redirects an authenticated owner away from the admin login', function (): void {
+    loginBrowserAdmin()
+        ->navigate('/admin/login')
+        ->assertPathIs('/admin')
+        ->assertSee('Total sales')
+        ->assertNoJavaScriptErrors();
+});

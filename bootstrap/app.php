@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             $request->is('account', 'account/*') => route('storefront.account.login'),
             default => route('login'),
         });
+        $middleware->redirectUsersTo(fn (Request $request): string => $request->is('admin', 'admin/*')
+            ? route('admin.dashboard')
+            : route('dashboard'));
 
         $middleware->alias([
             'role.check' => CheckStoreRole::class,
