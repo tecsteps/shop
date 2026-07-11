@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Collection;
+use App\Models\Store;
+use App\Models\User;
+use App\Traits\ChecksStoreRole;
+
+class CollectionPolicy
+{
+    use ChecksStoreRole;
+
+    public function viewAny(User $user): bool
+    {
+        return $this->isAnyRole($user, $this->currentStoreId());
+    }
+
+    public function view(User $user, Collection $collection): bool
+    {
+        return $this->isAnyRole($user, $collection->store_id);
+    }
+
+    public function create(User $user): bool
+    {
+        return $this->isOwnerAdminOrStaff($user, $this->currentStoreId());
+    }
+
+    public function update(User $user, Collection $collection): bool
+    {
+        return $this->isOwnerAdminOrStaff($user, $collection->store_id);
+    }
+
+    public function delete(User $user, Collection $collection): bool
+    {
+        return $this->isOwnerOrAdmin($user, $collection->store_id);
+    }
+
+    public function restore(User $user, Collection $collection): bool
+    {
+        return $this->delete($user, $collection);
+    }
+
+    public function forceDelete(User $user, Collection $collection): bool
+    {
+        return $this->delete($user, $collection);
+    }
+
+    private function currentStoreId(): int
+    {
+        /** @var Store $store */
+        $store = app('current_store');
+
+        return $store->getKey();
+    }
+}

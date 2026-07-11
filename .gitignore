@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/tests/Browser/Screenshots
 /vendor
 .env
 .env.backup
