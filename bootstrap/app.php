@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckStoreRole;
+use App\Http\Middleware\CustomerAuthenticate;
 use App\Http\Middleware\ResolveStore;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role.check' => CheckStoreRole::class,
             'store.resolve' => ResolveStore::class,
+            'customer.auth' => CustomerAuthenticate::class,
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
         ]);

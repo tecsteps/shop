@@ -1,0 +1,4 @@
+<x-admin.page title="Tax Settings" subtitle="Configure tax calculation and inclusive pricing.">
+    <x-slot:actions><flux:button wire:click="save" variant="primary" icon="check">Save taxes</flux:button></x-slot:actions>
+    <x-admin.panel heading="Tax calculation" class="max-w-3xl"><form wire:submit="save" class="space-y-5"><flux:select wire:model="mode" label="Mode"><flux:select.option value="manual">Manual</flux:select.option><flux:select.option value="provider">External provider</flux:select.option></flux:select><flux:input wire:model="provider" label="Provider" /><flux:input wire:model="defaultRate" type="number" min="0" max="100" step="0.01" label="Default tax rate (%)" /><flux:switch wire:model="pricesIncludeTax" label="Product prices include tax" /><flux:error name="defaultRate" /><flux:button type="submit" variant="primary">Save tax settings</flux:button></form></x-admin.panel>
+</x-admin.page>
