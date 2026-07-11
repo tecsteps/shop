@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class BrowserTestCase extends BaseTestCase
@@ -20,6 +22,18 @@ abstract class BrowserTestCase extends BaseTestCase
         }
 
         $app['config']->set('database.connections.sqlite.database', $databasePath);
+        $database = $app->make('db');
+        $database->purge('sqlite');
+
+        if (! $database->connection('sqlite')->getSchemaBuilder()->hasTable('migrations')) {
+            $app->make(Kernel::class)->call('migrate:fresh', [
+                '--database' => 'sqlite',
+                '--force' => true,
+                '--no-interaction' => true,
+            ]);
+        }
+
+        RefreshDatabaseState::$migrated = true;
 
         return $app;
     }
