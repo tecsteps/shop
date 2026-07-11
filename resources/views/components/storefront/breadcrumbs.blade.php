@@ -1,0 +1,2 @@
+@props(['items'])
+<nav aria-label="Breadcrumb" {{ $attributes }}><ol class="flex flex-wrap gap-2 text-sm text-zinc-600 dark:text-zinc-400">@foreach ($items as $item)<li class="flex gap-2">@if (! $loop->last)<a class="hover:underline" href="{{ $item['url'] }}">{{ $item['label'] }}</a><span aria-hidden="true">/</span>@else<span aria-current="page">{{ $item['label'] }}</span>@endif</li>@endforeach</ol></nav>
