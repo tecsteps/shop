@@ -35,6 +35,11 @@ final class StorePolicy
         return $this->hasRole($user, $store, ['owner', 'admin']);
     }
 
+    public function viewAnalytics(User $user, Store $store): bool
+    {
+        return $this->hasRole($user, $store, ['owner', 'admin', 'staff']);
+    }
+
     public function updateSettings(User $user, Store $store): bool
     {
         return $this->viewSettings($user, $store);

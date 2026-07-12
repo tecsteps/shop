@@ -4,9 +4,8 @@ namespace App\Livewire\Storefront\Account\Auth;
 
 use App\Livewire\Storefront\StorefrontComponent;
 use App\Models\Cart;
-use App\Models\Customer;
+use App\Services\CustomerService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -40,15 +39,12 @@ class Register extends StorefrontComponent
             'marketingOptIn' => ['boolean'],
         ], ['password.same' => 'The passwords do not match.']);
 
-        $customer = Customer::withoutGlobalScopes()->firstOrNew([
-            'store_id' => $store->getKey(),
-            'email' => mb_strtolower($this->email),
-        ]);
-        $customer->fill([
+        $customer = app(CustomerService::class)->register($store, [
             'name' => $this->name,
-            'password_hash' => Hash::make($this->password),
+            'email' => $this->email,
+            'password' => $this->password,
             'marketing_opt_in' => $this->marketingOptIn,
-        ])->save();
+        ]);
 
         Auth::guard('customer')->login($customer);
         request()->session()->regenerate();

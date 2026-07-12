@@ -16,6 +16,13 @@ final class StripeTaxProvider implements TaxProvider
             throw new RuntimeException('The configured tax provider is unavailable.');
         }
 
-        return new TaxCalculationResult([], 0);
+        return new TaxCalculationResult(
+            [],
+            0,
+            array_fill(0, count($request->lineItems), 0),
+            0,
+            'stripe',
+            ['status' => 'unavailable', 'fallback' => 'allow'],
+        );
     }
 }

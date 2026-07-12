@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\GenerateOrderExport;
+use App\Models\Order;
 use App\Models\OrderExport;
 use App\Services\AnalyticsService;
 use Illuminate\Http\JsonResponse;
@@ -18,6 +19,7 @@ final class AnalyticsController extends Controller
 
     public function summary(Request $request, int $storeId): JsonResponse
     {
+        $this->authorize('viewAnalytics', app('current_store'));
         $data = $request->validate(['from' => ['required', 'date'], 'to' => ['required', 'date', 'after_or_equal:from'], 'granularity' => ['sometimes', 'in:day,week,month']]);
         $daily = $this->analytics->getDailyMetrics(app('current_store'), $data['from'], $data['to']);
 
@@ -31,6 +33,7 @@ final class AnalyticsController extends Controller
 
     public function exportOrders(Request $request, int $storeId): JsonResponse
     {
+        $this->authorize('viewAny', Order::class);
         $data = $request->validate([
             'format' => ['sometimes', 'in:csv'],
             'filters' => ['sometimes', 'array'],
@@ -46,7 +49,7 @@ final class AnalyticsController extends Controller
             'filters_json' => $data['filters'] ?? [],
             'status' => 'queued',
         ]);
-        GenerateOrderExport::dispatch($export);
+        GenerateOrderExport::dispatch($export)->afterCommit();
 
         return response()->json([
             'export_id' => $export->id,
@@ -57,6 +60,7 @@ final class AnalyticsController extends Controller
 
     public function export(Request $request, int $storeId, int $exportId): JsonResponse|StreamedResponse
     {
+        $this->authorize('viewAny', Order::class);
         $export = OrderExport::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($exportId);
         if ($request->boolean('download')) {
             abort_unless($export->status === 'completed' && $export->storage_key !== null, 409, 'The export is not ready.');

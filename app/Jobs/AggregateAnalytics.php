@@ -14,6 +14,13 @@ final class AggregateAnalytics implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $tries = 3;
+
+    public int $timeout = 300;
+
+    /** @var list<int> */
+    public array $backoff = [10, 60, 300];
+
     public function __construct(public readonly ?string $date = null) {}
 
     public function handle(AnalyticsService $analytics): void

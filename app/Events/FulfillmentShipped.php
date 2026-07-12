@@ -10,5 +10,8 @@ final class FulfillmentShipped
 {
     use Dispatchable, SerializesModels;
 
-    public function __construct(public readonly Fulfillment $fulfillment) {}
+    public function __construct(
+        public readonly Fulfillment $fulfillment,
+        public readonly bool $notifyCustomer = true,
+    ) {}
 }

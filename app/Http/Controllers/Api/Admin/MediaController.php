@@ -25,6 +25,7 @@ final class MediaController extends Controller
         abort_if((int) $data['byte_size'] > $maximum, 422, 'The uploaded file is too large.');
 
         $product = Product::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($productId);
+        $this->authorize('update', $product);
         $extension = mb_strtolower((string) pathinfo($data['filename'], PATHINFO_EXTENSION));
         $storageKey = "stores/{$storeId}/products/{$product->id}/media/".Str::uuid().".{$extension}";
         $media = $product->media()->create([
@@ -58,7 +59,7 @@ final class MediaController extends Controller
         if (($media->type instanceof \BackedEnum ? $media->type->value : $media->type) === 'video') {
             $media->update(['status' => 'ready', 'byte_size' => strlen($contents)]);
         } else {
-            ProcessMediaUpload::dispatch($media);
+            ProcessMediaUpload::dispatch($media)->afterCommit();
         }
 
         return response()->json(['data' => $media->refresh()], 202);

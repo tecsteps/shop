@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\SanitizeHtml;
 use App\Enums\ProductStatus;
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +25,11 @@ class Product extends Model
             'tags' => 'array',
             'published_at' => 'datetime',
         ];
+    }
+
+    public function setDescriptionHtmlAttribute(mixed $value): void
+    {
+        $this->attributes['description_html'] = app(SanitizeHtml::class)->execute($value === null ? null : (string) $value);
     }
 
     public function options(): HasMany

@@ -14,6 +14,10 @@ final class VariantMatrixService
         DB::transaction(function () use ($product): void {
             $product->load(['options.values', 'variants.optionValues', 'variants.inventoryItem']);
             $groups = $product->options->sortBy('position')->map(fn ($option) => $option->values->sortBy('position')->pluck('id')->all())->all();
+            $combinationCount = array_reduce($groups, fn (int $count, array $group): int => $count * count($group), 1);
+            if ($combinationCount > 100) {
+                throw new \InvalidArgumentException('Product options may generate at most 100 variants.');
+            }
             $combinations = $groups === [] ? [[]] : $this->cartesian(array_values($groups));
             $existing = $product->variants;
             $template = $product->variants->first();
@@ -24,7 +28,7 @@ final class VariantMatrixService
                 $matchingVariant = $existing->first(fn (ProductVariant $variant): bool => ! in_array($variant->id, $matchedVariantIds, true)
                     && $this->key($variant->optionValues->modelKeys()) === $key);
                 if ($matchingVariant !== null) {
-                    $matchingVariant->update(['position' => $position, 'status' => 'active', 'is_default' => $groups === []]);
+                    $matchingVariant->update(['position' => $position, 'status' => 'active', 'is_default' => $position === 0]);
                     $matchedVariantIds[] = $matchingVariant->id;
 
                     continue;
@@ -38,7 +42,7 @@ final class VariantMatrixService
                     'currency' => $template?->currency ?? $product->store?->default_currency ?? 'USD',
                     'weight_g' => $template?->weight_g,
                     'requires_shipping' => $template?->requires_shipping ?? true,
-                    'is_default' => $groups === [],
+                    'is_default' => $position === 0,
                     'position' => $position,
                     'status' => 'active',
                 ]);
@@ -53,7 +57,7 @@ final class VariantMatrixService
                     continue;
                 }
                 if (OrderLine::query()->where('variant_id', $variant->id)->exists()) {
-                    $variant->update(['status' => 'archived']);
+                    $variant->update(['status' => 'archived', 'is_default' => false]);
                 } else {
                     $variant->delete();
                 }

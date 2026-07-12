@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Models\Fulfillment;
 use App\Models\Order;
 use App\Models\Refund;
+use App\Services\OrderStatusLink;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -47,7 +48,7 @@ final class OrderLifecycleNotification extends Notification
             default => $message->line("Order {$this->order->order_number} was updated."),
         };
 
-        return $message->action('Visit the shop', url('/account/orders'))
+        return $message->action('View order status', app(OrderStatusLink::class)->url($this->order))
             ->line('Thank you for shopping with us.');
     }
 

@@ -3,17 +3,22 @@
 namespace App\Listeners;
 
 use App\Events\CheckoutCompleted;
+use App\Events\FulfillmentCreated;
 use App\Events\FulfillmentDelivered;
 use App\Events\FulfillmentShipped;
 use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
+use App\Events\OrderFulfilled;
+use App\Events\OrderPaid;
 use App\Events\OrderRefunded;
 use App\Events\ProductCreated;
 use App\Events\ProductDeleted;
 use App\Events\ProductUpdated;
 use App\Models\Store;
+use App\Models\StoreSettings;
 use App\Notifications\OrderLifecycleNotification;
 use App\Services\AnalyticsService;
+use App\Services\OutboundDispatcher;
 use App\Services\WebhookService;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Notification;
@@ -23,6 +28,7 @@ final class ShopEventSubscriber
     public function __construct(
         private readonly WebhookService $webhooks,
         private readonly AnalyticsService $analytics,
+        private readonly OutboundDispatcher $outbound,
     ) {}
 
     public function orderCreated(OrderCreated $event): void
@@ -43,12 +49,34 @@ final class ShopEventSubscriber
     public function orderRefunded(OrderRefunded $event): void
     {
         $store = Store::query()->findOrFail($event->order->store_id);
-        $this->notify($event->order->email, new OrderLifecycleNotification($event->order, 'refunded', $event->refund));
+        if ($event->notifyCustomer) {
+            $this->notify($event->order->email, new OrderLifecycleNotification($event->order, 'refunded', $event->refund));
+        }
         $this->webhooks->dispatch($store, 'order.refunded', [
             ...$this->orderPayload($event->order),
             'refund_id' => $event->refund->id,
             'amount' => $event->refund->amount,
         ]);
+        $this->webhooks->dispatch($store, 'refund.created', [
+            'refund_id' => $event->refund->id,
+            'order_id' => $event->order->id,
+            'amount' => $event->refund->amount,
+        ]);
+        $this->webhooks->dispatch($store, 'order.updated', $this->orderPayload($event->order));
+    }
+
+    public function orderPaid(OrderPaid $event): void
+    {
+        $store = Store::query()->findOrFail($event->order->store_id);
+        $this->webhooks->dispatch($store, 'order.paid', $this->orderPayload($event->order));
+        $this->webhooks->dispatch($store, 'order.updated', $this->orderPayload($event->order));
+    }
+
+    public function orderFulfilled(OrderFulfilled $event): void
+    {
+        $store = Store::query()->findOrFail($event->order->store_id);
+        $this->webhooks->dispatch($store, 'order.fulfilled', $this->orderPayload($event->order));
+        $this->webhooks->dispatch($store, 'order.updated', $this->orderPayload($event->order));
     }
 
     public function checkoutCompleted(CheckoutCompleted $event): void
@@ -65,11 +93,19 @@ final class ShopEventSubscriber
     {
         $order = $event->fulfillment->order()->withoutGlobalScopes()->firstOrFail();
         $store = Store::query()->findOrFail($order->store_id);
-        $this->notify($order->email, new OrderLifecycleNotification($order, 'shipped', $event->fulfillment));
-        $this->webhooks->dispatch($store, 'order.fulfilled', [
+        if ($event->notifyCustomer) {
+            $this->notify($order->email, new OrderLifecycleNotification($order, 'shipped', $event->fulfillment));
+        }
+        $this->webhooks->dispatch($store, 'order.updated', $this->orderPayload($order));
+    }
+
+    public function fulfillmentCreated(FulfillmentCreated $event): void
+    {
+        $order = $event->fulfillment->order()->withoutGlobalScopes()->firstOrFail();
+        $store = Store::query()->findOrFail($order->store_id);
+        $this->webhooks->dispatch($store, 'fulfillment.created', [
             ...$this->orderPayload($order),
             'fulfillment_id' => $event->fulfillment->id,
-            'tracking_number' => $event->fulfillment->tracking_number,
         ]);
     }
 
@@ -91,6 +127,7 @@ final class ShopEventSubscriber
             ...$this->orderPayload($event->order),
             'reason' => $event->reason,
         ]);
+        $this->webhooks->dispatch($store, 'order.updated', $this->orderPayload($event->order));
     }
 
     public function productCreated(ProductCreated $event): void
@@ -111,9 +148,12 @@ final class ShopEventSubscriber
     public function subscribe(Dispatcher $events): void
     {
         $events->listen(OrderCreated::class, [self::class, 'orderCreated']);
+        $events->listen(OrderPaid::class, [self::class, 'orderPaid']);
+        $events->listen(OrderFulfilled::class, [self::class, 'orderFulfilled']);
         $events->listen(OrderRefunded::class, [self::class, 'orderRefunded']);
         $events->listen(CheckoutCompleted::class, [self::class, 'checkoutCompleted']);
         $events->listen(FulfillmentShipped::class, [self::class, 'fulfillmentShipped']);
+        $events->listen(FulfillmentCreated::class, [self::class, 'fulfillmentCreated']);
         $events->listen(FulfillmentDelivered::class, [self::class, 'fulfillmentDelivered']);
         $events->listen(OrderCancelled::class, [self::class, 'orderCancelled']);
         $events->listen(ProductCreated::class, [self::class, 'productCreated']);
@@ -140,8 +180,21 @@ final class ShopEventSubscriber
 
     private function notify(?string $email, OrderLifecycleNotification $notification): void
     {
-        if ($email !== null && $email !== '') {
-            Notification::route('mail', $email)->notify($notification);
+        $preference = match ($notification->type) {
+            'confirmed' => 'order_confirmation',
+            'shipped' => 'shipping_confirmation',
+            'refunded' => 'refund_confirmation',
+            'cancelled' => 'cancellation_confirmation',
+            default => null,
+        };
+        $settings = (array) StoreSettings::withoutGlobalScopes()
+            ->where('store_id', $notification->order->store_id)
+            ->value('settings_json');
+        $enabled = $preference === null || (bool) data_get($settings, 'notifications.'.$preference, true);
+        if ($enabled && $email !== null && $email !== '') {
+            $this->outbound->afterCommit(
+                fn () => Notification::route('mail', $email)->notify($notification),
+            );
         }
     }
 }

@@ -26,15 +26,22 @@ final class RefundService
         ?string $reason = null,
         bool $restock = false,
         ?array $lines = null,
+        bool $notifyCustomer = true,
     ): Refund {
-        if ((int) $payment->order_id !== (int) $order->id || ! in_array($this->value($payment->status), ['captured', 'refunded'], true)) {
-            throw new DomainException('The selected payment is not refundable for this order.');
+        if ($restock && ($lines === null || $lines === [])) {
+            throw new DomainException('Explicit line quantities are required when restocking a refund.');
         }
 
-        $order->load('lines');
-        $lineAmounts = [];
-        if ($lines !== null) {
-            foreach ($lines as $lineId => $quantity) {
+        return DB::transaction(function () use ($order, $payment, $amount, $reason, $restock, $lines, $notifyCustomer): Refund {
+            $order = Order::withoutGlobalScopes()->lockForUpdate()->findOrFail($order->id);
+            $payment = Payment::query()->lockForUpdate()->findOrFail($payment->id);
+            if ((int) $payment->order_id !== (int) $order->id || ! in_array($this->value($payment->status), ['captured', 'refunded'], true)) {
+                throw new DomainException('The selected payment is not refundable for this order.');
+            }
+
+            $order->load('lines');
+            $lineAmounts = [];
+            foreach ($lines ?? [] as $lineId => $quantity) {
                 $line = $order->lines->firstWhere('id', (int) $lineId);
                 $alreadyRefunded = $line === null ? 0 : (int) DB::table('refund_lines')
                     ->join('refunds', 'refunds.id', '=', 'refund_lines.refund_id')
@@ -46,19 +53,17 @@ final class RefundService
                 }
                 $lineAmounts[(int) $lineId] = (int) round((int) $line->total_amount * $quantity / max(1, (int) $line->quantity));
             }
-        }
 
-        $refunded = (int) $order->refunds()->where('status', 'processed')->sum('amount');
-        $remaining = min((int) $order->total_amount, (int) $payment->amount) - $refunded;
-        $amount ??= $lineAmounts === [] ? $remaining : array_sum($lineAmounts);
-        if ($amount < 1 || $amount > $remaining) {
-            throw new DomainException('The refund amount exceeds the refundable balance.');
-        }
+            $refunded = (int) $order->refunds()->where('status', 'processed')->sum('amount');
+            $remaining = min((int) $order->total_amount, (int) $payment->amount) - $refunded;
+            $refundAmount = $amount ?? ($lineAmounts === [] ? $remaining : array_sum($lineAmounts));
+            if ($refundAmount < 1 || $refundAmount > $remaining) {
+                throw new DomainException('The refund amount exceeds the refundable balance.');
+            }
 
-        return DB::transaction(function () use ($order, $payment, $amount, $reason, $restock, $lines, $lineAmounts): Refund {
             $refund = $order->refunds()->create([
                 'payment_id' => $payment->id,
-                'amount' => $amount,
+                'amount' => $refundAmount,
                 'reason' => $reason,
                 'status' => 'pending',
             ]);
@@ -69,7 +74,7 @@ final class RefundService
                     'amount' => $lineAmounts[(int) $lineId],
                 ]);
             }
-            $result = $this->provider->refund($payment, $amount);
+            $result = $this->provider->refund($payment, $refundAmount);
             $refund->update([
                 'status' => $result->success ? 'processed' : 'failed',
                 'provider_refund_id' => $result->providerRefundId,
@@ -95,7 +100,7 @@ final class RefundService
                     }
                 }
             }
-            event(new OrderRefunded($order, $refund));
+            event(new OrderRefunded($order, $refund, $notifyCustomer));
 
             return $refund->refresh()->load('lines');
         });

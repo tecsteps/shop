@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\NavigationItemType;
+use App\Support\SafeUrl;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,5 +44,13 @@ class NavigationItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'resource_id');
+    }
+
+    protected function url(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value): ?string => SafeUrl::normalize($value),
+            set: fn (mixed $value): ?string => SafeUrl::normalize($value),
+        );
     }
 }

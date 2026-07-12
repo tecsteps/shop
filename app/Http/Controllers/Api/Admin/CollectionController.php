@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCollectionRequest;
+use App\Http\Requests\UpdateCollectionRequest;
 use App\Models\Collection;
 use App\Support\HandleGenerator;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +17,7 @@ final class CollectionController extends Controller
 
     public function index(Request $request, int $storeId): JsonResponse
     {
+        $this->authorize('viewAny', Collection::class);
         $data = $request->validate(['status' => ['sometimes', 'in:draft,active,archived'], 'query' => ['sometimes', 'string'], 'per_page' => ['sometimes', 'integer', 'max:100']]);
         $items = Collection::withoutGlobalScopes()->where('store_id', $storeId)
             ->when(isset($data['status']), fn ($q) => $q->where('status', $data['status']))
@@ -24,11 +27,12 @@ final class CollectionController extends Controller
         return response()->json(['data' => $items->items(), 'meta' => ['total' => $items->total(), 'current_page' => $items->currentPage()]]);
     }
 
-    public function store(Request $request, int $storeId): JsonResponse
+    public function store(StoreCollectionRequest $request, int $storeId): JsonResponse
     {
+        $this->authorize('create', Collection::class);
         $data = $this->validateData($request, $storeId);
         $collection = Collection::withoutGlobalScopes()->create([
-            ...$data,
+            ...collect($data)->except(['product_ids', 'add_product_ids', 'remove_product_ids'])->all(),
             'store_id' => $storeId,
             'handle' => $data['handle'] ?? $this->handles->generate($data['title'], 'collections', $storeId),
         ]);
@@ -37,13 +41,25 @@ final class CollectionController extends Controller
         return response()->json(['data' => $collection->load('products')], 201);
     }
 
-    public function update(Request $request, int $storeId, int $collectionId): JsonResponse
+    public function update(UpdateCollectionRequest $request, int $storeId, int $collectionId): JsonResponse
     {
         $collection = $this->find($storeId, $collectionId);
+        $this->authorize('update', $collection);
         $data = $this->validateData($request, $storeId, $collectionId, true);
-        $collection->update(collect($data)->except('product_ids')->all());
+        $collection->update(collect($data)->except(['product_ids', 'add_product_ids', 'remove_product_ids'])->all());
         if (array_key_exists('product_ids', $data)) {
             $collection->products()->sync($this->positions($data['product_ids']));
+        } else {
+            $existing = $collection->products()->orderByPivot('position')->pluck('products.id')->map(fn ($id): int => (int) $id);
+            $merged = $existing
+                ->merge((array) ($data['add_product_ids'] ?? []))
+                ->diff((array) ($data['remove_product_ids'] ?? []))
+                ->unique()
+                ->values()
+                ->all();
+            if (array_key_exists('add_product_ids', $data) || array_key_exists('remove_product_ids', $data)) {
+                $collection->products()->sync($this->positions($merged));
+            }
         }
 
         return response()->json(['data' => $collection->refresh()->load('products')]);
@@ -51,7 +67,9 @@ final class CollectionController extends Controller
 
     public function destroy(int $storeId, int $collectionId): JsonResponse
     {
-        $this->find($storeId, $collectionId)->delete();
+        $collection = $this->find($storeId, $collectionId);
+        $this->authorize('delete', $collection);
+        $collection->delete();
 
         return response()->json(['message' => 'Collection deleted.']);
     }
@@ -66,7 +84,11 @@ final class CollectionController extends Controller
             'type' => ['sometimes', 'in:manual,automated'],
             'status' => ['sometimes', 'in:draft,active,archived'],
             'product_ids' => ['sometimes', 'array'],
-            'product_ids.*' => ['integer'],
+            'product_ids.*' => ['integer', Rule::exists('products', 'id')->where('store_id', $storeId)],
+            'add_product_ids' => ['sometimes', 'array'],
+            'add_product_ids.*' => ['integer', Rule::exists('products', 'id')->where('store_id', $storeId)],
+            'remove_product_ids' => ['sometimes', 'array'],
+            'remove_product_ids.*' => ['integer', Rule::exists('products', 'id')->where('store_id', $storeId)],
         ]);
     }
 

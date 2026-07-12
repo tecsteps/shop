@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\InvalidDiscountException;
 use App\Models\Cart;
 use App\Models\Discount;
+use App\Models\OrderLine;
 use App\Models\Store;
 use App\ValueObjects\DiscountResult;
 use App\ValueObjects\DiscountValidationResult;
@@ -21,6 +22,15 @@ final class DiscountService
             ->first();
 
         if ($discount === null) {
+            throw new InvalidDiscountException('not_found');
+        }
+
+        return $this->validateDiscount($discount, $store, $cart);
+    }
+
+    public function validateDiscount(Discount $discount, Store $store, Cart $cart, ?int $customerId = null): Discount
+    {
+        if ((int) $discount->store_id !== (int) $store->id) {
             throw new InvalidDiscountException('not_found');
         }
         if ($this->value($discount->status) !== 'active') {
@@ -46,8 +56,35 @@ final class DiscountService
         if ($this->qualifyingLines($discount, $cart->lines)->isEmpty() && $cart->lines->isNotEmpty()) {
             throw new InvalidDiscountException('not_applicable');
         }
+        $rules = (array) ($discount->rules_json ?? []);
+        $oncePerCustomer = (bool) ($rules['one_per_customer'] ?? $rules['once_per_customer'] ?? false);
+        $customerId ??= $cart->customer_id === null ? null : (int) $cart->customer_id;
+        if ($oncePerCustomer && $customerId !== null && $this->customerHasRedeemed($discount, $customerId)) {
+            throw new InvalidDiscountException('customer_usage_limit_reached');
+        }
 
         return $discount;
+    }
+
+    /** @return Collection<int, Discount> */
+    public function automaticDiscounts(Store $store, Cart $cart): Collection
+    {
+        return Discount::withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->where('type', 'automatic')
+            ->where('status', 'active')
+            ->orderBy('id')
+            ->get()
+            ->filter(function (Discount $discount) use ($store, $cart): bool {
+                try {
+                    $this->validateDiscount($discount, $store, $cart);
+
+                    return true;
+                } catch (InvalidDiscountException) {
+                    return false;
+                }
+            })
+            ->values();
     }
 
     public function validateResult(string $code, Store $store, Cart $cart): DiscountValidationResult
@@ -123,5 +160,16 @@ final class DiscountService
     private function value(mixed $value): string
     {
         return $value instanceof BackedEnum ? (string) $value->value : (string) $value;
+    }
+
+    public function customerHasRedeemed(Discount $discount, int $customerId): bool
+    {
+        return OrderLine::query()
+            ->whereHas('order', fn ($orders) => $orders->withoutGlobalScopes()
+                ->where('store_id', $discount->store_id)
+                ->where('customer_id', $customerId))
+            ->get(['discount_allocations_json'])
+            ->contains(fn (OrderLine $line): bool => collect((array) $line->discount_allocations_json)
+                ->contains(fn (mixed $allocation): bool => (int) data_get($allocation, 'discount_id') === (int) $discount->id));
     }
 }

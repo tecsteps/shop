@@ -33,8 +33,9 @@ class Login extends StorefrontComponent
         ]);
 
         $key = 'customer-login:'.Str::lower($this->email).'|'.request()->ip();
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = RateLimiter::availableIn($key);
+        $ipKey = 'login-ip:'.request()->ip();
+        if (RateLimiter::tooManyAttempts($key, 5) || RateLimiter::tooManyAttempts($ipKey, 5)) {
+            $seconds = max(RateLimiter::availableIn($key), RateLimiter::availableIn($ipKey));
             $this->addError('email', "Too many attempts. Try again in {$seconds} seconds.");
 
             return null;
@@ -42,12 +43,14 @@ class Login extends StorefrontComponent
 
         if (! Auth::guard('customer')->attempt(['email' => $this->email, 'password' => $this->password])) {
             RateLimiter::hit($key, 60);
+            RateLimiter::hit($ipKey, 60);
             $this->addError('credentials', 'Invalid credentials');
 
             return null;
         }
 
         RateLimiter::clear($key);
+        RateLimiter::clear($ipKey);
         request()->session()->regenerate();
         $this->mergeGuestCart();
 

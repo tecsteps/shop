@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Contracts\DnsResolver;
 use App\Contracts\PaymentProvider;
 use App\Contracts\TaxProvider;
 use App\Enums\StoreUserRole;
@@ -19,13 +20,20 @@ use App\Models\ProductMedia;
 use App\Models\Refund;
 use App\Models\ShippingZone;
 use App\Models\Store;
+use App\Models\StoreDomain;
 use App\Models\TaxSettings;
 use App\Models\Theme;
+use App\Models\ThemeSettings;
 use App\Models\User;
 use App\Observers\AuditableObserver;
 use App\Observers\ProductMediaObserver;
 use App\Observers\ProductObserver;
+use App\Observers\StoreDomainObserver;
+use App\Observers\ThemeCacheObserver;
 use App\Services\AuditLogger;
+use App\Services\CodeQuality\Contracts\AiReviewer;
+use App\Services\CodeQuality\Runners\CodexAiRunner;
+use App\Services\NativeDnsResolver;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\Tax\ManualTaxProvider;
 use Carbon\CarbonImmutable;
@@ -50,6 +58,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(AiReviewer::class, CodexAiRunner::class);
+        $this->app->bind(DnsResolver::class, NativeDnsResolver::class);
         $this->app->singleton(PaymentProvider::class, MockPaymentProvider::class);
         $this->app->singleton(TaxProvider::class, ManualTaxProvider::class);
     }
@@ -65,6 +75,9 @@ class AppServiceProvider extends ServiceProvider
         $this->configureGates();
         Product::observe(ProductObserver::class);
         ProductMedia::observe(ProductMediaObserver::class);
+        StoreDomain::observe(StoreDomainObserver::class);
+        Theme::observe(ThemeCacheObserver::class);
+        ThemeSettings::observe(ThemeCacheObserver::class);
         foreach ([
             Product::class,
             Collection::class,
@@ -83,9 +96,10 @@ class AppServiceProvider extends ServiceProvider
         Event::subscribe(ShopEventSubscriber::class);
         $this->configureAuditEvents();
         ResetPassword::createUrlUsing(function ($notifiable, string $token): string {
-            $path = $notifiable instanceof \App\Models\Customer ? '/reset-password/' : '/admin/reset-password/';
+            $path = $notifiable instanceof Customer ? '/reset-password/' : '/admin/reset-password/';
+            $root = rtrim((string) config('app.url'), '/');
 
-            return url($path.$token).'?email='.urlencode($notifiable->getEmailForPasswordReset());
+            return $root.$path.rawurlencode($token).'?email='.rawurlencode($notifiable->getEmailForPasswordReset());
         });
 
         if (config('database.default') === 'sqlite') {
@@ -129,7 +143,10 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureRateLimits(): void
     {
-        RateLimiter::for('login', fn ($request) => Limit::perMinute(5)->by($request->ip().'|'.mb_strtolower((string) $request->input('email'))));
+        RateLimiter::for('login', fn ($request): array => [
+            Limit::perMinute(5)->by('login-ip:'.$request->ip()),
+            Limit::perMinute(5)->by('login-identity:'.$request->ip().'|'.mb_strtolower((string) $request->input('email'))),
+        ]);
         RateLimiter::for('api.admin', fn ($request) => Limit::perMinute(60)->by((string) ($request->user()?->getAuthIdentifier() ?? $request->ip())));
         RateLimiter::for('api.storefront', fn ($request) => Limit::perMinute(120)->by($request->ip()));
         RateLimiter::for('checkout', fn ($request) => Limit::perMinute(10)->by($request->session()->getId()));
@@ -204,6 +221,6 @@ class AppServiceProvider extends ServiceProvider
 
         $store = app('current_store');
 
-        return (int) ($store instanceof \App\Models\Store ? $store->getKey() : $store);
+        return (int) ($store instanceof Store ? $store->getKey() : $store);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Checkout;
 use App\Models\Order;
 use App\Models\OrderExport;
 use Illuminate\Bus\Queueable;
@@ -17,6 +18,11 @@ final class GenerateOrderExport implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
+
+    public int $timeout = 120;
+
+    /** @var list<int> */
+    public array $backoff = [10, 60, 300];
 
     public function __construct(public readonly OrderExport $export) {}
 
@@ -37,15 +43,21 @@ final class GenerateOrderExport implements ShouldQueue
                 ->when($filters['financial_status'] ?? null, fn ($query, $status) => $query->where('financial_status', $status))
                 ->when($filters['created_after'] ?? null, fn ($query, $date) => $query->where('created_at', '>=', $date))
                 ->when($filters['created_before'] ?? null, fn ($query, $date) => $query->where('created_at', '<=', $date))
-                ->with('fulfillments')
+                ->with(['customer', 'fulfillments'])
                 ->orderBy('id')
                 ->get();
+            $shippingMethods = Checkout::withoutGlobalScopes()
+                ->where('store_id', $export->store_id)
+                ->where('status', 'completed')
+                ->with('shippingRate')
+                ->get()
+                ->mapWithKeys(fn (Checkout $checkout): array => [(int) data_get($checkout->totals_json, 'order_id') => $checkout->shippingRate?->name]);
 
             $stream = fopen('php://temp', 'w+b');
             if ($stream === false) {
                 throw new \RuntimeException('Could not create the export stream.');
             }
-            fputcsv($stream, ['order_number', 'created_at', 'status', 'financial_status', 'fulfillment_status', 'customer_email', 'subtotal_amount', 'discount_amount', 'shipping_amount', 'tax_amount', 'total_amount', 'currency', 'tracking_number']);
+            fputcsv($stream, ['order_number', 'created_at', 'status', 'financial_status', 'fulfillment_status', 'customer_email', 'customer_name', 'subtotal_amount', 'discount_amount', 'shipping_amount', 'tax_amount', 'total_amount', 'currency', 'shipping_method', 'tracking_number']);
             foreach ($orders as $order) {
                 fputcsv($stream, [
                     $order->order_number,
@@ -54,12 +66,14 @@ final class GenerateOrderExport implements ShouldQueue
                     $order->financial_status instanceof \BackedEnum ? $order->financial_status->value : $order->financial_status,
                     $order->fulfillment_status instanceof \BackedEnum ? $order->fulfillment_status->value : $order->fulfillment_status,
                     $order->email,
+                    $order->customer?->name ?: trim((string) data_get($order->shipping_address_json, 'first_name').' '.(string) data_get($order->shipping_address_json, 'last_name')),
                     $order->subtotal_amount,
                     $order->discount_amount,
                     $order->shipping_amount,
                     $order->tax_amount,
                     $order->total_amount,
                     $order->currency,
+                    $shippingMethods->get($order->id),
                     $order->fulfillments->first()?->tracking_number,
                 ]);
             }

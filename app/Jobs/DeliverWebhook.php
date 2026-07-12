@@ -4,10 +4,11 @@ namespace App\Jobs;
 
 use App\Models\WebhookDelivery;
 use App\Services\WebhookService;
+use App\Services\WebhookTargetValidator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
@@ -18,6 +19,8 @@ final class DeliverWebhook implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 6;
+
+    public int $timeout = 30;
 
     /** @var list<int> */
     public array $backoff = [60, 300, 1800, 7200, 43200];
@@ -40,17 +43,23 @@ final class DeliverWebhook implements ShouldQueue
 
         $body = json_encode($this->payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
         $secret = (string) $delivery->subscription->signing_secret_encrypted;
+        $timestamp = (string) now()->timestamp;
         $delivery->increment('attempt_count');
         $delivery->update(['last_attempt_at' => now()]);
 
         try {
-            $response = Http::timeout(10)->withHeaders([
-                'X-Platform-Signature' => $webhooks->sign($body, $secret),
+            $target = app(WebhookTargetValidator::class)->validate($delivery->subscription->target_url);
+            $options = ['allow_redirects' => false];
+            if (defined('CURLOPT_RESOLVE')) {
+                $options['curl'] = [CURLOPT_RESOLVE => [$target->curlResolveEntry()]];
+            }
+            $response = Http::timeout(10)->connectTimeout(5)->withOptions($options)->withHeaders([
+                'X-Platform-Signature' => $webhooks->sign("{$timestamp}.{$body}", $secret),
                 'X-Platform-Event' => $this->eventType,
                 'X-Platform-Delivery-Id' => $delivery->event_id,
-                'X-Platform-Timestamp' => (string) now()->timestamp,
+                'X-Platform-Timestamp' => $timestamp,
                 'Content-Type' => 'application/json',
-            ])->withBody($body, 'application/json')->post($delivery->subscription->target_url);
+            ])->withBody($body, 'application/json')->post($target->url);
 
             $delivery->update([
                 'status' => $response->successful() ? 'success' : 'failed',
@@ -58,8 +67,7 @@ final class DeliverWebhook implements ShouldQueue
                 'response_body_snippet' => mb_substr($response->body(), 0, 1000),
             ]);
             if (! $response->successful()) {
-                $webhooks->recordFailure($delivery);
-                $response->throw();
+                throw new RequestException($response);
             }
         } catch (Throwable $exception) {
             $delivery->update(['status' => 'failed', 'response_body_snippet' => mb_substr($exception->getMessage(), 0, 1000)]);

@@ -2,9 +2,13 @@
 
 namespace App\Livewire\Storefront;
 
+use App\Models\Collection;
 use App\Models\NavigationMenu;
+use App\Models\Page;
+use App\Models\Product;
 use App\Models\Store;
 use App\Services\ThemeSettingsService;
+use App\Support\SafeUrl;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -80,7 +84,7 @@ abstract class StorefrontComponent extends Component
             ];
         }
 
-        return array_replace_recursive([
+        return SafeUrl::sanitizeThemeSettings(array_replace_recursive([
             'announcement' => ['enabled' => false, 'text' => '', 'url' => null, 'background' => '#18181b'],
             'header' => ['sticky' => true, 'logo_url' => null],
             'colors' => ['primary' => '#1d4ed8', 'secondary' => '#334155', 'accent' => '#f59e0b'],
@@ -97,7 +101,7 @@ abstract class StorefrontComponent extends Component
                 ],
             ],
             'footer' => ['description' => null, 'social' => []],
-        ], $raw);
+        ], $raw));
     }
 
     /** @return array<int, array<string, mixed>> */
@@ -113,10 +117,10 @@ abstract class StorefrontComponent extends Component
             return [
                 'label' => $item->label,
                 'url' => match ($type) {
-                    'page' => $this->resourceUrl(\App\Models\Page::class, $item->resource_id, '/pages/'),
-                    'collection' => $this->resourceUrl(\App\Models\Collection::class, $item->resource_id, '/collections/'),
-                    'product' => $this->resourceUrl(\App\Models\Product::class, $item->resource_id, '/products/'),
-                    default => $item->url ?: '#',
+                    'page' => $this->resourceUrl(Page::class, $item->resource_id, '/pages/'),
+                    'collection' => $this->resourceUrl(Collection::class, $item->resource_id, '/collections/'),
+                    'product' => $this->resourceUrl(Product::class, $item->resource_id, '/products/'),
+                    default => SafeUrl::normalize($item->url) ?: '#',
                 },
                 'children' => Arr::wrap(data_get($item, 'children', [])),
             ];

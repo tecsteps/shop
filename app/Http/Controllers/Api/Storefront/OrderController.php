@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Api\Storefront;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\OrderStatusLink;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 final class OrderController extends Controller
 {
+    public function __construct(private readonly OrderStatusLink $links) {}
+
     public function show(Request $request, string $orderNumber): JsonResponse
     {
         $order = Order::withoutGlobalScopes()->where('store_id', app('current_store')->id)->where('order_number', $orderNumber)->with(['lines', 'fulfillments'])->firstOrFail();
-        $expected = hash_hmac('sha256', $order->order_number.'|'.$order->email, (string) config('app.key'));
-        abort_unless(is_string($request->query('token')) && hash_equals($expected, $request->query('token')), 401);
+        abort_unless($this->links->verify($order, $request->query('token')), 401);
 
         return response()->json([
             'order_number' => $order->order_number,

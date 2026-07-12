@@ -13,6 +13,7 @@ use App\Exceptions\ShippingUnavailableException;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Order;
+use App\ValueObjects\PaymentResult;
 use BackedEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -27,43 +28,83 @@ final class CheckoutService
         private readonly OrderService $orders,
     ) {}
 
-    public function create(Cart $cart): Checkout
+    public function create(Cart $cart, ?string $email = null): Checkout
     {
-        if ($cart->lines()->count() === 0) {
-            throw new InvalidCheckoutTransitionException('An empty cart cannot be checked out.');
-        }
+        return DB::transaction(function () use ($cart, $email): Checkout {
+            $cart = Cart::withoutGlobalScopes()->lockForUpdate()->with('lines')->findOrFail($cart->id);
+            if ($this->stateValue($cart->status) !== 'active' || $cart->lines->isEmpty()) {
+                throw new InvalidCheckoutTransitionException('Only a non-empty active cart can be checked out.');
+            }
 
-        return Checkout::withoutGlobalScopes()->create([
-            'store_id' => $cart->store_id,
-            'cart_id' => $cart->id,
-            'customer_id' => $cart->customer_id,
-            'status' => 'started',
-            'expires_at' => now()->addDay(),
-        ]);
+            $existing = Checkout::withoutGlobalScopes()
+                ->where('cart_id', $cart->id)
+                ->whereNotIn('status', ['completed', 'expired'])
+                ->latest('id')
+                ->first();
+            if ($existing !== null && $existing->expires_at?->isFuture()) {
+                if ($email !== null && $this->state($existing) === 'started') {
+                    $existing->update(['email' => mb_strtolower($email), 'expires_at' => now()->addDay()]);
+                }
+                $this->pricing->calculate($existing);
+
+                return $existing->refresh();
+            }
+            if ($existing !== null) {
+                $this->expireCheckout($existing);
+            }
+
+            $checkout = Checkout::withoutGlobalScopes()->create([
+                'store_id' => $cart->store_id,
+                'cart_id' => $cart->id,
+                'customer_id' => $cart->customer_id,
+                'status' => 'started',
+                'email' => $email === null ? null : mb_strtolower($email),
+                'expires_at' => now()->addDay(),
+            ]);
+            $this->pricing->calculate($checkout);
+
+            return $checkout->refresh();
+        });
     }
 
     /** @param array<string, mixed> $data */
     public function setAddress(Checkout $checkout, array $data): Checkout
     {
         $this->assertState($checkout, ['started', 'addressed', 'shipping_selected']);
+        $checkout->loadMissing('cart.lines.variant');
+        $requiresShipping = $this->shipping->requiresShipping($checkout->cart);
         $address = (array) ($data['shipping_address'] ?? $data['address'] ?? $data);
         $email = (string) ($data['email'] ?? $checkout->email ?? '');
-        Validator::make(['email' => $email, ...$address], [
+        $rules = [
             'email' => ['required', 'email'],
-            'first_name' => ['required', 'string', 'max:100'],
-            'last_name' => ['required', 'string', 'max:100'],
-            'address1' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:100'],
-            'country_code' => ['required_without:country', 'nullable', 'string', 'size:2'],
-            'country' => ['required_without:country_code', 'nullable', 'string', 'size:2'],
-            'postal_code' => ['required_without:zip', 'nullable', 'string', 'max:20'],
-            'zip' => ['required_without:postal_code', 'nullable', 'string', 'max:20'],
-        ])->validate();
+        ];
+        if ($requiresShipping) {
+            $rules += [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'address1' => ['required', 'string', 'max:500'],
+                'city' => ['required', 'string', 'max:255'],
+                'country_code' => ['required', 'string', 'size:2'],
+                'postal_code' => ['required', 'string', 'max:20'],
+            ];
+        }
+        Validator::make(['email' => $email, ...$address], $rules)->validate();
+
+        if ($requiresShipping) {
+            $checkout->loadMissing('store');
+            if ($this->shipping->getAvailableRates($checkout->store, $address, $checkout->cart)->isEmpty()) {
+                throw new ShippingUnavailableException('No shipping method is available for this address.');
+            }
+        }
+
+        $billing = (bool) ($data['use_shipping_as_billing'] ?? true)
+            ? $address
+            : (array) ($data['billing_address'] ?? []);
 
         $checkout->fill([
             'email' => mb_strtolower($email),
-            'shipping_address_json' => $address,
-            'billing_address_json' => (array) ($data['billing_address'] ?? $address),
+            'shipping_address_json' => $requiresShipping ? $address : null,
+            'billing_address_json' => $billing === [] ? null : $billing,
             'shipping_method_id' => null,
             'status' => 'addressed',
         ])->save();
@@ -127,27 +168,41 @@ final class CheckoutService
     /** @param array<string, mixed> $paymentDetails */
     public function completeCheckout(Checkout $checkout, array $paymentDetails = []): Order
     {
-        if ($this->state($checkout) === 'completed') {
-            $id = (int) data_get($checkout->totals_json, 'order_id');
+        $outcome = DB::transaction(function () use ($checkout, $paymentDetails): Order|\App\ValueObjects\PaymentResult {
+            $checkout = Checkout::withoutGlobalScopes()->lockForUpdate()->with('cart')->findOrFail($checkout->id);
+            if ($this->state($checkout) === 'completed') {
+                $id = (int) data_get($checkout->totals_json, 'order_id');
 
-            return Order::withoutGlobalScopes()->findOrFail($id);
+                return Order::withoutGlobalScopes()->findOrFail($id);
+            }
+            if ($checkout->expires_at?->isPast()) {
+                $this->expireCheckout($checkout);
+                throw new InvalidCheckoutTransitionException('This checkout has expired.');
+            }
+            $this->assertState($checkout, ['payment_selected']);
+            $method = $checkout->payment_method instanceof PaymentMethod
+                ? $checkout->payment_method
+                : PaymentMethod::from((string) $checkout->payment_method);
+            $result = $this->payments->charge($checkout, $method, $paymentDetails);
+
+            if (! $result->success) {
+                $this->releaseReservations($checkout);
+                $checkout->update(['status' => 'shipping_selected', 'payment_method' => null]);
+
+                return $result;
+            }
+
+            $order = $this->orders->createFromCheckout($checkout, $result);
+            event(new CheckoutCompleted($checkout, $order));
+
+            return $order;
+        });
+
+        if ($outcome instanceof PaymentResult) {
+            throw new PaymentFailedException($outcome->errorCode ?? 'payment_failed', $outcome->errorMessage);
         }
-        $this->assertState($checkout, ['payment_selected']);
-        $method = $checkout->payment_method instanceof PaymentMethod
-            ? $checkout->payment_method
-            : PaymentMethod::from((string) $checkout->payment_method);
-        $result = $this->payments->charge($checkout, $method, $paymentDetails);
 
-        if (! $result->success) {
-            $this->releaseReservations($checkout);
-            $checkout->update(['status' => 'shipping_selected', 'payment_method' => null]);
-            throw new PaymentFailedException($result->errorCode ?? 'payment_failed', $result->errorMessage);
-        }
-
-        $order = $this->orders->createFromCheckout($checkout, $result);
-        event(new CheckoutCompleted($checkout, $order));
-
-        return $order;
+        return $outcome;
     }
 
     public function expireCheckout(Checkout $checkout): void
@@ -185,6 +240,11 @@ final class CheckoutService
 
     private function state(Checkout $checkout): string
     {
-        return $checkout->status instanceof BackedEnum ? (string) $checkout->status->value : (string) $checkout->status;
+        return $this->stateValue($checkout->status);
+    }
+
+    private function stateValue(mixed $status): string
+    {
+        return $status instanceof BackedEnum ? (string) $status->value : (string) $status;
     }
 }

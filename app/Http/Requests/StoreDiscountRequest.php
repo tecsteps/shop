@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Discount;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDiscountRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Discount::class) ?? false;
     }
 
     public function rules(): array

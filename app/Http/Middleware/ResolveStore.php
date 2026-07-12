@@ -37,7 +37,13 @@ final class ResolveStore
     private function fromHostname(Request $request): Store
     {
         $hostname = mb_strtolower($request->getHost());
-        $storeId = Cache::remember("store_domain:{$hostname}", now()->addMinutes(5), fn (): ?int => StoreDomain::query()->where('hostname', $hostname)->value('store_id'));
+        $cacheKey = "store_domain:{$hostname}";
+        $storeId = Cache::get($cacheKey);
+        if ($storeId !== null && ! StoreDomain::withoutGlobalScopes()->where('hostname', $hostname)->where('store_id', $storeId)->exists()) {
+            Cache::forget($cacheKey);
+            $storeId = null;
+        }
+        $storeId ??= Cache::remember($cacheKey, now()->addMinutes(5), fn (): ?int => StoreDomain::withoutGlobalScopes()->where('hostname', $hostname)->value('store_id'));
         abort_if($storeId === null, 404);
 
         return Store::query()->findOrFail($storeId);
@@ -65,6 +71,12 @@ final class ResolveStore
         abort_if($user === null, 401);
         $storeId = (int) $request->route('storeId');
         abort_unless($storeId > 0 && $user->stores()->whereKey($storeId)->exists(), 403);
+        abort_unless(
+            $user->currentAccessToken() !== null
+            && ($user->tokenCan("store:{$storeId}") || $user->tokenCan('manage-platform')),
+            403,
+            'This API token is not authorized for the requested store.',
+        );
 
         return Store::query()->findOrFail($storeId);
     }

@@ -6,8 +6,10 @@ use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
 use App\Events\OrderPaid;
 use App\Exceptions\DomainException;
+use App\Exceptions\InvalidDiscountException;
 use App\Models\Checkout;
 use App\Models\Customer;
+use App\Models\Discount;
 use App\Models\Order;
 use App\Models\Store;
 use App\ValueObjects\PaymentResult;
@@ -19,6 +21,7 @@ final class OrderService
     public function __construct(
         private readonly InventoryService $inventory,
         private readonly FulfillmentService $fulfillments,
+        private readonly DiscountService $discounts,
     ) {}
 
     public function createFromCheckout(Checkout $checkout, ?PaymentResult $paymentResult = null): Order
@@ -39,6 +42,24 @@ final class OrderService
             $pending = $method === 'bank_transfer';
             $paymentResult ??= new PaymentResult(true, 'mock_manual', $pending ? 'pending' : 'captured');
             $customer = $this->resolveCustomer($checkout);
+            $appliedDiscounts = (array) ($snapshot['applied_discounts'] ?? []);
+            if ($appliedDiscounts === [] && $checkout->discount_code !== null) {
+                $legacyDiscount = Discount::withoutGlobalScopes()
+                    ->where('store_id', $checkout->store_id)
+                    ->whereRaw('LOWER(code) = ?', [mb_strtolower($checkout->discount_code)])
+                    ->first();
+                if ($legacyDiscount !== null) {
+                    $appliedDiscounts = [[
+                        'discount_id' => $legacyDiscount->id,
+                        'code' => $legacyDiscount->code,
+                        'amount' => (int) ($snapshot['discount'] ?? 0),
+                        'allocations' => $checkout->cart->lines->mapWithKeys(fn ($line): array => [
+                            (int) $line->id => (int) $line->line_discount_amount,
+                        ])->all(),
+                    ]];
+                }
+            }
+            $lockedDiscounts = $this->lockAndValidateDiscounts($checkout, $appliedDiscounts, $customer?->id);
             $order = Order::withoutGlobalScopes()->create([
                 'store_id' => $checkout->store_id,
                 'customer_id' => $customer?->id,
@@ -74,10 +95,15 @@ final class OrderService
                     'quantity' => $line->quantity,
                     'unit_price_amount' => $line->unit_price_amount,
                     'total_amount' => $line->line_total_amount,
-                    'tax_lines_json' => (array) ($snapshot['tax_lines'] ?? []),
-                    'discount_allocations_json' => $line->line_discount_amount > 0
-                        ? [['code' => $checkout->discount_code, 'amount' => $line->line_discount_amount]]
-                        : [],
+                    'tax_lines_json' => (array) data_get($snapshot, 'line_tax_allocations.'.$line->id, $snapshot['tax_lines'] ?? []),
+                    'discount_allocations_json' => collect($appliedDiscounts)
+                        ->map(fn (array $discount): array => [
+                            'discount_id' => (int) ($discount['discount_id'] ?? 0),
+                            'amount' => (int) data_get($discount, 'allocations.'.$line->id, 0),
+                        ])
+                        ->filter(fn (array $allocation): bool => $allocation['discount_id'] > 0 && $allocation['amount'] > 0)
+                        ->values()
+                        ->all(),
                 ]);
 
                 if (! $pending && $variant->inventoryItem !== null) {
@@ -95,11 +121,8 @@ final class OrderService
                 'raw_json_encrypted' => $paymentResult->raw,
             ]);
 
-            if ($checkout->discount_code !== null) {
-                \App\Models\Discount::withoutGlobalScopes()
-                    ->where('store_id', $checkout->store_id)
-                    ->whereRaw('LOWER(code) = ?', [mb_strtolower($checkout->discount_code)])
-                    ->increment('usage_count');
+            foreach ($lockedDiscounts as $discount) {
+                $discount->increment('usage_count');
             }
 
             $checkout->cart->update(['status' => 'converted']);
@@ -182,6 +205,43 @@ final class OrderService
             ['store_id' => $checkout->store_id, 'email' => mb_strtolower($checkout->email)],
             ['name' => trim((string) data_get($checkout->shipping_address_json, 'first_name').' '.(string) data_get($checkout->shipping_address_json, 'last_name')), 'password_hash' => null, 'marketing_opt_in' => false],
         );
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $appliedDiscounts
+     * @return list<Discount>
+     */
+    private function lockAndValidateDiscounts(Checkout $checkout, array $appliedDiscounts, ?int $customerId): array
+    {
+        $discountIds = collect($appliedDiscounts)
+            ->pluck('discount_id')
+            ->map(fn (mixed $id): int => (int) $id)
+            ->filter()
+            ->unique()
+            ->values();
+        if ($discountIds->isEmpty()) {
+            return [];
+        }
+
+        $locked = Discount::withoutGlobalScopes()
+            ->where('store_id', $checkout->store_id)
+            ->whereKey($discountIds)
+            ->orderBy('id')
+            ->lockForUpdate()
+            ->get();
+        if ($locked->count() !== $discountIds->count()) {
+            throw new DomainException('An applied discount is no longer available.');
+        }
+
+        foreach ($locked as $discount) {
+            try {
+                $this->discounts->validateDiscount($discount, $checkout->store, $checkout->cart, $customerId);
+            } catch (InvalidDiscountException $exception) {
+                throw new DomainException('An applied discount is no longer valid: '.$exception->reason);
+            }
+        }
+
+        return $locked->all();
     }
 
     private function value(mixed $value): string

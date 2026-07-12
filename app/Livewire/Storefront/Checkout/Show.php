@@ -76,6 +76,7 @@ class Show extends StorefrontComponent
         abort_if($this->status() === 'completed', 409, 'This checkout is already complete.');
         abort_if($this->status() === 'expired', 410, 'This checkout has expired.');
         abort_if($this->checkout->cart->lines->isEmpty(), 422, 'Your cart is empty.');
+        $this->requiresShipping = app(ShippingCalculator::class)->requiresShipping($this->checkout->cart);
 
         $this->email = (string) ($this->checkout->email ?: Auth::guard('customer')->user()?->email);
         $this->discountCode = (string) ($this->checkout->discount_code ?: session('cart_discount_code', ''));
@@ -101,6 +102,17 @@ class Show extends StorefrontComponent
         $this->validate(['email' => ['required', 'email:rfc', 'max:255']]);
         $this->email = mb_strtolower($this->email);
         $this->checkout->forceFill(['email' => $this->email])->save();
+        if (! $this->requiresShipping) {
+            $service = app(CheckoutService::class);
+            $service->setAddress($this->checkout, ['email' => $this->email]);
+            $this->checkout->refresh();
+            $service->setShippingMethod($this->checkout, null);
+            $this->checkout->refresh();
+            $this->step = 4;
+            $this->dispatch('checkout-step-changed', step: 4);
+
+            return;
+        }
         $this->step = 2;
         $this->dispatch('checkout-step-changed', step: 2);
     }

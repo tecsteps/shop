@@ -5,6 +5,7 @@ namespace App\Livewire\Storefront\Checkout;
 use App\Livewire\Storefront\StorefrontComponent;
 use App\Models\Checkout;
 use App\Models\Order;
+use App\Services\OrderStatusLink;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -13,6 +14,8 @@ class Confirmation extends StorefrontComponent
     public Checkout $checkout;
 
     public Order $order;
+
+    public string $orderStatusUrl = '';
 
     public function mount(int|string|Checkout $checkoutId): void
     {
@@ -31,12 +34,15 @@ class Confirmation extends StorefrontComponent
             403,
         );
 
+        $orderId = data_get($this->checkout->totals_json, 'order_id');
+        abort_unless(is_numeric($orderId) && (int) $orderId > 0, 404);
+
         $this->order = Order::query()
             ->where('store_id', $this->currentStore()->getKey())
-            ->when(session('last_order_id'), fn ($query, $id) => $query->whereKey($id))
-            ->when(! session('last_order_id'), fn ($query) => $query->where('email', $this->checkout->email)->latest('placed_at'))
+            ->whereKey((int) $orderId)
             ->with(['lines.product.media', 'payments', 'fulfillments'])
             ->firstOrFail();
+        $this->orderStatusUrl = app(OrderStatusLink::class)->url($this->order);
     }
 
     public function render(): View

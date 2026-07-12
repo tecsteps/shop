@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\CartVersionMismatchException;
 use App\Exceptions\DomainException;
+use App\Exceptions\InsufficientInventoryException;
 use App\Models\Cart;
 use App\Models\CartLine;
 use App\Models\Customer;
@@ -16,12 +17,12 @@ final class CartService
 {
     public function __construct(private readonly InventoryService $inventory) {}
 
-    public function create(Store $store, ?Customer $customer = null): Cart
+    public function create(Store $store, ?Customer $customer = null, ?string $currency = null): Cart
     {
         return Cart::withoutGlobalScopes()->create([
             'store_id' => $store->id,
             'customer_id' => $customer?->id,
-            'currency' => $store->default_currency,
+            'currency' => $currency ?? $store->default_currency,
             'cart_version' => 1,
             'status' => 'active',
         ]);
@@ -62,6 +63,7 @@ final class CartService
 
     public function addLine(Cart $cart, int|ProductVariant $variant, int $quantity = 1, ?int $expectedVersion = null): CartLine
     {
+        $this->assertMutable($cart);
         $this->assertVersion($cart, $expectedVersion);
         $this->positive($quantity);
         $variant = $variant instanceof ProductVariant
@@ -80,18 +82,22 @@ final class CartService
             throw new DomainException('This product is not available.');
         }
 
-        return DB::transaction(function () use ($cart, $variant, $quantity): CartLine {
-            $line = CartLine::query()->where('cart_id', $cart->id)->where('variant_id', $variant->id)->first();
+        return DB::transaction(function () use ($cart, $variant, $quantity, $expectedVersion): CartLine {
+            $lockedCart = Cart::withoutGlobalScopes()->lockForUpdate()->findOrFail($cart->id);
+            $this->assertMutable($lockedCart);
+            $this->assertVersion($lockedCart, $expectedVersion);
+            $line = CartLine::query()->where('cart_id', $lockedCart->id)->where('variant_id', $variant->id)->first();
             $newQuantity = $quantity + ($line?->quantity ?? 0);
 
             if ($variant->inventoryItem !== null && ! $this->inventory->checkAvailability($variant->inventoryItem, $newQuantity)) {
-                throw new \App\Exceptions\InsufficientInventoryException('The requested quantity is not available.');
+                throw new InsufficientInventoryException('The requested quantity is not available.');
             }
 
             $amounts = $this->amounts((int) $variant->price_amount, $newQuantity);
-            $line ??= new CartLine(['cart_id' => $cart->id, 'variant_id' => $variant->id]);
+            $line ??= new CartLine(['cart_id' => $lockedCart->id, 'variant_id' => $variant->id]);
             $line->fill(['quantity' => $newQuantity, ...$amounts])->save();
-            $this->bumpVersion($cart);
+            $this->bumpVersion($lockedCart);
+            $cart->setRawAttributes($lockedCart->getAttributes(), true);
 
             return $line->refresh();
         });
@@ -99,6 +105,7 @@ final class CartService
 
     public function updateLineQuantity(Cart $cart, int $lineId, int $quantity, ?int $expectedVersion = null): CartLine
     {
+        $this->assertMutable($cart);
         $this->assertVersion($cart, $expectedVersion);
         if ($quantity === 0) {
             $this->removeLine($cart, $lineId, $expectedVersion);
@@ -107,15 +114,19 @@ final class CartService
         }
         $this->positive($quantity);
 
-        return DB::transaction(function () use ($cart, $lineId, $quantity): CartLine {
-            $line = CartLine::query()->where('cart_id', $cart->id)->with('variant.inventoryItem')->findOrFail($lineId);
+        return DB::transaction(function () use ($cart, $lineId, $quantity, $expectedVersion): CartLine {
+            $lockedCart = Cart::withoutGlobalScopes()->lockForUpdate()->findOrFail($cart->id);
+            $this->assertMutable($lockedCart);
+            $this->assertVersion($lockedCart, $expectedVersion);
+            $line = CartLine::query()->where('cart_id', $lockedCart->id)->with('variant.inventoryItem')->findOrFail($lineId);
 
             if ($line->variant->inventoryItem !== null && ! $this->inventory->checkAvailability($line->variant->inventoryItem, $quantity)) {
-                throw new \App\Exceptions\InsufficientInventoryException('The requested quantity is not available.');
+                throw new InsufficientInventoryException('The requested quantity is not available.');
             }
 
             $line->fill(['quantity' => $quantity, ...$this->amounts((int) $line->variant->price_amount, $quantity)])->save();
-            $this->bumpVersion($cart);
+            $this->bumpVersion($lockedCart);
+            $cart->setRawAttributes($lockedCart->getAttributes(), true);
 
             return $line->refresh();
         });
@@ -123,10 +134,15 @@ final class CartService
 
     public function removeLine(Cart $cart, int $lineId, ?int $expectedVersion = null): void
     {
+        $this->assertMutable($cart);
         $this->assertVersion($cart, $expectedVersion);
-        DB::transaction(function () use ($cart, $lineId): void {
-            CartLine::query()->where('cart_id', $cart->id)->findOrFail($lineId)->delete();
-            $this->bumpVersion($cart);
+        DB::transaction(function () use ($cart, $lineId, $expectedVersion): void {
+            $lockedCart = Cart::withoutGlobalScopes()->lockForUpdate()->findOrFail($cart->id);
+            $this->assertMutable($lockedCart);
+            $this->assertVersion($lockedCart, $expectedVersion);
+            CartLine::query()->where('cart_id', $lockedCart->id)->findOrFail($lineId)->delete();
+            $this->bumpVersion($lockedCart);
+            $cart->setRawAttributes($lockedCart->getAttributes(), true);
         });
     }
 
@@ -137,13 +153,30 @@ final class CartService
         }
 
         return DB::transaction(function () use ($guest, $customer): Cart {
-            $guest->load('lines');
+            $guest->load('lines.variant.inventoryItem');
             foreach ($guest->lines as $line) {
                 $target = CartLine::query()->where('cart_id', $customer->id)->where('variant_id', $line->variant_id)->first();
                 if ($target !== null) {
-                    $target->quantity += $line->quantity;
+                    $target->quantity = max((int) $target->quantity, (int) $line->quantity);
+                    if ($line->variant?->inventoryItem !== null && ! $this->inventory->checkAvailability($line->variant->inventoryItem, (int) $target->quantity)) {
+                        $target->quantity = max(0, (int) $line->variant->inventoryItem->quantity_on_hand - (int) $line->variant->inventoryItem->quantity_reserved);
+                    }
+                    if ($target->quantity === 0) {
+                        $target->delete();
+
+                        continue;
+                    }
                     $target->fill($this->amounts((int) $target->unit_price_amount, (int) $target->quantity))->save();
                 } else {
+                    if ($line->variant?->inventoryItem !== null && ! $this->inventory->checkAvailability($line->variant->inventoryItem, (int) $line->quantity)) {
+                        $line->quantity = max(0, (int) $line->variant->inventoryItem->quantity_on_hand - (int) $line->variant->inventoryItem->quantity_reserved);
+                    }
+                    if ($line->quantity === 0) {
+                        $line->delete();
+
+                        continue;
+                    }
+                    $line->fill($this->amounts((int) $line->unit_price_amount, (int) $line->quantity));
                     $line->cart_id = $customer->id;
                     $line->save();
                 }
@@ -161,6 +194,18 @@ final class CartService
     {
         if ($expectedVersion !== null && (int) $cart->cart_version !== $expectedVersion) {
             throw new CartVersionMismatchException($cart->fresh('lines') ?? $cart);
+        }
+    }
+
+    private function assertMutable(Cart $cart): void
+    {
+        $status = $this->enumValue($cart->status);
+        $hasReservedCheckout = $cart->checkouts()
+            ->whereIn('status', ['payment_selected', 'completed'])
+            ->exists();
+
+        if ($status !== 'active' || $hasReservedCheckout) {
+            throw new DomainException('This cart can no longer be changed.');
         }
     }
 

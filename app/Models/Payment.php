@@ -19,6 +19,8 @@ class Payment extends Model
         'order_id', 'provider', 'method', 'provider_payment_id', 'status', 'amount', 'currency', 'raw_json_encrypted',
     ];
 
+    protected $hidden = ['raw_json_encrypted'];
+
     protected function casts(): array
     {
         return [

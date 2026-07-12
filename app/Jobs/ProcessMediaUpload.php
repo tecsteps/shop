@@ -18,6 +18,11 @@ final class ProcessMediaUpload implements ShouldQueue
 
     public int $tries = 3;
 
+    public int $timeout = 120;
+
+    /** @var list<int> */
+    public array $backoff = [10, 60, 300];
+
     public function __construct(public readonly ProductMedia $media) {}
 
     public function handle(): void

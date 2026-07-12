@@ -14,13 +14,13 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | 1. Foundation, tenancy, authentication, authorization | Complete | All migrations pass; tenancy/auth infrastructure and factories are present |
 | 2. Catalog, inventory, collections, media | Complete | Catalog/cart/pricing and media behavior suites pass |
 | 3. Themes, CMS, navigation, storefront shell | Complete | Blade compilation, Vite build, and live Herd render smoke pass |
-| 4. Cart, checkout, discounts, shipping, taxes | In progress | Domain and storefront API suites pass; Chrome flow pending |
-| 5. Payments, orders, refunds, fulfillment | In progress | Lifecycle suite passes; admin UI and Chrome pending |
-| 6. Customer accounts | In progress | Tenant auth/reset/address/order suite passes; Chrome pending |
-| 7. Admin panel | In progress | Full resource surface under implementation and runtime smoke QA |
-| 8. Search, analytics, apps, webhooks | In progress | Search/analytics/media/webhook/job suite passes; admin UI pending |
-| 9. Accessibility, responsive, dark mode, error states | Pending | Build + Chrome review |
-| 10. Full quality and acceptance verification | Pending | Pint, quality checker, all Pest, fresh seed, routes, config cache, Chrome |
+| 4. Cart, checkout, discounts, shipping, taxes | Complete | Contract-aligned API, integrity, discount-stacking, digital/physical checkout, and concurrency suites pass |
+| 5. Payments, orders, refunds, fulfillment | Complete | Idempotent payment, snapshot, refund/restock, export, fulfillment, and webhook lifecycle suites pass |
+| 6. Customer accounts | Complete | Tenant auth/reset/address/order and guest-identity security suites pass |
+| 7. Admin panel | Complete | All specified admin resources, roles, settings tabs, and mutation workflows pass HTTP/Livewire QA |
+| 8. Search, analytics, apps, webhooks | Complete | Facets/suggestions, deduplication, persistent reindex, secure delivery, analytics, apps, and job suites pass |
+| 9. Accessibility, responsive, dark mode, error states | In progress | Production build and Blade QA pass; final visible Chrome review pending |
+| 10. Full quality and acceptance verification | In progress | Final integrated Pest gate passes 252 tests / 1,651 assertions; seed/Chrome gate pending |
 
 ## Iteration Log
 
@@ -61,20 +61,34 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 - Restored stateful storefront API sessions and stable documented 422 errors for invalid variants, inventory, shipping, discounts, and checkout transitions.
 - Verified focused Pest suites for catalog/cart/pricing, checkout/order lifecycle, customer accounts, search/analytics/media/webhooks/jobs, and the complete storefront REST API. All currently pass.
 
+### Iteration 4 - Complete admin, contract reconciliation, security, and reliability
+
+- Delivered the complete admin surface for dashboard, products/media/options/variants, inventory, collections, orders/fulfillment/refunds, customers, discounts, settings/domains/shipping/taxes/checkout/notifications, themes, pages, navigation, analytics, search, apps, and developers.
+- Reconciled storefront REST responses and validation with the documented cart, checkout, payment, search/facets/suggestions, analytics, and signed order-status contracts.
+- Bound guest carts/checkouts to their owning session or customer, froze reserved carts, locked optimistic mutations, enforced one live checkout per cart, and made payment completion idempotent under lock.
+- Added automatic discount stacking, once-per-customer enforcement, transaction-safe usage accounting, per-line tax/discount snapshots, provider snapshots, lock-safe refunds, and double-restock prevention.
+- Hardened tenant associations, variant cardinality/defaults, support/admin role boundaries, suspended users/stores, canonical password-reset links, guest identity claims, serialized secrets, scriptable URLs, and API token store binding.
+- Added SSRF-safe DNS-pinned webhook delivery with redirects disabled, post-commit outbound isolation, tenant-context restoration, lifecycle-complete webhooks, and reusable signed order-status links.
+- Added validated theme ZIP extraction and duplication, responsive media processing, persistent search reindex progress, complete CSV fields, global login throttles, API-token audit events, and Checkout/Notifications settings.
+- Installed the reusable Laravel code-quality checker and retained its fixture regression suite; updated Composer and npm lockfiles until both package managers reported zero known vulnerabilities.
+- Verified the production Vite build, all route/config/view caches, the checker’s 13-test contract suite, 89 commerce/admin tests, 96 reliability/security-adjacent tests, and the final integrated 252-test / 1,651-assertion Pest run.
+
 ## Verification Ledger
 
 | Check | Latest Result |
 | --- | --- |
 | Working tree at start | Clean |
 | Existing shop code reused | No |
-| Pest suite | All implemented focused shop slices pass; full integrated run pending admin completion |
+| Pest suite | Final integrated gate passed: 252 tests / 1,651 assertions |
 | Vite production build | Passed |
 | Fresh migrate and seed | Passed (all migrations and all 18 seed stages) |
-| Laravel code-quality checker | Not installed yet |
+| Laravel code-quality checker | Installed; command contract suite passed 13 tests / 41 assertions |
+| Composer audit | Zero known vulnerabilities after dependency update |
+| npm audit | Zero known vulnerabilities after dependency update |
 | Chrome acceptance review | Not run yet |
 
 ## Open Risks
 
 - SQLite FTS5 is available and its migration passes locally.
 - `shop.test`, `acme-fashion.test`, and `acme-electronics.test` are seeded; live browser host routing remains to be verified.
-- Final integrated quality scan and visible Chrome customer/admin review remain pending until the admin surface is route-complete.
+- Final deterministic scan, post-hardening Pest/seed gate, and visible Chrome customer/admin review remain pending.

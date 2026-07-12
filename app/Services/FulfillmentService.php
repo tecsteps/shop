@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Events\OrderFulfilled;
 use App\Events\FulfillmentCreated;
 use App\Events\FulfillmentDelivered;
 use App\Events\FulfillmentShipped;
+use App\Events\OrderFulfilled;
 use App\Exceptions\FulfillmentGuardException;
 use App\Models\Fulfillment;
 use App\Models\Order;
@@ -49,7 +49,7 @@ final class FulfillmentService
     }
 
     /** @param array<string, mixed>|null $tracking */
-    public function markAsShipped(Fulfillment $fulfillment, ?array $tracking = null): void
+    public function markAsShipped(Fulfillment $fulfillment, ?array $tracking = null, bool $notifyCustomer = true): void
     {
         if ($this->value($fulfillment->status) !== 'pending') {
             throw new FulfillmentGuardException('Only pending fulfillments can be shipped.');
@@ -61,7 +61,7 @@ final class FulfillmentService
             'tracking_url' => $tracking['tracking_url'] ?? $fulfillment->tracking_url,
             'shipped_at' => now(),
         ], fn (mixed $value): bool => $value !== null))->save();
-        event(new FulfillmentShipped($fulfillment));
+        event(new FulfillmentShipped($fulfillment, $notifyCustomer));
     }
 
     public function markAsDelivered(Fulfillment $fulfillment): void
