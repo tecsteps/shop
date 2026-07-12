@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Checkout;
+use App\Models\Store;
 use App\Services\CheckoutService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,6 +22,9 @@ final class ExpireAbandonedCheckouts implements ShouldQueue
             ->where(function ($query): void {
                 $query->where('expires_at', '<', now())->orWhere('updated_at', '<', now()->subDay());
             })
-            ->chunkById(100, fn ($checkouts) => $checkouts->each(fn (Checkout $checkout) => $service->expireCheckout($checkout)));
+            ->chunkById(100, fn ($checkouts) => $checkouts->each(function (Checkout $checkout) use ($service): void {
+                app()->instance('current_store', Store::query()->findOrFail($checkout->store_id));
+                $service->expireCheckout($checkout);
+            }));
     }
 }

@@ -17,8 +17,16 @@ use App\Livewire\Storefront\Home;
 use App\Livewire\Storefront\Pages\Show as Page;
 use App\Livewire\Storefront\Products\Show as Product;
 use App\Livewire\Storefront\Search\Index as Search;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/oauth/authorize', fn () => response()->json([
+    'message' => 'The OAuth app ecosystem is not implemented in this release.',
+], 501));
+Route::post('/oauth/token', fn () => response()->json([
+    'message' => 'The OAuth app ecosystem is not implemented in this release.',
+], 501))->withoutMiddleware(ValidateCsrfToken::class);
 
 Route::middleware('storefront')->group(function (): void {
     Route::get('/', Home::class)->name('storefront.home');

@@ -107,7 +107,10 @@ final class CheckoutService
     {
         $this->assertState($checkout, ['shipping_selected']);
         $method = $paymentMethod instanceof PaymentMethod ? $paymentMethod : PaymentMethod::from($paymentMethod);
-        $checkout->loadMissing('cart.lines.variant.inventoryItem');
+        $checkout->load([
+            'cart' => fn ($query) => $query->withoutGlobalScopes(),
+            'cart.lines.variant.inventoryItem' => fn ($query) => $query->withoutGlobalScopes(),
+        ]);
 
         DB::transaction(function () use ($checkout, $method): void {
             foreach ($checkout->cart->lines as $line) {
@@ -161,7 +164,10 @@ final class CheckoutService
 
     private function releaseReservations(Checkout $checkout): void
     {
-        $checkout->loadMissing('cart.lines.variant.inventoryItem');
+        $checkout->load([
+            'cart' => fn ($query) => $query->withoutGlobalScopes(),
+            'cart.lines.variant.inventoryItem' => fn ($query) => $query->withoutGlobalScopes(),
+        ]);
         foreach ($checkout->cart->lines as $line) {
             if ($line->variant->inventoryItem !== null) {
                 $this->inventory->release($line->variant->inventoryItem, (int) $line->quantity);

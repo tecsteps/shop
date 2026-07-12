@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\Api\Storefront\AnalyticsController;
-use App\Http\Controllers\Api\Storefront\CartController;
-use App\Http\Controllers\Api\Storefront\CheckoutController;
-use App\Http\Controllers\Api\Storefront\SearchController;
-use App\Http\Controllers\Api\Storefront\OrderController as StorefrontOrderController;
 use App\Http\Controllers\Api\Admin\AnalyticsController as AdminAnalyticsController;
 use App\Http\Controllers\Api\Admin\CollectionController as AdminCollectionController;
 use App\Http\Controllers\Api\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Api\Admin\DiscountController as AdminDiscountController;
+use App\Http\Controllers\Api\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\PlatformController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Api\Storefront\AnalyticsController;
+use App\Http\Controllers\Api\Storefront\CartController;
+use App\Http\Controllers\Api\Storefront\CheckoutController;
+use App\Http\Controllers\Api\Storefront\OrderController as StorefrontOrderController;
+use App\Http\Controllers\Api\Storefront\SearchController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('storefront/v1')->middleware(['store.resolve', 'throttle:api.storefront'])->group(function (): void {
+Route::prefix('storefront/v1')->middleware(['storefront.api', 'throttle:api.storefront'])->group(function (): void {
     Route::post('carts', [CartController::class, 'store']);
     Route::get('carts/{cartId}', [CartController::class, 'show']);
     Route::post('carts/{cartId}/lines', [CartController::class, 'addLine']);
@@ -52,6 +53,7 @@ Route::prefix('admin/v1')->middleware(['auth:sanctum', 'throttle:api.admin'])->g
         Route::get('products/{productId}', [AdminProductController::class, 'show'])->middleware('abilities:read-products');
         Route::put('products/{productId}', [AdminProductController::class, 'update'])->middleware('abilities:write-products');
         Route::delete('products/{productId}', [AdminProductController::class, 'destroy'])->middleware('abilities:write-products');
+        Route::post('products/{productId}/media/presign-upload', [AdminMediaController::class, 'presign'])->middleware('abilities:write-products');
 
         Route::get('collections', [AdminCollectionController::class, 'index'])->middleware('abilities:read-collections');
         Route::post('collections', [AdminCollectionController::class, 'store'])->middleware('abilities:write-collections');
@@ -87,5 +89,16 @@ Route::prefix('admin/v1')->middleware(['auth:sanctum', 'throttle:api.admin'])->g
         Route::get('search/status', [AdminContentController::class, 'searchStatus'])->middleware('abilities:read-settings');
         Route::get('analytics/summary', [AdminAnalyticsController::class, 'summary'])->middleware('abilities:read-analytics');
         Route::post('exports/orders', [AdminAnalyticsController::class, 'exportOrders'])->middleware('abilities:read-orders');
+        Route::get('exports/{exportId}', [AdminAnalyticsController::class, 'export'])->middleware('abilities:read-orders')->name('api.admin.exports.show');
     });
+});
+
+Route::put('admin/v1/media/{media}/upload', [AdminMediaController::class, 'upload'])
+    ->middleware('signed')
+    ->name('api.media.upload');
+
+Route::prefix('apps/v1')->group(function (): void {
+    Route::get('stores/{storeId}/{resource}', fn () => response()->json([
+        'message' => 'The OAuth app ecosystem is not implemented in this release.',
+    ], 501))->where('resource', 'products|orders|customers');
 });

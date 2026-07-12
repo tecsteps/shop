@@ -66,10 +66,13 @@ final class CartService
         $this->positive($quantity);
         $variant = $variant instanceof ProductVariant
             ? $variant
-            : ProductVariant::withoutGlobalScopes()->with(['product', 'inventoryItem'])->findOrFail($variant);
-        $variant->loadMissing(['product', 'inventoryItem']);
+            : ProductVariant::withoutGlobalScopes()->findOrFail($variant);
+        $variant->load([
+            'product' => fn ($query) => $query->withoutGlobalScopes(),
+            'inventoryItem' => fn ($query) => $query->withoutGlobalScopes(),
+        ]);
 
-        if ((int) $variant->product->store_id !== (int) $cart->store_id) {
+        if ($variant->product === null || (int) $variant->product->store_id !== (int) $cart->store_id) {
             throw new DomainException('The selected variant does not belong to this store.');
         }
 

@@ -22,6 +22,7 @@ final class CancelUnpaidBankTransferOrders implements ShouldQueue
             ->with('store.settings')
             ->chunkById(100, function ($pending) use ($orders): void {
                 foreach ($pending as $order) {
+                    app()->instance('current_store', $order->store);
                     $days = (int) data_get($order->store?->settings?->settings_json, 'bank_transfer_cancel_days', 7);
                     if ($order->placed_at?->lt(now()->subDays($days))) {
                         $orders->cancel($order, 'Bank transfer payment timeout');

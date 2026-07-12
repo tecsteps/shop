@@ -17,6 +17,10 @@ trait ChecksStoreRoles
         if ($store === null) {
             return false;
         }
+        $store = $store instanceof Store ? $store : Store::query()->find($store);
+        if ($store === null) {
+            return false;
+        }
         $role = $user->roleForStore($store);
         $value = $role instanceof BackedEnum ? (string) $role->value : ($role === null ? null : (string) $role);
 
@@ -35,7 +39,9 @@ trait ChecksStoreRoles
             return $resource->store;
         }
         if (method_exists($resource, 'order')) {
-            return $resource->order?->store;
+            $storeId = $resource->order()->withoutGlobalScopes()->value('store_id');
+
+            return $storeId === null ? null : Store::query()->find($storeId);
         }
 
         return null;

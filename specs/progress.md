@@ -12,13 +12,13 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | --- | --- | --- |
 | 0. Specification traceability and repository audit | Complete | Specs and starter audited by backend, frontend, and QA roles |
 | 1. Foundation, tenancy, authentication, authorization | Complete | All migrations pass; tenancy/auth infrastructure and factories are present |
-| 2. Catalog, inventory, collections, media | In progress | Schema/models/factories/demo catalog complete; behavior tests pending |
+| 2. Catalog, inventory, collections, media | Complete | Catalog/cart/pricing and media behavior suites pass |
 | 3. Themes, CMS, navigation, storefront shell | Complete | Blade compilation, Vite build, and live Herd render smoke pass |
-| 4. Cart, checkout, discounts, shipping, taxes | In progress | Customer UI and services integrated; full Pest/Chrome flow pending |
-| 5. Payments, orders, refunds, fulfillment | Pending | Pest unit/feature + Chrome |
-| 6. Customer accounts | Pending | Pest feature + Chrome |
-| 7. Admin panel | Pending | Pest feature + Chrome |
-| 8. Search, analytics, apps, webhooks | Pending | Pest unit/feature |
+| 4. Cart, checkout, discounts, shipping, taxes | In progress | Domain and storefront API suites pass; Chrome flow pending |
+| 5. Payments, orders, refunds, fulfillment | In progress | Lifecycle suite passes; admin UI and Chrome pending |
+| 6. Customer accounts | In progress | Tenant auth/reset/address/order suite passes; Chrome pending |
+| 7. Admin panel | In progress | Full resource surface under implementation and runtime smoke QA |
+| 8. Search, analytics, apps, webhooks | In progress | Search/analytics/media/webhook/job suite passes; admin UI pending |
 | 9. Accessibility, responsive, dark mode, error states | Pending | Build + Chrome review |
 | 10. Full quality and acceptance verification | Pending | Pint, quality checker, all Pest, fresh seed, routes, config cache, Chrome |
 
@@ -51,13 +51,23 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 - Registered the complete storefront/customer/checkout web route surface.
 - Verified all Blade views compile, the Tailwind/Vite production build succeeds, and live Herd requests to `shop.test/` and the seeded product detail return 200 with correct tenant/product content.
 
+### Iteration 3 - Domain hardening and automated acceptance
+
+- Enforced automatic one-to-one inventory creation and per-store SKU uniqueness for every variant.
+- Reworked option synchronization and matrix rebuilding so unchanged variants preserve identity, price, SKU, and inventory while removed duplicate combinations are archived or deleted correctly.
+- Hardened carts, checkout expiry, unpaid bank-transfer cancellation, abandoned-cart cleanup, refunds, and order inventory work against stale tenant context in cross-store scheduled jobs.
+- Added structured audit logging, auth/model audit listeners, order lifecycle notifications, webhook/analytics subscribers, image resizing in source and WebP formats, and media cleanup.
+- Added asynchronous order export status/download support, direct media upload URLs, line-level refund tracking, OAuth/app 501 placeholders, exact policy abilities, reusable role gates, Sanctum token prefix/expiry, and single-owner database enforcement.
+- Restored stateful storefront API sessions and stable documented 422 errors for invalid variants, inventory, shipping, discounts, and checkout transitions.
+- Verified focused Pest suites for catalog/cart/pricing, checkout/order lifecycle, customer accounts, search/analytics/media/webhooks/jobs, and the complete storefront REST API. All currently pass.
+
 ## Verification Ledger
 
 | Check | Latest Result |
 | --- | --- |
 | Working tree at start | Clean |
 | Existing shop code reused | No |
-| Pest suite | Baseline not yet run against integrated shop |
+| Pest suite | All implemented focused shop slices pass; full integrated run pending admin completion |
 | Vite production build | Passed |
 | Fresh migrate and seed | Passed (all migrations and all 18 seed stages) |
 | Laravel code-quality checker | Not installed yet |
@@ -67,4 +77,4 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 
 - SQLite FTS5 is available and its migration passes locally.
 - `shop.test`, `acme-fashion.test`, and `acme-electronics.test` are seeded; live browser host routing remains to be verified.
-- The specification spans roughly 320-380 files; traceability and staged verification are required to prevent late integration defects.
+- Final integrated quality scan and visible Chrome customer/admin review remain pending until the admin surface is route-complete.

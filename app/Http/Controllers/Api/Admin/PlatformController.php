@@ -9,9 +9,9 @@ use App\Models\StoreSettings;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 final class PlatformController extends Controller
 {
@@ -29,8 +29,18 @@ final class PlatformController extends Controller
             'handle' => ['required', 'regex:/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/', 'max:63', 'unique:stores,handle'],
             'default_currency' => ['required', 'string', 'size:3'], 'default_locale' => ['required', 'string', 'max:10'], 'timezone' => ['required', 'timezone'],
         ]);
-        $store = Store::query()->create([...$data, 'status' => 'active']);
-        StoreSettings::query()->create(['store_id' => $store->id, 'settings_json' => []]);
+        $store = DB::transaction(function () use ($data, $request): Store {
+            $store = Store::query()->create([...$data, 'status' => 'active']);
+            StoreSettings::query()->create(['store_id' => $store->id, 'settings_json' => []]);
+            DB::table('store_users')->insert([
+                'store_id' => $store->id,
+                'user_id' => $request->user()->id,
+                'role' => 'owner',
+                'created_at' => now(),
+            ]);
+
+            return $store;
+        });
 
         return response()->json(['data' => $store], 201);
     }
@@ -38,6 +48,11 @@ final class PlatformController extends Controller
     public function invite(Request $request, int $storeId): JsonResponse
     {
         $data = $request->validate(['email' => ['required', 'email'], 'role' => ['required', 'in:owner,admin,staff,support']]);
+        $actorRole = $request->user()->roleForStore(app('current_store'))?->value;
+        abort_unless(in_array($actorRole, ['owner', 'admin'], true), 403);
+        if ($data['role'] === 'owner' && DB::table('store_users')->where('store_id', $storeId)->where('role', 'owner')->exists()) {
+            throw ValidationException::withMessages(['role' => 'Transfer ownership before assigning a new owner.']);
+        }
         $user = User::query()->firstOrCreate(['email' => mb_strtolower($data['email'])], ['name' => str($data['email'])->before('@')->headline(), 'password_hash' => Hash::make(str()->password()), 'status' => 'active']);
         if ($user->stores()->whereKey($storeId)->exists()) {
             return response()->json(['message' => 'User is already a member.'], 409);

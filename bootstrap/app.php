@@ -1,11 +1,14 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\CustomerAuthenticate;
 use App\Http\Middleware\ResolveStore;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Session\Middleware\StartSession;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -23,6 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'abilities' => CheckAbilities::class,
         ]);
         $middleware->group('storefront', [ResolveStore::class]);
+        $middleware->group('storefront.api', [
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ResolveStore::class,
+        ]);
         $middleware->group('admin.store', [ResolveStore::class]);
         $middleware->redirectGuestsTo(fn ($request): string => $request->is('account', 'account/*')
             ? '/account/login'

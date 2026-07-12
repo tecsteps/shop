@@ -7,7 +7,6 @@ use App\Models\InventoryItem;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -95,13 +94,15 @@ class ProductSeeder extends Seeder
                 if ($combination !== []) {
                     $variant->optionValues()->sync(collect($combination)->pluck('id')->all());
                 }
-                InventoryItem::withoutGlobalScopes()->create([
-                    'store_id' => $store->id,
-                    'variant_id' => $variant->id,
-                    'quantity_on_hand' => $inventory,
-                    'quantity_reserved' => 0,
-                    'policy' => $policy,
-                ]);
+                InventoryItem::withoutGlobalScopes()->updateOrCreate(
+                    ['variant_id' => $variant->id],
+                    [
+                        'store_id' => $store->id,
+                        'quantity_on_hand' => $inventory,
+                        'quantity_reserved' => 0,
+                        'policy' => $policy,
+                    ],
+                );
             }
         }
 

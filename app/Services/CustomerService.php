@@ -10,6 +10,8 @@ use Illuminate\Validation\Rule;
 
 final class CustomerService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /** @param array<string, mixed> $data */
     public function register(Store $store, array $data): Customer
     {
@@ -20,12 +22,22 @@ final class CustomerService
             'marketing_opt_in' => ['sometimes', 'boolean'],
         ])->validate();
 
-        return Customer::withoutGlobalScopes()->create([
+        $customer = Customer::withoutGlobalScopes()->create([
             'store_id' => $store->id,
             'name' => $validated['name'],
             'email' => mb_strtolower($validated['email']),
             'password_hash' => Hash::make($validated['password']),
             'marketing_opt_in' => (bool) ($validated['marketing_opt_in'] ?? false),
         ]);
+
+        $this->audit->log(
+            'customer.registered',
+            storeId: (int) $store->id,
+            resourceType: 'customer',
+            resourceId: (int) $customer->id,
+            extra: ['customer_id' => (int) $customer->id],
+        );
+
+        return $customer;
     }
 }

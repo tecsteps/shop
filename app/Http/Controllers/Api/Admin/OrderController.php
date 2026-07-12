@@ -45,23 +45,46 @@ final class OrderController extends Controller
     public function fulfill(Request $request, int $storeId, int $orderId): JsonResponse
     {
         $data = $request->validate([
-            'lines' => ['required', 'array', 'min:1'],
-            'lines.*' => ['required', 'integer', 'min:1'],
+            'line_items' => ['required_without:lines', 'array', 'min:1'],
+            'line_items.*.order_line_id' => ['required_with:line_items', 'integer'],
+            'line_items.*.quantity' => ['required_with:line_items', 'integer', 'min:1'],
+            'lines' => ['required_without:line_items', 'array', 'min:1'],
+            'lines.*' => ['required_with:lines', 'integer', 'min:1'],
             'tracking_company' => ['nullable', 'string'],
             'tracking_number' => ['nullable', 'string'],
             'tracking_url' => ['nullable', 'url'],
+            'notify_customer' => ['sometimes', 'boolean'],
         ]);
         $tracking = collect($data)->only(['tracking_company', 'tracking_number', 'tracking_url'])->all();
-        $fulfillment = $this->fulfillments->create($this->find($storeId, $orderId), $data['lines'], $tracking);
+        $lines = isset($data['line_items'])
+            ? collect($data['line_items'])->mapWithKeys(fn (array $line): array => [(int) $line['order_line_id'] => (int) $line['quantity']])->all()
+            : $data['lines'];
+        $fulfillment = $this->fulfillments->create($this->find($storeId, $orderId), $lines, $tracking);
+        $this->fulfillments->markAsShipped($fulfillment, $tracking);
 
-        return response()->json(['data' => $fulfillment], 201);
+        return response()->json(['data' => $fulfillment->refresh()->load('lines')], 201);
     }
 
     public function refund(Request $request, int $storeId, int $orderId): JsonResponse
     {
-        $data = $request->validate(['amount' => ['required', 'integer', 'min:1'], 'reason' => ['nullable', 'string'], 'restock' => ['sometimes', 'boolean'], 'lines' => ['sometimes', 'array']]);
+        $data = $request->validate([
+            'amount' => ['required_without_all:lines,line_items', 'nullable', 'integer', 'min:1'],
+            'reason' => ['nullable', 'string', 'max:1000'],
+            'restock' => ['sometimes', 'boolean'],
+            'lines' => ['sometimes', 'array'],
+            'lines.*' => ['integer', 'min:1'],
+            'line_items' => ['sometimes', 'array'],
+            'line_items.*.order_line_id' => ['required_with:line_items', 'integer'],
+            'line_items.*.quantity' => ['required_with:line_items', 'integer', 'min:1'],
+            'notify_customer' => ['sometimes', 'boolean'],
+        ]);
         $order = $this->find($storeId, $orderId)->load('payments');
-        $refund = $this->refunds->create($order, $order->payments->firstOrFail(), $data['amount'], $data['reason'] ?? null, (bool) ($data['restock'] ?? false), $data['lines'] ?? null);
+        $lines = isset($data['line_items'])
+            ? collect($data['line_items'])->mapWithKeys(fn (array $line): array => [(int) $line['order_line_id'] => (int) $line['quantity']])->all()
+            : ($data['lines'] ?? null);
+        $payment = $order->payments->first(fn ($payment) => ($payment->status instanceof \BackedEnum ? $payment->status->value : $payment->status) === 'captured')
+            ?? $order->payments->firstOrFail();
+        $refund = $this->refunds->create($order, $payment, $data['amount'] ?? null, $data['reason'] ?? null, (bool) ($data['restock'] ?? false), $lines);
 
         return response()->json(['data' => $refund], 201);
     }

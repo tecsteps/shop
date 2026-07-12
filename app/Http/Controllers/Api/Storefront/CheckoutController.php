@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Api\Storefront;
 
+use App\Exceptions\DomainException;
+use App\Exceptions\InsufficientInventoryException;
+use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\InvalidDiscountException;
 use App\Exceptions\PaymentFailedException;
+use App\Exceptions\ShippingUnavailableException;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Checkout;
@@ -10,6 +15,7 @@ use App\Services\CheckoutService;
 use App\Services\ShippingCalculator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 final class CheckoutController extends Controller
 {
@@ -22,7 +28,11 @@ final class CheckoutController extends Controller
     {
         $validated = $request->validate(['cart_id' => ['required', 'integer']]);
         $cart = Cart::withoutGlobalScopes()->where('store_id', app('current_store')->id)->with('lines')->findOrFail($validated['cart_id']);
-        $checkout = $this->checkouts->create($cart);
+        try {
+            $checkout = $this->checkouts->create($cart);
+        } catch (InvalidCheckoutTransitionException $exception) {
+            throw ValidationException::withMessages(['cart_id' => $exception->getMessage()]);
+        }
 
         return response()->json(['data' => $this->data($checkout)], 201);
     }
@@ -56,7 +66,11 @@ final class CheckoutController extends Controller
     public function shipping(Request $request, int $checkoutId): JsonResponse
     {
         $validated = $request->validate(['shipping_rate_id' => ['nullable', 'integer']]);
-        $checkout = $this->checkouts->setShippingMethod($this->checkout($checkoutId), $validated['shipping_rate_id'] ?? null);
+        try {
+            $checkout = $this->checkouts->setShippingMethod($this->checkout($checkoutId), $validated['shipping_rate_id'] ?? null);
+        } catch (ShippingUnavailableException $exception) {
+            throw ValidationException::withMessages(['shipping_rate_id' => $exception->getMessage()]);
+        }
 
         return response()->json(['data' => $this->data($checkout)]);
     }
@@ -64,7 +78,11 @@ final class CheckoutController extends Controller
     public function payment(Request $request, int $checkoutId): JsonResponse
     {
         $validated = $request->validate(['payment_method' => ['required', 'in:credit_card,paypal,bank_transfer']]);
-        $checkout = $this->checkouts->selectPaymentMethod($this->checkout($checkoutId), $validated['payment_method']);
+        try {
+            $checkout = $this->checkouts->selectPaymentMethod($this->checkout($checkoutId), $validated['payment_method']);
+        } catch (InsufficientInventoryException $exception) {
+            throw ValidationException::withMessages(['payment_method' => $exception->getMessage()]);
+        }
 
         return response()->json(['data' => $this->data($checkout)]);
     }
@@ -72,7 +90,15 @@ final class CheckoutController extends Controller
     public function discount(Request $request, int $checkoutId): JsonResponse
     {
         $validated = $request->validate(['code' => ['required', 'string', 'max:100']]);
-        $checkout = $this->checkouts->applyDiscount($this->checkout($checkoutId), $validated['code']);
+        try {
+            $checkout = $this->checkouts->applyDiscount($this->checkout($checkoutId), $validated['code']);
+        } catch (InvalidDiscountException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'error_code' => $exception->reason,
+                'errors' => ['code' => [$exception->getMessage()]],
+            ], 422);
+        }
 
         return response()->json(['data' => $this->data($checkout)]);
     }
@@ -98,6 +124,8 @@ final class CheckoutController extends Controller
             return response()->json(['data' => ['checkout' => $this->data($this->checkout($checkoutId)), 'order' => $order->load(['lines', 'payments'])]]);
         } catch (PaymentFailedException $exception) {
             return response()->json(['message' => $exception->getMessage(), 'error_code' => $exception->errorCode], 422);
+        } catch (DomainException $exception) {
+            throw ValidationException::withMessages(['checkout' => $exception->getMessage()]);
         }
     }
 

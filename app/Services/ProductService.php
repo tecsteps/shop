@@ -50,7 +50,7 @@ final class ProductService
                     'position' => 0,
                     'status' => 'active',
                 ]);
-                InventoryItem::withoutGlobalScopes()->firstOrCreate(
+                InventoryItem::withoutGlobalScopes()->updateOrCreate(
                     ['variant_id' => $variant->id],
                     ['store_id' => $store->id, 'quantity_on_hand' => (int) ($variantData['quantity_on_hand'] ?? 0), 'quantity_reserved' => 0, 'policy' => $variantData['policy'] ?? 'deny'],
                 );
@@ -128,13 +128,44 @@ final class ProductService
         if (count($options) > 3) {
             throw new \InvalidArgumentException('A product may have at most three options.');
         }
-        $product->options()->delete();
+
+        $existingOptions = $product->options()->with('values')->get();
+        $keptOptionIds = [];
+
         foreach (array_values($options) as $position => $optionData) {
-            $option = $product->options()->create(['name' => $optionData['name'], 'position' => $position]);
-            foreach (array_values((array) ($optionData['values'] ?? [])) as $valuePosition => $value) {
-                $option->values()->create(['value' => is_array($value) ? $value['value'] : $value, 'position' => $valuePosition]);
+            $name = trim((string) ($optionData['name'] ?? ''));
+            $values = array_values((array) ($optionData['values'] ?? []));
+            if ($name === '' || $values === []) {
+                throw new \InvalidArgumentException('Every product option needs a name and at least one value.');
             }
+
+            $option = isset($optionData['id'])
+                ? $existingOptions->firstWhere('id', (int) $optionData['id'])
+                : $existingOptions->first(fn ($candidate) => mb_strtolower($candidate->name) === mb_strtolower($name));
+            $option ??= $product->options()->make();
+            $option->fill(['name' => $name, 'position' => $position])->save();
+            $keptOptionIds[] = $option->id;
+
+            $existingValues = $option->values;
+            $keptValueIds = [];
+            foreach ($values as $valuePosition => $valueData) {
+                $value = trim((string) (is_array($valueData) ? ($valueData['value'] ?? '') : $valueData));
+                if ($value === '') {
+                    throw new \InvalidArgumentException('Product option values may not be empty.');
+                }
+
+                $optionValue = is_array($valueData) && isset($valueData['id'])
+                    ? $existingValues->firstWhere('id', (int) $valueData['id'])
+                    : $existingValues->first(fn ($candidate) => mb_strtolower($candidate->value) === mb_strtolower($value));
+                $optionValue ??= $option->values()->make();
+                $optionValue->fill(['value' => $value, 'position' => $valuePosition])->save();
+                $keptValueIds[] = $optionValue->id;
+            }
+
+            $option->values()->whereNotIn('id', $keptValueIds)->delete();
         }
+
+        $product->options()->whereNotIn('id', $keptOptionIds)->delete();
     }
 
     private function hasOrderReferences(Product $product): bool

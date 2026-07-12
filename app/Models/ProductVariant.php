@@ -3,16 +3,55 @@
 namespace App\Models;
 
 use App\Enums\VariantStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Validation\ValidationException;
 
 class ProductVariant extends Model
 {
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::saving(function (ProductVariant $variant): void {
+            $sku = trim((string) $variant->sku);
+            if ($sku === '') {
+                return;
+            }
+
+            $storeId = Product::withoutGlobalScopes()->whereKey($variant->product_id)->value('store_id');
+            $duplicateExists = static::query()
+                ->where('sku', $sku)
+                ->when($variant->exists, fn (Builder $query) => $query->whereKeyNot($variant->getKey()))
+                ->whereHas('product', fn (Builder $query) => $query->withoutGlobalScopes()->where('store_id', $storeId))
+                ->exists();
+
+            if ($duplicateExists) {
+                throw ValidationException::withMessages(['sku' => 'The SKU has already been taken for this store.']);
+            }
+
+            $variant->sku = $sku;
+        });
+
+        static::created(function (ProductVariant $variant): void {
+            $storeId = Product::withoutGlobalScopes()->whereKey($variant->product_id)->value('store_id');
+
+            InventoryItem::withoutGlobalScopes()->firstOrCreate(
+                ['variant_id' => $variant->getKey()],
+                [
+                    'store_id' => $storeId,
+                    'quantity_on_hand' => 0,
+                    'quantity_reserved' => 0,
+                    'policy' => 'deny',
+                ],
+            );
+        });
+    }
 
     protected $fillable = [
         'product_id', 'sku', 'barcode', 'price_amount', 'compare_at_amount', 'currency', 'weight_g',

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Cart;
+use App\Models\Store;
 use App\Services\CheckoutService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,9 +18,10 @@ final class CleanupAbandonedCarts implements ShouldQueue
     public function handle(CheckoutService $checkouts): void
     {
         Cart::withoutGlobalScopes()->where('status', 'active')->where('updated_at', '<', now()->subDays(14))
-            ->with('checkouts')
+            ->with(['checkouts' => fn ($query) => $query->withoutGlobalScopes()])
             ->chunkById(100, function ($carts) use ($checkouts): void {
                 foreach ($carts as $cart) {
+                    app()->instance('current_store', Store::query()->findOrFail($cart->store_id));
                     foreach ($cart->checkouts->whereNotIn('status', ['completed', 'expired']) as $checkout) {
                         $checkouts->expireCheckout($checkout);
                     }

@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\InventoryItem;
 use App\Models\OrderLine;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 final class VariantMatrixService
@@ -17,15 +15,18 @@ final class VariantMatrixService
             $product->load(['options.values', 'variants.optionValues', 'variants.inventoryItem']);
             $groups = $product->options->sortBy('position')->map(fn ($option) => $option->values->sortBy('position')->pluck('id')->all())->all();
             $combinations = $groups === [] ? [[]] : $this->cartesian(array_values($groups));
-            $existing = $product->variants->keyBy(fn (ProductVariant $variant): string => $this->key($variant->optionValues->modelKeys()));
+            $existing = $product->variants;
             $template = $product->variants->first();
-            $desiredKeys = [];
+            $matchedVariantIds = [];
 
             foreach ($combinations as $position => $combination) {
                 $key = $this->key($combination);
-                $desiredKeys[] = $key;
-                if ($existing->has($key)) {
-                    $existing[$key]->update(['position' => $position, 'status' => 'active', 'is_default' => $groups === []]);
+                $matchingVariant = $existing->first(fn (ProductVariant $variant): bool => ! in_array($variant->id, $matchedVariantIds, true)
+                    && $this->key($variant->optionValues->modelKeys()) === $key);
+                if ($matchingVariant !== null) {
+                    $matchingVariant->update(['position' => $position, 'status' => 'active', 'is_default' => $groups === []]);
+                    $matchedVariantIds[] = $matchingVariant->id;
+
                     continue;
                 }
 
@@ -44,17 +45,11 @@ final class VariantMatrixService
                 if ($combination !== []) {
                     $variant->optionValues()->sync($combination);
                 }
-                InventoryItem::withoutGlobalScopes()->create([
-                    'store_id' => $product->store_id,
-                    'variant_id' => $variant->id,
-                    'quantity_on_hand' => 0,
-                    'quantity_reserved' => 0,
-                    'policy' => 'deny',
-                ]);
+                $matchedVariantIds[] = $variant->id;
             }
 
-            foreach ($existing as $key => $variant) {
-                if (in_array($key, $desiredKeys, true)) {
+            foreach ($existing as $variant) {
+                if (in_array($variant->id, $matchedVariantIds, true)) {
                     continue;
                 }
                 if (OrderLine::query()->where('variant_id', $variant->id)->exists()) {

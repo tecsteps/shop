@@ -9,11 +9,9 @@ use App\Exceptions\DomainException;
 use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\Payment;
 use App\Models\Store;
 use App\ValueObjects\PaymentResult;
 use BackedEnum;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 final class OrderService
@@ -26,7 +24,12 @@ final class OrderService
     public function createFromCheckout(Checkout $checkout, ?PaymentResult $paymentResult = null): Order
     {
         return DB::transaction(function () use ($checkout, $paymentResult): Order {
-            $checkout = Checkout::withoutGlobalScopes()->lockForUpdate()->with(['cart.lines.variant.product', 'store'])->findOrFail($checkout->id);
+            $checkout = Checkout::withoutGlobalScopes()->lockForUpdate()->with([
+                'cart' => fn ($query) => $query->withoutGlobalScopes(),
+                'cart.lines.variant.product' => fn ($query) => $query->withoutGlobalScopes(),
+                'cart.lines.variant.inventoryItem' => fn ($query) => $query->withoutGlobalScopes(),
+                'store',
+            ])->findOrFail($checkout->id);
             $snapshot = (array) ($checkout->totals_json ?? []);
             if (isset($snapshot['order_id'])) {
                 return Order::withoutGlobalScopes()->findOrFail((int) $snapshot['order_id']);
@@ -132,7 +135,7 @@ final class OrderService
         }
 
         DB::transaction(function () use ($order): void {
-            $order->load('lines.variant.inventoryItem');
+            $order->load(['lines.variant.inventoryItem' => fn ($query) => $query->withoutGlobalScopes()]);
             foreach ($order->lines as $line) {
                 if ($line->variant?->inventoryItem !== null) {
                     $this->inventory->commit($line->variant->inventoryItem, (int) $line->quantity);
@@ -153,7 +156,7 @@ final class OrderService
 
         DB::transaction(function () use ($order, $reason): void {
             if ($this->value($order->financial_status) === 'pending') {
-                $order->load('lines.variant.inventoryItem');
+                $order->load(['lines.variant.inventoryItem' => fn ($query) => $query->withoutGlobalScopes()]);
                 foreach ($order->lines as $line) {
                     if ($line->variant?->inventoryItem !== null) {
                         $this->inventory->release($line->variant->inventoryItem, (int) $line->quantity);

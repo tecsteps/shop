@@ -10,9 +10,33 @@ final class ThemePolicy
 {
     use ChecksStoreRoles;
 
-    public function viewAny(User $user): bool { return $this->hasRole($user, null, ['owner', 'admin']); }
-    public function view(User $user, Theme $theme): bool { return $this->hasRole($user, $theme, ['owner', 'admin']); }
-    public function create(User $user): bool { return $this->hasRole($user, null, ['owner', 'admin']); }
-    public function update(User $user, Theme $theme): bool { return $this->hasRole($user, $theme, ['owner', 'admin']); }
-    public function delete(User $user, Theme $theme): bool { return $this->hasRole($user, $theme, ['owner', 'admin']); }
+    public function viewAny(User $user): bool
+    {
+        return $this->hasRole($user, null, ['owner', 'admin']);
+    }
+
+    public function view(User $user, Theme $theme): bool
+    {
+        return $this->hasRole($user, $theme, ['owner', 'admin']);
+    }
+
+    public function create(User $user): bool
+    {
+        return $this->hasRole($user, null, ['owner', 'admin']);
+    }
+
+    public function update(User $user, Theme $theme): bool
+    {
+        return $this->hasRole($user, $theme, ['owner', 'admin']);
+    }
+
+    public function delete(User $user, Theme $theme): bool
+    {
+        return $this->hasRole($user, $theme, ['owner', 'admin']);
+    }
+
+    public function publish(User $user, Theme $theme): bool
+    {
+        return $this->update($user, $theme);
+    }
 }

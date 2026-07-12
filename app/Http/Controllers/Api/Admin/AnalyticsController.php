@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use App\Jobs\GenerateOrderExport;
+use App\Models\OrderExport;
 use App\Services\AnalyticsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class AnalyticsController extends Controller
@@ -26,15 +29,54 @@ final class AnalyticsController extends Controller
         ]]);
     }
 
-    public function exportOrders(int $storeId): StreamedResponse
+    public function exportOrders(Request $request, int $storeId): JsonResponse
     {
-        return response()->streamDownload(function () use ($storeId): void {
-            $out = fopen('php://output', 'wb');
-            fputcsv($out, ['order_number', 'created_at', 'status', 'financial_status', 'fulfillment_status', 'customer_email', 'subtotal_amount', 'discount_amount', 'shipping_amount', 'tax_amount', 'total_amount', 'currency', 'tracking_number']);
-            Order::withoutGlobalScopes()->where('store_id', $storeId)->with('fulfillments')->orderBy('id')->each(function (Order $order) use ($out): void {
-                fputcsv($out, [$order->order_number, $order->created_at?->toIso8601String(), $order->status, $order->financial_status, $order->fulfillment_status, $order->email, $order->subtotal_amount, $order->discount_amount, $order->shipping_amount, $order->tax_amount, $order->total_amount, $order->currency, $order->fulfillments->first()?->tracking_number]);
-            });
-            fclose($out);
-        }, 'orders-'.now()->toDateString().'.csv', ['Content-Type' => 'text/csv']);
+        $data = $request->validate([
+            'format' => ['sometimes', 'in:csv'],
+            'filters' => ['sometimes', 'array'],
+            'filters.status' => ['sometimes', 'in:pending,paid,fulfilled,cancelled,refunded'],
+            'filters.financial_status' => ['sometimes', 'string'],
+            'filters.created_after' => ['sometimes', 'date'],
+            'filters.created_before' => ['sometimes', 'date', 'after_or_equal:filters.created_after'],
+        ]);
+        $export = OrderExport::withoutGlobalScopes()->create([
+            'store_id' => $storeId,
+            'user_id' => $request->user()?->id,
+            'format' => $data['format'] ?? 'csv',
+            'filters_json' => $data['filters'] ?? [],
+            'status' => 'queued',
+        ]);
+        GenerateOrderExport::dispatch($export);
+
+        return response()->json([
+            'export_id' => $export->id,
+            'status' => 'queued',
+            'created_at' => $export->created_at?->toIso8601String(),
+        ], 202);
+    }
+
+    public function export(Request $request, int $storeId, int $exportId): JsonResponse|StreamedResponse
+    {
+        $export = OrderExport::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($exportId);
+        if ($request->boolean('download')) {
+            abort_unless($export->status === 'completed' && $export->storage_key !== null, 409, 'The export is not ready.');
+
+            return Storage::disk('local')->download($export->storage_key, "orders-{$export->id}.csv", ['Content-Type' => 'text/csv']);
+        }
+
+        $expires = now()->addHour();
+
+        return response()->json(['data' => [
+            'id' => $export->id,
+            'status' => $export->status,
+            'format' => $export->format,
+            'row_count' => $export->row_count,
+            'download_url' => $export->status === 'completed'
+                ? URL::temporarySignedRoute('api.admin.exports.show', $expires, ['storeId' => $storeId, 'exportId' => $export->id, 'download' => 1])
+                : null,
+            'download_expires_at' => $export->status === 'completed' ? $expires->toIso8601String() : null,
+            'created_at' => $export->created_at?->toIso8601String(),
+            'completed_at' => $export->completed_at?->toIso8601String(),
+        ]]);
     }
 }

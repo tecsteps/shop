@@ -6,6 +6,7 @@ use App\Enums\RefundStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Refund extends Model
 {
@@ -31,5 +32,10 @@ class Refund extends Model
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);
+    }
+
+    public function lines(): HasMany
+    {
+        return $this->hasMany(RefundLine::class);
     }
 }
