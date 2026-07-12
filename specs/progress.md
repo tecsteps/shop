@@ -13,8 +13,8 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | 0. Specification traceability and repository audit | Complete | Specs and starter audited by backend, frontend, and QA roles |
 | 1. Foundation, tenancy, authentication, authorization | Complete | All migrations pass; tenancy/auth infrastructure and factories are present |
 | 2. Catalog, inventory, collections, media | In progress | Schema/models/factories/demo catalog complete; behavior tests pending |
-| 3. Themes, CMS, navigation, storefront shell | Pending | Pest feature + Chrome |
-| 4. Cart, checkout, discounts, shipping, taxes | Pending | Pest unit/feature + Chrome |
+| 3. Themes, CMS, navigation, storefront shell | Complete | Blade compilation, Vite build, and live Herd render smoke pass |
+| 4. Cart, checkout, discounts, shipping, taxes | In progress | Customer UI and services integrated; full Pest/Chrome flow pending |
 | 5. Payments, orders, refunds, fulfillment | Pending | Pest unit/feature + Chrome |
 | 6. Customer accounts | Pending | Pest feature + Chrome |
 | 7. Admin panel | Pending | Pest feature + Chrome |
@@ -42,6 +42,15 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 - Added `shop.test` as an explicit Acme Fashion storefront domain while retaining the specification's demo domains.
 - Verified a fresh migrate-and-seed and a second idempotent seed execution.
 
+### Iteration 2 - Complete customer storefront
+
+- Added the responsive/dark tenant storefront shell, theme tokens, accessible navigation, announcement, footer, toast region, cart drawer, and keyboard-friendly search modal.
+- Added home sections, collection browsing/filtering/sorting, product variants and inventory states, cart quantity/discount behavior, checkout stepper, all mock payment methods, and confirmation.
+- Added full customer authentication, tenant-aware password reset storage, account dashboard, order history/detail, and address CRUD.
+- Added CMS pages, SEO/JSON-LD metadata, reusable storefront components, currency formatting, placeholders, and themed 404/503 pages.
+- Registered the complete storefront/customer/checkout web route surface.
+- Verified all Blade views compile, the Tailwind/Vite production build succeeds, and live Herd requests to `shop.test/` and the seeded product detail return 200 with correct tenant/product content.
+
 ## Verification Ledger
 
 | Check | Latest Result |
@@ -49,7 +58,7 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | Working tree at start | Clean |
 | Existing shop code reused | No |
 | Pest suite | Baseline not yet run against integrated shop |
-| Vite production build | Not run yet |
+| Vite production build | Passed |
 | Fresh migrate and seed | Passed (all migrations and all 18 seed stages) |
 | Laravel code-quality checker | Not installed yet |
 | Chrome acceptance review | Not run yet |

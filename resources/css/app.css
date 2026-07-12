@@ -64,3 +64,399 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* Storefront theme tokens are intentionally plain CSS variables so active theme
+   settings can override them at render time without generating Tailwind classes. */
+@layer base {
+    :root {
+        --storefront-primary: #2563eb;
+        --storefront-primary-hover: #1d4ed8;
+        --storefront-primary-soft: #eff6ff;
+        --storefront-secondary: #18181b;
+        --storefront-accent: #ea580c;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    html.dark {
+        --storefront-primary: #3b82f6;
+        --storefront-primary-hover: #60a5fa;
+        --storefront-primary-soft: #172554;
+        --storefront-secondary: #fafafa;
+        --storefront-accent: #fb923c;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            scroll-behavior: auto !important;
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    input[type='number'].appearance-none::-webkit-inner-spin-button,
+    input[type='number'].appearance-none::-webkit-outer-spin-button {
+        margin: 0;
+        appearance: none;
+    }
+}
+
+@layer components {
+    .storefront-shell {
+        accent-color: var(--storefront-primary);
+    }
+
+    .storefront-skip-link {
+        @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white shadow-xl transition-transform focus:translate-y-0 focus:outline-none dark:bg-white dark:text-zinc-950;
+    }
+
+    .storefront-skip-link:focus-visible {
+        outline: 3px solid var(--storefront-primary);
+        outline-offset: 3px;
+    }
+
+    .storefront-button-primary,
+    .storefront-button-secondary {
+        @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .storefront-button-primary {
+        background-color: var(--storefront-primary);
+        color: white;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+
+    .storefront-button-primary:hover:not(:disabled) {
+        background-color: var(--storefront-primary-hover);
+    }
+
+    .storefront-button-secondary {
+        @apply border border-zinc-300 bg-white text-zinc-900 shadow-sm hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800;
+    }
+
+    .storefront-button-primary:focus-visible,
+    .storefront-button-secondary:focus-visible,
+    .storefront-pagination-button:focus-visible {
+        outline: 2px solid var(--storefront-primary);
+        outline-offset: 2px;
+    }
+
+    .storefront-field-label {
+        @apply mb-1.5 block text-sm font-medium text-zinc-800 dark:text-zinc-200;
+    }
+
+    .storefront-field-input {
+        @apply block min-h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-base text-zinc-950 shadow-sm transition placeholder:text-zinc-400 focus:outline-none sm:text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:placeholder:text-zinc-500;
+    }
+
+    .storefront-field-input:focus {
+        border-color: var(--storefront-primary);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--storefront-primary) 22%, transparent);
+    }
+
+    .storefront-field-input[aria-invalid='true'] {
+        @apply border-red-500;
+    }
+
+    .storefront-field-input[aria-invalid='true']:focus {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgb(220 38 38 / 0.18);
+    }
+
+    .storefront-field-error {
+        @apply mt-1.5 text-sm text-red-600 dark:text-red-400;
+    }
+
+    .storefront-pagination-button {
+        @apply inline-flex min-h-10 items-center justify-center gap-1 rounded-lg border border-zinc-300 bg-white px-3 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white;
+    }
+
+    .storefront-line-clamp-1,
+    .storefront-line-clamp-2 {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+    }
+
+    .storefront-line-clamp-1 {
+        -webkit-line-clamp: 1;
+    }
+
+    .storefront-line-clamp-2 {
+        -webkit-line-clamp: 2;
+    }
+
+    .storefront-product-card__secondary {
+        opacity: 0;
+        transition: opacity 300ms ease;
+    }
+
+    .storefront-product-card__quick-add {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .storefront-product-card:hover .storefront-product-card__secondary,
+        .storefront-product-card:focus-within .storefront-product-card__secondary {
+            opacity: 1;
+        }
+
+        .storefront-product-card__quick-add {
+            opacity: 0;
+            transform: translateY(0.25rem);
+            transition: opacity 200ms ease, transform 200ms ease;
+        }
+
+        .storefront-product-card:hover .storefront-product-card__quick-add,
+        .storefront-product-card:focus-within .storefront-product-card__quick-add {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .storefront-prose {
+        @apply mx-auto max-w-prose text-base leading-7 text-zinc-700 dark:text-zinc-300;
+    }
+
+    .storefront-prose :where(h1, h2, h3, h4) {
+        @apply mt-8 scroll-mt-24 font-semibold tracking-tight text-zinc-950 first:mt-0 dark:text-white;
+    }
+
+    .storefront-prose :where(h1) {
+        @apply text-3xl;
+    }
+
+    .storefront-prose :where(h2) {
+        @apply text-2xl;
+    }
+
+    .storefront-prose :where(h3, h4) {
+        @apply text-xl;
+    }
+
+    .storefront-prose :where(p, ul, ol, blockquote) {
+        @apply my-5;
+    }
+
+    .storefront-prose :where(ul, ol) {
+        @apply space-y-2 pl-6;
+    }
+
+    .storefront-prose :where(ul) {
+        @apply list-disc;
+    }
+
+    .storefront-prose :where(ol) {
+        @apply list-decimal;
+    }
+
+    .storefront-prose :where(a) {
+        color: var(--storefront-primary);
+        @apply rounded-sm font-medium underline underline-offset-4;
+    }
+
+    .storefront-prose :where(a):focus-visible {
+        outline: 2px solid var(--storefront-primary);
+        outline-offset: 2px;
+    }
+
+    .storefront-prose :where(blockquote) {
+        @apply border-l-4 border-zinc-300 pl-4 italic text-zinc-600 dark:border-zinc-700 dark:text-zinc-400;
+    }
+
+    /* Shared storefront page primitives. The sf-* namespace keeps the customer
+       surface independent from Flux/admin component styling. */
+    .sf-container {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .sf-page-y {
+        @apply py-8 sm:py-12 lg:py-16;
+    }
+
+    .sf-section {
+        @apply py-14 sm:py-20 lg:py-24;
+    }
+
+    .sf-hero {
+        background-position: center;
+        background-size: cover;
+    }
+
+    .sf-page-title {
+        @apply text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white;
+    }
+
+    .sf-section-title {
+        @apply mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl dark:text-white;
+    }
+
+    .sf-eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.16em];
+        color: var(--storefront-primary);
+    }
+
+    .sf-card {
+        @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900;
+    }
+
+    .sf-button {
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .sf-button-primary {
+        background-color: var(--storefront-primary);
+        color: white;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+    }
+
+    .sf-button-primary:hover:not(:disabled) {
+        background-color: var(--storefront-primary-hover);
+    }
+
+    .sf-button-secondary {
+        @apply border border-slate-300 bg-white text-slate-900 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800;
+    }
+
+    .sf-button:focus-visible,
+    .sf-icon-button:focus-visible,
+    .sf-text-link:focus-visible,
+    .sf-account-nav-link:focus-visible,
+    .sf-filter-pill:focus-visible {
+        outline: 2px solid var(--storefront-primary);
+        outline-offset: 2px;
+    }
+
+    .sf-icon-button {
+        @apply inline-grid size-11 shrink-0 place-items-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white;
+    }
+
+    .sf-text-link {
+        @apply inline-flex items-center gap-1 rounded-sm font-medium underline-offset-4 transition hover:underline focus-visible:outline-none;
+        color: var(--storefront-primary);
+    }
+
+    .sf-label {
+        @apply block text-sm font-medium text-slate-800 dark:text-slate-200;
+    }
+
+    .sf-input,
+    .sf-select {
+        @apply min-h-11 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 shadow-sm transition placeholder:text-slate-400 focus:outline-none sm:text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500;
+    }
+
+    .sf-input {
+        @apply block w-full;
+    }
+
+    .sf-select {
+        @apply block cursor-pointer pr-9;
+    }
+
+    .sf-input:focus,
+    .sf-select:focus {
+        border-color: var(--storefront-primary);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--storefront-primary) 20%, transparent);
+    }
+
+    .sf-input-error,
+    .sf-input[aria-invalid='true'],
+    .sf-select[aria-invalid='true'] {
+        @apply border-red-500;
+    }
+
+    .sf-input-error:focus,
+    .sf-input[aria-invalid='true']:focus,
+    .sf-select[aria-invalid='true']:focus {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgb(220 38 38 / 0.18);
+    }
+
+    .sf-field-error {
+        @apply mt-1.5 text-sm text-red-700 dark:text-red-300;
+    }
+
+    .sf-checkbox,
+    .sf-radio {
+        @apply size-4 shrink-0 border-slate-300 focus-visible:outline-none dark:border-slate-600 dark:bg-slate-900;
+        accent-color: var(--storefront-primary);
+    }
+
+    .sf-checkbox {
+        @apply rounded;
+    }
+
+    .sf-radio {
+        @apply rounded-full;
+    }
+
+    .sf-checkbox:focus-visible,
+    .sf-radio:focus-visible {
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--storefront-primary) 24%, transparent);
+    }
+
+    .sf-callout {
+        @apply rounded-xl border px-4 py-3 text-sm leading-6;
+    }
+
+    .sf-callout-error {
+        @apply border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-200;
+    }
+
+    .sf-callout-info {
+        @apply border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-200;
+    }
+
+    .sf-callout-warning {
+        @apply border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-200;
+    }
+
+    .sf-empty-state {
+        @apply rounded-2xl border border-dashed border-slate-300 px-5 py-14 text-center dark:border-slate-700;
+    }
+
+    .sf-filter-pill {
+        @apply inline-flex min-h-9 items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-950 focus-visible:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-white;
+    }
+
+    .sf-account-nav-link {
+        @apply flex min-h-11 items-center justify-center rounded-xl px-3 py-2 text-center text-sm font-medium text-slate-600 transition hover:bg-white hover:text-slate-950 focus-visible:outline-none lg:justify-start dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white;
+    }
+
+    .sf-account-nav-link[aria-current='page'] {
+        @apply bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white;
+    }
+
+    .sf-checkout-step {
+        @apply border-b border-slate-200 py-8 first:pt-0 last:border-b-0 dark:border-slate-800;
+    }
+
+    .sf-step-number {
+        @apply text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400;
+    }
+
+    .sf-step-title {
+        @apply mt-1 text-xl font-semibold tracking-tight text-slate-950 dark:text-white;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .storefront-product-card__secondary,
+    .storefront-product-card__quick-add {
+        transition: none;
+    }
+}

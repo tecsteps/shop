@@ -24,7 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->group('storefront', [ResolveStore::class]);
         $middleware->group('admin.store', [ResolveStore::class]);
-        $middleware->redirectGuestsTo(fn ($request): string => $request->is('account/*') ? '/account/login' : '/admin/login');
+        $middleware->redirectGuestsTo(fn ($request): string => $request->is('account', 'account/*')
+            ? '/account/login'
+            : ($request->is('admin', 'admin/*') ? '/admin/login' : '/login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

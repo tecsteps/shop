@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -38,6 +39,11 @@ class AppServiceProvider extends ServiceProvider
         $this->configureAuthentication();
         $this->configureRateLimits();
         Product::observe(ProductObserver::class);
+        ResetPassword::createUrlUsing(function ($notifiable, string $token): string {
+            $path = $notifiable instanceof \App\Models\Customer ? '/reset-password/' : '/reset-password/';
+
+            return url($path.$token).'?email='.urlencode($notifiable->getEmailForPasswordReset());
+        });
 
         if (config('database.default') === 'sqlite') {
             try {

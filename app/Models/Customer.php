@@ -6,11 +6,13 @@ use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\Notifiable;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable implements CanResetPasswordContract
 {
-    use BelongsToStore, HasFactory, Notifiable;
+    use BelongsToStore, CanResetPassword, HasFactory, Notifiable;
 
     protected $fillable = ['store_id', 'email', 'password_hash', 'password', 'name', 'marketing_opt_in'];
 
