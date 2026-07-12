@@ -1,0 +1,158 @@
+- generic [ref=e43]:
+  - complementary [ref=e44]:
+    - navigation "Admin navigation" [ref=e45]:
+      - generic [ref=e50]:
+        - generic [ref=e51]: Shop
+        - generic [ref=e52]: Commerce platform
+      - generic [ref=e53]:
+        - link "Dashboard" [ref=e55] [cursor=pointer]:
+          - /url: /admin
+        - generic [ref=e59]: Products
+        - generic [ref=e60]:
+          - link "Products" [ref=e61] [cursor=pointer]:
+            - /url: /admin/products
+          - link "Collections" [ref=e65] [cursor=pointer]:
+            - /url: /admin/collections
+          - link "Inventory" [ref=e69] [cursor=pointer]:
+            - /url: /admin/inventory
+        - generic [ref=e73]: Orders
+        - link "Orders" [ref=e75] [cursor=pointer]:
+          - /url: /admin/orders
+        - generic [ref=e79]: Customers
+        - link "Customers" [ref=e81] [cursor=pointer]:
+          - /url: /admin/customers
+        - generic [ref=e85]: Discounts
+        - link "Discounts" [ref=e87] [cursor=pointer]:
+          - /url: /admin/discounts
+        - generic [ref=e92]: Content
+        - generic [ref=e93]:
+          - link "Pages" [ref=e94] [cursor=pointer]:
+            - /url: /admin/pages
+          - link "Navigation" [ref=e98] [cursor=pointer]:
+            - /url: /admin/navigation
+          - link "Themes" [ref=e102] [cursor=pointer]:
+            - /url: /admin/themes
+        - generic [ref=e106]: Insights
+        - generic [ref=e107]:
+          - link "Analytics" [ref=e108] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Search" [ref=e113] [cursor=pointer]:
+            - /url: /admin/settings/search
+        - generic [ref=e117]: Platform
+        - generic [ref=e118]:
+          - link "Settings" [ref=e119] [cursor=pointer]:
+            - /url: /admin/settings
+          - link "Apps" [ref=e124] [cursor=pointer]:
+            - /url: /admin/apps
+          - link "Developers" [ref=e128] [cursor=pointer]:
+            - /url: /admin/developers
+  - generic [ref=e132]:
+    - banner [ref=e133]:
+      - generic [ref=e134]:
+        - button "Acme Fashion" [ref=e137]
+        - generic [ref=e141]:
+          - button "Notifications" [ref=e143]
+          - button "AU Admin User" [ref=e147]:
+            - generic [ref=e148]: AU
+            - generic [ref=e151]: Admin User
+    - main [ref=e155]:
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - link "Home" [ref=e159] [cursor=pointer]:
+            - /url: /admin
+          - generic [ref=e162]: Dashboard
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - heading "Dashboard" [level=1] [ref=e166]
+            - paragraph [ref=e167]: A live view of store performance.
+          - combobox "Date range" [ref=e169]:
+            - option "Today"
+            - option "Last 7 days"
+            - option "Last 30 days" [selected]
+            - option "Custom range"
+        - generic [ref=e170]:
+          - generic [ref=e173]:
+            - paragraph [ref=e174]: Total sales
+            - generic [ref=e175]: €1,602.07
+          - generic [ref=e180]:
+            - paragraph [ref=e181]: Orders
+            - generic [ref=e182]: "17"
+          - generic [ref=e187]:
+            - paragraph [ref=e188]: Average order value
+            - generic [ref=e189]: €94.23
+          - generic [ref=e194]:
+            - paragraph [ref=e195]: Visitors
+            - generic [ref=e196]: 3,481
+        - generic [ref=e199]:
+          - generic [ref=e200]:
+            - generic [ref=e201]: Orders over time
+            - generic "Orders chart" [ref=e203]:
+              - generic:
+                - 'generic "2026-06-16: 1"'
+              - generic:
+                - 'generic "2026-06-21: 1"'
+              - generic:
+                - 'generic "2026-06-26: 1"'
+              - generic:
+                - 'generic "2026-06-27: 1"'
+              - generic:
+                - 'generic "2026-06-29: 1"'
+              - generic:
+                - 'generic "2026-07-01: 1"'
+              - generic:
+                - 'generic "2026-07-06: 1"'
+              - generic:
+                - 'generic "2026-07-07: 1"'
+              - generic:
+                - 'generic "2026-07-08: 1"'
+              - generic:
+                - 'generic "2026-07-09: 1"'
+              - generic:
+                - 'generic "2026-07-10: 3"'
+              - generic:
+                - 'generic "2026-07-11: 4"'
+          - generic [ref=e204]:
+            - generic [ref=e205]: Conversion funnel
+            - generic [ref=e207]:
+              - generic [ref=e209]:
+                - generic [ref=e210]: Visits
+                - generic [ref=e211]: 3,481
+              - generic [ref=e215]:
+                - generic [ref=e216]: Add To Cart
+                - generic [ref=e217]: "740"
+              - generic [ref=e221]:
+                - generic [ref=e222]: Checkout Started
+                - generic [ref=e223]: "352"
+              - generic [ref=e227]:
+                - generic [ref=e228]: Checkout Completed
+                - generic [ref=e229]: "152"
+        - generic [ref=e232]:
+          - generic [ref=e233]: Top products
+          - table [ref=e236]:
+            - rowgroup [ref=e237]:
+              - row [ref=e238]:
+                - columnheader "Product" [ref=e239]
+                - columnheader "Units sold" [ref=e240]
+                - columnheader "Revenue" [ref=e241]
+            - rowgroup [ref=e242]:
+              - row [ref=e243]:
+                - cell "Cashmere Overcoat" [ref=e244]
+                - cell "1" [ref=e245]
+                - cell "€499.99" [ref=e246]
+              - row [ref=e247]:
+                - cell "Classic Cotton T-Shirt" [ref=e248]
+                - cell "8" [ref=e249]
+                - cell "€199.92" [ref=e250]
+              - row [ref=e251]:
+                - cell "Running Sneakers" [ref=e252]
+                - cell "1" [ref=e253]
+                - cell "€119.99" [ref=e254]
+              - row [ref=e255]:
+                - cell "Premium Slim Fit Jeans" [ref=e256]
+                - cell "1" [ref=e257]
+                - cell "€79.99" [ref=e258]
+              - row [ref=e259]:
+                - cell "Chino Shorts" [ref=e260]
+                - cell "2" [ref=e261]
+                - cell "€79.98" [ref=e262]
+  - status

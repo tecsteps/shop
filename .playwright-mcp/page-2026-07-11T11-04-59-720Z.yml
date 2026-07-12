@@ -1,0 +1,249 @@
+- generic [active] [ref=f1e1]:
+  - dialog [ref=f1e79]:
+    - iframe [ref=f1e80]:
+      - generic [ref=f2e2]:
+        - generic [ref=f2e4]:
+          - generic [ref=f2e5]: Internal Server Error
+          - button "Copy as Markdown" [ref=f2e11] [cursor=pointer]
+        - generic [ref=f2e18]:
+          - generic [ref=f2e19]:
+            - heading "TypeError" [level=1] [ref=f2e20]
+            - generic [ref=f2e21]: app/Livewire/Storefront/Cart/Show.php:38
+            - paragraph [ref=f2e23]: "App\\Livewire\\Storefront\\Cart\\Show::checkout(): Return value must be of type Illuminate\\Http\\RedirectResponse, Livewire\\Features\\SupportRedirects\\Redirector returned"
+          - generic [ref=f2e24]:
+            - generic [ref=f2e25]:
+              - generic [ref=f2e26]:
+                - generic [ref=f2e27]: LARAVEL
+                - generic [ref=f2e28]: 12.51.0
+              - generic [ref=f2e29]:
+                - generic [ref=f2e30]: PHP
+                - generic [ref=f2e31]: 8.4.17
+            - generic [ref=f2e32]: UNHANDLED
+            - generic [ref=f2e36]: CODE 0
+          - generic [ref=f2e38]:
+            - generic [ref=f2e39]: "500"
+            - generic [ref=f2e43]: POST
+            - generic [ref=f2e47]: http://acme-fashion.test/livewire-6701cc17/update
+            - button [ref=f2e48] [cursor=pointer]
+        - generic [ref=f2e53]:
+          - generic [ref=f2e54]:
+            - heading "Exception trace" [level=3] [ref=f2e60]
+            - generic [ref=f2e61]:
+              - generic [ref=f2e62]:
+                - generic [ref=f2e63] [cursor=pointer]:
+                  - generic [ref=f2e66]:
+                    - code [ref=f2e70]:
+                      - generic [ref=f2e71]: app/Livewire/Storefront/Cart/Show.php
+                    - generic [ref=f2e72]: app/Livewire/Storefront/Cart/Show.php:38
+                  - button [ref=f2e75]
+                - code [ref=f2e84]:
+                  - generic [ref=f2e85]: "33"
+                  - generic [ref=f2e86]: "34 public function checkout(CheckoutService $checkouts): RedirectResponse"
+                  - generic [ref=f2e87]: "35 {"
+                  - generic [ref=f2e88]: 36 $checkout = $checkouts->create($this->cart());
+                  - generic [ref=f2e89]: "37"
+                  - generic [ref=f2e90]: 38 return redirect()->route('storefront.checkout.show', $checkout->id);
+                  - generic [ref=f2e91]: "39 }"
+                  - generic [ref=f2e92]: "40"
+                  - generic [ref=f2e93]: "41 public function render(): View"
+                  - generic [ref=f2e94]: "42 {"
+                  - generic [ref=f2e95]: 43 return view('livewire.storefront.cart.show', ['cart' => $this->cart()])
+                  - generic [ref=f2e96]: 44 ->layout('layouts.storefront', ['title' => 'Cart - '.app('current_store')->name]);
+                  - generic [ref=f2e97]: "45 }"
+                  - generic [ref=f2e98]: "46"
+                  - generic [ref=f2e99]: "47 private function cart(): Cart"
+                  - generic [ref=f2e100]: "48 {"
+                  - generic [ref=f2e101]: 49 return Cart::query()->with(['lines.variant.product', 'lines.variant.inventoryItem'])->findOrFail($this->cartId);
+                  - generic [ref=f2e102]: "50"
+              - generic [ref=f2e104] [cursor=pointer]:
+                - generic [ref=f2e109]: 58 vendor frames
+                - button [ref=f2e110]
+              - generic [ref=f2e116] [cursor=pointer]:
+                - generic [ref=f2e119]:
+                  - code [ref=f2e123]:
+                    - generic [ref=f2e124]: public/index.php
+                  - generic [ref=f2e125]: public/index.php:20
+                - button [ref=f2e128]
+              - generic [ref=f2e134] [cursor=pointer]:
+                - generic [ref=f2e139]: 1 vendor frame
+                - button [ref=f2e140]
+          - generic [ref=f2e145]:
+            - generic [ref=f2e146]:
+              - heading "Queries" [level=3] [ref=f2e151]
+              - generic [ref=f2e152]: 1-8 of 8
+            - generic [ref=f2e154]:
+              - generic [ref=f2e155]:
+                - generic [ref=f2e156]:
+                  - generic [ref=f2e157]: sqlite
+                  - code [ref=f2e164]:
+                    - generic [ref=f2e165]: select * from "stores" where "stores"."id" = 1 limit 1
+                - generic [ref=f2e166]: 2.79ms
+              - generic [ref=f2e167]:
+                - generic [ref=f2e168]:
+                  - generic [ref=f2e169]: sqlite
+                  - code [ref=f2e176]:
+                    - generic [ref=f2e177]: select * from "carts" where "carts"."id" = 1 and "carts"."store_id" = 1 limit 1
+                - generic [ref=f2e178]: 0.12ms
+              - generic [ref=f2e179]:
+                - generic [ref=f2e180]:
+                  - generic [ref=f2e181]: sqlite
+                  - code [ref=f2e188]:
+                    - generic [ref=f2e189]: select * from "cart_lines" where "cart_lines"."cart_id" in (1)
+                - generic [ref=f2e190]: 0.04ms
+              - generic [ref=f2e191]:
+                - generic [ref=f2e192]:
+                  - generic [ref=f2e193]: sqlite
+                  - code [ref=f2e200]:
+                    - generic [ref=f2e201]: select * from "product_variants" where "product_variants"."id" in (1)
+                - generic [ref=f2e202]: 0.07ms
+              - generic [ref=f2e203]:
+                - generic [ref=f2e204]:
+                  - generic [ref=f2e205]: sqlite
+                  - code [ref=f2e212]:
+                    - generic [ref=f2e213]: select * from "products" where "products"."id" in (1) and "products"."store_id" = 1
+                - generic [ref=f2e214]: 0.19ms
+              - generic [ref=f2e215]:
+                - generic [ref=f2e216]:
+                  - generic [ref=f2e217]: sqlite
+                  - code [ref=f2e224]:
+                    - generic [ref=f2e225]: select * from "inventory_items" where "inventory_items"."variant_id" in (1) and "inventory_items"."store_id" = 1
+                - generic [ref=f2e226]: 0.06ms
+              - generic [ref=f2e227]:
+                - generic [ref=f2e228]:
+                  - generic [ref=f2e229]: sqlite
+                  - code [ref=f2e236]:
+                    - generic [ref=f2e237]: select exists(select * from "cart_lines" where "cart_lines"."cart_id" = 1 and "cart_lines"."cart_id" is not null) as "exists"
+                - generic [ref=f2e238]: 0.02ms
+              - generic [ref=f2e239]:
+                - generic [ref=f2e240]:
+                  - generic [ref=f2e241]: sqlite
+                  - code [ref=f2e248]:
+                    - generic [ref=f2e249]: insert into "checkouts" ("status", "store_id", "cart_id", "customer_id", "updated_at", "created_at") values ('started', 1, 1, NULL, '2026-07-11 11:04:58', '2026-07-11 11:04:58')
+                - generic [ref=f2e250]: 0.38ms
+        - generic [ref=f2e252]:
+          - generic [ref=f2e253]:
+            - heading "Headers" [level=2] [ref=f2e254]
+            - generic [ref=f2e255]:
+              - generic [ref=f2e256]:
+                - generic [ref=f2e257]: cookie
+                - generic [ref=f2e259]: XSRF-TOKEN=eyJpdiI6IlFTcEhjR2ZBZHZqL3Z1UTQzdkJtdlE9PSIsInZhbHVlIjoiZDQwWkVsbWJCcFE4Y1h2OExYNjlQdTlqVFFBbEs4TnVaN1g1Ykc4RTB4QVBuWGlwS29odUh0bFF1Wk92RGFQbmJhZjR4dzFoK2g1VDdGaXd1b3F3SUQxWkhCNXdaZWFDNzNmb3ppeFFqcGRRYUFhRDN0YWk3S2U4TlFEZjVZeWgiLCJtYWMiOiI5MzliOGIzZmYwMDViODlkN2QyMTY4YWU5YWNkZTg3ZjI0ODQzMWFiMzZkMzc1NDgwNjllZTMxYTQxNGE4NjkwIiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6IkpPSU5QdENWTkpmT1dmenhMWUlUeXc9PSIsInZhbHVlIjoiVVZIWmVGSUlXUjRMUU9HM1B4K2lSRUZkUzdBbFVUVUE1Mk1SQXZkc1NyMmN3L1h5RXVTNHUvSC9BcWxteGpXYUNYbCtxSEVCaUNvN2VFZDRpejlyeTJJYTI3bXpmQk9nSmlTSmYxZ2p3ZmVGLzE1OEN5MVlXelhZZm1abXRZTnQiLCJtYWMiOiJjOGU5Y2RhYWRjN2FjODY0NjA1Y2I4M2E2NDcyNDkwNGFiODkwYjE1NDEzOTNiM2JhODYzZWE4ZmQ4YWZiMzBhIiwidGFnIjoiIn0%3D
+              - generic [ref=f2e260]:
+                - generic [ref=f2e261]: accept-language
+                - generic [ref=f2e263]: en-GB,en-US;q=0.9,en;q=0.8
+              - generic [ref=f2e264]:
+                - generic [ref=f2e265]: accept-encoding
+                - generic [ref=f2e267]: gzip, deflate
+              - generic [ref=f2e268]:
+                - generic [ref=f2e269]: referer
+                - generic [ref=f2e271]: http://acme-fashion.test/cart
+              - generic [ref=f2e272]:
+                - generic [ref=f2e273]: origin
+                - generic [ref=f2e275]: http://acme-fashion.test
+              - generic [ref=f2e276]:
+                - generic [ref=f2e277]: accept
+                - generic [ref=f2e279]: "*/*"
+              - generic [ref=f2e280]:
+                - generic [ref=f2e281]: x-livewire
+                - generic [ref=f2e283]: "1"
+              - generic [ref=f2e284]:
+                - generic [ref=f2e285]: content-type
+                - generic [ref=f2e287]: application/json
+              - generic [ref=f2e288]:
+                - generic [ref=f2e289]: user-agent
+                - generic [ref=f2e291]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36
+              - generic [ref=f2e292]:
+                - generic [ref=f2e293]: content-length
+                - generic [ref=f2e295]: "490"
+              - generic [ref=f2e296]:
+                - generic [ref=f2e297]: connection
+                - generic [ref=f2e299]: keep-alive
+              - generic [ref=f2e300]:
+                - generic [ref=f2e301]: host
+                - generic [ref=f2e303]: acme-fashion.test
+          - generic [ref=f2e304]:
+            - heading "Body" [level=2] [ref=f2e305]
+            - code [ref=f2e310]:
+              - generic [ref=f2e311]: "{"
+              - generic [ref=f2e312]: "\"_token\": \"BLvnxGmt1x5SpbfmG3dDyA7evVNRFS6OHjX7PUMY\","
+              - generic [ref=f2e313]: "\"components\": ["
+              - generic [ref=f2e314]: "{"
+              - generic [ref=f2e315]: "\"snapshot\": \"{\"data\":{\"cartId\":1},\"memo\":{\"id\":\"zDXuALWmt4P62je0agSV\",\"name\":\"storefront.cart.show\",\"path\":\"cart\",\"method\":\"GET\",\"release\":\"a-a-a\",\"children\":[],\"scripts\":[],\"assets\":[],\"errors\":[],\"locale\":\"en\",\"islands\":[]},\"checksum\":\"ff7e7b024d96314eeb12025b6375d8dcff76f6001dc4b10afc22518fbd8c9423\"}\","
+              - generic [ref=f2e316]: "\"updates\": [],"
+              - generic [ref=f2e317]: "\"calls\": ["
+              - generic [ref=f2e318]: "{"
+              - generic [ref=f2e319]: "\"method\": \"checkout\","
+              - generic [ref=f2e320]: "\"params\": [],"
+              - generic [ref=f2e321]: "\"metadata\": []"
+              - generic [ref=f2e322]: "}"
+              - generic [ref=f2e323]: "]"
+              - generic [ref=f2e324]: "}"
+              - generic [ref=f2e325]: "]"
+              - generic [ref=f2e326]: "}"
+          - generic [ref=f2e327]:
+            - heading "Routing" [level=2] [ref=f2e328]
+            - generic [ref=f2e329]:
+              - generic [ref=f2e330]:
+                - generic [ref=f2e331]: controller
+                - generic [ref=f2e333]: Livewire\Mechanisms\HandleRequests\HandleRequests@handleUpdate
+              - generic [ref=f2e334]:
+                - generic [ref=f2e335]: route name
+                - generic [ref=f2e337]: default-livewire.update
+              - generic [ref=f2e338]:
+                - generic [ref=f2e339]: middleware
+                - generic [ref=f2e341]: web
+          - generic [ref=f2e342]:
+            - heading "Routing parameters" [level=2] [ref=f2e343]
+            - generic [ref=f2e344]: // No routing parameters
+  - link "Skip to main content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f1e3]: Free shipping available with code FREESHIP
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Acme Fashion" [ref=f1e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f1e7]:
+        - link "Home" [ref=f1e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=f1e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f1e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Sign in" [ref=f1e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+      - generic [ref=f1e12]:
+        - button "Open product search" [ref=f1e14]:
+          - generic [ref=f1e19]: Search
+        - button "Open shopping cart" [ref=f1e21]:
+          - generic [ref=f1e26]: Cart
+  - main [ref=f1e27]:
+    - generic [ref=f1e28]:
+      - heading "Your cart" [level=1] [ref=f1e29]
+      - generic [ref=f1e30]:
+        - article [ref=f1e32]:
+          - generic [ref=f1e34]:
+            - heading "Classic Cotton T-Shirt" [level=2] [ref=f1e35]
+            - generic [ref=f1e36]: €24.99
+            - generic [ref=f1e38]:
+              - button "Decrease quantity" [ref=f1e39]:
+                - generic [ref=f1e44]: −
+              - generic [ref=f1e45]: "1"
+              - button "Increase quantity" [ref=f1e46]:
+                - generic [ref=f1e51]: +
+              - button "Remove" [ref=f1e52]
+        - complementary [ref=f1e58]:
+          - heading "Order summary" [level=2] [ref=f1e59]
+          - generic [ref=f1e60]:
+            - generic [ref=f1e61]: Subtotal
+            - generic [ref=f1e62]: €24.99
+          - button "Checkout" [ref=f1e64]
+  - contentinfo [ref=f1e70]:
+    - generic [ref=f1e71]:
+      - generic [ref=f1e72]:
+        - paragraph [ref=f1e73]: Acme Fashion
+        - paragraph [ref=f1e74]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f1e75]:
+        - link "Shop all collections" [ref=f1e76] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f1e77] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=f1e78]: Secure mock checkout. Prices shown in EUR.

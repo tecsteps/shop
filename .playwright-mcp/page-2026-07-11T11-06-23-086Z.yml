@@ -1,0 +1,105 @@
+- generic [ref=f2e1]:
+  - link "Skip to main content" [ref=f2e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f2e3]: Free shipping available with code FREESHIP
+  - banner [ref=f2e4]:
+    - generic [ref=f2e5]:
+      - link "Acme Fashion" [ref=f2e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f2e7]:
+        - link "Home" [ref=f2e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=f2e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f2e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Sign in" [ref=f2e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+      - generic [ref=f2e12]:
+        - button "Open product search" [ref=f2e14]:
+          - generic [ref=f2e19]: Search
+        - button "Open shopping cart" [ref=f2e21]:
+          - generic [ref=f2e26]: Cart
+  - main [ref=f2e27]:
+    - generic [ref=f2e28]:
+      - heading "Checkout" [level=1] [ref=f2e29]
+      - generic [ref=f2e30]:
+        - generic [ref=f2e31]:
+          - generic [ref=f2e32]:
+            - generic [ref=f2e33]: 1. Contact and shipping address
+            - generic [ref=f2e34]:
+              - generic [ref=f2e35]:
+                - generic [ref=f2e36]: Email
+                - textbox "Email" [ref=f2e38]: browser-review@example.test
+              - generic [ref=f2e39]:
+                - generic [ref=f2e40]: First name
+                - textbox "First name" [ref=f2e42]: Browser
+              - generic [ref=f2e43]:
+                - generic [ref=f2e44]: Last name
+                - textbox "Last name" [ref=f2e46]: Reviewer
+              - generic [ref=f2e47]:
+                - generic [ref=f2e48]: Address
+                - textbox "Address" [ref=f2e50]: Teststrasse 42
+              - generic [ref=f2e51]:
+                - generic [ref=f2e52]: City
+                - textbox "City" [ref=f2e54]: Berlin
+              - generic [ref=f2e55]:
+                - generic [ref=f2e56]: Postal code
+                - textbox "Postal code" [ref=f2e58]: "10115"
+              - generic [ref=f2e59]:
+                - generic [ref=f2e60]: Country code
+                - textbox "Country code" [ref=f2e62]: DE
+              - generic [ref=f2e63]:
+                - generic [ref=f2e64]: Phone (optional)
+                - textbox "Phone (optional)" [ref=f2e66]
+              - button "Continue to shipping" [ref=f2e67]
+          - generic [ref=f2e105]:
+            - generic [ref=f2e106]: 2. Shipping method
+            - group "Choose a shipping method" [ref=f2e107]:
+              - generic [ref=f2e109] [cursor=pointer]:
+                - generic [ref=f2e110]: Standard Shipping
+                - radio "Standard Shipping" [checked] [ref=f2e111]
+              - generic [ref=f2e112] [cursor=pointer]:
+                - generic [ref=f2e113]: Express Shipping
+                - radio "Express Shipping" [ref=f2e114]
+            - button "Continue to payment" [active] [ref=f2e115]
+          - generic [ref=f2e121]:
+            - generic [ref=f2e122]: 3. Payment
+            - group "Payment method" [ref=f2e123]:
+              - generic [ref=f2e125] [cursor=pointer]:
+                - radio "Credit card" [checked] [ref=f2e126]
+                - generic [ref=f2e127]: Credit card
+              - generic [ref=f2e128] [cursor=pointer]:
+                - radio "PayPal" [ref=f2e129]
+                - generic [ref=f2e130]: PayPal
+              - generic [ref=f2e131] [cursor=pointer]:
+                - radio "Bank transfer" [ref=f2e132]
+                - generic [ref=f2e133]: Bank transfer
+            - generic [ref=f2e134]:
+              - generic [ref=f2e135]: Card number
+              - textbox "Card number" [ref=f2e137]: 4242 4242 4242 4242
+            - button "Review payment" [ref=f2e138]
+        - complementary [ref=f2e73]:
+          - heading "Order summary" [level=2] [ref=f2e74]
+          - generic [ref=f2e76]:
+            - generic [ref=f2e77]: 2 × Classic Cotton T-Shirt
+            - generic [ref=f2e78]: €49.98
+          - generic [ref=f2e81]:
+            - generic [ref=f2e82]: Total
+            - generic [ref=f2e83]: €54.97
+          - generic [ref=f2e85]:
+            - generic [ref=f2e86]:
+              - generic [ref=f2e87]: Discount code
+              - textbox "Discount code" [ref=f2e89]
+            - button "Apply discount" [ref=f2e90]
+  - contentinfo [ref=f2e96]:
+    - generic [ref=f2e97]:
+      - generic [ref=f2e98]:
+        - paragraph [ref=f2e99]: Acme Fashion
+        - paragraph [ref=f2e100]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f2e101]:
+        - link "Shop all collections" [ref=f2e102] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f2e103] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=f2e104]: Secure mock checkout. Prices shown in EUR.

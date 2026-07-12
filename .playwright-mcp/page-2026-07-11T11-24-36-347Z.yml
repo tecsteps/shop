@@ -1,0 +1,131 @@
+- generic [active] [ref=f4e1]:
+  - link "Skip to main content" [ref=f4e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f4e3]: Free shipping available with code FREESHIP
+  - banner [ref=f4e4]:
+    - generic [ref=f4e5]:
+      - link "Acme Fashion" [ref=f4e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f4e7]:
+        - link "Home" [ref=f4e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=f4e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f4e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Account" [ref=f4e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+      - generic [ref=f4e12]:
+        - button "Open product search" [ref=f4e14]:
+          - generic [ref=f4e19]: Search
+        - button "Open shopping cart" [ref=f4e21]:
+          - generic [ref=f4e26]: Cart
+  - main [ref=f4e27]:
+    - generic [ref=f4e28]:
+      - generic [ref=f4e31]:
+        - generic [ref=f4e32]: New season
+        - heading "Find your next favorite." [level=1] [ref=f4e33]
+        - paragraph [ref=f4e34]: Explore curated essentials from Acme Fashion.
+        - link "Shop collections" [ref=f4e36] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+      - generic [ref=f4e38]:
+        - generic [ref=f4e39]:
+          - generic [ref=f4e40]:
+            - paragraph [ref=f4e41]: Explore
+            - heading "Featured collections" [level=2] [ref=f4e42]
+          - link "View all" [ref=f4e43] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections
+        - generic [ref=f4e44]:
+          - link [ref=f4e45] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/new-arrivals
+            - heading "New Arrivals" [level=3] [ref=f4e46]
+            - paragraph [ref=f4e47]: 7 products
+          - link [ref=f4e48] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/t-shirts
+            - heading "T-Shirts" [level=3] [ref=f4e49]
+            - paragraph [ref=f4e50]: 4 products
+          - link [ref=f4e51] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/pants-jeans
+            - heading "Pants & Jeans" [level=3] [ref=f4e52]
+            - paragraph [ref=f4e53]: 4 products
+      - generic [ref=f4e54]:
+        - heading "Featured products" [level=2] [ref=f4e55]
+        - generic [ref=f4e56]:
+          - article [ref=f4e57]:
+            - link "Cashmere Overcoat image placeholder Cashmere Overcoat €499.99" [ref=f4e58] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/cashmere-overcoat
+              - img "Cashmere Overcoat image placeholder" [ref=f4e59]:
+                - generic [ref=f4e60]: Cashmere Overcoat
+              - generic [ref=f4e61]:
+                - heading "Cashmere Overcoat" [level=2] [ref=f4e62]
+                - generic [ref=f4e63]: €499.99
+          - article [ref=f4e65]:
+            - link "Gift Card image placeholder Gift Card €25.00" [ref=f4e66] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/gift-card
+              - img "Gift Card image placeholder" [ref=f4e67]:
+                - generic [ref=f4e68]: Gift Card
+              - generic [ref=f4e69]:
+                - heading "Gift Card" [level=2] [ref=f4e70]
+                - generic [ref=f4e71]: €25.00
+          - article [ref=f4e73]:
+            - link "Backorder Denim Jacket image placeholder Backorder Denim Jacket €99.99" [ref=f4e74] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/backorder-denim-jacket
+              - img "Backorder Denim Jacket image placeholder" [ref=f4e75]:
+                - generic [ref=f4e76]: Backorder Denim Jacket
+              - generic [ref=f4e77]:
+                - heading "Backorder Denim Jacket" [level=2] [ref=f4e78]
+                - generic [ref=f4e79]: €99.99
+          - article [ref=f4e81]:
+            - link "Limited Edition Sneakers image placeholder Limited Edition Sneakers €159.99" [ref=f4e82] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/limited-edition-sneakers
+              - img "Limited Edition Sneakers image placeholder" [ref=f4e83]:
+                - generic [ref=f4e84]: Limited Edition Sneakers
+              - generic [ref=f4e85]:
+                - heading "Limited Edition Sneakers" [level=2] [ref=f4e86]
+                - generic [ref=f4e87]: €159.99
+          - article [ref=f4e89]:
+            - link "Bucket Hat image placeholder Bucket Hat €24.99" [ref=f4e90] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/bucket-hat
+              - img "Bucket Hat image placeholder" [ref=f4e91]:
+                - generic [ref=f4e92]: Bucket Hat
+              - generic [ref=f4e93]:
+                - heading "Bucket Hat" [level=2] [ref=f4e94]
+                - generic [ref=f4e95]: €24.99
+          - article [ref=f4e97]:
+            - link "Canvas Tote Bag image placeholder Canvas Tote Bag €19.99" [ref=f4e98] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/canvas-tote-bag
+              - img "Canvas Tote Bag image placeholder" [ref=f4e99]:
+                - generic [ref=f4e100]: Canvas Tote Bag
+              - generic [ref=f4e101]:
+                - heading "Canvas Tote Bag" [level=2] [ref=f4e102]
+                - generic [ref=f4e103]: €19.99
+          - article [ref=f4e105]:
+            - link "Wool Scarf image placeholder Wool Scarf €29.99" [ref=f4e106] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/wool-scarf
+              - img "Wool Scarf image placeholder" [ref=f4e107]:
+                - generic [ref=f4e108]: Wool Scarf
+              - generic [ref=f4e109]:
+                - heading "Wool Scarf" [level=2] [ref=f4e110]
+                - generic [ref=f4e111]: €29.99
+          - article [ref=f4e113]:
+            - link "Wide Leg Trousers image placeholder Wide Leg Trousers €49.99 €69.99 Sale price" [ref=f4e114] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/wide-leg-trousers
+              - img "Wide Leg Trousers image placeholder" [ref=f4e115]:
+                - generic [ref=f4e116]: Wide Leg Trousers
+              - generic [ref=f4e117]:
+                - heading "Wide Leg Trousers" [level=2] [ref=f4e118]
+                - generic [ref=f4e119]:
+                  - generic [ref=f4e120]: €49.99
+                  - generic [ref=f4e121]: €69.99
+                  - generic [ref=f4e122]: Sale price
+  - contentinfo [ref=f4e123]:
+    - generic [ref=f4e124]:
+      - generic [ref=f4e125]:
+        - paragraph [ref=f4e126]: Acme Fashion
+        - paragraph [ref=f4e127]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f4e128]:
+        - link "Shop all collections" [ref=f4e129] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f4e130] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=f4e131]: Secure mock checkout. Prices shown in EUR.

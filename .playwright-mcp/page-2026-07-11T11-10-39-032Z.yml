@@ -1,0 +1,54 @@
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Free shipping available with code FREESHIP
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Acme Fashion" [ref=e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Sign in" [ref=e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+      - generic [ref=e12]:
+        - button "Open product search" [ref=e14]:
+          - generic [ref=e19]: Search
+        - button "Open shopping cart" [ref=e21]:
+          - generic [ref=e26]: Cart
+  - main [ref=e27]:
+    - generic [ref=e29]:
+      - generic [ref=e30]: Sign in
+      - paragraph [ref=e31]: Access your orders and saved addresses.
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Email
+          - textbox "Email" [active] [ref=e36]
+        - generic [ref=e37]:
+          - generic [ref=e38]: Password
+          - generic [ref=e39]:
+            - textbox "Password" [ref=e40]
+            - button "Toggle password visibility" [ref=e42]
+        - generic [ref=e46]:
+          - checkbox "Remember me" [ref=e47]
+          - generic [ref=e49]: Remember me
+        - button "Sign in" [ref=e50]
+      - paragraph [ref=e56]:
+        - text: New here?
+        - link "Create an account" [ref=e57] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/register
+  - contentinfo [ref=e58]:
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - paragraph [ref=e61]: Acme Fashion
+        - paragraph [ref=e62]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=e63]:
+        - link "Shop all collections" [ref=e64] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=e66]: Secure mock checkout. Prices shown in EUR.

@@ -1,0 +1,5 @@
+[      57ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/admin/login:51
+[   48918ms] [WARNING] The resource http://acme-fashion.test/build/assets/app-Cxwdcq-d.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://acme-fashion.test/admin/orders/5:0
+[   59121ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://acme-fashion.test/livewire-6701cc17/update:0
+[   59137ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ :6
+[   62543ms] [WARNING] The resource http://acme-fashion.test/build/assets/app-Cxwdcq-d.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://acme-fashion.test/admin/orders/5:0

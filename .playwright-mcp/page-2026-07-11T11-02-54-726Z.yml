@@ -1,0 +1,98 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to main content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f1e3]: Free shipping available with code FREESHIP
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Acme Fashion" [ref=f1e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f1e7]:
+        - link "Home" [ref=f1e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=f1e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f1e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Sign in" [ref=f1e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+      - generic [ref=f1e12]:
+        - button "Open product search" [ref=f1e14]:
+          - generic [ref=f1e19]: Search
+        - button "Open shopping cart" [ref=f1e21]:
+          - generic [ref=f1e26]: Cart
+  - main [ref=f1e27]:
+    - generic [ref=f1e28]:
+      - navigation "Breadcrumb" [ref=f1e29]:
+        - list [ref=f1e30]:
+          - listitem [ref=f1e31]:
+            - link "Home" [ref=f1e32] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+            - generic [ref=f1e33]: /
+          - listitem [ref=f1e34]:
+            - link "Products" [ref=f1e35] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections
+            - generic [ref=f1e36]: /
+          - listitem [ref=f1e37]:
+            - generic [ref=f1e38]: Classic Cotton T-Shirt
+      - generic [ref=f1e39]:
+        - img "Classic Cotton T-Shirt" [ref=f1e40]
+        - generic [ref=f1e41]:
+          - generic [ref=f1e42]:
+            - paragraph [ref=f1e43]: Acme Basics
+            - heading "Classic Cotton T-Shirt" [level=1] [ref=f1e44]
+          - generic [ref=f1e45]: €24.99
+          - group "Choose a variant" [ref=f1e48]:
+            - generic [ref=f1e50]:
+              - generic [ref=f1e51] [cursor=pointer]:
+                - generic [ref=f1e52]: ACME-CLASSICC-S-WHITE-1
+                - radio "Select variant ACME-CLASSICC-S-WHITE-1" [checked] [ref=f1e53]
+              - generic [ref=f1e54] [cursor=pointer]:
+                - generic [ref=f1e55]: ACME-CLASSICC-S-BLACK-2
+                - radio "Select variant ACME-CLASSICC-S-BLACK-2" [ref=f1e56]
+              - generic [ref=f1e57] [cursor=pointer]:
+                - generic [ref=f1e58]: ACME-CLASSICC-S-NAVY-3
+                - radio "Select variant ACME-CLASSICC-S-NAVY-3" [ref=f1e59]
+              - generic [ref=f1e60] [cursor=pointer]:
+                - generic [ref=f1e61]: ACME-CLASSICC-M-WHITE-4
+                - radio "Select variant ACME-CLASSICC-M-WHITE-4" [ref=f1e62]
+              - generic [ref=f1e63] [cursor=pointer]:
+                - generic [ref=f1e64]: ACME-CLASSICC-M-BLACK-5
+                - radio "Select variant ACME-CLASSICC-M-BLACK-5" [ref=f1e65]
+              - generic [ref=f1e66] [cursor=pointer]:
+                - generic [ref=f1e67]: ACME-CLASSICC-M-NAVY-6
+                - radio "Select variant ACME-CLASSICC-M-NAVY-6" [ref=f1e68]
+              - generic [ref=f1e69] [cursor=pointer]:
+                - generic [ref=f1e70]: ACME-CLASSICC-L-WHITE-7
+                - radio "Select variant ACME-CLASSICC-L-WHITE-7" [ref=f1e71]
+              - generic [ref=f1e72] [cursor=pointer]:
+                - generic [ref=f1e73]: ACME-CLASSICC-L-BLACK-8
+                - radio "Select variant ACME-CLASSICC-L-BLACK-8" [ref=f1e74]
+              - generic [ref=f1e75] [cursor=pointer]:
+                - generic [ref=f1e76]: ACME-CLASSICC-L-NAVY-9
+                - radio "Select variant ACME-CLASSICC-L-NAVY-9" [ref=f1e77]
+              - generic [ref=f1e78] [cursor=pointer]:
+                - generic [ref=f1e79]: ACME-CLASSICC-XL-WHITE-10
+                - radio "Select variant ACME-CLASSICC-XL-WHITE-10" [ref=f1e80]
+              - generic [ref=f1e81] [cursor=pointer]:
+                - generic [ref=f1e82]: ACME-CLASSICC-XL-BLACK-11
+                - radio "Select variant ACME-CLASSICC-XL-BLACK-11" [ref=f1e83]
+              - generic [ref=f1e84] [cursor=pointer]:
+                - generic [ref=f1e85]: ACME-CLASSICC-XL-NAVY-12
+                - radio "Select variant ACME-CLASSICC-XL-NAVY-12" [ref=f1e86]
+          - paragraph [ref=f1e87]: In stock
+          - generic [ref=f1e88]:
+            - generic [ref=f1e89]: Quantity
+            - spinbutton "Quantity" [ref=f1e91]: "1"
+          - button "Add to cart" [ref=f1e92]
+          - paragraph [ref=f1e99]: A timeless classic cotton t-shirt. Comfortable, breathable, and perfect for everyday wear.
+  - contentinfo [ref=f1e100]:
+    - generic [ref=f1e101]:
+      - generic [ref=f1e102]:
+        - paragraph [ref=f1e103]: Acme Fashion
+        - paragraph [ref=f1e104]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f1e105]:
+        - link "Shop all collections" [ref=f1e106] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f1e107] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=f1e108]: Secure mock checkout. Prices shown in EUR.

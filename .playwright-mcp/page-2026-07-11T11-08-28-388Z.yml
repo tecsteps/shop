@@ -1,0 +1,52 @@
+- generic [active] [ref=f3e1]:
+  - link "Skip to main content" [ref=f3e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f3e3]: Free shipping available with code FREESHIP
+  - banner [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - link "Acme Fashion" [ref=f3e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f3e7]:
+        - link "Home" [ref=f3e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=f3e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f3e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Sign in" [ref=f3e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+      - generic [ref=f3e12]:
+        - button "Open product search" [ref=f3e14]:
+          - generic [ref=f3e19]: Search
+        - button "Open shopping cart" [ref=f3e21]:
+          - generic [ref=f3e26]: Cart
+  - main [ref=f3e27]:
+    - generic [ref=f3e28]:
+      - generic [ref=f3e29]: ✓
+      - heading "Thank you for your order!" [level=1] [ref=f3e30]
+      - paragraph [ref=f3e31]: "Order #1017 has been placed."
+      - generic [ref=f3e34]:
+        - generic [ref=f3e35]: Bank transfer instructions
+        - paragraph [ref=f3e36]: Mock Bank AG · IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX
+        - paragraph [ref=f3e37]: "Use #1017 as the payment reference."
+      - generic [ref=f3e38]:
+        - heading "Order details" [level=2] [ref=f3e39]
+        - generic [ref=f3e40]:
+          - generic [ref=f3e41]: 1 × Classic Cotton T-Shirt
+          - generic [ref=f3e42]: €24.99
+        - generic [ref=f3e44]:
+          - generic [ref=f3e45]: Total
+          - generic [ref=f3e46]: €29.98
+      - link "Continue shopping" [ref=f3e48] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+  - contentinfo [ref=f3e49]:
+    - generic [ref=f3e50]:
+      - generic [ref=f3e51]:
+        - paragraph [ref=f3e52]: Acme Fashion
+        - paragraph [ref=f3e53]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f3e54]:
+        - link "Shop all collections" [ref=f3e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f3e56] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=f3e57]: Secure mock checkout. Prices shown in EUR.

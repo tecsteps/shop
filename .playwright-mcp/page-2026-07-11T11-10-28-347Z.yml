@@ -1,0 +1,16 @@
+- generic [ref=e2]:
+  - link "Laravel Starter Kit" [ref=e4] [cursor=pointer]:
+    - /url: http://acme-fashion.test/dashboard
+  - navigation [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]: Platform
+      - link "Dashboard" [ref=e15] [cursor=pointer]:
+        - /url: http://acme-fashion.test/dashboard
+  - navigation [ref=e21]:
+    - link "Repository" [ref=e23] [cursor=pointer]:
+      - /url: https://github.com/laravel/livewire-starter-kit
+    - link "Documentation" [ref=e32] [cursor=pointer]:
+      - /url: https://laravel.com/docs/starter-kits#livewire
+  - button "AU Admin User" [ref=e38]:
+    - generic [ref=e39]: AU
+    - generic [ref=e42]: Admin User

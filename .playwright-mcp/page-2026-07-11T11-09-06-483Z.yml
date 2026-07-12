@@ -1,0 +1,113 @@
+- generic [ref=e264]:
+  - complementary [ref=e265]:
+    - navigation "Admin navigation" [ref=e266]:
+      - generic [ref=e271]:
+        - generic [ref=e272]: Shop
+        - generic [ref=e273]: Commerce platform
+      - generic [ref=e274]:
+        - link "Dashboard" [ref=e276] [cursor=pointer]:
+          - /url: /admin
+        - generic [ref=e280]: Products
+        - generic [ref=e281]:
+          - link "Products" [ref=e282] [cursor=pointer]:
+            - /url: /admin/products
+          - link "Collections" [ref=e286] [cursor=pointer]:
+            - /url: /admin/collections
+          - link "Inventory" [ref=e290] [cursor=pointer]:
+            - /url: /admin/inventory
+        - generic [ref=e294]: Orders
+        - link "Orders" [ref=e296] [cursor=pointer]:
+          - /url: /admin/orders
+        - generic [ref=e300]: Customers
+        - link "Customers" [ref=e302] [cursor=pointer]:
+          - /url: /admin/customers
+        - generic [ref=e306]: Discounts
+        - link "Discounts" [ref=e308] [cursor=pointer]:
+          - /url: /admin/discounts
+        - generic [ref=e313]: Content
+        - generic [ref=e314]:
+          - link "Pages" [ref=e315] [cursor=pointer]:
+            - /url: /admin/pages
+          - link "Navigation" [ref=e319] [cursor=pointer]:
+            - /url: /admin/navigation
+          - link "Themes" [ref=e323] [cursor=pointer]:
+            - /url: /admin/themes
+        - generic [ref=e327]: Insights
+        - generic [ref=e328]:
+          - link "Analytics" [ref=e329] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Search" [ref=e334] [cursor=pointer]:
+            - /url: /admin/settings/search
+        - generic [ref=e338]: Platform
+        - generic [ref=e339]:
+          - link "Settings" [ref=e340] [cursor=pointer]:
+            - /url: /admin/settings
+          - link "Apps" [ref=e345] [cursor=pointer]:
+            - /url: /admin/apps
+          - link "Developers" [ref=e349] [cursor=pointer]:
+            - /url: /admin/developers
+  - generic [ref=e353]:
+    - banner [ref=e354]:
+      - generic [ref=e355]:
+        - button "Acme Fashion" [ref=e358]
+        - generic [ref=e362]:
+          - button "Notifications" [ref=e364]
+          - button "AU Admin User" [ref=e368]:
+            - generic [ref=e369]: AU
+            - generic [ref=e372]: Admin User
+    - main [ref=e376]:
+      - generic [ref=e377]:
+        - generic [ref=e378]:
+          - link "Home" [ref=e380] [cursor=pointer]:
+            - /url: /admin
+          - generic [ref=e383]: Products
+        - generic [ref=e385]:
+          - generic [ref=e386]:
+            - heading "Products" [level=1] [ref=e387]
+            - paragraph [ref=e388]: Manage catalog products, variants, and publishing.
+          - link "Add product" [ref=e390] [cursor=pointer]:
+            - /url: /admin/products/create
+        - generic [ref=e395]:
+          - textbox "Search products" [active] [ref=e397]:
+            - /placeholder: Search products…
+            - text: Classic
+          - combobox "Filter status" [ref=e399]:
+            - option "All statuses" [selected]
+            - option "Active"
+            - option "Draft"
+            - option "Archived"
+          - combobox "Filter product type" [ref=e400]:
+            - option "All types" [selected]
+            - option "Accessories"
+            - option "Gift Cards"
+            - option "Hoodies"
+            - option "Jackets"
+            - option "Pants"
+            - option "Shoes"
+            - option "T-Shirts"
+        - table [ref=e403]:
+          - rowgroup [ref=e404]:
+            - row [ref=e405]:
+              - columnheader "Select" [ref=e406]
+              - columnheader [ref=e408]:
+                - button "Product" [ref=e409]
+              - columnheader "Status" [ref=e410]
+              - columnheader "Inventory" [ref=e411]
+              - columnheader "Type" [ref=e412]
+              - columnheader "Vendor" [ref=e413]
+              - columnheader [ref=e414]:
+                - button "Updated" [ref=e415]
+          - rowgroup [ref=e416]:
+            - row [ref=e634]:
+              - cell [ref=e444]:
+                - checkbox "Select Classic Cotton T-Shirt" [ref=e445]
+              - cell "Classic Cotton T-Shirt 12 variants" [ref=e447]:
+                - link "Classic Cotton T-Shirt" [ref=e448] [cursor=pointer]:
+                  - /url: /admin/products/1/edit
+                - generic [ref=e449]: 12 variants
+              - cell "Active" [ref=e450]
+              - cell "178" [ref=e452]
+              - cell "T-Shirts" [ref=e453]
+              - cell "Acme Basics" [ref=e454]
+              - cell "9 minutes ago" [ref=e635]
+  - status

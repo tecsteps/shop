@@ -1,0 +1,20 @@
+- generic [ref=e3]:
+  - link "Shop" [ref=e4] [cursor=pointer]:
+    - /url: http://acme-fashion.test/home
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Sign in" [level=1] [ref=e16]
+      - paragraph [ref=e17]: Access your store administration.
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]: Email
+        - textbox "Email" [active] [ref=e22]
+      - generic [ref=e23]:
+        - generic [ref=e24]: Password
+        - generic [ref=e25]:
+          - textbox "Password" [ref=e26]
+          - button "Toggle password visibility" [ref=e28]
+      - generic [ref=e32]:
+        - checkbox "Remember me" [ref=e33]
+        - generic [ref=e35]: Remember me
+      - button "Sign in" [ref=e36]
