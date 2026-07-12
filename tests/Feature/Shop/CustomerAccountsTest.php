@@ -4,7 +4,12 @@ use App\Auth\CustomerPasswordBroker;
 use App\Livewire\Storefront\Account\Addresses\Index as AddressBook;
 use App\Livewire\Storefront\Account\Auth\Login;
 use App\Livewire\Storefront\Account\Auth\Register;
+use App\Livewire\Storefront\Account\Dashboard as CustomerDashboard;
+use App\Livewire\Storefront\Account\Orders\Index as CustomerOrders;
 use App\Livewire\Storefront\Account\Orders\Show as CustomerOrderShow;
+use App\Livewire\Storefront\Checkout\Confirmation;
+use App\Models\Cart;
+use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\Order;
@@ -164,6 +169,32 @@ describe('tenant customer password reset', function () {
 });
 
 describe('customer-owned data', function () {
+    it('encodes order numbers in account links and resolves the decoded route value', function () {
+        $context = createStoreContext();
+        $customer = Customer::factory()->for($context['store'])->create();
+        $order = Order::factory()->for($context['store'])->for($customer)->create([
+            'order_number' => '#1015',
+        ]);
+        $cart = Cart::factory()->for($context['store'])->create(['customer_id' => $customer->id]);
+        $checkout = Checkout::factory()->completed()->for($context['store'])->for($cart)->create([
+            'customer_id' => $customer->id,
+            'email' => $customer->email,
+            'totals_json' => ['order_id' => $order->id],
+        ]);
+        actingAsCustomer($customer);
+
+        Livewire::test(CustomerDashboard::class)
+            ->assertSeeHtml('href="/account/orders/%231015"');
+        Livewire::test(CustomerOrders::class)
+            ->assertSeeHtml('href="/account/orders/%231015"');
+        Livewire::test(Confirmation::class, ['checkoutId' => $checkout->id])
+            ->assertSeeHtml('href="/account/orders/%231015"');
+
+        $this->get("http://{$context['domain']->hostname}/account/orders/%231015")
+            ->assertOk()
+            ->assertSee('Order #1015');
+    });
+
     it('creates updates defaults and deletes only owned addresses', function () {
         $store = createStoreContext()['store'];
         $customer = Customer::factory()->for($store)->create();

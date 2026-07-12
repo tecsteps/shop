@@ -6,6 +6,7 @@ use App\Livewire\Storefront\StorefrontComponent;
 use App\Models\Checkout;
 use App\Models\CustomerAddress;
 use App\Models\ShippingRate;
+use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\DiscountService;
 use App\Services\PricingEngine;
@@ -259,6 +260,8 @@ class Show extends StorefrontComponent
 
             session()->put('last_order_id', $order->getKey());
             session()->put('checkout_access.'.$this->checkout->getKey(), true);
+            app(CartService::class)->getOrCreateForSession($this->currentStore(), Auth::guard('customer')->user());
+            session()->forget(['cart_discount_code', 'cart_discount_amount', 'cart_free_shipping']);
 
             return $this->redirect(url('/checkout/'.$this->checkout->getRouteKey().'/confirmation'), navigate: true);
         } catch (\Throwable $exception) {

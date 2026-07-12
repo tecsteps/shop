@@ -25,26 +25,13 @@ trait ManagesCart
     public function cart(): ?Cart
     {
         $store = $this->currentStore();
-        $cartId = session('cart_id');
+        $cart = app(CartService::class)->resolveForSession($store, Auth::guard('customer')->user());
 
-        $query = Cart::query()
-            ->where('store_id', $store->getKey())
-            ->where('status', 'active')
-            ->with([
-                'lines.variant.product.media',
-                'lines.variant.optionValues.option',
-                'lines.variant.inventoryItem',
-            ]);
-
-        if ($cartId) {
-            $query->whereKey($cartId);
-        } elseif ($customer = Auth::guard('customer')->user()) {
-            $query->where('customer_id', $customer->getAuthIdentifier())->latest('updated_at');
-        } else {
-            return null;
-        }
-
-        return $query->first();
+        return $cart?->load([
+            'lines.variant.product.media',
+            'lines.variant.optionValues.option',
+            'lines.variant.inventoryItem',
+        ]);
     }
 
     #[Computed]

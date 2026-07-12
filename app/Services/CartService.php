@@ -30,19 +30,19 @@ final class CartService
 
     public function getOrCreateForSession(Store $store, ?Customer $customer = null): Cart
     {
-        if ($customer !== null) {
-            $customerCart = Cart::withoutGlobalScopes()
-                ->where('store_id', $store->id)
-                ->where('customer_id', $customer->id)
-                ->where('status', 'active')
-                ->latest('id')
-                ->first();
-
-            if ($customerCart !== null) {
-                return $customerCart;
-            }
+        $cart = $this->resolveForSession($store, $customer);
+        if ($cart !== null) {
+            return $cart;
         }
 
+        $cart = $this->create($store, $customer);
+        session(['cart_id' => $cart->id]);
+
+        return $cart;
+    }
+
+    public function resolveForSession(Store $store, ?Customer $customer = null): ?Cart
+    {
         $cartId = session('cart_id');
         if ($cartId !== null) {
             $cart = Cart::withoutGlobalScopes()
@@ -50,13 +50,27 @@ final class CartService
                 ->where('status', 'active')
                 ->find($cartId);
 
-            if ($cart !== null) {
+            if ($cart !== null && $this->belongsToCustomer($cart, $customer)) {
                 return $cart;
             }
+
+            session()->forget('cart_id');
         }
 
-        $cart = $this->create($store, $customer);
-        session(['cart_id' => $cart->id]);
+        if ($customer === null) {
+            return null;
+        }
+
+        $cart = Cart::withoutGlobalScopes()
+            ->where('store_id', $store->id)
+            ->where('customer_id', $customer->id)
+            ->where('status', 'active')
+            ->latest('id')
+            ->first();
+
+        if ($cart !== null) {
+            session(['cart_id' => $cart->id]);
+        }
 
         return $cart;
     }
@@ -238,5 +252,12 @@ final class CartService
     private function enumValue(mixed $value): string
     {
         return $value instanceof BackedEnum ? (string) $value->value : (string) $value;
+    }
+
+    private function belongsToCustomer(Cart $cart, ?Customer $customer): bool
+    {
+        return $customer === null
+            ? $cart->customer_id === null
+            : (int) $cart->customer_id === (int) $customer->id;
     }
 }

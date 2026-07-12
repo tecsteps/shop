@@ -11,6 +11,7 @@ use App\Exceptions\ShippingUnavailableException;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Checkout;
+use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\ShippingCalculator;
 use Illuminate\Http\JsonResponse;
@@ -21,6 +22,7 @@ final class CheckoutController extends Controller
 {
     public function __construct(
         private readonly CheckoutService $checkouts,
+        private readonly CartService $carts,
         private readonly ShippingCalculator $shipping,
     ) {}
 
@@ -165,6 +167,14 @@ final class CheckoutController extends Controller
                     'total_amount' => $order->total_amount,
                     'currency' => $order->currency,
                 ],
+            ];
+            $nextCart = $this->carts->getOrCreateForSession(app('current_store'), auth('customer')->user());
+            $request->session()->put('api_cart_ids', collect($request->session()->get('api_cart_ids', []))
+                ->push($nextCart->id)->unique()->take(-20)->values()->all());
+            $response['next_cart'] = [
+                'id' => $nextCart->id,
+                'status' => $nextCart->status instanceof \BackedEnum ? $nextCart->status->value : $nextCart->status,
+                'item_count' => (int) $nextCart->lines()->sum('quantity'),
             ];
             if ($method === 'bank_transfer') {
                 $response['bank_transfer_instructions'] = [

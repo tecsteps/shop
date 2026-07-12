@@ -7,6 +7,7 @@ use App\Contracts\DnsResolver;
 use App\Contracts\PaymentProvider;
 use App\Contracts\TaxProvider;
 use App\Enums\StoreUserRole;
+use App\Http\Middleware\ResolveStore;
 use App\Listeners\ShopEventSubscriber;
 use App\Models\Collection;
 use App\Models\Customer;
@@ -50,6 +51,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -69,6 +71,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Livewire::addPersistentMiddleware(ResolveStore::class);
+
         $this->configureDefaults();
         $this->configureAuthentication();
         $this->configureRateLimits();

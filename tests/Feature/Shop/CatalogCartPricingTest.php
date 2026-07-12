@@ -234,6 +234,29 @@ describe('variant matrix SKU and inventory invariants', function () {
 });
 
 describe('cart mutations and optimistic concurrency', function () {
+    it('resolves only an active session cart and creates one fresh cart after conversion', function () {
+        $flow = checkoutReadyForPayment();
+        session(['cart_id' => $flow['cart']->id]);
+
+        $order = app(CheckoutService::class)->completeCheckout($flow['checkout'], ['card_number' => '4242424242424242']);
+        $service = app(CartService::class);
+
+        expect($service->resolveForSession($flow['store']))->toBeNull()
+            ->and(session()->has('cart_id'))->toBeFalse();
+
+        $fresh = $service->getOrCreateForSession($flow['store']);
+        $sameOrder = app(CheckoutService::class)->completeCheckout($flow['checkout']->refresh(), ['card_number' => '4242424242424242']);
+        $sameFresh = $service->getOrCreateForSession($flow['store']);
+
+        expect($fresh->id)->not->toBe($flow['cart']->id)
+            ->and($fresh->status->value)->toBe('active')
+            ->and($fresh->lines()->count())->toBe(0)
+            ->and(session('cart_id'))->toBe($fresh->id)
+            ->and($sameOrder->id)->toBe($order->id)
+            ->and($sameFresh->id)->toBe($fresh->id)
+            ->and(Order::withoutGlobalScopes()->where('store_id', $flow['store']->id)->count())->toBe(1);
+    });
+
     it('creates prices combines updates removes and versions cart lines', function () {
         $store = createStoreContext()['store'];
         $sku = makeSellableVariant($store, variantAttributes: ['price_amount' => 2500]);

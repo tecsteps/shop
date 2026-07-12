@@ -19,8 +19,8 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | 6. Customer accounts | Complete | Tenant auth/reset/address/order and guest-identity security suites pass |
 | 7. Admin panel | Complete | All specified admin resources, roles, settings tabs, and mutation workflows pass HTTP/Livewire QA |
 | 8. Search, analytics, apps, webhooks | Complete | Facets/suggestions, deduplication, persistent reindex, secure delivery, analytics, apps, and job suites pass |
-| 9. Accessibility, responsive, dark mode, error states | In progress | Production build and Blade QA pass; final visible Chrome review pending |
-| 10. Full quality and acceptance verification | In progress | Final integrated Pest gate passes 252 tests / 1,651 assertions; seed/Chrome gate pending |
+| 9. Accessibility, responsive, dark mode, error states | In progress | Responsive storefront/admin walkthrough complete; final clean-console Chrome restart pending |
+| 10. Full quality and acceptance verification | In progress | Integrated Pest gate passes 257 tests / 1,709 assertions; final clean Chrome restart pending |
 
 ## Iteration Log
 
@@ -73,22 +73,33 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 - Installed the reusable Laravel code-quality checker and retained its fixture regression suite; updated Composer and npm lockfiles until both package managers reported zero known vulnerabilities.
 - Verified the production Vite build, all route/config/view caches, the checker’s 13-test contract suite, 89 commerce/admin tests, 96 reliability/security-adjacent tests, and the final integrated 252-test / 1,651-assertion Pest run.
 
+### Iteration 5 - Visible Chrome acceptance and runtime hardening
+
+- Ran the complete customer walkthrough in Chrome: responsive navigation, collection sorting/filter surfaces, live search, product variants, cart quantities, free-shipping discount, physical checkout, declined-card recovery, successful payment, confirmation, signed tracking, customer login, order history/detail, and address management.
+- Ran the complete admin walkthrough in Chrome: dashboard, catalog/variants/media, inventory, collections, orders, fulfillment/shipping/refund forms, customers, discounts, all settings tabs, themes/editor preview, pages, navigation, analytics, search reindex, apps, and developers.
+- Fixed Livewire 4 tenant middleware replay so lazy storefront components and all subsequent Livewire requests retain the original storefront/admin tenant context.
+- Fixed customer order links containing `#` so account and confirmation links use encoded paths and resolve to the intended order detail route.
+- Replaced incompatible Flux checked controls with reusable accessible native switch/radio components after Chrome exposed client-side setter exceptions on taxes, discounts, shipping, and the theme editor.
+- Fixed post-checkout cart rotation and active-cart resolution so converted carts cannot remain visible, merge into a customer cart, or be reused after a successful payment; API payment responses now expose the fresh empty cart.
+- Corrected the default-address badge label and verified fulfillment creation plus shipment transition against the browser-created order.
+- Added focused Pest regressions for every browser-discovered defect; reran the integrated suite at 257 tests / 1,709 assertions, production build, Pint, deterministic quality scan, and dependency audits successfully.
+
 ## Verification Ledger
 
 | Check | Latest Result |
 | --- | --- |
 | Working tree at start | Clean |
 | Existing shop code reused | No |
-| Pest suite | Final integrated gate passed: 252 tests / 1,651 assertions |
+| Pest suite | Final integrated gate passed: 257 tests / 1,709 assertions |
 | Vite production build | Passed |
 | Fresh migrate and seed | Passed (all migrations and all 18 seed stages) |
 | Laravel code-quality checker | Installed; command contract suite passed 13 tests / 41 assertions |
 | Composer audit | Zero known vulnerabilities after dependency update |
 | npm audit | Zero known vulnerabilities after dependency update |
-| Chrome acceptance review | Not run yet |
+| Chrome acceptance review | Customer and admin walkthrough complete; final clean-console restart pending |
 
 ## Open Risks
 
 - SQLite FTS5 is available and its migration passes locally.
-- `shop.test`, `acme-fashion.test`, and `acme-electronics.test` are seeded; live browser host routing remains to be verified.
-- Final deterministic scan, post-hardening Pest/seed gate, and visible Chrome customer/admin review remain pending.
+- `shop.test` and the signed `acme-fashion.test` order-status endpoint both passed live Chrome/HTTP host routing.
+- Only the final clean-tab Chrome restart and showcase handoff remain pending.

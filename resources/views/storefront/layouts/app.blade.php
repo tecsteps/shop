@@ -9,11 +9,8 @@
     $accent = preg_match('/^#[0-9a-f]{6}$/i', (string) $accent) ? $accent : '#ea580c';
 
     $cartCount = 0;
-    $cartId = session('cart_id');
-    if ($cartId && class_exists(\App\Models\Cart::class)) {
-        $cartCount = (int) \App\Models\CartLine::query()->where('cart_id', $cartId)->sum('quantity');
-    } elseif ($storefrontCustomer && class_exists(\App\Models\Cart::class)) {
-        $cart = \App\Models\Cart::withoutGlobalScopes()->where('store_id', $currentStore->id)->where('customer_id', $storefrontCustomer->getAuthIdentifier())->where('status', 'active')->latest('id')->first();
+    if (class_exists(\App\Services\CartService::class)) {
+        $cart = app(\App\Services\CartService::class)->resolveForSession($currentStore, $storefrontCustomer);
         $cartCount = $cart ? (int) $cart->lines()->sum('quantity') : 0;
     }
 

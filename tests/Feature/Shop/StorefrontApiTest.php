@@ -386,12 +386,26 @@ describe('storefront checkout API', function () {
             ->assertOk()
             ->assertJsonPath('status', 'completed')
             ->assertJsonPath('order.financial_status', 'paid')
-            ->assertJsonPath('order.total_amount', 4999);
+            ->assertJsonPath('order.total_amount', 4999)
+            ->assertJsonPath('next_cart.status', 'active')
+            ->assertJsonPath('next_cart.item_count', 0);
         $orderId = $paid->json('order.id');
+        $nextCartId = $paid->json('next_cart.id');
+
+        expect($nextCartId)->not->toBe($cart->id);
+        $this->getJson(storefrontApiUrl($context, "carts/{$nextCartId}"))
+            ->assertOk()
+            ->assertJsonPath('status', 'active')
+            ->assertJsonPath('totals.item_count', 0);
+        $this->get('http://'.$context['domain']->hostname.'/')
+            ->assertOk()
+            ->assertSee('cartCount: 0', false);
 
         $this->postJson(storefrontApiUrl($context, "checkouts/{$checkoutId}/pay"), storefrontCardPayment('4242 4242 4242 4242'))
             ->assertOk()
-            ->assertJsonPath('order.id', $orderId);
+            ->assertJsonPath('order.id', $orderId)
+            ->assertJsonPath('next_cart.id', $nextCartId)
+            ->assertJsonPath('next_cart.item_count', 0);
 
         expect(Order::withoutGlobalScopes()->where('store_id', $context['store']->id)->count())->toBe(1)
             ->and(Payment::query()->where('order_id', $orderId)->count())->toBe(1)
