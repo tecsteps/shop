@@ -19,8 +19,8 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | 6. Customer accounts | Complete | Tenant auth/reset/address/order and guest-identity security suites pass |
 | 7. Admin panel | Complete | All specified admin resources, roles, settings tabs, and mutation workflows pass HTTP/Livewire QA |
 | 8. Search, analytics, apps, webhooks | Complete | Facets/suggestions, deduplication, persistent reindex, secure delivery, analytics, apps, and job suites pass |
-| 9. Accessibility, responsive, dark mode, error states | In progress | Responsive storefront/admin walkthrough complete; final clean-console Chrome restart pending |
-| 10. Full quality and acceptance verification | In progress | Integrated Pest gate passes 257 tests / 1,709 assertions; final clean Chrome restart pending |
+| 9. Accessibility, responsive, dark mode, error states | Complete | Desktop/mobile Chrome walkthrough and repaired-page clean-console restart passed |
+| 10. Full quality and acceptance verification | Complete | Pest, build, quality, audits, seed, HTTP, and final visible Chrome gates all passed |
 
 ## Iteration Log
 
@@ -83,6 +83,8 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 - Fixed post-checkout cart rotation and active-cart resolution so converted carts cannot remain visible, merge into a customer cart, or be reused after a successful payment; API payment responses now expose the fresh empty cart.
 - Corrected the default-address badge label and verified fulfillment creation plus shipment transition against the browser-created order.
 - Added focused Pest regressions for every browser-discovered defect; reran the integrated suite at 257 tests / 1,709 assertions, production build, Pint, deterministic quality scan, and dependency audits successfully.
+- Restarted Chrome from fresh tabs after all fixes and repeated storefront lazy loading, mobile layout, empty post-purchase cart, tax/discount/shipping/theme controls, order fulfillment state, search status, and admin dashboard checks with zero console warnings or errors.
+- Left the final review meeting open with both `http://shop.test/` and `http://shop.test/admin` ready for customer/admin inspection.
 
 ## Verification Ledger
 
@@ -96,10 +98,8 @@ Build the complete self-contained multi-tenant shop described by Specs 01-09 fro
 | Laravel code-quality checker | Installed; command contract suite passed 13 tests / 41 assertions |
 | Composer audit | Zero known vulnerabilities after dependency update |
 | npm audit | Zero known vulnerabilities after dependency update |
-| Chrome acceptance review | Customer and admin walkthrough complete; final clean-console restart pending |
+| Chrome acceptance review | Passed in Chrome; customer/admin walkthrough and clean-console restart complete |
 
 ## Open Risks
 
-- SQLite FTS5 is available and its migration passes locally.
-- `shop.test` and the signed `acme-fashion.test` order-status endpoint both passed live Chrome/HTTP host routing.
-- Only the final clean-tab Chrome restart and showcase handoff remain pending.
+- None identified. SQLite FTS5, all seeded hosts, the signed order-status endpoint, and both customer/admin Chrome surfaces passed locally.
