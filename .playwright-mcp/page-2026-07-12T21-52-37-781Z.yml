@@ -1,0 +1,140 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - text: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=e4]: ×
+  - banner [ref=e5]:
+    - navigation "Primary navigation" [ref=e6]:
+      - link "Acme Fashion" [ref=e7] [cursor=pointer]:
+        - /url: http://shop.test
+      - list [ref=e8]:
+        - listitem [ref=e9]:
+          - link "Home" [ref=e10] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e11]:
+          - link "New Arrivals" [ref=e12] [cursor=pointer]:
+            - /url: http://shop.test/collections/new-arrivals
+        - listitem [ref=e13]:
+          - link "T-Shirts" [ref=e14] [cursor=pointer]:
+            - /url: http://shop.test/collections/t-shirts
+        - listitem [ref=e15]:
+          - link "Pants & Jeans" [ref=e16] [cursor=pointer]:
+            - /url: http://shop.test/collections/pants-jeans
+        - listitem [ref=e17]:
+          - link "Sale" [ref=e18] [cursor=pointer]:
+            - /url: http://shop.test/collections/sale
+      - generic [ref=e19]:
+        - button "Search" [ref=e20]
+        - link "Log in" [ref=e24] [cursor=pointer]:
+          - /url: http://shop.test/account/login
+        - button "Open cart" [ref=e28]
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - region [ref=e33]:
+        - generic [ref=e36]:
+          - paragraph [ref=e37]: Acme Fashion
+          - heading "Welcome to Acme Fashion" [level=1] [ref=e38]
+          - paragraph [ref=e39]: Discover our curated collection of modern essentials
+          - link "Shop New Arrivals" [ref=e40] [cursor=pointer]:
+            - /url: http://shop.test/collections/new-arrivals
+      - region [ref=e43]:
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - paragraph [ref=e47]: Curated for you
+              - heading "Shop collections" [level=2] [ref=e48]
+            - link "View all" [ref=e49] [cursor=pointer]:
+              - /url: http://shop.test/collections
+              - text: View all
+              - generic [ref=e50]: →
+          - generic [ref=e51]:
+            - link [ref=e52] [cursor=pointer]:
+              - /url: http://shop.test/collections/new-arrivals
+              - generic [ref=e55]:
+                - heading "New Arrivals" [level=3] [ref=e56]
+                - generic [ref=e57]:
+                  - text: Shop now
+                  - generic [ref=e58]: →
+            - link [ref=e59] [cursor=pointer]:
+              - /url: http://shop.test/collections/t-shirts
+              - generic [ref=e62]:
+                - heading "T-Shirts" [level=3] [ref=e63]
+                - generic [ref=e64]:
+                  - text: Shop now
+                  - generic [ref=e65]: →
+            - link [ref=e66] [cursor=pointer]:
+              - /url: http://shop.test/collections/pants-jeans
+              - generic [ref=e69]:
+                - heading "Pants & Jeans" [level=3] [ref=e70]
+                - generic [ref=e71]:
+                  - text: Shop now
+                  - generic [ref=e72]: →
+            - link [ref=e73] [cursor=pointer]:
+              - /url: http://shop.test/collections/sale
+              - generic [ref=e76]:
+                - heading "Sale" [level=3] [ref=e77]
+                - generic [ref=e78]:
+                  - text: Shop now
+                  - generic [ref=e79]: →
+      - region [ref=e80]:
+        - generic [ref=e81]:
+          - generic [ref=e83]:
+            - paragraph [ref=e84]: New and noteworthy
+            - heading "Featured products" [level=2] [ref=e85]
+          - generic "Loading products" [ref=e86]
+      - region [ref=e119]:
+        - generic [ref=e120]:
+          - paragraph [ref=e121]: A note from us
+          - heading "Stay in the loop" [level=2] [ref=e122]
+          - paragraph [ref=e123]: Subscribe for thoughtful product updates, useful stories, and occasional offers.
+          - generic [ref=e125]:
+            - generic [ref=e126]: Email address
+            - textbox "Email address" [ref=e127]:
+              - /placeholder: Enter your email
+            - button "Subscribe" [ref=e128]
+  - contentinfo "Store footer" [ref=e130]:
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - generic [ref=e133]:
+          - heading "Acme Fashion" [level=2] [ref=e134]
+          - paragraph
+        - generic [ref=e135]:
+          - heading "Explore" [level=2] [ref=e136]
+          - list [ref=e137]:
+            - listitem [ref=e138]:
+              - link "About Us" [ref=e139] [cursor=pointer]:
+                - /url: http://shop.test/pages/about
+            - listitem [ref=e140]:
+              - link "FAQ" [ref=e141] [cursor=pointer]:
+                - /url: http://shop.test/pages/faq
+            - listitem [ref=e142]:
+              - link "Shipping & Returns" [ref=e143] [cursor=pointer]:
+                - /url: http://shop.test/pages/shipping-returns
+            - listitem [ref=e144]:
+              - link "Privacy Policy" [ref=e145] [cursor=pointer]:
+                - /url: http://shop.test/pages/privacy-policy
+            - listitem [ref=e146]:
+              - link "Terms of Service" [ref=e147] [cursor=pointer]:
+                - /url: http://shop.test/pages/terms
+        - generic [ref=e148]:
+          - heading "Customer care" [level=2] [ref=e149]
+          - list [ref=e150]:
+            - listitem [ref=e151]:
+              - link "Your account" [ref=e152] [cursor=pointer]:
+                - /url: http://shop.test/account
+            - listitem [ref=e153]:
+              - link "Your cart" [ref=e154] [cursor=pointer]:
+                - /url: http://shop.test/cart
+            - listitem [ref=e155]:
+              - link "Search" [ref=e156] [cursor=pointer]:
+                - /url: http://shop.test/search
+        - generic [ref=e157]:
+          - heading "Store" [level=2] [ref=e158]
+          - paragraph [ref=e159]: Secure checkoutMock payments for demonstrationEUR pricing
+      - generic [ref=e160]:
+        - paragraph [ref=e161]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=e162]:
+          - generic [ref=e163]: Visa
+          - generic [ref=e164]: Mastercard
+          - generic [ref=e165]: PayPal
