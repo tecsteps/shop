@@ -34,12 +34,14 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => (($sqlitePath = env('DB_DATABASE')) === null || $sqlitePath === '')
+                ? database_path('database.sqlite')
+                : (($sqlitePath === ':memory:' || str_starts_with($sqlitePath, DIRECTORY_SEPARATOR)) ? $sqlitePath : base_path($sqlitePath)),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
-            'synchronous' => null,
+            'busy_timeout' => 5000,
+            'journal_mode' => 'WAL',
+            'synchronous' => 'NORMAL',
             'transaction_mode' => 'DEFERRED',
         ],
 
