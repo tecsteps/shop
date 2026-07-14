@@ -1,0 +1,100 @@
+- generic [active] [ref=f2e1]:
+  - link "Skip to main content" [ref=f2e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f2e3]: Free shipping available with code FREESHIP
+  - banner [ref=f2e4]:
+    - generic [ref=f2e5]:
+      - link "Acme Electronics" [ref=f2e6] [cursor=pointer]:
+        - /url: http://acme-electronics.test
+      - navigation "Main navigation" [ref=f2e7]:
+        - link "Home" [ref=f2e8] [cursor=pointer]:
+          - /url: http://acme-electronics.test
+        - link "Collections" [ref=f2e9] [cursor=pointer]:
+          - /url: http://acme-electronics.test/collections
+        - link "Search" [ref=f2e10] [cursor=pointer]:
+          - /url: http://acme-electronics.test/search
+        - link "Sign in" [ref=f2e11] [cursor=pointer]:
+          - /url: http://acme-electronics.test/account/login
+      - generic [ref=f2e12]:
+        - button "Open product search" [ref=f2e14]:
+          - generic [ref=f2e19]: Search
+        - button "Open shopping cart" [ref=f2e21]:
+          - generic [ref=f2e26]: Cart
+  - main [ref=f2e27]:
+    - generic [ref=f2e28]:
+      - generic [ref=f2e31]:
+        - generic [ref=f2e32]: New season
+        - heading "Find your next favorite." [level=1] [ref=f2e33]
+        - paragraph [ref=f2e34]: Explore curated essentials from Acme Electronics.
+        - link "Shop collections" [ref=f2e36] [cursor=pointer]:
+          - /url: http://acme-electronics.test/collections
+      - generic [ref=f2e38]:
+        - generic [ref=f2e39]:
+          - generic [ref=f2e40]:
+            - paragraph [ref=f2e41]: Explore
+            - heading "Featured collections" [level=2] [ref=f2e42]
+          - link "View all" [ref=f2e43] [cursor=pointer]:
+            - /url: http://acme-electronics.test/collections
+        - generic [ref=f2e44]:
+          - link [ref=f2e45] [cursor=pointer]:
+            - /url: http://acme-electronics.test/collections/featured
+            - heading "Featured" [level=3] [ref=f2e46]
+            - paragraph [ref=f2e47]: 3 products
+          - link [ref=f2e48] [cursor=pointer]:
+            - /url: http://acme-electronics.test/collections/accessories
+            - heading "Accessories" [level=3] [ref=f2e49]
+            - paragraph [ref=f2e50]: 2 products
+      - generic [ref=f2e51]:
+        - heading "Featured products" [level=2] [ref=f2e52]
+        - generic [ref=f2e53]:
+          - article [ref=f2e54]:
+            - link "Monitor Stand image placeholder Monitor Stand €49.99" [ref=f2e55] [cursor=pointer]:
+              - /url: http://acme-electronics.test/products/monitor-stand
+              - img "Monitor Stand image placeholder" [ref=f2e56]:
+                - generic [ref=f2e57]: Monitor Stand
+              - generic [ref=f2e58]:
+                - heading "Monitor Stand" [level=2] [ref=f2e59]
+                - generic [ref=f2e60]: €49.99
+          - article [ref=f2e62]:
+            - link "Mechanical Keyboard image placeholder Mechanical Keyboard €129.99" [ref=f2e63] [cursor=pointer]:
+              - /url: http://acme-electronics.test/products/mechanical-keyboard
+              - img "Mechanical Keyboard image placeholder" [ref=f2e64]:
+                - generic [ref=f2e65]: Mechanical Keyboard
+              - generic [ref=f2e66]:
+                - heading "Mechanical Keyboard" [level=2] [ref=f2e67]
+                - generic [ref=f2e68]: €129.99
+          - article [ref=f2e70]:
+            - link "USB-C Cable 2m image placeholder USB-C Cable 2m €12.99" [ref=f2e71] [cursor=pointer]:
+              - /url: http://acme-electronics.test/products/usb-c-cable-2m
+              - img "USB-C Cable 2m image placeholder" [ref=f2e72]:
+                - generic [ref=f2e73]: USB-C Cable 2m
+              - generic [ref=f2e74]:
+                - heading "USB-C Cable 2m" [level=2] [ref=f2e75]
+                - generic [ref=f2e76]: €12.99
+          - article [ref=f2e78]:
+            - link "Wireless Headphones image placeholder Wireless Headphones €149.99" [ref=f2e79] [cursor=pointer]:
+              - /url: http://acme-electronics.test/products/wireless-headphones
+              - img "Wireless Headphones image placeholder" [ref=f2e80]:
+                - generic [ref=f2e81]: Wireless Headphones
+              - generic [ref=f2e82]:
+                - heading "Wireless Headphones" [level=2] [ref=f2e83]
+                - generic [ref=f2e84]: €149.99
+          - article [ref=f2e86]:
+            - link "Pro Laptop 15 image placeholder Pro Laptop 15 €999.99" [ref=f2e87] [cursor=pointer]:
+              - /url: http://acme-electronics.test/products/pro-laptop-15
+              - img "Pro Laptop 15 image placeholder" [ref=f2e88]:
+                - generic [ref=f2e89]: Pro Laptop 15
+              - generic [ref=f2e90]:
+                - heading "Pro Laptop 15" [level=2] [ref=f2e91]
+                - generic [ref=f2e92]: €999.99
+  - contentinfo [ref=f2e94]:
+    - generic [ref=f2e95]:
+      - generic [ref=f2e96]:
+        - paragraph [ref=f2e97]: Acme Electronics
+        - paragraph [ref=f2e98]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f2e99]:
+        - link "Shop all collections" [ref=f2e100] [cursor=pointer]:
+          - /url: http://acme-electronics.test/collections
+        - link "Search" [ref=f2e101] [cursor=pointer]:
+          - /url: http://acme-electronics.test/search
+      - paragraph [ref=f2e102]: Secure mock checkout. Prices shown in EUR.

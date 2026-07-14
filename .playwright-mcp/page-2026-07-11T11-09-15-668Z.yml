@@ -1,0 +1,274 @@
+- generic [ref=e637]:
+  - complementary [ref=e638]:
+    - navigation "Admin navigation" [ref=e639]:
+      - generic [ref=e644]:
+        - generic [ref=e645]: Shop
+        - generic [ref=e646]: Commerce platform
+      - generic [ref=e647]:
+        - link "Dashboard" [ref=e649] [cursor=pointer]:
+          - /url: /admin
+        - generic [ref=e653]: Products
+        - generic [ref=e654]:
+          - link "Products" [ref=e655] [cursor=pointer]:
+            - /url: /admin/products
+          - link "Collections" [ref=e659] [cursor=pointer]:
+            - /url: /admin/collections
+          - link "Inventory" [ref=e663] [cursor=pointer]:
+            - /url: /admin/inventory
+        - generic [ref=e667]: Orders
+        - link "Orders" [ref=e669] [cursor=pointer]:
+          - /url: /admin/orders
+        - generic [ref=e673]: Customers
+        - link "Customers" [ref=e675] [cursor=pointer]:
+          - /url: /admin/customers
+        - generic [ref=e679]: Discounts
+        - link "Discounts" [ref=e681] [cursor=pointer]:
+          - /url: /admin/discounts
+        - generic [ref=e686]: Content
+        - generic [ref=e687]:
+          - link "Pages" [ref=e688] [cursor=pointer]:
+            - /url: /admin/pages
+          - link "Navigation" [ref=e692] [cursor=pointer]:
+            - /url: /admin/navigation
+          - link "Themes" [ref=e696] [cursor=pointer]:
+            - /url: /admin/themes
+        - generic [ref=e700]: Insights
+        - generic [ref=e701]:
+          - link "Analytics" [ref=e702] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Search" [ref=e707] [cursor=pointer]:
+            - /url: /admin/settings/search
+        - generic [ref=e711]: Platform
+        - generic [ref=e712]:
+          - link "Settings" [ref=e713] [cursor=pointer]:
+            - /url: /admin/settings
+          - link "Apps" [ref=e718] [cursor=pointer]:
+            - /url: /admin/apps
+          - link "Developers" [ref=e722] [cursor=pointer]:
+            - /url: /admin/developers
+  - generic [ref=e726]:
+    - banner [ref=e727]:
+      - generic [ref=e728]:
+        - button "Acme Fashion" [ref=e731]
+        - generic [ref=e735]:
+          - button "Notifications" [ref=e737]
+          - button "AU Admin User" [ref=e741]:
+            - generic [ref=e742]: AU
+            - generic [ref=e745]: Admin User
+    - main [ref=e749]:
+      - generic [ref=e750]:
+        - generic [ref=e751]:
+          - link "Home" [ref=e753] [cursor=pointer]:
+            - /url: /admin
+          - generic [ref=e756]: Orders
+        - generic [ref=e759]:
+          - heading "Orders" [level=1] [ref=e760]
+          - paragraph [ref=e761]: Review payments, fulfillment, and customer orders.
+        - generic [ref=e763]:
+          - textbox "Search orders" [ref=e765]:
+            - /placeholder: Search order or email…
+          - combobox "Filter orders" [ref=e767]:
+            - option "All orders" [selected]
+            - option "Paid"
+            - option "Pending"
+            - option "Unfulfilled"
+            - option "Fulfilled"
+            - option "Refunded"
+        - table [ref=e770]:
+          - rowgroup [ref=e771]:
+            - row [ref=e772]:
+              - columnheader "Order" [ref=e773]
+              - columnheader "Date" [ref=e774]
+              - columnheader "Customer" [ref=e775]
+              - columnheader "Total" [ref=e776]
+              - columnheader "Payment" [ref=e777]
+              - columnheader "Fulfillment" [ref=e778]
+          - rowgroup [ref=e779]:
+            - row [ref=e780]:
+              - cell [ref=e781]:
+                - link "#1017" [ref=e782] [cursor=pointer]:
+                  - /url: /admin/orders/20
+              - cell "Jul 11, 2026 11:08" [ref=e783]
+              - cell "Guest decline-review@example.test" [ref=e784]:
+                - generic [ref=e785]: Guest
+                - generic [ref=e786]: decline-review@example.test
+              - cell "€29.98" [ref=e787]
+              - cell "Pending" [ref=e788]
+              - cell "Unfulfilled" [ref=e790]
+            - row [ref=e792]:
+              - cell [ref=e793]:
+                - link "#1016" [ref=e794] [cursor=pointer]:
+                  - /url: /admin/orders/19
+              - cell "Jul 11, 2026 11:06" [ref=e795]
+              - cell "Guest browser-review@example.test" [ref=e796]:
+                - generic [ref=e797]: Guest
+                - generic [ref=e798]: browser-review@example.test
+              - cell "€54.97" [ref=e799]
+              - cell "Paid" [ref=e800]
+              - cell "Unfulfilled" [ref=e802]
+            - row [ref=e804]:
+              - cell [ref=e805]:
+                - link "#1015" [ref=e806] [cursor=pointer]:
+                  - /url: /admin/orders/15
+              - cell "Jul 11, 2026 11:00" [ref=e807]
+              - cell "John Doe customer@acme.test" [ref=e808]:
+                - generic [ref=e809]: John Doe
+                - generic [ref=e810]: customer@acme.test
+              - cell "€54.47" [ref=e811]
+              - cell "Paid" [ref=e812]
+              - cell "Unfulfilled" [ref=e814]
+            - row [ref=e816]:
+              - cell [ref=e817]:
+                - link "#1005" [ref=e818] [cursor=pointer]:
+                  - /url: /admin/orders/5
+              - cell "Jul 11, 2026 09:00" [ref=e819]
+              - cell "Jane Smith jane@example.com" [ref=e820]:
+                - generic [ref=e821]: Jane Smith
+                - generic [ref=e822]: jane@example.com
+              - cell "€39.98" [ref=e823]
+              - cell "Pending" [ref=e824]
+              - cell "Unfulfilled" [ref=e826]
+            - row [ref=e828]:
+              - cell [ref=e829]:
+                - link "#1013" [ref=e830] [cursor=pointer]:
+                  - /url: /admin/orders/13
+              - cell "Jul 10, 2026 11:00" [ref=e831]
+              - cell "Robert Martinez robert@example.com" [ref=e832]:
+                - generic [ref=e833]: Robert Martinez
+                - generic [ref=e834]: robert@example.com
+              - cell "€84.97" [ref=e835]
+              - cell "Paid" [ref=e836]
+              - cell "Unfulfilled" [ref=e838]
+            - row [ref=e840]:
+              - cell [ref=e841]:
+                - link "#1010" [ref=e842] [cursor=pointer]:
+                  - /url: /admin/orders/10
+              - cell "Jul 10, 2026 11:00" [ref=e843]
+              - cell "John Doe customer@acme.test" [ref=e844]:
+                - generic [ref=e845]: John Doe
+                - generic [ref=e846]: customer@acme.test
+              - cell "€504.98" [ref=e847]
+              - cell "Paid" [ref=e848]
+              - cell "Unfulfilled" [ref=e850]
+            - row [ref=e852]:
+              - cell [ref=e853]:
+                - link "#1006" [ref=e854] [cursor=pointer]:
+                  - /url: /admin/orders/6
+              - cell "Jul 10, 2026 11:00" [ref=e855]
+              - cell "Michael Brown michael@example.com" [ref=e856]:
+                - generic [ref=e857]: Michael Brown
+                - generic [ref=e858]: michael@example.com
+              - cell "€124.98" [ref=e859]
+              - cell "Paid" [ref=e860]
+              - cell "Unfulfilled" [ref=e862]
+            - row [ref=e864]:
+              - cell [ref=e865]:
+                - link "#1001" [ref=e866] [cursor=pointer]:
+                  - /url: /admin/orders/1
+              - cell "Jul 9, 2026 11:00" [ref=e867]
+              - cell "John Doe customer@acme.test" [ref=e868]:
+                - generic [ref=e869]: John Doe
+                - generic [ref=e870]: customer@acme.test
+              - cell "€54.97" [ref=e871]
+              - cell "Paid" [ref=e872]
+              - cell "Unfulfilled" [ref=e874]
+            - row [ref=e876]:
+              - cell [ref=e877]:
+                - link "#1009" [ref=e878] [cursor=pointer]:
+                  - /url: /admin/orders/9
+              - cell "Jul 8, 2026 11:00" [ref=e879]
+              - cell "Emma Garcia emma@example.com" [ref=e880]:
+                - generic [ref=e881]: Emma Garcia
+                - generic [ref=e882]: emma@example.com
+              - cell "€49.97" [ref=e883]
+              - cell "Paid" [ref=e884]
+              - cell "Unfulfilled" [ref=e886]
+            - row [ref=e888]:
+              - cell [ref=e889]:
+                - link "#1012" [ref=e890] [cursor=pointer]:
+                  - /url: /admin/orders/12
+              - cell "Jul 7, 2026 11:00" [ref=e891]
+              - cell "Lisa Anderson lisa@example.com" [ref=e892]:
+                - generic [ref=e893]: Lisa Anderson
+                - generic [ref=e894]: lisa@example.com
+              - cell "€84.97" [ref=e895]
+              - cell "Paid" [ref=e896]
+              - cell "Unfulfilled" [ref=e898]
+            - row [ref=e900]:
+              - cell [ref=e901]:
+                - link "#1003" [ref=e902] [cursor=pointer]:
+                  - /url: /admin/orders/3
+              - cell "Jul 6, 2026 11:00" [ref=e903]
+              - cell "Jane Smith jane@example.com" [ref=e904]:
+                - generic [ref=e905]: Jane Smith
+                - generic [ref=e906]: jane@example.com
+              - cell "€119.97" [ref=e907]
+              - cell "Paid" [ref=e908]
+              - cell "Partial" [ref=e910]
+            - row [ref=e912]:
+              - cell [ref=e913]:
+                - link "#1002" [ref=e914] [cursor=pointer]:
+                  - /url: /admin/orders/2
+              - cell "Jul 1, 2026 11:00" [ref=e915]
+              - cell "John Doe customer@acme.test" [ref=e916]:
+                - generic [ref=e917]: John Doe
+                - generic [ref=e918]: customer@acme.test
+              - cell "€89.97" [ref=e919]
+              - cell "Paid" [ref=e920]
+              - cell "Fulfilled" [ref=e922]
+            - row [ref=e924]:
+              - cell [ref=e925]:
+                - link "#1008" [ref=e926] [cursor=pointer]:
+                  - /url: /admin/orders/8
+              - cell "Jun 29, 2026 11:00" [ref=e927]
+              - cell "David Lee david@example.com" [ref=e928]:
+                - generic [ref=e929]: David Lee
+                - generic [ref=e930]: david@example.com
+              - cell "€89.97" [ref=e931]
+              - cell "Partially Refunded" [ref=e932]
+              - cell "Fulfilled" [ref=e934]
+            - row [ref=e936]:
+              - cell [ref=e937]:
+                - link "#1014" [ref=e938] [cursor=pointer]:
+                  - /url: /admin/orders/14
+              - cell "Jun 27, 2026 11:00" [ref=e939]
+              - cell "Anna Thomas anna@example.com" [ref=e940]:
+                - generic [ref=e941]: Anna Thomas
+                - generic [ref=e942]: anna@example.com
+              - cell "€50.00" [ref=e943]
+              - cell "Paid" [ref=e944]
+              - cell "Fulfilled" [ref=e946]
+            - row [ref=e948]:
+              - cell [ref=e949]:
+                - link "#1004" [ref=e950] [cursor=pointer]:
+                  - /url: /admin/orders/4
+              - cell "Jun 26, 2026 11:00" [ref=e951]
+              - cell "John Doe customer@acme.test" [ref=e952]:
+                - generic [ref=e953]: John Doe
+                - generic [ref=e954]: customer@acme.test
+              - cell "€29.98" [ref=e955]
+              - cell "Refunded" [ref=e956]
+              - cell "Unfulfilled" [ref=e958]
+            - row [ref=e960]:
+              - cell [ref=e961]:
+                - link "#1007" [ref=e962] [cursor=pointer]:
+                  - /url: /admin/orders/7
+              - cell "Jun 21, 2026 11:00" [ref=e963]
+              - cell "Sarah Wilson sarah@example.com" [ref=e964]:
+                - generic [ref=e965]: Sarah Wilson
+                - generic [ref=e966]: sarah@example.com
+              - cell "€104.96" [ref=e967]
+              - cell "Paid" [ref=e968]
+              - cell "Fulfilled" [ref=e970]
+            - row [ref=e972]:
+              - cell [ref=e973]:
+                - link "#1011" [ref=e974] [cursor=pointer]:
+                  - /url: /admin/orders/11
+              - cell "Jun 16, 2026 11:00" [ref=e975]
+              - cell "James Taylor james@example.com" [ref=e976]:
+                - generic [ref=e977]: James Taylor
+                - generic [ref=e978]: james@example.com
+              - cell "€32.98" [ref=e979]
+              - cell "Paid" [ref=e980]
+              - cell "Fulfilled" [ref=e982]
+  - status

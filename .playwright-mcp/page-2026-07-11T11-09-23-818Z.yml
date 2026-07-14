@@ -1,0 +1,127 @@
+- generic [ref=e986]:
+  - complementary [ref=e987]:
+    - navigation "Admin navigation" [ref=e988]:
+      - generic [ref=e993]:
+        - generic [ref=e994]: Shop
+        - generic [ref=e995]: Commerce platform
+      - generic [ref=e996]:
+        - link "Dashboard" [ref=e998] [cursor=pointer]:
+          - /url: /admin
+        - generic [ref=e1002]: Products
+        - generic [ref=e1003]:
+          - link "Products" [ref=e1004] [cursor=pointer]:
+            - /url: /admin/products
+          - link "Collections" [ref=e1008] [cursor=pointer]:
+            - /url: /admin/collections
+          - link "Inventory" [ref=e1012] [cursor=pointer]:
+            - /url: /admin/inventory
+        - generic [ref=e1016]: Orders
+        - link "Orders" [ref=e1018] [cursor=pointer]:
+          - /url: /admin/orders
+        - generic [ref=e1022]: Customers
+        - link "Customers" [ref=e1024] [cursor=pointer]:
+          - /url: /admin/customers
+        - generic [ref=e1028]: Discounts
+        - link "Discounts" [ref=e1030] [cursor=pointer]:
+          - /url: /admin/discounts
+        - generic [ref=e1035]: Content
+        - generic [ref=e1036]:
+          - link "Pages" [ref=e1037] [cursor=pointer]:
+            - /url: /admin/pages
+          - link "Navigation" [ref=e1041] [cursor=pointer]:
+            - /url: /admin/navigation
+          - link "Themes" [ref=e1045] [cursor=pointer]:
+            - /url: /admin/themes
+        - generic [ref=e1049]: Insights
+        - generic [ref=e1050]:
+          - link "Analytics" [ref=e1051] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Search" [ref=e1056] [cursor=pointer]:
+            - /url: /admin/settings/search
+        - generic [ref=e1060]: Platform
+        - generic [ref=e1061]:
+          - link "Settings" [ref=e1062] [cursor=pointer]:
+            - /url: /admin/settings
+          - link "Apps" [ref=e1067] [cursor=pointer]:
+            - /url: /admin/apps
+          - link "Developers" [ref=e1071] [cursor=pointer]:
+            - /url: /admin/developers
+  - generic [ref=e1075]:
+    - banner [ref=e1076]:
+      - generic [ref=e1077]:
+        - button "Acme Fashion" [ref=e1080]
+        - generic [ref=e1084]:
+          - button "Notifications" [ref=e1086]
+          - button "AU Admin User" [ref=e1090]:
+            - generic [ref=e1091]: AU
+            - generic [ref=e1094]: Admin User
+    - main [ref=e1098]:
+      - generic [ref=e1099]:
+        - generic [ref=e1100]:
+          - link "Home" [ref=e1102] [cursor=pointer]:
+            - /url: /admin
+          - generic [ref=e1105]: "#1005"
+        - generic [ref=e1107]:
+          - generic [ref=e1108]:
+            - heading "#1005" [level=1] [ref=e1109]
+            - paragraph [ref=e1110]: Placed 2 hours ago
+          - generic [ref=e1111]:
+            - button "Confirm payment" [ref=e1112]
+            - button "Refund" [ref=e1120]
+        - generic [ref=e1133]:
+          - generic [ref=e1134]: Payment required
+          - text: This order must be paid before fulfillment can be created.
+        - generic [ref=e1135]:
+          - generic [ref=e1136]:
+            - generic [ref=e1137]:
+              - generic [ref=e1138]: Items
+              - generic [ref=e1141]:
+                - generic [ref=e1142]:
+                  - generic [ref=e1143]: Leather Belt
+                  - generic [ref=e1144]: SKU ACME-LEATHERB-SM-BLACK-2 · Qty 1
+                - generic [ref=e1145]: €34.99
+              - generic [ref=e1146]:
+                - generic [ref=e1147]:
+                  - generic [ref=e1148]: Subtotal
+                  - generic [ref=e1149]: €34.99
+                - generic [ref=e1150]:
+                  - generic [ref=e1151]: Discount
+                  - generic [ref=e1152]: €0.00
+                - generic [ref=e1153]:
+                  - generic [ref=e1154]: Shipping
+                  - generic [ref=e1155]: €4.99
+                - generic [ref=e1156]:
+                  - generic [ref=e1157]: Tax
+                  - generic [ref=e1158]: €5.59
+                - generic [ref=e1159]:
+                  - generic [ref=e1160]: Total
+                  - generic [ref=e1161]: €39.98
+            - generic [ref=e1162]:
+              - generic [ref=e1163]: Fulfillment
+              - paragraph [ref=e1166]: No fulfillments yet.
+            - generic [ref=e1167]:
+              - generic [ref=e1168]: Timeline
+              - list [ref=e1170]:
+                - listitem [ref=e1171]:
+                  - generic [ref=e1172]: Order created
+                  - generic [ref=e1173]: Jul 11, 2026 09:00
+          - generic [ref=e1174]:
+            - generic [ref=e1175]:
+              - generic [ref=e1176]: Status
+              - generic [ref=e1178]:
+                - generic [ref=e1179]:
+                  - generic [ref=e1180]: Payment
+                  - generic [ref=e1181]: Pending
+                - generic [ref=e1182]:
+                  - generic [ref=e1183]: Fulfillment
+                  - generic [ref=e1184]: Unfulfilled
+            - generic [ref=e1185]:
+              - generic [ref=e1186]: Customer
+              - generic [ref=e1188]:
+                - generic [ref=e1189]: Jane Smith
+                - link "jane@example.com" [ref=e1190] [cursor=pointer]:
+                  - /url: mailto:jane@example.com
+            - generic [ref=e1191]:
+              - generic [ref=e1192]: Shipping address
+              - generic [ref=e1194]: Jane Smith Schillerstrasse 45 Munich Bavaria BY Germany DE 80336
+  - status

@@ -1,0 +1,289 @@
+- generic [ref=e264]:
+  - complementary [ref=e265]:
+    - navigation "Admin navigation" [ref=e266]:
+      - generic [ref=e271]:
+        - generic [ref=e272]: Shop
+        - generic [ref=e273]: Commerce platform
+      - generic [ref=e274]:
+        - link "Dashboard" [ref=e276] [cursor=pointer]:
+          - /url: /admin
+        - generic [ref=e280]: Products
+        - generic [ref=e281]:
+          - link "Products" [ref=e282] [cursor=pointer]:
+            - /url: /admin/products
+          - link "Collections" [ref=e286] [cursor=pointer]:
+            - /url: /admin/collections
+          - link "Inventory" [ref=e290] [cursor=pointer]:
+            - /url: /admin/inventory
+        - generic [ref=e294]: Orders
+        - link "Orders" [ref=e296] [cursor=pointer]:
+          - /url: /admin/orders
+        - generic [ref=e300]: Customers
+        - link "Customers" [ref=e302] [cursor=pointer]:
+          - /url: /admin/customers
+        - generic [ref=e306]: Discounts
+        - link "Discounts" [ref=e308] [cursor=pointer]:
+          - /url: /admin/discounts
+        - generic [ref=e313]: Content
+        - generic [ref=e314]:
+          - link "Pages" [ref=e315] [cursor=pointer]:
+            - /url: /admin/pages
+          - link "Navigation" [ref=e319] [cursor=pointer]:
+            - /url: /admin/navigation
+          - link "Themes" [ref=e323] [cursor=pointer]:
+            - /url: /admin/themes
+        - generic [ref=e327]: Insights
+        - generic [ref=e328]:
+          - link "Analytics" [ref=e329] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Search" [ref=e334] [cursor=pointer]:
+            - /url: /admin/settings/search
+        - generic [ref=e338]: Platform
+        - generic [ref=e339]:
+          - link "Settings" [ref=e340] [cursor=pointer]:
+            - /url: /admin/settings
+          - link "Apps" [ref=e345] [cursor=pointer]:
+            - /url: /admin/apps
+          - link "Developers" [ref=e349] [cursor=pointer]:
+            - /url: /admin/developers
+  - generic [ref=e353]:
+    - banner [ref=e354]:
+      - generic [ref=e355]:
+        - button "Acme Fashion" [ref=e358]
+        - generic [ref=e362]:
+          - button "Notifications" [ref=e364]
+          - button "AU Admin User" [ref=e368]:
+            - generic [ref=e369]: AU
+            - generic [ref=e372]: Admin User
+    - main [ref=e376]:
+      - generic [ref=e377]:
+        - generic [ref=e378]:
+          - link "Home" [ref=e380] [cursor=pointer]:
+            - /url: /admin
+          - generic [ref=e383]: Products
+        - generic [ref=e385]:
+          - generic [ref=e386]:
+            - heading "Products" [level=1] [ref=e387]
+            - paragraph [ref=e388]: Manage catalog products, variants, and publishing.
+          - link "Add product" [ref=e390] [cursor=pointer]:
+            - /url: /admin/products/create
+        - generic [ref=e395]:
+          - textbox "Search products" [ref=e397]:
+            - /placeholder: Search products…
+          - combobox "Filter status" [ref=e399]:
+            - option "All statuses" [selected]
+            - option "Active"
+            - option "Draft"
+            - option "Archived"
+          - combobox "Filter product type" [ref=e400]:
+            - option "All types" [selected]
+            - option "Accessories"
+            - option "Gift Cards"
+            - option "Hoodies"
+            - option "Jackets"
+            - option "Pants"
+            - option "Shoes"
+            - option "T-Shirts"
+        - generic [ref=e401]:
+          - table [ref=e403]:
+            - rowgroup [ref=e404]:
+              - row [ref=e405]:
+                - columnheader "Select" [ref=e406]
+                - columnheader [ref=e408]:
+                  - button "Product" [ref=e409]
+                - columnheader "Status" [ref=e410]
+                - columnheader "Inventory" [ref=e411]
+                - columnheader "Type" [ref=e412]
+                - columnheader "Vendor" [ref=e413]
+                - columnheader [ref=e414]:
+                  - button "Updated" [ref=e415]
+            - rowgroup [ref=e416]:
+              - row [ref=e417]:
+                - cell [ref=e418]:
+                  - checkbox "Select Unreleased Winter Jacket" [ref=e419]
+                - cell "Unreleased Winter Jacket 4 variants" [ref=e421]:
+                  - link "Unreleased Winter Jacket" [ref=e422] [cursor=pointer]:
+                    - /url: /admin/products/15/edit
+                  - generic [ref=e423]: 4 variants
+                - cell "Draft" [ref=e424]
+                - cell "0" [ref=e426]
+                - cell "Jackets" [ref=e427]
+                - cell "Acme Outerwear" [ref=e428]
+                - cell "8 minutes ago" [ref=e429]
+              - row [ref=e430]:
+                - cell [ref=e431]:
+                  - checkbox "Select Discontinued Raincoat" [ref=e432]
+                - cell "Discontinued Raincoat 2 variants" [ref=e434]:
+                  - link "Discontinued Raincoat" [ref=e435] [cursor=pointer]:
+                    - /url: /admin/products/16/edit
+                  - generic [ref=e436]: 2 variants
+                - cell "Archived" [ref=e437]
+                - cell "6" [ref=e439]
+                - cell "Jackets" [ref=e440]
+                - cell "Acme Outerwear" [ref=e441]
+                - cell "8 minutes ago" [ref=e442]
+              - row [ref=e443]:
+                - cell [ref=e444]:
+                  - checkbox "Select Classic Cotton T-Shirt" [ref=e445]
+                - cell "Classic Cotton T-Shirt 12 variants" [ref=e447]:
+                  - link "Classic Cotton T-Shirt" [ref=e448] [cursor=pointer]:
+                    - /url: /admin/products/1/edit
+                  - generic [ref=e449]: 12 variants
+                - cell "Active" [ref=e450]
+                - cell "178" [ref=e452]
+                - cell "T-Shirts" [ref=e453]
+                - cell "Acme Basics" [ref=e454]
+                - cell "8 minutes ago" [ref=e455]
+              - row [ref=e456]:
+                - cell [ref=e457]:
+                  - checkbox "Select Premium Slim Fit Jeans" [ref=e458]
+                - cell "Premium Slim Fit Jeans 10 variants" [ref=e460]:
+                  - link "Premium Slim Fit Jeans" [ref=e461] [cursor=pointer]:
+                    - /url: /admin/products/2/edit
+                  - generic [ref=e462]: 10 variants
+                - cell "Active" [ref=e463]
+                - cell "80" [ref=e465]
+                - cell "Pants" [ref=e466]
+                - cell "Acme Denim" [ref=e467]
+                - cell "8 minutes ago" [ref=e468]
+              - row [ref=e469]:
+                - cell [ref=e470]:
+                  - checkbox "Select Organic Hoodie" [ref=e471]
+                - cell "Organic Hoodie 4 variants" [ref=e473]:
+                  - link "Organic Hoodie" [ref=e474] [cursor=pointer]:
+                    - /url: /admin/products/3/edit
+                  - generic [ref=e475]: 4 variants
+                - cell "Active" [ref=e476]
+                - cell "80" [ref=e478]
+                - cell "Hoodies" [ref=e479]
+                - cell "Acme Basics" [ref=e480]
+                - cell "8 minutes ago" [ref=e481]
+              - row [ref=e482]:
+                - cell [ref=e483]:
+                  - checkbox "Select Leather Belt" [ref=e484]
+                - cell "Leather Belt 4 variants" [ref=e486]:
+                  - link "Leather Belt" [ref=e487] [cursor=pointer]:
+                    - /url: /admin/products/4/edit
+                  - generic [ref=e488]: 4 variants
+                - cell "Active" [ref=e489]
+                - cell "100" [ref=e491]
+                - cell "Accessories" [ref=e492]
+                - cell "Acme Accessories" [ref=e493]
+                - cell "8 minutes ago" [ref=e494]
+              - row [ref=e495]:
+                - cell [ref=e496]:
+                  - checkbox "Select Running Sneakers" [ref=e497]
+                - cell "Running Sneakers 14 variants" [ref=e499]:
+                  - link "Running Sneakers" [ref=e500] [cursor=pointer]:
+                    - /url: /admin/products/5/edit
+                  - generic [ref=e501]: 14 variants
+                - cell "Active" [ref=e502]
+                - cell "70" [ref=e504]
+                - cell "Shoes" [ref=e505]
+                - cell "Acme Sport" [ref=e506]
+                - cell "8 minutes ago" [ref=e507]
+              - row [ref=e508]:
+                - cell [ref=e509]:
+                  - checkbox "Select Graphic Print Tee" [ref=e510]
+                - cell "Graphic Print Tee 4 variants" [ref=e512]:
+                  - link "Graphic Print Tee" [ref=e513] [cursor=pointer]:
+                    - /url: /admin/products/6/edit
+                  - generic [ref=e514]: 4 variants
+                - cell "Active" [ref=e515]
+                - cell "72" [ref=e517]
+                - cell "T-Shirts" [ref=e518]
+                - cell "Acme Basics" [ref=e519]
+                - cell "8 minutes ago" [ref=e520]
+              - row [ref=e521]:
+                - cell [ref=e522]:
+                  - checkbox "Select V-Neck Linen Tee" [ref=e523]
+                - cell "V-Neck Linen Tee 9 variants" [ref=e525]:
+                  - link "V-Neck Linen Tee" [ref=e526] [cursor=pointer]:
+                    - /url: /admin/products/7/edit
+                  - generic [ref=e527]: 9 variants
+                - cell "Active" [ref=e528]
+                - cell "108" [ref=e530]
+                - cell "T-Shirts" [ref=e531]
+                - cell "Acme Basics" [ref=e532]
+                - cell "8 minutes ago" [ref=e533]
+              - row [ref=e534]:
+                - cell [ref=e535]:
+                  - checkbox "Select Striped Polo Shirt" [ref=e536]
+                - cell "Striped Polo Shirt 4 variants" [ref=e538]:
+                  - link "Striped Polo Shirt" [ref=e539] [cursor=pointer]:
+                    - /url: /admin/products/8/edit
+                  - generic [ref=e540]: 4 variants
+                - cell "Active" [ref=e541]
+                - cell "40" [ref=e543]
+                - cell "T-Shirts" [ref=e544]
+                - cell "Acme Basics" [ref=e545]
+                - cell "8 minutes ago" [ref=e546]
+              - row [ref=e547]:
+                - cell [ref=e548]:
+                  - checkbox "Select Cargo Pants" [ref=e549]
+                - cell "Cargo Pants 12 variants" [ref=e551]:
+                  - link "Cargo Pants" [ref=e552] [cursor=pointer]:
+                    - /url: /admin/products/9/edit
+                  - generic [ref=e553]: 12 variants
+                - cell "Active" [ref=e554]
+                - cell "168" [ref=e556]
+                - cell "Pants" [ref=e557]
+                - cell "Acme Workwear" [ref=e558]
+                - cell "8 minutes ago" [ref=e559]
+              - row [ref=e560]:
+                - cell [ref=e561]:
+                  - checkbox "Select Chino Shorts" [ref=e562]
+                - cell "Chino Shorts 8 variants" [ref=e564]:
+                  - link "Chino Shorts" [ref=e565] [cursor=pointer]:
+                    - /url: /admin/products/10/edit
+                  - generic [ref=e566]: 8 variants
+                - cell "Active" [ref=e567]
+                - cell "128" [ref=e569]
+                - cell "Pants" [ref=e570]
+                - cell "Acme Basics" [ref=e571]
+                - cell "8 minutes ago" [ref=e572]
+              - row [ref=e573]:
+                - cell [ref=e574]:
+                  - checkbox "Select Wide Leg Trousers" [ref=e575]
+                - cell "Wide Leg Trousers 3 variants" [ref=e577]:
+                  - link "Wide Leg Trousers" [ref=e578] [cursor=pointer]:
+                    - /url: /admin/products/11/edit
+                  - generic [ref=e579]: 3 variants
+                - cell "Active" [ref=e580]
+                - cell "21" [ref=e582]
+                - cell "Pants" [ref=e583]
+                - cell "Acme Denim" [ref=e584]
+                - cell "8 minutes ago" [ref=e585]
+              - row [ref=e586]:
+                - cell [ref=e587]:
+                  - checkbox "Select Wool Scarf" [ref=e588]
+                - cell "Wool Scarf 3 variants" [ref=e590]:
+                  - link "Wool Scarf" [ref=e591] [cursor=pointer]:
+                    - /url: /admin/products/12/edit
+                  - generic [ref=e592]: 3 variants
+                - cell "Active" [ref=e593]
+                - cell "90" [ref=e595]
+                - cell "Accessories" [ref=e596]
+                - cell "Acme Accessories" [ref=e597]
+                - cell "8 minutes ago" [ref=e598]
+              - row [ref=e599]:
+                - cell [ref=e600]:
+                  - checkbox "Select Canvas Tote Bag" [ref=e601]
+                - cell "Canvas Tote Bag 2 variants" [ref=e603]:
+                  - link "Canvas Tote Bag" [ref=e604] [cursor=pointer]:
+                    - /url: /admin/products/13/edit
+                  - generic [ref=e605]: 2 variants
+                - cell "Active" [ref=e606]
+                - cell "80" [ref=e608]
+                - cell "Accessories" [ref=e609]
+                - cell "Acme Accessories" [ref=e610]
+                - cell "8 minutes ago" [ref=e611]
+          - navigation "Pagination Navigation" [ref=e614]:
+            - generic [ref=e615]:
+              - paragraph [ref=e617]: Showing 1 to 15 of 20 results
+              - generic [ref=e619]:
+                - generic "&laquo; Previous" [ref=e621]
+                - generic [ref=e625]: "1"
+                - button "Go to page 2" [ref=e629]: "2"
+                - button "Next &raquo;" [ref=e631]
+  - status

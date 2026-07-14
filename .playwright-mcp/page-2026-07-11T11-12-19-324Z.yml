@@ -1,0 +1,60 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to main content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f1e3]: Free shipping available with code FREESHIP
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Acme Fashion" [ref=f1e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f1e7]:
+        - link "Home" [ref=f1e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=f1e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f1e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Account" [ref=f1e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+      - generic [ref=f1e12]:
+        - button "Open product search" [ref=f1e14]:
+          - generic [ref=f1e19]: Search
+        - button "Open shopping cart" [ref=f1e21]:
+          - generic [ref=f1e26]: Cart
+  - main [ref=f1e27]:
+    - generic [ref=f1e28]:
+      - navigation "Breadcrumb" [ref=f1e29]:
+        - list [ref=f1e30]:
+          - listitem [ref=f1e31]:
+            - link "Account" [ref=f1e32] [cursor=pointer]:
+              - /url: http://acme-fashion.test/account
+            - generic [ref=f1e33]: /
+          - listitem [ref=f1e34]:
+            - link "Orders" [ref=f1e35] [cursor=pointer]:
+              - /url: http://acme-fashion.test/account/orders
+            - generic [ref=f1e36]: /
+          - listitem [ref=f1e37]:
+            - generic [ref=f1e38]: "#1001"
+      - generic [ref=f1e39]:
+        - generic [ref=f1e40]:
+          - 'heading "Order #1001" [level=1] [ref=f1e41]'
+          - paragraph [ref=f1e42]: Placed Jul 9, 2026
+        - generic [ref=f1e43]: paid
+      - generic [ref=f1e44]:
+        - heading "Items" [level=2] [ref=f1e45]
+        - generic [ref=f1e46]:
+          - generic [ref=f1e47]: 2 × Classic Cotton T-Shirt
+          - generic [ref=f1e48]: €49.98
+        - generic [ref=f1e50]:
+          - generic [ref=f1e51]: Total
+          - generic [ref=f1e52]: €54.97
+  - contentinfo [ref=f1e54]:
+    - generic [ref=f1e55]:
+      - generic [ref=f1e56]:
+        - paragraph [ref=f1e57]: Acme Fashion
+        - paragraph [ref=f1e58]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=f1e59]:
+        - link "Shop all collections" [ref=f1e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=f1e61] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=f1e62]: Secure mock checkout. Prices shown in EUR.

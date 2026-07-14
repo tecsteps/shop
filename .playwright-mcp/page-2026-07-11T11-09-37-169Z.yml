@@ -1,0 +1,372 @@
+- generic [active] [ref=e985]:
+  - dialog [ref=e1195]:
+    - iframe [ref=e1196]:
+      - generic [ref=f1e2]:
+        - generic [ref=f1e4]:
+          - generic [ref=f1e5]: Internal Server Error
+          - button "Copy as Markdown" [ref=f1e11] [cursor=pointer]
+        - generic [ref=f1e18]:
+          - generic [ref=f1e19]:
+            - heading "App\\Exceptions\\InvalidInventoryOperationException" [level=1] [ref=f1e20]
+            - generic [ref=f1e21]: app/Services/InventoryService.php:62
+            - paragraph [ref=f1e23]: Cannot commit more inventory than is reserved.
+          - generic [ref=f1e24]:
+            - generic [ref=f1e25]:
+              - generic [ref=f1e26]:
+                - generic [ref=f1e27]: LARAVEL
+                - generic [ref=f1e28]: 12.51.0
+              - generic [ref=f1e29]:
+                - generic [ref=f1e30]: PHP
+                - generic [ref=f1e31]: 8.4.17
+            - generic [ref=f1e32]: UNHANDLED
+            - generic [ref=f1e36]: CODE 0
+          - generic [ref=f1e38]:
+            - generic [ref=f1e39]: "500"
+            - generic [ref=f1e43]: POST
+            - generic [ref=f1e47]: http://acme-fashion.test/livewire-6701cc17/update
+            - button [ref=f1e48] [cursor=pointer]
+        - generic [ref=f1e53]:
+          - generic [ref=f1e54]:
+            - heading "Exception trace" [level=3] [ref=f1e60]
+            - generic [ref=f1e61]:
+              - generic [ref=f1e62]:
+                - generic [ref=f1e63] [cursor=pointer]:
+                  - generic [ref=f1e66]:
+                    - code [ref=f1e70]:
+                      - generic [ref=f1e71]: app/Services/InventoryService.php
+                    - generic [ref=f1e72]: app/Services/InventoryService.php:62
+                  - button [ref=f1e75]
+                - code [ref=f1e84]:
+                  - generic [ref=f1e85]: "57"
+                  - generic [ref=f1e86]: "58 DB::transaction(function () use ($item, $quantity): void {"
+                  - generic [ref=f1e87]: 59 $inventory = $this->lock($item);
+                  - generic [ref=f1e88]: "60"
+                  - generic [ref=f1e89]: "61 if ($inventory->quantity_reserved < $quantity) {"
+                  - generic [ref=f1e90]: 62 throw new InvalidInventoryOperationException('Cannot commit more inventory than is reserved.');
+                  - generic [ref=f1e91]: "63 }"
+                  - generic [ref=f1e92]: "64"
+                  - generic [ref=f1e93]: 65 $inventory->update([
+                  - generic [ref=f1e94]: 66 'quantity_on_hand' => $inventory->quantity_on_hand - $quantity,
+                  - generic [ref=f1e95]: 67 'quantity_reserved' => $inventory->quantity_reserved - $quantity,
+                  - generic [ref=f1e96]: 68 ]);
+                  - generic [ref=f1e97]: "69"
+                  - generic [ref=f1e98]: 70 $this->syncModel($item, $inventory);
+                  - generic [ref=f1e99]: "71 });"
+                  - generic [ref=f1e100]: "72 }"
+                  - generic [ref=f1e101]: "73"
+                  - generic [ref=f1e102]: "74"
+              - generic [ref=f1e104] [cursor=pointer]:
+                - generic [ref=f1e109]: 3 vendor frames
+                - button [ref=f1e110]
+              - generic [ref=f1e116] [cursor=pointer]:
+                - generic [ref=f1e119]:
+                  - code [ref=f1e123]:
+                    - generic [ref=f1e124]: app/Services/InventoryService.php
+                  - generic [ref=f1e125]: app/Services/InventoryService.php:58
+                - button [ref=f1e128]
+              - generic [ref=f1e134] [cursor=pointer]:
+                - generic [ref=f1e137]:
+                  - code [ref=f1e141]:
+                    - generic [ref=f1e142]: app/Services/PaymentService.php
+                  - generic [ref=f1e143]: app/Services/PaymentService.php:46
+                - button [ref=f1e146]
+              - generic [ref=f1e152] [cursor=pointer]:
+                - generic [ref=f1e157]: 3 vendor frames
+                - button [ref=f1e158]
+              - generic [ref=f1e164] [cursor=pointer]:
+                - generic [ref=f1e167]:
+                  - code [ref=f1e171]:
+                    - generic [ref=f1e172]: app/Services/PaymentService.php
+                  - generic [ref=f1e173]: app/Services/PaymentService.php:44
+                - button [ref=f1e176]
+              - generic [ref=f1e182] [cursor=pointer]:
+                - generic [ref=f1e185]:
+                  - code [ref=f1e189]:
+                    - generic [ref=f1e190]: app/Livewire/Admin/Orders/Show.php
+                  - generic [ref=f1e191]: app/Livewire/Admin/Orders/Show.php:48
+                - button [ref=f1e194]
+              - generic [ref=f1e200] [cursor=pointer]:
+                - generic [ref=f1e205]: 58 vendor frames
+                - button [ref=f1e206]
+              - generic [ref=f1e212] [cursor=pointer]:
+                - generic [ref=f1e215]:
+                  - code [ref=f1e219]:
+                    - generic [ref=f1e220]: public/index.php
+                  - generic [ref=f1e221]: public/index.php:20
+                - button [ref=f1e224]
+              - generic [ref=f1e230] [cursor=pointer]:
+                - generic [ref=f1e235]: 1 vendor frame
+                - button [ref=f1e236]
+          - generic [ref=f1e241]:
+            - generic [ref=f1e242]:
+              - heading "Queries" [level=3] [ref=f1e247]
+              - generic [ref=f1e248]: 1-10 of 16
+            - generic [ref=f1e250]:
+              - generic [ref=f1e251]:
+                - generic [ref=f1e252]:
+                  - generic [ref=f1e253]: sqlite
+                  - code [ref=f1e260]:
+                    - generic [ref=f1e261]: select * from "users" where "id" = 1 limit 1
+                - generic [ref=f1e262]: 4.7ms
+              - generic [ref=f1e263]:
+                - generic [ref=f1e264]:
+                  - generic [ref=f1e265]: sqlite
+                  - code [ref=f1e272]:
+                    - generic [ref=f1e273]: select * from "orders" where "id" = '5' limit 1
+                - generic [ref=f1e274]: 0.17ms
+              - generic [ref=f1e275]:
+                - generic [ref=f1e276]:
+                  - generic [ref=f1e277]: sqlite
+                  - code [ref=f1e284]:
+                    - generic [ref=f1e285]: select * from "stores" where "stores"."id" = 1 limit 1
+                - generic [ref=f1e286]: 0.06ms
+              - generic [ref=f1e287]:
+                - generic [ref=f1e288]:
+                  - generic [ref=f1e289]: sqlite
+                  - code [ref=f1e296]:
+                    - generic [ref=f1e297]: select exists(select * from "store_users" where "store_users"."user_id" = 1 and "store_users"."user_id" is not null and "store_id" = 1) as "exists"
+                - generic [ref=f1e298]: 0.2ms
+              - generic [ref=f1e299]:
+                - generic [ref=f1e300]:
+                  - generic [ref=f1e301]: sqlite
+                  - code [ref=f1e308]:
+                    - generic [ref=f1e309]: select * from "orders" where "store_id" = 1 and "orders"."id" = 5 and "orders"."store_id" = 1 limit 1
+                - generic [ref=f1e310]: 0.06ms
+              - generic [ref=f1e311]:
+                - generic [ref=f1e312]:
+                  - generic [ref=f1e313]: sqlite
+                  - code [ref=f1e320]:
+                    - generic [ref=f1e321]: select * from "customers" where "customers"."id" in (2) and "customers"."store_id" = 1
+                - generic [ref=f1e322]: 0.14ms
+              - generic [ref=f1e323]:
+                - generic [ref=f1e324]:
+                  - generic [ref=f1e325]: sqlite
+                  - code [ref=f1e332]:
+                    - generic [ref=f1e333]: select * from "order_lines" where "order_lines"."order_id" in (5)
+                - generic [ref=f1e334]: 0.1ms
+              - generic [ref=f1e335]:
+                - generic [ref=f1e336]:
+                  - generic [ref=f1e337]: sqlite
+                  - code [ref=f1e344]:
+                    - generic [ref=f1e345]: select * from "payments" where "payments"."order_id" in (5)
+                - generic [ref=f1e346]: 0.14ms
+              - generic [ref=f1e347]:
+                - generic [ref=f1e348]:
+                  - generic [ref=f1e349]: sqlite
+                  - code [ref=f1e356]:
+                    - generic [ref=f1e357]: select * from "refunds" where "refunds"."payment_id" in (5)
+                - generic [ref=f1e358]: 0.12ms
+              - generic [ref=f1e359]:
+                - generic [ref=f1e360]:
+                  - generic [ref=f1e361]: sqlite
+                  - code [ref=f1e368]:
+                    - generic [ref=f1e369]: select * from "refunds" where "refunds"."order_id" in (5)
+                - generic [ref=f1e370]: 0.02ms
+            - generic [ref=f1e371]:
+              - button [disabled] [ref=f1e372]
+              - button [disabled] [ref=f1e376]
+              - button "1" [ref=f1e380] [cursor=pointer]
+              - button "2" [ref=f1e382] [cursor=pointer]
+              - button [ref=f1e383] [cursor=pointer]
+              - button [ref=f1e386] [cursor=pointer]
+        - generic [ref=f1e391]:
+          - generic [ref=f1e392]:
+            - heading "Headers" [level=2] [ref=f1e393]
+            - generic [ref=f1e394]:
+              - generic [ref=f1e395]:
+                - generic [ref=f1e396]: cookie
+                - generic [ref=f1e398]: XSRF-TOKEN=eyJpdiI6IitGSm1id1JIazBDSFlqQTJVTEowZkE9PSIsInZhbHVlIjoiOGxBWC9kcTBEQ2c2RVVuRDgwbTBDWDVHenBBLzljbmhaVkpuOGFwRTJuRUZ2VXBjNXowSDNxRlBPL2p2OEU4MHIzc285dmgzdHkwOUlXVE05Q1I1VWVBa3NPYllrOHNRdkhiNUJyYjhrM1hSQ1B0emxzRStmcUNVdDZCSXlkaEoiLCJtYWMiOiI2MGZhYTY5YmUyN2ExMzYyNzUyNTc4MTQ4ZmM5M2RmMmU4ZjNlOWNmMDY3YjNhMjI1YzNlMDExN2RiMTIwODg1IiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6Im5Db3lQVnpiOGtsWHNTSVp5Si9rK1E9PSIsInZhbHVlIjoiWFNvYlF3SVZ5YWZBUDhEeENFczg4MnREdUI0L2F1YU50akpOK29MdXVPWmlpb1JqdThnZCs1cDhUMzh4cDhTME5Ba2NKU3pGc1ltZ2dCSDFyQWFBbnk5SG80cmJLcGF6eFdydnBhSi9NQlRjWm5VbGxHNHlaN3k2ZnlsakFnWm4iLCJtYWMiOiJhOWRkNjBlZmExODYwMWJhNDk0YzA4OGU0YTNiMWM2YzM5MDU3NjE5YmQxODhlZWJlNzM2ZmFkOWE0NTFkOWFmIiwidGFnIjoiIn0%3D
+              - generic [ref=f1e399]:
+                - generic [ref=f1e400]: accept-language
+                - generic [ref=f1e402]: en-GB,en-US;q=0.9,en;q=0.8
+              - generic [ref=f1e403]:
+                - generic [ref=f1e404]: accept-encoding
+                - generic [ref=f1e406]: gzip, deflate
+              - generic [ref=f1e407]:
+                - generic [ref=f1e408]: referer
+                - generic [ref=f1e410]: http://acme-fashion.test/admin/orders/5
+              - generic [ref=f1e411]:
+                - generic [ref=f1e412]: origin
+                - generic [ref=f1e414]: http://acme-fashion.test
+              - generic [ref=f1e415]:
+                - generic [ref=f1e416]: accept
+                - generic [ref=f1e418]: "*/*"
+              - generic [ref=f1e419]:
+                - generic [ref=f1e420]: x-livewire
+                - generic [ref=f1e422]: "1"
+              - generic [ref=f1e423]:
+                - generic [ref=f1e424]: content-type
+                - generic [ref=f1e426]: application/json
+              - generic [ref=f1e427]:
+                - generic [ref=f1e428]: user-agent
+                - generic [ref=f1e430]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36
+              - generic [ref=f1e431]:
+                - generic [ref=f1e432]: content-length
+                - generic [ref=f1e434]: "730"
+              - generic [ref=f1e435]:
+                - generic [ref=f1e436]: connection
+                - generic [ref=f1e438]: keep-alive
+              - generic [ref=f1e439]:
+                - generic [ref=f1e440]: host
+                - generic [ref=f1e442]: acme-fashion.test
+          - generic [ref=f1e443]:
+            - heading "Body" [level=2] [ref=f1e444]
+            - code [ref=f1e449]:
+              - generic [ref=f1e450]: "{"
+              - generic [ref=f1e451]: "\"_token\": \"v1cigc0AO9llddR4D8S9axZfXeOmbJvjtR964N87\","
+              - generic [ref=f1e452]: "\"components\": ["
+              - generic [ref=f1e453]: "{"
+              - generic [ref=f1e454]: "\"snapshot\": \"{\"data\":{\"orderId\":5,\"showFulfillmentModal\":false,\"showRefundModal\":false,\"trackingCompany\":\"\",\"trackingNumber\":\"\",\"fulfillmentQuantities\":[{\"7\":1},{\"s\":\"arr\"}],\"refundAmount\":\"\",\"refundReason\":\"\",\"restock\":false},\"memo\":{\"id\":\"KP28VETFzacd91TwOUSd\",\"name\":\"admin.orders.show\",\"path\":\"admin/orders/5\",\"method\":\"GET\",\"release\":\"a-a-a\",\"children\":[],\"scripts\":[],\"assets\":[],\"errors\":[],\"locale\":\"en\",\"islands\":[]},\"checksum\":\"9987ae09bf7e180c3f2ad8b7fce034404e98d398409e5e9abd184fdfc0961398\"}\","
+              - generic [ref=f1e455]: "\"updates\": [],"
+              - generic [ref=f1e456]: "\"calls\": ["
+              - generic [ref=f1e457]: "{"
+              - generic [ref=f1e458]: "\"method\": \"confirmPayment\","
+              - generic [ref=f1e459]: "\"params\": [],"
+              - generic [ref=f1e460]: "\"metadata\": []"
+              - generic [ref=f1e461]: "}"
+              - generic [ref=f1e462]: "]"
+              - generic [ref=f1e463]: "}"
+              - generic [ref=f1e464]: "]"
+              - generic [ref=f1e465]: "}"
+          - generic [ref=f1e466]:
+            - heading "Routing" [level=2] [ref=f1e467]
+            - generic [ref=f1e468]:
+              - generic [ref=f1e469]:
+                - generic [ref=f1e470]: controller
+                - generic [ref=f1e472]: Livewire\Mechanisms\HandleRequests\HandleRequests@handleUpdate
+              - generic [ref=f1e473]:
+                - generic [ref=f1e474]: route name
+                - generic [ref=f1e476]: default-livewire.update
+              - generic [ref=f1e477]:
+                - generic [ref=f1e478]: middleware
+                - generic [ref=f1e480]: web
+          - generic [ref=f1e481]:
+            - heading "Routing parameters" [level=2] [ref=f1e482]
+            - generic [ref=f1e483]: // No routing parameters
+  - generic [ref=e986]:
+    - complementary [ref=e987]:
+      - navigation "Admin navigation" [ref=e988]:
+        - generic [ref=e993]:
+          - generic [ref=e994]: Shop
+          - generic [ref=e995]: Commerce platform
+        - generic [ref=e996]:
+          - link "Dashboard" [ref=e998] [cursor=pointer]:
+            - /url: /admin
+          - generic [ref=e1002]: Products
+          - generic [ref=e1003]:
+            - link "Products" [ref=e1004] [cursor=pointer]:
+              - /url: /admin/products
+            - link "Collections" [ref=e1008] [cursor=pointer]:
+              - /url: /admin/collections
+            - link "Inventory" [ref=e1012] [cursor=pointer]:
+              - /url: /admin/inventory
+          - generic [ref=e1016]: Orders
+          - link "Orders" [ref=e1018] [cursor=pointer]:
+            - /url: /admin/orders
+          - generic [ref=e1022]: Customers
+          - link "Customers" [ref=e1024] [cursor=pointer]:
+            - /url: /admin/customers
+          - generic [ref=e1028]: Discounts
+          - link "Discounts" [ref=e1030] [cursor=pointer]:
+            - /url: /admin/discounts
+          - generic [ref=e1035]: Content
+          - generic [ref=e1036]:
+            - link "Pages" [ref=e1037] [cursor=pointer]:
+              - /url: /admin/pages
+            - link "Navigation" [ref=e1041] [cursor=pointer]:
+              - /url: /admin/navigation
+            - link "Themes" [ref=e1045] [cursor=pointer]:
+              - /url: /admin/themes
+          - generic [ref=e1049]: Insights
+          - generic [ref=e1050]:
+            - link "Analytics" [ref=e1051] [cursor=pointer]:
+              - /url: /admin/analytics
+            - link "Search" [ref=e1056] [cursor=pointer]:
+              - /url: /admin/settings/search
+          - generic [ref=e1060]: Platform
+          - generic [ref=e1061]:
+            - link "Settings" [ref=e1062] [cursor=pointer]:
+              - /url: /admin/settings
+            - link "Apps" [ref=e1067] [cursor=pointer]:
+              - /url: /admin/apps
+            - link "Developers" [ref=e1071] [cursor=pointer]:
+              - /url: /admin/developers
+    - generic [ref=e1075]:
+      - banner [ref=e1076]:
+        - generic [ref=e1077]:
+          - button "Acme Fashion" [ref=e1080]
+          - generic [ref=e1084]:
+            - button "Notifications" [ref=e1086]
+            - button "AU Admin User" [ref=e1090]:
+              - generic [ref=e1091]: AU
+              - generic [ref=e1094]: Admin User
+      - main [ref=e1098]:
+        - generic [ref=e1099]:
+          - generic [ref=e1100]:
+            - link "Home" [ref=e1102] [cursor=pointer]:
+              - /url: /admin
+            - generic [ref=e1105]: "#1005"
+          - generic [ref=e1107]:
+            - generic [ref=e1108]:
+              - heading "#1005" [level=1] [ref=e1109]
+              - paragraph [ref=e1110]: Placed 2 hours ago
+            - generic [ref=e1111]:
+              - button "Confirm payment" [ref=e1112]
+              - button "Refund" [ref=e1120]
+          - generic [ref=e1133]:
+            - generic [ref=e1134]: Payment required
+            - text: This order must be paid before fulfillment can be created.
+          - generic [ref=e1135]:
+            - generic [ref=e1136]:
+              - generic [ref=e1137]:
+                - generic [ref=e1138]: Items
+                - generic [ref=e1141]:
+                  - generic [ref=e1142]:
+                    - generic [ref=e1143]: Leather Belt
+                    - generic [ref=e1144]: SKU ACME-LEATHERB-SM-BLACK-2 · Qty 1
+                  - generic [ref=e1145]: €34.99
+                - generic [ref=e1146]:
+                  - generic [ref=e1147]:
+                    - generic [ref=e1148]: Subtotal
+                    - generic [ref=e1149]: €34.99
+                  - generic [ref=e1150]:
+                    - generic [ref=e1151]: Discount
+                    - generic [ref=e1152]: €0.00
+                  - generic [ref=e1153]:
+                    - generic [ref=e1154]: Shipping
+                    - generic [ref=e1155]: €4.99
+                  - generic [ref=e1156]:
+                    - generic [ref=e1157]: Tax
+                    - generic [ref=e1158]: €5.59
+                  - generic [ref=e1159]:
+                    - generic [ref=e1160]: Total
+                    - generic [ref=e1161]: €39.98
+              - generic [ref=e1162]:
+                - generic [ref=e1163]: Fulfillment
+                - paragraph [ref=e1166]: No fulfillments yet.
+              - generic [ref=e1167]:
+                - generic [ref=e1168]: Timeline
+                - list [ref=e1170]:
+                  - listitem [ref=e1171]:
+                    - generic [ref=e1172]: Order created
+                    - generic [ref=e1173]: Jul 11, 2026 09:00
+            - generic [ref=e1174]:
+              - generic [ref=e1175]:
+                - generic [ref=e1176]: Status
+                - generic [ref=e1178]:
+                  - generic [ref=e1179]:
+                    - generic [ref=e1180]: Payment
+                    - generic [ref=e1181]: Pending
+                  - generic [ref=e1182]:
+                    - generic [ref=e1183]: Fulfillment
+                    - generic [ref=e1184]: Unfulfilled
+              - generic [ref=e1185]:
+                - generic [ref=e1186]: Customer
+                - generic [ref=e1188]:
+                  - generic [ref=e1189]: Jane Smith
+                  - link "jane@example.com" [ref=e1190] [cursor=pointer]:
+                    - /url: mailto:jane@example.com
+              - generic [ref=e1191]:
+                - generic [ref=e1192]: Shipping address
+                - generic [ref=e1194]: Jane Smith Schillerstrasse 45 Munich Bavaria BY Germany DE 80336
+    - status

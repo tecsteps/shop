@@ -1,0 +1,71 @@
+- generic [active] [ref=e67]:
+  - link "Skip to main content" [ref=e68] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e69]: Free shipping available with code FREESHIP
+  - banner [ref=e70]:
+    - generic [ref=e71]:
+      - link "Acme Fashion" [ref=e72] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=e73]:
+        - link "Home" [ref=e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "Collections" [ref=e75] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=e76] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - link "Account" [ref=e77] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+      - generic [ref=e78]:
+        - button "Open product search" [ref=e80]:
+          - generic [ref=e85]: Search
+        - button "Open shopping cart" [ref=e87]:
+          - generic [ref=e92]: Cart
+  - main [ref=e93]:
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - heading "Welcome, John Doe" [level=1] [ref=e97]
+          - paragraph [ref=e98]: customer@acme.test
+        - button "Sign out" [ref=e99]
+      - generic [ref=e105]:
+        - link [ref=e106] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders
+          - heading "Orders" [level=2] [ref=e107]
+          - paragraph [ref=e108]: View your order history
+        - link [ref=e109] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/addresses
+          - heading "Addresses" [level=2] [ref=e110]
+          - paragraph [ref=e111]: Manage delivery addresses
+      - heading "Recent orders" [level=2] [ref=e112]
+      - generic [ref=e113]:
+        - link "#1015 €54.47" [ref=e114] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders/#1015
+          - generic [ref=e115]: "#1015"
+          - generic [ref=e116]: €54.47
+        - link "#1010 €504.98" [ref=e118] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders/#1010
+          - generic [ref=e119]: "#1010"
+          - generic [ref=e120]: €504.98
+        - link "#1001 €54.97" [ref=e122] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders/#1001
+          - generic [ref=e123]: "#1001"
+          - generic [ref=e124]: €54.97
+        - link "#1002 €89.97" [ref=e126] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders/#1002
+          - generic [ref=e127]: "#1002"
+          - generic [ref=e128]: €89.97
+        - link "#1004 €29.98" [ref=e130] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders/#1004
+          - generic [ref=e131]: "#1004"
+          - generic [ref=e132]: €29.98
+  - contentinfo [ref=e134]:
+    - generic [ref=e135]:
+      - generic [ref=e136]:
+        - paragraph [ref=e137]: Acme Fashion
+        - paragraph [ref=e138]: Thoughtfully selected products for everyday life.
+      - navigation "Footer navigation" [ref=e139]:
+        - link "Shop all collections" [ref=e140] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections
+        - link "Search" [ref=e141] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+      - paragraph [ref=e142]: Secure mock checkout. Prices shown in EUR.
