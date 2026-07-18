@@ -38,7 +38,8 @@ class Show extends Component
         $this->order = $order;
         $this->reloadOrder();
         foreach ($this->order->lines as $line) {
-            $this->fulfillmentLines[$line->id] = 0;
+            $alreadyFulfilled = (int) $line->fulfillmentLines()->sum('quantity');
+            $this->fulfillmentLines[$line->id] = max(0, $line->quantity - $alreadyFulfilled);
             $this->refundLines[$line->id] = 0;
         }
     }

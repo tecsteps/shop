@@ -44,7 +44,16 @@ class Shipping extends Component
     {
         Gate::authorize('update', app('current_store'));
         $validated = $this->validate(['rateZoneId' => ['required', Rule::exists('shipping_zones', 'id')->where('store_id', app('current_store')->id)], 'rateName' => ['required', 'string', 'max:255'], 'rateType' => ['required', Rule::in(['flat', 'weight', 'price', 'carrier'])], 'ratePrice' => ['required', 'integer', 'min:0'], 'rateActive' => ['boolean']]);
-        ShippingRate::query()->create(['zone_id' => $validated['rateZoneId'], 'name' => $validated['rateName'], 'type' => $validated['rateType'], 'config_json' => ['price_amount' => $validated['ratePrice'], 'currency' => app('current_store')->default_currency], 'is_active' => $validated['rateActive']]);
+        ShippingRate::query()->create([
+            'zone_id' => $validated['rateZoneId'],
+            'name' => $validated['rateName'],
+            'type' => $validated['rateType'],
+            'config_json' => [
+                'amount' => $validated['ratePrice'],
+                'currency' => app('current_store')->default_currency,
+            ],
+            'is_active' => $validated['rateActive'],
+        ]);
         $this->reset('rateZoneId', 'rateName', 'ratePrice');
     }
 

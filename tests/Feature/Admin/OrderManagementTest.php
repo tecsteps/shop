@@ -48,3 +48,22 @@ it('refunds a paid order through the domain service', function () {
     expect($order->refunds()->count())->toBe(1)
         ->and($order->fresh()->financial_status->value)->toBe('partially_refunded');
 });
+
+it('marks a fulfillment as shipped and delivered', function () {
+    $order = Order::factory()->create(['store_id' => $this->store->id, 'total_amount' => 2000]);
+    $line = OrderLine::factory()->create(['order_id' => $order->id, 'quantity' => 1, 'unit_price_amount' => 2000, 'total_amount' => 2000]);
+    Payment::factory()->create(['order_id' => $order->id, 'amount' => 2000]);
+
+    $component = Livewire::actingAs($this->user)->test(Show::class, ['order' => $order])
+        ->set("fulfillmentLines.{$line->id}", 1)
+        ->call('createFulfillment')
+        ->assertHasNoErrors();
+
+    $fulfillmentId = $order->fulfillments()->first()->id;
+
+    $component->call('markAsShipped', $fulfillmentId)->assertHasNoErrors();
+    expect($order->fulfillments()->first()->status->value)->toBe('shipped');
+
+    $component->call('markAsDelivered', $fulfillmentId)->assertHasNoErrors();
+    expect($order->fulfillments()->first()->status->value)->toBe('delivered');
+});

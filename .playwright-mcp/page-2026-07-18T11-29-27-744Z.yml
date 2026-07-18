@@ -1,0 +1,23 @@
+- generic [ref=f5e3]:
+  - link "Shop" [ref=f5e4] [cursor=pointer]:
+    - /url: http://acme-fashion.test
+  - generic [ref=f5e10]:
+    - generic [ref=f5e11]:
+      - generic [ref=f5e12]: Admin sign in
+      - paragraph [ref=f5e13]: Manage your store from one place.
+    - generic [ref=f5e14]:
+      - generic [ref=f5e15]:
+        - generic [ref=f5e16]: Email address
+        - textbox "Email address" [active] [ref=f5e18]
+      - generic [ref=f5e19]:
+        - generic [ref=f5e20]: Password
+        - generic [ref=f5e21]:
+          - textbox "Password" [ref=f5e22]
+          - button "Toggle password visibility" [ref=f5e24]
+      - generic [ref=f5e28]:
+        - generic [ref=f5e29]:
+          - checkbox "Remember me" [ref=f5e30]
+          - generic [ref=f5e32]: Remember me
+        - link "Forgot password?" [ref=f5e33] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/forgot-password
+      - button "Sign in" [ref=f5e34]

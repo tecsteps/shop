@@ -19,7 +19,7 @@ Approach: Build from scratch on clean Laravel Livewire starter (no reuse of othe
 | 9 | Analytics | ✅ done | Events + daily aggregates |
 | 10 | Apps and Webhooks | ✅ done | Extensibility |
 | 11 | Polish | 🟡 seed data done | Acme Fashion/Electronics demo seeders; A11y and dark mode pending |
-| 12 | Full Test Suite + Playwright | 🔄 in progress | Pest + MCP confirmation |
+| 12 | Full Test Suite + Playwright | ✅ done | Pest + MCP confirmation |
 
 ## Iteration Log
 
@@ -76,3 +76,11 @@ Approach: Build from scratch on clean Laravel Livewire starter (no reuse of othe
 - Full demo seeders for Acme Fashion (`acme-fashion.test`)
 - Analytics, FTS search, webhook delivery scaffolding
 - Pest: 116 passing; migrate:fresh --seed OK; Vite build OK
+
+### 2026-07-18 — Playwright acceptance + bugfixes
+- Confirmed storefront browse → cart → checkout (magic card) → order #1016
+- Confirmed admin login, dashboard KPIs, products/orders/customers/discounts/settings/analytics
+- Confirmed fulfillment create + ship/deliver; customer account order history
+- Fixed admin shipping rate display (`amount` vs `price_amount`)
+- Default fulfillment quantities to remaining units
+- Pest full suite green
