@@ -1,0 +1,1 @@
+<flux:button wire:click="logout" variant="ghost" icon="arrow-right-start-on-rectangle" class="w-full justify-start">Log out</flux:button>

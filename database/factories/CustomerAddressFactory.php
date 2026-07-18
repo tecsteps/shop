@@ -1,0 +1,38 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Customer;
+use App\Models\CustomerAddress;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<CustomerAddress>
+ */
+class CustomerAddressFactory extends Factory
+{
+    protected $model = CustomerAddress::class;
+
+    public function definition(): array
+    {
+        return [
+            'customer_id' => Customer::factory(),
+            'label' => fake()->randomElement(['Home', 'Work']),
+            'address_json' => [
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'company' => '',
+                'address1' => fake()->streetAddress(),
+                'address2' => '',
+                'city' => fake()->city(),
+                'province' => 'Berlin',
+                'province_code' => 'BE',
+                'country' => 'Germany',
+                'country_code' => 'DE',
+                'zip' => fake()->postcode(),
+                'phone' => fake()->phoneNumber(),
+            ],
+            'is_default' => true,
+        ];
+    }
+}

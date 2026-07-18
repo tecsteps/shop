@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
+            $table->enum('status', ['active', 'disabled'])->default('active');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->comment('Stores the bcrypt/Argon2 password hash for Laravel and Fortify compatibility.');
+            $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->unique('email', 'idx_users_email');
+            $table->index('status', 'idx_users_status');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
