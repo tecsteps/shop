@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('variant_id')->constrained('product_variants')->cascadeOnDelete();
             $table->integer('quantity_on_hand')->default(0);
             $table->integer('quantity_reserved')->default(0);
-            $table->string('policy')->default('deny');
+            $table->enum('policy', ['deny', 'continue'])->default('deny');
 
             $table->unique('variant_id', 'idx_inventory_items_variant_id');
             $table->index('store_id', 'idx_inventory_items_store_id');

@@ -7,12 +7,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductVariant extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductVariantFactory> */
     use HasFactory;
+
+    protected $attributes = [
+        'price_amount' => 0,
+        'currency' => 'USD',
+        'requires_shipping' => true,
+        'is_default' => false,
+        'position' => 0,
+        'status' => 'active',
+    ];
 
     protected $fillable = [
         'product_id',
@@ -53,5 +63,15 @@ class ProductVariant extends Model
     public function optionValues(): BelongsToMany
     {
         return $this->belongsToMany(ProductOptionValue::class, 'variant_option_values', 'variant_id', 'product_option_value_id');
+    }
+
+    public function cartLines(): HasMany
+    {
+        return $this->hasMany(CartLine::class, 'variant_id');
+    }
+
+    public function orderLines(): HasMany
+    {
+        return $this->hasMany(OrderLine::class, 'variant_id');
     }
 }

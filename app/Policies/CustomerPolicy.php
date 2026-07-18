@@ -21,8 +21,18 @@ class CustomerPolicy
         return $this->viewAny($user);
     }
 
-    public function update(User $user, Customer $customer): bool
+    public function create(User $user): bool
     {
         return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin, StoreUserRole::Staff]);
+    }
+
+    public function update(User $user, Customer $customer): bool
+    {
+        return $this->create($user);
+    }
+
+    public function delete(User $user, Customer $customer): bool
+    {
+        return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin]);
     }
 }

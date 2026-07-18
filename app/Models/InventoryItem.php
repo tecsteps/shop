@@ -15,6 +15,12 @@ class InventoryItem extends Model
 
     public $timestamps = false;
 
+    protected $attributes = [
+        'quantity_on_hand' => 0,
+        'quantity_reserved' => 0,
+        'policy' => 'deny',
+    ];
+
     protected $fillable = [
         'store_id',
         'variant_id',

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('handle');
-            $table->string('status')->default('active');
+            $table->enum('status', ['active', 'suspended'])->default('active');
             $table->string('default_currency')->default('USD');
             $table->string('default_locale')->default('en');
             $table->string('timezone')->default('UTC');

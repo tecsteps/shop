@@ -14,6 +14,11 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use BelongsToStore, HasFactory;
 
+    protected $attributes = [
+        'status' => 'draft',
+        'tags' => '[]',
+    ];
+
     protected $fillable = [
         'store_id',
         'title',

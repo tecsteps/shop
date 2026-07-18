@@ -10,6 +10,16 @@ class FulfillmentPolicy
 {
     use ChecksStoreRole;
 
+    public function viewAny(User $user): bool
+    {
+        return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin, StoreUserRole::Staff, StoreUserRole::Support]);
+    }
+
+    public function view(User $user, object $fulfillment): bool
+    {
+        return $this->viewAny($user);
+    }
+
     public function create(User $user): bool
     {
         return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin, StoreUserRole::Staff]);
@@ -18,5 +28,10 @@ class FulfillmentPolicy
     public function update(User $user, object $fulfillment): bool
     {
         return $this->create($user);
+    }
+
+    public function delete(User $user, object $fulfillment): bool
+    {
+        return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin]);
     }
 }

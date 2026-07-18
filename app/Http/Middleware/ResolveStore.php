@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Enums\StoreStatus;
 use App\Models\Store;
 use App\Models\StoreDomain;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -12,9 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResolveStore
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string $context = 'storefront'): Response
     {
-        if ($request->is('admin', 'admin/*')) {
+        app()->forgetInstance('current_store');
+
+        if ($context === 'admin') {
             return $this->resolveAdminStore($request, $next);
         }
 
@@ -55,19 +58,11 @@ class ResolveStore
     {
         $user = $request->user();
 
-        if ($user === null) {
-            return $next($request);
+        if (! $user instanceof User) {
+            abort(403);
         }
 
         $storeId = $request->session()->get('current_store_id');
-
-        if ($storeId === null) {
-            $storeId = $user->stores()->value('stores.id');
-
-            if ($storeId !== null) {
-                $request->session()->put('current_store_id', $storeId);
-            }
-        }
 
         if ($storeId === null) {
             abort(403);

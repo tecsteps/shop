@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('product_media', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->string('type')->default('image');
+            $table->enum('type', ['image', 'video'])->default('image');
             $table->string('storage_key');
             $table->string('alt_text')->nullable();
             $table->integer('width')->nullable();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('mime_type')->nullable();
             $table->integer('byte_size')->nullable();
             $table->integer('position')->default(0);
-            $table->string('status')->default('processing');
+            $table->enum('status', ['processing', 'ready', 'failed'])->default('processing');
             $table->timestamp('created_at')->nullable();
 
             $table->index('product_id', 'idx_product_media_product_id');

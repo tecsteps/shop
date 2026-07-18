@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('requires_shipping')->default(true);
             $table->boolean('is_default')->default(false);
             $table->integer('position')->default(0);
-            $table->string('status')->default('active');
+            $table->enum('status', ['active', 'archived'])->default('active');
             $table->timestamps();
 
             $table->index('product_id', 'idx_product_variants_product_id');

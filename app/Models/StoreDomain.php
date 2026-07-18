@@ -14,6 +14,12 @@ class StoreDomain extends Model
 
     public $timestamps = false;
 
+    protected $attributes = [
+        'type' => 'storefront',
+        'is_primary' => false,
+        'tls_mode' => 'managed',
+    ];
+
     protected $fillable = [
         'store_id',
         'hostname',

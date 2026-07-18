@@ -32,6 +32,6 @@ class DiscountPolicy
 
     public function delete(User $user, object $discount): bool
     {
-        return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin]);
+        return $this->viewAny($user);
     }
 }

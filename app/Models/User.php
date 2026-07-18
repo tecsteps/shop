@@ -16,6 +16,10 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
+    protected $attributes = [
+        'status' => 'active',
+    ];
+
     protected $fillable = [
         'name',
         'email',
@@ -45,8 +49,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Store::class, 'store_users')
             ->using(StoreUser::class)
-            ->withPivot('role')
-            ->withTimestamps();
+            ->withPivot('role');
     }
 
     public function roleForStore(Store $store): ?StoreUserRole

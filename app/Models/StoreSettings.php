@@ -17,6 +17,10 @@ class StoreSettings extends Model
 
     protected $primaryKey = 'store_id';
 
+    protected $attributes = [
+        'settings_json' => '{}',
+    ];
+
     protected $fillable = [
         'store_id',
         'settings_json',

@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->string('hostname');
-            $table->string('type')->default('storefront');
+            $table->enum('type', ['storefront', 'admin', 'api'])->default('storefront');
             $table->boolean('is_primary')->default(false);
-            $table->string('tls_mode')->default('managed');
+            $table->enum('tls_mode', ['managed', 'bring_your_own'])->default('managed');
             $table->timestamp('created_at')->nullable();
 
             $table->unique('hostname', 'idx_store_domains_hostname');

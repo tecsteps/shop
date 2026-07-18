@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('handle');
-            $table->string('status')->default('draft');
+            $table->enum('status', ['draft', 'active', 'archived'])->default('draft');
             $table->text('description_html')->nullable();
             $table->string('vendor')->nullable();
             $table->string('product_type')->nullable();

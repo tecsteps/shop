@@ -14,6 +14,10 @@ class ProductOption extends Model
 
     public $timestamps = false;
 
+    protected $attributes = [
+        'position' => 0,
+    ];
+
     protected $fillable = [
         'product_id',
         'name',

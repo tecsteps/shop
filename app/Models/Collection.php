@@ -14,6 +14,11 @@ class Collection extends Model
     /** @use HasFactory<\Database\Factories\CollectionFactory> */
     use BelongsToStore, HasFactory;
 
+    protected $attributes = [
+        'type' => 'manual',
+        'status' => 'active',
+    ];
+
     protected $fillable = [
         'store_id',
         'title',

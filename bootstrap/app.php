@@ -16,12 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'store.resolve' => ResolveStore::class,
         ]);
 
-        $middleware->appendToGroup('storefront', [
-            ResolveStore::class,
+        $middleware->group('storefront', [
+            ResolveStore::class.':storefront',
         ]);
 
-        $middleware->appendToGroup('admin', [
-            ResolveStore::class,
+        $middleware->group('admin', [
+            ResolveStore::class.':admin',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

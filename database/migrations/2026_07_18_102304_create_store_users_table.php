@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('store_users', function (Blueprint $table) {
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('role')->default('staff');
-            $table->timestamps();
+            $table->enum('role', ['owner', 'admin', 'staff', 'support'])->default('staff');
+            $table->timestamp('created_at')->nullable();
 
             $table->primary(['store_id', 'user_id']);
             $table->index('user_id', 'idx_store_users_user_id');

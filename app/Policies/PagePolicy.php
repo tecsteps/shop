@@ -15,6 +15,11 @@ class PagePolicy
         return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin, StoreUserRole::Staff]);
     }
 
+    public function view(User $user, object $page): bool
+    {
+        return $this->viewAny($user);
+    }
+
     public function create(User $user): bool
     {
         return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin]);

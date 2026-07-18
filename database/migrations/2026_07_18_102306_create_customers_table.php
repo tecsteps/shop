@@ -12,10 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->string('email');
-            $table->string('password')->nullable();
+            $table->string('password_hash')->nullable();
             $table->string('name')->nullable();
             $table->boolean('marketing_opt_in')->default(false);
-            $table->rememberToken();
             $table->timestamps();
 
             $table->unique(['store_id', 'email'], 'idx_customers_store_email');

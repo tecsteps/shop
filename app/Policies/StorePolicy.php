@@ -11,6 +11,11 @@ class StorePolicy
 {
     use ChecksStoreRole;
 
+    public function viewAny(User $user): bool
+    {
+        return $user->stores()->exists();
+    }
+
     public function view(User $user, Store $store): bool
     {
         return $user->roleForStore($store) !== null;

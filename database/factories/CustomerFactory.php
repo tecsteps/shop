@@ -21,7 +21,7 @@ class CustomerFactory extends Factory
         return [
             'store_id' => Store::factory(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password_hash' => static::$password ??= Hash::make('password'),
             'name' => fake()->name(),
             'marketing_opt_in' => false,
         ];
@@ -30,7 +30,7 @@ class CustomerFactory extends Factory
     public function guest(): static
     {
         return $this->state(fn (): array => [
-            'password' => null,
+            'password_hash' => null,
         ]);
     }
 }

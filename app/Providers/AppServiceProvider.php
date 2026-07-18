@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\PaymentProvider;
+use App\Services\Payments\MockPaymentProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
     }
 
     /**

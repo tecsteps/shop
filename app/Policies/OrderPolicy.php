@@ -20,9 +20,19 @@ class OrderPolicy
         return $this->viewAny($user);
     }
 
-    public function update(User $user, object $order): bool
+    public function create(User $user): bool
     {
         return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin, StoreUserRole::Staff]);
+    }
+
+    public function update(User $user, object $order): bool
+    {
+        return $this->create($user);
+    }
+
+    public function delete(User $user, object $order): bool
+    {
+        return $this->hasRole($user, [StoreUserRole::Owner, StoreUserRole::Admin]);
     }
 
     public function refund(User $user, object $order): bool

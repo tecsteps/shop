@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('handle');
             $table->text('description_html')->nullable();
-            $table->string('type')->default('manual');
-            $table->string('status')->default('active');
+            $table->enum('type', ['manual', 'automated'])->default('manual');
+            $table->enum('status', ['draft', 'active', 'archived'])->default('active');
             $table->timestamps();
 
             $table->unique(['store_id', 'handle'], 'idx_collections_store_handle');

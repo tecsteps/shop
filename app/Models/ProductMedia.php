@@ -17,6 +17,12 @@ class ProductMedia extends Model
 
     protected $table = 'product_media';
 
+    protected $attributes = [
+        'type' => 'image',
+        'position' => 0,
+        'status' => 'processing',
+    ];
+
     protected $fillable = [
         'product_id',
         'type',

@@ -13,6 +13,11 @@ class CustomerAddress extends Model
 
     public $timestamps = false;
 
+    protected $attributes = [
+        'address_json' => '{}',
+        'is_default' => false,
+    ];
+
     protected $fillable = [
         'customer_id',
         'label',

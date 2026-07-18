@@ -1,30 +1,22 @@
 <?php
 
 use App\Models\Product;
+use App\Models\Scopes\StoreScope;
 use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('scopes products to the current store', function () {
+it('scopes product queries to the current store', function () {
     $storeA = Store::factory()->create();
     $storeB = Store::factory()->create();
 
-    $productA = Product::factory()->create([
-        'store_id' => $storeA->id,
-        'title' => 'Store A Product',
-    ]);
-    Product::factory()->create([
-        'store_id' => $storeB->id,
-        'title' => 'Store B Product',
-    ]);
+    Product::factory()->count(3)->for($storeA)->create();
+    Product::factory()->count(5)->for($storeB)->create();
 
     app()->instance('current_store', $storeA);
 
-    $products = Product::query()->get();
-
-    expect($products)->toHaveCount(1)
-        ->and($products->first()->is($productA))->toBeTrue();
+    expect(Product::query()->count())->toBe(3);
 });
 
 it('auto assigns store_id when creating within store context', function () {
@@ -38,4 +30,25 @@ it('auto assigns store_id when creating within store context', function () {
     ]);
 
     expect($product->store_id)->toBe($store->id);
+});
+
+it('prevents direct access to another stores product', function () {
+    $storeA = Store::factory()->create();
+    $storeB = Store::factory()->create();
+    $product = Product::factory()->for($storeA)->create();
+
+    app()->instance('current_store', $storeB);
+
+    expect(Product::query()->find($product->id))->toBeNull();
+});
+
+it('allows explicit cross-store access when the global scope is removed', function () {
+    $storeA = Store::factory()->create();
+    $storeB = Store::factory()->create();
+    Product::factory()->count(2)->for($storeA)->create();
+    Product::factory()->count(4)->for($storeB)->create();
+
+    app()->instance('current_store', $storeA);
+
+    expect(Product::query()->withoutGlobalScope(StoreScope::class)->count())->toBe(6);
 });
