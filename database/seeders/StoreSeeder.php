@@ -5,22 +5,33 @@ namespace Database\Seeders;
 use App\Models\Organization;
 use App\Models\Store;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class StoreSeeder extends Seeder
 {
     public function run(): void
     {
-        $organization = Organization::query()->first() ?? Organization::factory()->create();
+        DB::transaction(function (): void {
+            $organization = Organization::query()
+                ->where('billing_email', 'billing@acme.test')
+                ->firstOrFail();
 
-        Store::query()->firstOrCreate(
-            ['handle' => 'demo-shop'],
-            [
-                'organization_id' => $organization->id,
-                'name' => 'Demo Shop',
-                'default_currency' => 'EUR',
-                'default_locale' => 'en',
-                'timezone' => 'Europe/Berlin',
-            ],
-        );
+            foreach ([
+                ['name' => 'Acme Fashion', 'handle' => 'acme-fashion'],
+                ['name' => 'Acme Electronics', 'handle' => 'acme-electronics'],
+            ] as $store) {
+                Store::query()->updateOrCreate(
+                    ['handle' => $store['handle']],
+                    [
+                        'organization_id' => $organization->id,
+                        'name' => $store['name'],
+                        'status' => 'active',
+                        'default_currency' => 'EUR',
+                        'default_locale' => 'en',
+                        'timezone' => 'Europe/Berlin',
+                    ],
+                );
+            }
+        });
     }
 }

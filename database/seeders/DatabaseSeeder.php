@@ -15,6 +15,18 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StoreUserSeeder::class,
             StoreSettingsSeeder::class,
+            TaxSettingsSeeder::class,
+            ShippingSeeder::class,
+            CollectionSeeder::class,
+            ProductSeeder::class,
+            DiscountSeeder::class,
+            CustomerSeeder::class,
+            OrderSeeder::class,
+            ThemeSeeder::class,
+            PageSeeder::class,
+            NavigationSeeder::class,
+            AnalyticsSeeder::class,
+            SearchSettingsSeeder::class,
         ]);
     }
 }
