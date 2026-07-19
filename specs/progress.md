@@ -25,6 +25,8 @@
 
 | 4 | 2026-07-19 | Phase 4 | Cart/Checkout/Discount/Shipping/Tax engine: 7 models, 7 VOs, PricingEngine, DiscountService, ShippingCalculator, TaxCalculator(+providers), CartService, CheckoutService state machine, storefront cart/checkout REST API, cart drawer + cart page + checkout stepper UI, expiry/cleanup jobs. 219 tests green. Notable: intdiv tax math & merge-sum per spec 09 precedence. | pending |
 
+| 5 | 2026-07-19 | Phase 5 | Payments/orders/fulfillment/customers: MockPaymentProvider, PaymentService, OrderService (atomic creation, numbering, idempotency, digital auto-fulfill), RefundService, FulfillmentService (guard), 9 events + listeners, /pay + order-status APIs, checkout payment step + confirmation UI. 294 tests green. | b55fd22e |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -61,11 +63,11 @@
 - [x] Tests: PricingEngineTest, DiscountCalculatorTest, TaxCalculatorTest, ShippingCalculatorTest, CartVersionTest, CartServiceTest, CartApiTest, CheckoutFlowTest, CheckoutStateTest, PricingIntegrationTest, DiscountTest, ShippingTest, TaxTest
 
 ### Phase 5 — Payments / Orders / Fulfillment
-- [ ] Models: Customer, CustomerAddress, Order, OrderLine, Payment, Refund, Fulfillment, FulfillmentLine
-- [ ] MockPaymentProvider, PaymentService, OrderService, RefundService, FulfillmentService, CustomerService
-- [ ] Events: OrderCreated, OrderPaid, OrderFulfilled, OrderCancelled, OrderRefunded, etc.
-- [ ] Jobs: CancelUnpaidBankTransferOrders
-- [ ] Tests: OrderCreationTest, RefundTest, FulfillmentTest, MockPaymentProviderTest, PaymentServiceTest, BankTransferConfirmationTest
+- [x] Models: Customer, CustomerAddress, Order, OrderLine, Payment, Refund, Fulfillment, FulfillmentLine
+- [x] MockPaymentProvider, PaymentService, OrderService, RefundService, FulfillmentService, CustomerService
+- [x] Events: OrderCreated, OrderPaid, OrderFulfilled, OrderCancelled, OrderRefunded, etc.
+- [x] Jobs: CancelUnpaidBankTransferOrders
+- [x] Tests: OrderCreationTest, RefundTest, FulfillmentTest, MockPaymentProviderTest, PaymentServiceTest, BankTransferConfirmationTest
 
 ### Phase 6 — Customer Accounts + Auth UI
 - [ ] Admin auth: Login, Logout, ForgotPassword, ResetPassword (Livewire)
