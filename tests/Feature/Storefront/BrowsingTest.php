@@ -186,7 +186,7 @@ test('zero-stock variant with continue policy shows backorder and an enabled but
         ->assertDontSee('Sold out');
 });
 
-test('add to cart dispatches the event with variant id and quantity', function () {
+test('add to cart adds the line to the session cart and opens the drawer', function () {
     $store = $this->createStore();
     $this->bindStore($store);
 
@@ -195,7 +195,14 @@ test('add to cart dispatches the event with variant id and quantity', function (
 
     Livewire::test(ProductPage::class, ['handle' => $product->handle])
         ->call('addToCart')
-        ->assertDispatched('add-to-cart', variantId: $variant->id, quantity: 1);
+        ->assertDispatched('cart-updated', count: 1)
+        ->assertDispatched('cart-drawer-open');
+
+    $cart = \App\Models\Cart::query()->where('store_id', $store->id)->sole();
+
+    expect($cart->lines)->toHaveCount(1)
+        ->and($cart->lines->first()->variant_id)->toBe($variant->id)
+        ->and($cart->lines->first()->quantity)->toBe(1);
 });
 
 test('published page renders its title and sanitized body', function () {

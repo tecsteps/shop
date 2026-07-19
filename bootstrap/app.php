@@ -26,5 +26,28 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Cart optimistic-concurrency conflicts return 409 with the current
+        // cart state in the response body (spec 02 §2.1, spec 05 §4.3).
+        $exceptions->render(function (App\Exceptions\CartVersionMismatchException $exception, Illuminate\Http\Request $request) {
+            if (! $request->expectsJson()) {
+                return null;
+            }
+
+            return response()->json(
+                array_merge(
+                    ['message' => $exception->getMessage()],
+                    (new App\Http\Resources\Storefront\CartResource($exception->cart->refresh()))->toArray($request),
+                ),
+                409,
+            );
+        });
+
+        // Invalid checkout state transitions map to 422 (spec 02 §2.2).
+        $exceptions->render(function (App\Exceptions\InvalidCheckoutTransitionException $exception, Illuminate\Http\Request $request) {
+            if (! $request->expectsJson()) {
+                return null;
+            }
+
+            return response()->json(['message' => $exception->getMessage()], 422);
+        });
     })->create();

@@ -132,9 +132,8 @@ class Show extends Component
     }
 
     /**
-     * Stage the add-to-cart for the selected variant. The real cart is
-     * wired in Phase 4; for now we dispatch the browser event it will
-     * listen to.
+     * Add the selected variant to the session cart, update the header
+     * badge and open the cart drawer.
      */
     public function addToCart(): void
     {
@@ -144,7 +143,17 @@ class Show extends Component
             return;
         }
 
-        $this->dispatch('add-to-cart', variantId: $variant->id, quantity: max(1, $this->quantity));
+        $carts = app(\App\Services\CartService::class);
+        $cart = $carts->getOrCreateForSession(app('current_store'), auth('customer')->user());
+
+        try {
+            $carts->addLine($cart, $variant->id, max(1, $this->quantity));
+        } catch (\App\Exceptions\InsufficientInventoryException|\Illuminate\Validation\ValidationException) {
+            return;
+        }
+
+        $this->dispatch('cart-updated', count: $cart->refresh()->itemCount());
+        $this->dispatch('cart-drawer-open');
     }
 
     /**

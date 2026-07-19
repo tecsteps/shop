@@ -140,15 +140,17 @@
                     </svg>
                 </a>
                 <button type="button"
-                        x-data
+                        x-data="{ count: 0 }"
+                        @cart-updated.window="count = $event.detail.count"
                         @click="$dispatch('cart-drawer-open')"
                         class="relative rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
                         aria-label="Open cart">
                     <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
                     </svg>
-                    {{-- Item count badge (wired to the cart in Phase 4) --}}
-                    <span class="absolute -top-0.5 -right-0.5 hidden size-5 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white" aria-hidden="true">0</span>
+                    <span x-show="count > 0" x-cloak x-text="count"
+                          class="absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white"
+                          aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -254,7 +256,7 @@
         <script type="application/ld+json">@json($organizationJsonLd)</script>
     </footer>
 
-    {{-- Cart drawer shell (inner content replaced by the real cart component in Phase 4) --}}
+    {{-- Cart drawer (shell here, content in the CartDrawer Livewire component) --}}
     <div x-data="{ open: false }"
          @cart-drawer-open.window="open = true"
          @keydown.escape.window="open = false">
@@ -268,28 +270,7 @@
                  x-transition:enter="transition ease-out duration-200" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                  x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
                  class="fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-white shadow-xl sm:w-96 dark:bg-gray-950">
-                <div class="flex items-center justify-between border-b border-gray-200 px-4 py-4 dark:border-gray-800">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Your Cart</h2>
-                    <button type="button"
-                            @click="open = false"
-                            class="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-                            aria-label="Close cart">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-12 text-center">
-                    <svg class="size-16 text-gray-300 dark:text-gray-700" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
-                    </svg>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Cart is empty</p>
-                    <button type="button"
-                            @click="open = false"
-                            class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800">
-                        Continue shopping
-                    </button>
-                </div>
+                <livewire:storefront.cart-drawer />
             </div>
         </div>
     </div>

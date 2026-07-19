@@ -23,6 +23,8 @@
 
 | 3 | 2026-07-19 | Phase 3 | Themes/pages/navigation models + NavigationService + ThemeSettingsService + Money helper; storefront layout (dark mode, a11y) + components; Home/Collections/Products/Pages Livewire; real-env smoke OK (200s + 404). 105 tests green. | pending |
 
+| 4 | 2026-07-19 | Phase 4 | Cart/Checkout/Discount/Shipping/Tax engine: 7 models, 7 VOs, PricingEngine, DiscountService, ShippingCalculator, TaxCalculator(+providers), CartService, CheckoutService state machine, storefront cart/checkout REST API, cart drawer + cart page + checkout stepper UI, expiry/cleanup jobs. 219 tests green. Notable: intdiv tax math & merge-sum per spec 09 precedence. | pending |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -51,12 +53,12 @@
 - [x] Storefront Livewire: Home, Collections Index/Show, Products Show, Pages Show
 
 ### Phase 4 — Cart / Checkout / Discounts / Shipping / Taxes
-- [ ] Models: Cart, CartLine, Checkout, ShippingZone, ShippingRate, TaxSettings, Discount
-- [ ] CartService, DiscountService, ShippingCalculator, TaxCalculator, PricingEngine, CheckoutService
-- [ ] Value objects: PricingResult, TaxLine, Address, etc.
-- [ ] Jobs: ExpireAbandonedCheckouts, CleanupAbandonedCarts
-- [ ] Storefront cart/checkout Livewire UI + REST API endpoints
-- [ ] Tests: PricingEngineTest, DiscountCalculatorTest, TaxCalculatorTest, ShippingCalculatorTest, CartVersionTest, CartServiceTest, CartApiTest, CheckoutFlowTest, CheckoutStateTest, PricingIntegrationTest, DiscountTest, ShippingTest, TaxTest
+- [x] Models: Cart, CartLine, Checkout, ShippingZone, ShippingRate, TaxSettings, Discount
+- [x] CartService, DiscountService, ShippingCalculator, TaxCalculator, PricingEngine, CheckoutService
+- [x] Value objects: PricingResult, TaxLine, Address, etc.
+- [x] Jobs: ExpireAbandonedCheckouts, CleanupAbandonedCarts
+- [x] Storefront cart/checkout Livewire UI + REST API endpoints
+- [x] Tests: PricingEngineTest, DiscountCalculatorTest, TaxCalculatorTest, ShippingCalculatorTest, CartVersionTest, CartServiceTest, CartApiTest, CheckoutFlowTest, CheckoutStateTest, PricingIntegrationTest, DiscountTest, ShippingTest, TaxTest
 
 ### Phase 5 — Payments / Orders / Fulfillment
 - [ ] Models: Customer, CustomerAddress, Order, OrderLine, Payment, Refund, Fulfillment, FulfillmentLine

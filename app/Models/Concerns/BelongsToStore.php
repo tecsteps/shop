@@ -3,7 +3,9 @@
 namespace App\Models\Concerns;
 
 use App\Models\Scopes\StoreScope;
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait BelongsToStore
 {
@@ -20,5 +22,15 @@ trait BelongsToStore
                 $model->setAttribute('store_id', app('current_store')->getKey());
             }
         });
+    }
+
+    /**
+     * Get the store that owns the model.
+     *
+     * @return BelongsTo<Store, $this>
+     */
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
     }
 }
