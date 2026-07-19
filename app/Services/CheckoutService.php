@@ -8,11 +8,14 @@ use App\Enums\PaymentMethod;
 use App\Events\CheckoutAddressed;
 use App\Events\CheckoutExpired;
 use App\Events\CheckoutShippingSelected;
+use App\Exceptions\InsufficientInventoryException;
 use App\Exceptions\InvalidCheckoutTransitionException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\Discount;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use App\Models\TaxSettings;
 use App\ValueObjects\Address;
@@ -28,9 +31,6 @@ use Illuminate\Validation\ValidationException;
  * started -> addressed -> shipping_selected -> payment_selected -> completed.
  * Any active state can transition to expired. Pricing is recalculated on
  * every significant state change and snapshotted to checkouts.totals_json.
- *
- * The final `payment_selected -> completed` transition (completeCheckout)
- * is implemented in Phase 5 together with payments and orders.
  */
 class CheckoutService
 {
@@ -40,6 +40,8 @@ class CheckoutService
         private ShippingCalculator $shipping,
         private TaxCalculator $taxCalculator,
         private InventoryService $inventory,
+        private PaymentService $payments,
+        private OrderService $orders,
     ) {}
 
     /**
@@ -200,6 +202,67 @@ class CheckoutService
         });
 
         return $checkout->refresh();
+    }
+
+    /**
+     * Transition payment_selected -> completed (spec 05 §6.2). Charges the
+     * payment via the Mock PSP and creates the order. IDEMPOTENT: repeated
+     * calls for the same checkout return the already-created order.
+     *
+     * On payment failure the reserved inventory is released (in its own
+     * transaction so the release is not rolled back by the thrown
+     * exception), the checkout stays payment_selected, and a
+     * PaymentFailedException is thrown. The reservation is refreshed
+     * (released + re-reserved) before every charge attempt so retries after
+     * a decline re-establish it and re-validate availability.
+     *
+     * @param  array<string, mixed>  $paymentDetails
+     *
+     * @throws InvalidCheckoutTransitionException|PaymentFailedException|InsufficientInventoryException
+     */
+    public function completeCheckout(Checkout $checkout, array $paymentDetails = []): Order
+    {
+        $this->assertStatus($checkout, [CheckoutStatus::PaymentSelected, CheckoutStatus::Completed], 'completeCheckout');
+
+        $existing = Order::query()->where('checkout_id', $checkout->id)->first();
+
+        if ($existing !== null) {
+            return $existing;
+        }
+
+        $checkout->loadMissing('cart.lines.variant.inventoryItem');
+
+        DB::transaction(function () use ($checkout): void {
+            foreach ($checkout->cart->lines as $line) {
+                $item = $line->variant?->inventoryItem;
+
+                if ($item !== null) {
+                    $this->inventory->release($item, $line->quantity);
+                    $this->inventory->reserve($item, $line->quantity);
+                }
+            }
+        });
+
+        $result = $this->payments->charge($checkout, $checkout->payment_method, $paymentDetails);
+
+        if (! $result->success) {
+            DB::transaction(function () use ($checkout): void {
+                foreach ($checkout->cart->lines as $line) {
+                    $item = $line->variant?->inventoryItem;
+
+                    if ($item !== null) {
+                        $this->inventory->release($item, $line->quantity);
+                    }
+                }
+            });
+
+            throw new PaymentFailedException(
+                $result->errorCode ?? 'payment_failed',
+                $result->errorMessage ?? 'The payment failed.',
+            );
+        }
+
+        return $this->orders->createFromCheckout($checkout, $result, $paymentDetails);
     }
 
     /**

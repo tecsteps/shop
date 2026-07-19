@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Storefront\Cart\Show as CartShow;
+use App\Livewire\Storefront\Checkout\Confirmation as CheckoutConfirmation;
 use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Livewire\Storefront\Collections\Index as CollectionsIndex;
 use App\Livewire\Storefront\Collections\Show as CollectionsShow;
@@ -17,5 +18,6 @@ Route::middleware(['store.resolve:storefront'])->group(function (): void {
     Route::livewire('/products/{handle}', ProductsShow::class)->name('storefront.products.show');
     Route::livewire('/cart', CartShow::class)->name('storefront.cart.show');
     Route::livewire('/checkout/{checkoutId}', CheckoutShow::class)->name('storefront.checkout.show');
+    Route::livewire('/checkout/{checkoutId}/confirmation', CheckoutConfirmation::class)->name('storefront.checkout.confirmation');
     Route::livewire('/pages/{handle}', PagesShow::class)->name('storefront.pages.show');
 });

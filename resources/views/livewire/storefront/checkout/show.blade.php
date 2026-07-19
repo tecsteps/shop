@@ -159,8 +159,8 @@
                             <fieldset class="space-y-3">
                                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300">Select a payment method</legend>
                                 @foreach (['credit_card' => 'Credit Card', 'paypal' => 'PayPal', 'bank_transfer' => 'Bank Transfer'] as $value => $label)
-                                    <label class="flex cursor-pointer items-center gap-3 rounded-md border px-4 py-3 {{ $paymentMethod === $value ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30' : 'border-gray-300 dark:border-gray-700' }}">
-                                        <input type="radio" wire:model.live="paymentMethod" value="{{ $value }}" class="text-blue-600 focus:ring-blue-500">
+                                    <label class="flex cursor-pointer items-center gap-3 rounded-md border px-4 py-3 {{ $paymentMethod === $value ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30' : 'border-gray-300 dark:border-gray-700' }} {{ $paymentSelected ? 'opacity-60' : '' }}">
+                                        <input type="radio" wire:model.live="paymentMethod" value="{{ $value }}" @if ($paymentSelected) disabled @endif class="text-blue-600 focus:ring-blue-500">
                                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $label }}</span>
                                     </label>
                                 @endforeach
@@ -174,14 +174,65 @@
                                     <span wire:loading wire:target="selectPayment">Reserving...</span>
                                 </button>
                             @else
-                                <p class="rounded-md bg-green-50 px-3 py-2 text-sm text-green-800 dark:bg-green-950 dark:text-green-200">
-                                    Payment method saved and inventory reserved.
-                                </p>
-                                <button type="button" disabled
-                                        class="w-full cursor-not-allowed rounded-md bg-gray-300 px-4 py-3 text-sm font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-500">
-                                    Pay now - {{ \App\Support\Money::format($summaryTotal, $summaryCurrency) }}
-                                </button>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Payment processing arrives with Phase 5. Your order cannot be placed yet.</p>
+                                @php $storedMethod = $checkout?->payment_method?->value ?? $paymentMethod; @endphp
+
+                                <form wire:submit="pay" class="space-y-4">
+                                    @if ($storedMethod === 'credit_card')
+                                        <div>
+                                            <label for="card-number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Card number <span aria-hidden="true" class="text-red-500">*</span></label>
+                                            <input id="card-number" type="text" inputmode="numeric" wire:model="cardNumber" placeholder="4242 4242 4242 4242" required
+                                                   class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                                                   aria-describedby="card-number-error">
+                                            @error('cardNumber') <p id="card-number-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                        </div>
+                                        <div>
+                                            <label for="card-holder" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cardholder name <span aria-hidden="true" class="text-red-500">*</span></label>
+                                            <input id="card-holder" type="text" wire:model="cardHolder" required
+                                                   class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                                                   aria-describedby="card-holder-error">
+                                            @error('cardHolder') <p id="card-holder-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="card-expiry" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Expiry (MM/YY) <span aria-hidden="true" class="text-red-500">*</span></label>
+                                                <input id="card-expiry" type="text" inputmode="numeric" wire:model="cardExpiry" placeholder="12/28" required
+                                                       class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                                                       aria-describedby="card-expiry-error">
+                                                @error('cardExpiry') <p id="card-expiry-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                            </div>
+                                            <div>
+                                                <label for="card-cvc" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CVC <span aria-hidden="true" class="text-red-500">*</span></label>
+                                                <input id="card-cvc" type="text" inputmode="numeric" wire:model="cardCvc" placeholder="123" required
+                                                       class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                                                       aria-describedby="card-cvc-error">
+                                                @error('cardCvc') <p id="card-cvc-error" class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
+                                            </div>
+                                        </div>
+                                    @elseif ($storedMethod === 'paypal')
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Your PayPal payment will be processed securely.</p>
+                                    @else
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">After placing your order, you will receive bank transfer instructions. Your order will be held while we await your payment.</p>
+                                    @endif
+
+                                    @if ($paymentError !== null)
+                                        <p role="alert" class="rounded-md bg-red-50 px-3 py-2 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">{{ $paymentError }}</p>
+                                    @endif
+
+                                    <button type="submit"
+                                            class="w-full rounded-md bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                                            wire:loading.attr="disabled">
+                                        <span wire:loading.remove wire:target="pay">
+                                            @if ($storedMethod === 'credit_card')
+                                                Pay now - {{ \App\Support\Money::format($summaryTotal, $summaryCurrency) }}
+                                            @elseif ($storedMethod === 'paypal')
+                                                Pay with PayPal - {{ \App\Support\Money::format($summaryTotal, $summaryCurrency) }}
+                                            @else
+                                                Place order - {{ \App\Support\Money::format($summaryTotal, $summaryCurrency) }}
+                                            @endif
+                                        </span>
+                                        <span wire:loading wire:target="pay">Processing...</span>
+                                    </button>
+                                </form>
                             @endif
                         </div>
                     @endif

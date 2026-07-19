@@ -19,6 +19,10 @@ trait ChecksStoreRole
             ->where('user_id', $user->getKey())
             ->value('role');
 
+        if ($role instanceof StoreUserRole) {
+            return $role;
+        }
+
         return $role === null ? null : StoreUserRole::from($role);
     }
 

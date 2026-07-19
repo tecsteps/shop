@@ -3,8 +3,16 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Contracts\PaymentProvider;
 use App\Enums\StoreUserRole;
+use App\Events\FulfillmentShipped;
+use App\Events\OrderCancelled;
+use App\Events\OrderCreated;
+use App\Events\OrderPaid;
+use App\Events\OrderRefunded;
+use App\Listeners\WriteAuditLog;
 use App\Models\User;
+use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -14,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(ThemeSettingsService::class);
+
+        // Mock PSP: in-process payment provider (spec 05 §10).
+        $this->app->bind(PaymentProvider::class, MockPaymentProvider::class);
     }
 
     /**
@@ -38,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureAuth();
         $this->configureGates();
         $this->configureRateLimiting();
+        $this->configureAuditLog();
 
         // Anonymous storefront components: <x-storefront::product-card ... />
         Blade::anonymousComponentPath(resource_path('views/storefront/components'), 'storefront');
@@ -109,6 +122,21 @@ class AppServiceProvider extends ServiceProvider
         $role = $user->roleForStore(app('current_store'));
 
         return $role !== null && in_array($role, $roles, true);
+    }
+
+    /**
+     * Register the audit log listener for order lifecycle events
+     * (spec 05 §17, spec 06 §4.6).
+     */
+    protected function configureAuditLog(): void
+    {
+        Event::listen([
+            OrderCreated::class,
+            OrderPaid::class,
+            OrderCancelled::class,
+            OrderRefunded::class,
+            FulfillmentShipped::class,
+        ], WriteAuditLog::class);
     }
 
     /**

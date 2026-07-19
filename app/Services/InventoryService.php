@@ -42,12 +42,16 @@ class InventoryService
     }
 
     /**
-     * Release a reservation (checkout expired/abandoned): reserved -= quantity.
+     * Release a reservation (checkout expired/abandoned, payment declined):
+     * reserved -= quantity. Floored at zero so double-release paths (e.g.
+     * release on payment failure followed by checkout expiry) can never
+     * drive reserved stock negative.
      */
     public function release(InventoryItem $item, int $quantity): void
     {
         DB::transaction(function () use ($item, $quantity): void {
-            $this->lockAndRefresh($item)->decrement('quantity_reserved', $quantity);
+            $locked = $this->lockAndRefresh($item);
+            $locked->decrement('quantity_reserved', min($quantity, $locked->quantity_reserved));
         });
     }
 

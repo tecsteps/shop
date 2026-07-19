@@ -3,6 +3,8 @@
 namespace App\Livewire\Storefront\Checkout;
 
 use App\Enums\CheckoutStatus;
+use App\Exceptions\InsufficientInventoryException;
+use App\Exceptions\PaymentFailedException;
 use App\Models\Checkout;
 use App\Services\CartService;
 use App\Services\CheckoutService;
@@ -18,8 +20,7 @@ use Livewire\Component;
  * Step 1 (contact + shipping address) runs under the "new" route parameter:
  * submitting it creates the checkout from the session cart and sets the
  * address, then redirects to /checkout/{id} for step 2 (shipping method)
- * and step 3 (payment method). The actual payment is Phase 5; the pay
- * button renders disabled with a placeholder note.
+ * and step 3 (payment method + pay via the Mock PSP).
  */
 class Show extends Component
 {
@@ -56,6 +57,16 @@ class Show extends Component
     public string $paymentMethod = 'credit_card';
 
     public bool $paymentSelected = false;
+
+    public string $cardNumber = '';
+
+    public string $cardExpiry = '';
+
+    public string $cardCvc = '';
+
+    public string $cardHolder = '';
+
+    public ?string $paymentError = null;
 
     public string $discountCode = '';
 
@@ -194,8 +205,7 @@ class Show extends Component
     }
 
     /**
-     * Step 3: record the payment method (reserves inventory). The actual
-     * payment processing ships in Phase 5.
+     * Step 3: record the payment method (reserves inventory).
      */
     public function selectPayment(): void
     {
@@ -208,6 +218,52 @@ class Show extends Component
         app(CheckoutService::class)->selectPaymentMethod($checkout, $this->paymentMethod);
 
         $this->paymentSelected = true;
+    }
+
+    /**
+     * Step 3 submit: charge the selected payment method and create the order
+     * (spec 04 §8.2). On decline the customer stays on the payment step and
+     * sees the error; on success they are redirected to the confirmation.
+     */
+    public function pay(): void
+    {
+        $this->paymentError = null;
+
+        $checkout = Checkout::findOrFail($this->checkoutDbId);
+        $method = $checkout->payment_method?->value ?? $this->paymentMethod;
+
+        $rules = [];
+
+        if ($method === 'credit_card') {
+            $rules = [
+                'cardNumber' => ['required', 'string', 'max:25'],
+                'cardExpiry' => ['required', 'string', 'max:7'],
+                'cardCvc' => ['required', 'string', 'max:4'],
+                'cardHolder' => ['required', 'string', 'max:255'],
+            ];
+        }
+
+        $this->validate($rules);
+
+        try {
+            app(CheckoutService::class)->completeCheckout($checkout, [
+                'payment_method' => $method,
+                'card_number' => $this->cardNumber,
+                'card_expiry' => $this->cardExpiry,
+                'card_cvc' => $this->cardCvc,
+                'card_holder' => $this->cardHolder,
+            ]);
+        } catch (PaymentFailedException $exception) {
+            $this->paymentError = 'Payment declined: '.$exception->getMessage();
+
+            return;
+        } catch (InsufficientInventoryException) {
+            $this->paymentError = 'Some items in your order are no longer available.';
+
+            return;
+        }
+
+        $this->redirectRoute('storefront.checkout.confirmation', ['checkoutId' => $checkout->id]);
     }
 
     /**

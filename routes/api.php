@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
+use App\Http\Controllers\Api\Storefront\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // Storefront API (cart, checkout, search). Endpoints are added in later phases.
@@ -24,7 +25,11 @@ Route::middleware(['store.resolve:storefront', 'throttle:api.storefront'])
             Route::put('/checkouts/{checkoutId}/payment-method', [CheckoutController::class, 'selectPaymentMethod']);
             Route::post('/checkouts/{checkoutId}/apply-discount', [CheckoutController::class, 'applyDiscount']);
             Route::delete('/checkouts/{checkoutId}/discount', [CheckoutController::class, 'removeDiscount']);
+            Route::post('/checkouts/{checkoutId}/pay', [CheckoutController::class, 'pay']);
         });
+
+        // Order status endpoint (spec 02 §2.4), token-authenticated.
+        Route::get('/orders/{orderNumber}', [OrderController::class, 'show']);
     });
 
 // Admin REST API (Sanctum personal access tokens). Endpoints are added in later phases.
