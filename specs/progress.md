@@ -15,30 +15,32 @@
 | # | Date | Phase | Summary | Commit |
 |---|------|-------|---------|--------|
 | 0 | 2026-07-19 | Setup | Project scaffolding: sanctum + pest-plugin-browser deps, .env.testing, Herd site links (acme-fashion.test, acme-electronics.test), starter-kit cleanup, Fortify removed | c002d312 |
-| 1 | 2026-07-19 | Phase 1 | Foundation: all 46-table migrations (+users rewrite), 28 enums, core models (Organization/Store/StoreDomain/StoreSettings/StoreUser/User/Customer), BelongsToStore+StoreScope, ResolveStore/CheckStoreRole/CustomerAuthenticate middleware, CustomerUserProvider, 11 policies, 9 gates, 7 rate limiters, route wiring (web/admin/api). 15 tests green. | pending |
+| 1 | 2026-07-19 | Phase 1 | Foundation: all 46-table migrations (+users rewrite), 28 enums, core models (Organization/Store/StoreDomain/StoreSettings/StoreUser/User/Customer), BelongsToStore+StoreScope, ResolveStore/CheckStoreRole/CustomerAuthenticate middleware, CustomerUserProvider, 11 policies, 9 gates, 7 rate limiters, route wiring (web/admin/api). 15 tests green. | 342ff904 |
 
 ---
+
+| 2 | 2026-07-19 | Phase 2 | Catalog: 7 models + factories, ProductService (state machine, SKU uniqueness), VariantMatrixService, InventoryService, HandleGenerator, SanitizeHtml, ProcessMediaUpload (GD). 78 tests green. | pending |
 
 ## Phase Checklist
 
 ### Phase 1 — Foundation
-- [ ] Config: database pragmas, session, cache, queue, auth (customer guard), logging (json + audit), cors
-- [ ] All 46-table migrations (spec 01, dependency order)
-- [ ] Core models: Organization, Store, StoreDomain, StoreUser, StoreSettings, User
-- [ ] Enums (all, spec 05 §21)
-- [ ] ResolveStore / CheckStoreRole / CustomerAuthenticate middleware
-- [ ] BelongsToStore trait + StoreScope
-- [ ] CustomerUserProvider
-- [ ] Policies + ChecksStoreRole trait + Gates
-- [ ] Rate limiters
-- [ ] Tests: Tenancy (TenantResolutionTest, StoreIsolationTest)
+- [x] Config: database pragmas, session, cache, queue, auth (customer guard), logging (json + audit), cors
+- [x] All 46-table migrations (spec 01, dependency order)
+- [x] Core models: Organization, Store, StoreDomain, StoreUser, StoreSettings, User
+- [x] Enums (all, spec 05 §21)
+- [x] ResolveStore / CheckStoreRole / CustomerAuthenticate middleware
+- [x] BelongsToStore trait + StoreScope
+- [x] CustomerUserProvider
+- [x] Policies + ChecksStoreRole trait + Gates
+- [x] Rate limiters
+- [x] Tests: Tenancy (TenantResolutionTest, StoreIsolationTest)
 
 ### Phase 2 — Catalog
-- [ ] Models: Product, ProductOption, ProductOptionValue, ProductVariant, InventoryItem, Collection, ProductMedia
-- [ ] ProductService, VariantMatrixService, InventoryService, HandleGenerator
-- [ ] ProcessMediaUpload job
-- [ ] SanitizeHtml action
-- [ ] Tests: ProductCrudTest, VariantTest, InventoryTest, CollectionTest, MediaUploadTest, HandleGeneratorTest
+- [x] Models: Product, ProductOption, ProductOptionValue, ProductVariant, InventoryItem, Collection, ProductMedia
+- [x] ProductService, VariantMatrixService, InventoryService, HandleGenerator
+- [x] ProcessMediaUpload job
+- [x] SanitizeHtml action
+- [x] Tests: ProductCrudTest, VariantTest, InventoryTest, CollectionTest, MediaUploadTest, HandleGeneratorTest
 
 ### Phase 3 — Themes / Pages / Navigation / Storefront layout
 - [ ] Models: Theme, ThemeFile, ThemeSettings, Page, NavigationMenu, NavigationItem

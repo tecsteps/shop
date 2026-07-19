@@ -45,3 +45,27 @@ function something()
 {
     // ..
 }
+
+/**
+ * Create a minimal order with a single order line referencing the given
+ * product/variant. Orders are Phase 5, so rows are inserted directly.
+ */
+function createOrderLineFor(App\Models\Store $store, App\Models\Product $product, ?App\Models\ProductVariant $variant = null): void
+{
+    $orderId = Illuminate\Support\Facades\DB::table('orders')->insertGetId([
+        'store_id' => $store->id,
+        'order_number' => 'ORD-'.Illuminate\Support\Str::random(10),
+        'payment_method' => 'credit_card',
+    ]);
+
+    Illuminate\Support\Facades\DB::table('order_lines')->insert([
+        'order_id' => $orderId,
+        'product_id' => $product->id,
+        'variant_id' => $variant?->id,
+        'title_snapshot' => $product->title,
+        'sku_snapshot' => $variant?->sku,
+        'quantity' => 1,
+        'unit_price_amount' => $variant?->price_amount ?? 0,
+        'total_amount' => $variant?->price_amount ?? 0,
+    ]);
+}
