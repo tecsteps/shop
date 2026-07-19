@@ -5,8 +5,11 @@ use App\Http\Controllers\Admin\Auth\LogoutController;
 use App\Livewire\Admin\Auth\ForgotPassword;
 use App\Livewire\Admin\Auth\Login;
 use App\Livewire\Admin\Auth\ResetPassword;
+use App\Livewire\Admin\Customers;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Discounts;
 use App\Livewire\Admin\Inventory;
+use App\Livewire\Admin\Orders;
 use App\Livewire\Admin\Products;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +30,16 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::livewire('/products/{product}/edit', Products\Form::class)->name('products.edit');
 
         Route::livewire('/inventory', Inventory\Index::class)->name('inventory.index');
+
+        Route::livewire('/orders', Orders\Index::class)->name('orders.index');
+        Route::livewire('/orders/{order}', Orders\Show::class)->name('orders.show');
+
+        Route::livewire('/customers', Customers\Index::class)->name('customers.index');
+        Route::livewire('/customers/{customer}', Customers\Show::class)->name('customers.show');
+
+        Route::livewire('/discounts', Discounts\Index::class)->name('discounts.index');
+        Route::livewire('/discounts/create', Discounts\Form::class)->name('discounts.create');
+        Route::livewire('/discounts/{discount}/edit', Discounts\Form::class)->name('discounts.edit');
     });
 });
 

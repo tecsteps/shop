@@ -81,6 +81,7 @@ class Breadcrumbs extends Component
         $trail[] = match ($action) {
             'create' => ['label' => 'Create', 'url' => null],
             'edit' => ['label' => $this->currentModelTitle($section) ?? 'Edit', 'url' => null],
+            'show' => ['label' => $this->currentModelTitle($section) ?? 'Details', 'url' => null],
             default => ['label' => ucfirst($action), 'url' => null],
         };
 
@@ -88,13 +89,24 @@ class Breadcrumbs extends Component
     }
 
     /**
-     * Resolve the title of the route-bound model for edit pages, e.g. the
-     * product title for "Home > Products > Blue T-Shirt".
+     * Resolve the title of the route-bound model for edit/show pages, e.g.
+     * the product title for "Home > Products > Blue T-Shirt" or the order
+     * number for "Home > Orders > #1001".
      */
     private function currentModelTitle(string $section): ?string
     {
         $model = request()->route($section === 'products' ? 'product' : rtrim($section, 's'));
 
-        return is_object($model) && isset($model->title) ? (string) $model->title : null;
+        if (! is_object($model)) {
+            return null;
+        }
+
+        foreach (['title', 'name', 'order_number', 'code', 'email'] as $attribute) {
+            if (isset($model->{$attribute}) && (string) $model->{$attribute} !== '') {
+                return (string) $model->{$attribute};
+            }
+        }
+
+        return null;
     }
 }
