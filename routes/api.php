@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
 use App\Http\Controllers\Api\Storefront\OrderController;
+use App\Http\Controllers\Api\Storefront\SearchController;
 use Illuminate\Support\Facades\Route;
 
 // Storefront API (cart, checkout, search). Endpoints are added in later phases.
@@ -30,6 +31,12 @@ Route::middleware(['store.resolve:storefront', 'throttle:api.storefront'])
 
         // Order status endpoint (spec 02 §2.4), token-authenticated.
         Route::get('/orders/{orderNumber}', [OrderController::class, 'show']);
+
+        // Search endpoints (spec 02 §2.5) with the stricter search rate limit on top.
+        Route::middleware('throttle:search')->group(function (): void {
+            Route::get('/search', [SearchController::class, 'index']);
+            Route::get('/search/suggest', [SearchController::class, 'suggest']);
+        });
     });
 
 // Admin REST API (Sanctum personal access tokens). Endpoints are added in later phases.

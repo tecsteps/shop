@@ -14,6 +14,7 @@ use App\Livewire\Admin\Navigation;
 use App\Livewire\Admin\Orders;
 use App\Livewire\Admin\Pages;
 use App\Livewire\Admin\Products;
+use App\Livewire\Admin\Search;
 use App\Livewire\Admin\Settings;
 use App\Livewire\Admin\Themes;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,8 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::livewire('/settings', Settings\Index::class)->name('settings.index');
         Route::livewire('/settings/shipping', Settings\Shipping::class)->name('settings.shipping');
         Route::livewire('/settings/taxes', Settings\Taxes::class)->name('settings.taxes');
+
+        Route::livewire('/search/settings', Search\Settings::class)->name('search.settings');
     });
 });
 

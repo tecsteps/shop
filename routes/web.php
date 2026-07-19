@@ -17,6 +17,7 @@ use App\Livewire\Storefront\Collections\Show as CollectionsShow;
 use App\Livewire\Storefront\Home;
 use App\Livewire\Storefront\Pages\Show as PagesShow;
 use App\Livewire\Storefront\Products\Show as ProductsShow;
+use App\Livewire\Storefront\Search\Index as SearchIndex;
 use Illuminate\Support\Facades\Route;
 
 // Storefront routes (spec 04).
@@ -26,6 +27,7 @@ Route::middleware(['store.resolve:storefront'])->group(function (): void {
     Route::livewire('/collections/{handle}', CollectionsShow::class)->name('storefront.collections.show');
     Route::livewire('/products/{handle}', ProductsShow::class)->name('storefront.products.show');
     Route::livewire('/cart', CartShow::class)->name('storefront.cart.show');
+    Route::livewire('/search', SearchIndex::class)->name('storefront.search');
     Route::livewire('/checkout/{checkoutId}', CheckoutShow::class)->name('storefront.checkout.show');
     Route::livewire('/checkout/{checkoutId}/confirmation', CheckoutConfirmation::class)->name('storefront.checkout.confirmation');
     Route::livewire('/pages/{handle}', PagesShow::class)->name('storefront.pages.show');

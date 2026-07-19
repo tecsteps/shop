@@ -13,7 +13,9 @@ use App\Events\OrderPaid;
 use App\Events\OrderRefunded;
 use App\Listeners\WriteAuditLog;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Models\User;
+use App\Observers\ProductObserver;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
@@ -55,6 +57,9 @@ class AppServiceProvider extends ServiceProvider
         $this->configureGates();
         $this->configureRateLimiting();
         $this->configureAuditLog();
+
+        // Keep the products_fts full-text index in sync (spec 05 §16.2).
+        Product::observe(ProductObserver::class);
 
         // Anonymous storefront components: <x-storefront::product-card ... />
         Blade::anonymousComponentPath(resource_path('views/storefront/components'), 'storefront');

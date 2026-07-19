@@ -275,6 +275,9 @@
         </div>
     </div>
 
+    {{-- Search modal (spec 04 §11.1) --}}
+    <livewire:storefront.search.modal />
+
     @fluxScripts
 </body>
 </html>
