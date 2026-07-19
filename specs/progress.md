@@ -29,6 +29,8 @@
 
 | 6 | 2026-07-19 | Phase 6 | Admin auth (login/logout/forgot/reset, rate-limited, session regen, current_store_id) + customer auth (login/register/forgot/reset, store-scoped token repository, cart merge on login) + account pages (dashboard/orders/addresses) + email verification routes. 342 tests green. | pending |
 
+| 7 | 2026-07-19 | Phase 7 | Admin panel complete: layout shell (sidebar/topbar/breadcrumbs/toasts), dashboard (KPIs, chart), products (form + variants + media), inventory, orders (fulfill/refund/confirm/cancel), customers, discounts, collections, pages, navigation, settings (general/domains/shipping/taxes/checkout/notifications), themes + editor. 462 tests green. | 9b32c262 |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -78,12 +80,12 @@
 - [x] Tests: AdminAuthTest, CustomerAuthTest, SanctumTokenTest, CustomerAccountTest, AddressManagementTest
 
 ### Phase 7 — Admin Panel
-- [ ] Admin layout (sidebar, topbar, breadcrumbs, toasts)
-- [ ] Dashboard (KPIs, chart, recent orders)
-- [ ] Products (index, form with variants builder, media upload)
-- [ ] Orders (index, show with fulfillment/refund modals, confirm payment)
-- [ ] Collections, Customers, Discounts, Settings (general/domains/shipping/taxes), Themes, Pages, Navigation, Inventory
-- [ ] Tests: DashboardTest, ProductManagementTest, OrderManagementTest, DiscountManagementTest, SettingsTest
+- [x] Admin layout (sidebar, topbar, breadcrumbs, toasts)
+- [x] Dashboard (KPIs, chart, recent orders)
+- [x] Products (index, form with variants builder, media upload)
+- [x] Orders (index, show with fulfillment/refund modals, confirm payment)
+- [x] Collections, Customers, Discounts, Settings (general/domains/shipping/taxes), Themes, Pages, Navigation, Inventory
+- [x] Tests: DashboardTest, ProductManagementTest, OrderManagementTest, DiscountManagementTest, SettingsTest
 
 ### Phase 8 — Search
 - [ ] FTS5 migration (products_fts), SearchService, ProductObserver
