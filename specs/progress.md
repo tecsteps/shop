@@ -21,6 +21,8 @@
 
 | 2 | 2026-07-19 | Phase 2 | Catalog: 7 models + factories, ProductService (state machine, SKU uniqueness), VariantMatrixService, InventoryService, HandleGenerator, SanitizeHtml, ProcessMediaUpload (GD). 78 tests green. | pending |
 
+| 3 | 2026-07-19 | Phase 3 | Themes/pages/navigation models + NavigationService + ThemeSettingsService + Money helper; storefront layout (dark mode, a11y) + components; Home/Collections/Products/Pages Livewire; real-env smoke OK (200s + 404). 105 tests green. | pending |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -43,10 +45,10 @@
 - [x] Tests: ProductCrudTest, VariantTest, InventoryTest, CollectionTest, MediaUploadTest, HandleGeneratorTest
 
 ### Phase 3 — Themes / Pages / Navigation / Storefront layout
-- [ ] Models: Theme, ThemeFile, ThemeSettings, Page, NavigationMenu, NavigationItem
-- [ ] NavigationService, ThemeSettings service
-- [ ] Storefront layout + components (product-card, price, badge, etc.)
-- [ ] Storefront Livewire: Home, Collections Index/Show, Products Show, Pages Show
+- [x] Models: Theme, ThemeFile, ThemeSettings, Page, NavigationMenu, NavigationItem
+- [x] NavigationService, ThemeSettings service
+- [x] Storefront layout + components (product-card, price, badge, etc.)
+- [x] Storefront Livewire: Home, Collections Index/Show, Products Show, Pages Show
 
 ### Phase 4 — Cart / Checkout / Discounts / Shipping / Taxes
 - [ ] Models: Cart, CartLine, Checkout, ShippingZone, ShippingRate, TaxSettings, Discount

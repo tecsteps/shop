@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Auth\CustomerUserProvider;
 use App\Enums\StoreUserRole;
 use App\Models\User;
+use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -24,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ThemeSettingsService::class);
     }
 
     /**
@@ -36,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
         $this->configureAuth();
         $this->configureGates();
         $this->configureRateLimiting();
+
+        // Anonymous storefront components: <x-storefront::product-card ... />
+        Blade::anonymousComponentPath(resource_path('views/storefront/components'), 'storefront');
     }
 
     /**
