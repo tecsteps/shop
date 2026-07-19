@@ -2,12 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-require __DIR__.'/settings.php';
+// Storefront routes (Phase 3 replaces the placeholder with real pages).
+Route::middleware(['store.resolve:storefront'])->group(function (): void {
+    Route::get('/', fn (): string => 'storefront ok');
+});

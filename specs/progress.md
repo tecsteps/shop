@@ -14,7 +14,8 @@
 
 | # | Date | Phase | Summary | Commit |
 |---|------|-------|---------|--------|
-| 0 | 2026-07-19 | Setup | Project scaffolding: sanctum + pest-plugin-browser deps, .env.testing, Herd site links (acme-fashion.test, acme-electronics.test), starter-kit cleanup | - |
+| 0 | 2026-07-19 | Setup | Project scaffolding: sanctum + pest-plugin-browser deps, .env.testing, Herd site links (acme-fashion.test, acme-electronics.test), starter-kit cleanup, Fortify removed | c002d312 |
+| 1 | 2026-07-19 | Phase 1 | Foundation: all 46-table migrations (+users rewrite), 28 enums, core models (Organization/Store/StoreDomain/StoreSettings/StoreUser/User/Customer), BelongsToStore+StoreScope, ResolveStore/CheckStoreRole/CustomerAuthenticate middleware, CustomerUserProvider, 11 policies, 9 gates, 7 rate limiters, route wiring (web/admin/api). 15 tests green. | pending |
 
 ---
 

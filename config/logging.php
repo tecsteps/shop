@@ -73,6 +73,23 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'json' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/json.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'formatter' => Monolog\Formatter\JsonFormatter::class,
+            'replace_placeholders' => true,
+        ],
+
+        'audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/audit.log'),
+            'level' => 'info',
+            'days' => 90,
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
