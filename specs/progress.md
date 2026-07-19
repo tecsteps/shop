@@ -27,6 +27,8 @@
 
 | 5 | 2026-07-19 | Phase 5 | Payments/orders/fulfillment/customers: MockPaymentProvider, PaymentService, OrderService (atomic creation, numbering, idempotency, digital auto-fulfill), RefundService, FulfillmentService (guard), 9 events + listeners, /pay + order-status APIs, checkout payment step + confirmation UI. 294 tests green. | b55fd22e |
 
+| 6 | 2026-07-19 | Phase 6 | Admin auth (login/logout/forgot/reset, rate-limited, session regen, current_store_id) + customer auth (login/register/forgot/reset, store-scoped token repository, cart merge on login) + account pages (dashboard/orders/addresses) + email verification routes. 342 tests green. | pending |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -70,10 +72,10 @@
 - [x] Tests: OrderCreationTest, RefundTest, FulfillmentTest, MockPaymentProviderTest, PaymentServiceTest, BankTransferConfirmationTest
 
 ### Phase 6 — Customer Accounts + Auth UI
-- [ ] Admin auth: Login, Logout, ForgotPassword, ResetPassword (Livewire)
-- [ ] Customer auth: Login, Register, ForgotPassword, ResetPassword (Livewire)
-- [ ] Account pages: Dashboard, Orders Index/Show, Addresses Index
-- [ ] Tests: AdminAuthTest, CustomerAuthTest, SanctumTokenTest, CustomerAccountTest, AddressManagementTest
+- [x] Admin auth: Login, Logout, ForgotPassword, ResetPassword (Livewire)
+- [x] Customer auth: Login, Register, ForgotPassword, ResetPassword (Livewire)
+- [x] Account pages: Dashboard, Orders Index/Show, Addresses Index
+- [x] Tests: AdminAuthTest, CustomerAuthTest, SanctumTokenTest, CustomerAccountTest, AddressManagementTest
 
 ### Phase 7 — Admin Panel
 - [ ] Admin layout (sidebar, topbar, breadcrumbs, toasts)

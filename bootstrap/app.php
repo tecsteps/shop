@@ -24,6 +24,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'role.check' => CheckStoreRole::class,
             'auth.customer' => CustomerAuthenticate::class,
         ]);
+
+        // Guests hitting the admin panel go to the admin login; everything
+        // else is storefront-facing and goes to the customer login.
+        $middleware->redirectGuestsTo(
+            fn (Illuminate\Http\Request $request): string => $request->is('admin', 'admin/*') ? '/admin/login' : '/account/login',
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Cart optimistic-concurrency conflicts return 409 with the current

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Auth\CustomerPasswordBrokerManager;
 use App\Auth\CustomerUserProvider;
 use App\Contracts\PaymentProvider;
 use App\Enums\StoreUserRole;
@@ -11,11 +12,14 @@ use App\Events\OrderCreated;
 use App\Events\OrderPaid;
 use App\Events\OrderRefunded;
 use App\Listeners\WriteAuditLog;
+use App\Models\Customer;
 use App\Models\User;
 use App\Services\Payments\MockPaymentProvider;
 use App\Services\ThemeSettingsService;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +58,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Anonymous storefront components: <x-storefront::product-card ... />
         Blade::anonymousComponentPath(resource_path('views/storefront/components'), 'storefront');
+
+        // Anonymous admin views (layouts): <x-admin::layouts.auth ... />
+        Blade::anonymousComponentPath(resource_path('views/admin'), 'admin');
     }
 
     /**
@@ -85,6 +92,29 @@ class AppServiceProvider extends ServiceProvider
     {
         Auth::provider('customer', function (Application $app, array $config): CustomerUserProvider {
             return new CustomerUserProvider($app['hash'], $config['model']);
+        });
+
+        // Store-scoped password broker for storefront customers (spec 06 §1.2).
+        // The framework's PasswordResetServiceProvider is deferred and would
+        // lazily rebind these services on first resolution, so its deferred
+        // entries are removed in favour of this binding. This must run in
+        // boot(): the deferred service map is only populated after all
+        // register() calls.
+        $this->app->removeDeferredServices(['auth.password', 'auth.password.broker']);
+        $this->app->singleton('auth.password', fn ($app): CustomerPasswordBrokerManager => new CustomerPasswordBrokerManager($app));
+        $this->app->bind('auth.password.broker', fn ($app) => $app['auth.password']->broker());
+
+        // Password reset links point at the admin form for users and at the
+        // storefront form for customers (spec 06 §1.1/§1.2).
+        ResetPasswordNotification::createUrlUsing(function (Authenticatable $notifiable, string $token): string {
+            $route = $notifiable instanceof Customer
+                ? 'storefront.password.reset'
+                : 'admin.password.reset';
+
+            return route($route, [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ]);
         });
     }
 
