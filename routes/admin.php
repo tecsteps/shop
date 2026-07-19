@@ -5,12 +5,17 @@ use App\Http\Controllers\Admin\Auth\LogoutController;
 use App\Livewire\Admin\Auth\ForgotPassword;
 use App\Livewire\Admin\Auth\Login;
 use App\Livewire\Admin\Auth\ResetPassword;
+use App\Livewire\Admin\Collections;
 use App\Livewire\Admin\Customers;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Discounts;
 use App\Livewire\Admin\Inventory;
+use App\Livewire\Admin\Navigation;
 use App\Livewire\Admin\Orders;
+use App\Livewire\Admin\Pages;
 use App\Livewire\Admin\Products;
+use App\Livewire\Admin\Settings;
+use App\Livewire\Admin\Themes;
 use Illuminate\Support\Facades\Route;
 
 // Admin panel routes. Loaded inside the "web" middleware group (see bootstrap/app.php).
@@ -29,6 +34,10 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::livewire('/products/create', Products\Form::class)->name('products.create');
         Route::livewire('/products/{product}/edit', Products\Form::class)->name('products.edit');
 
+        Route::livewire('/collections', Collections\Index::class)->name('collections.index');
+        Route::livewire('/collections/create', Collections\Form::class)->name('collections.create');
+        Route::livewire('/collections/{collection}/edit', Collections\Form::class)->name('collections.edit');
+
         Route::livewire('/inventory', Inventory\Index::class)->name('inventory.index');
 
         Route::livewire('/orders', Orders\Index::class)->name('orders.index');
@@ -40,6 +49,19 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::livewire('/discounts', Discounts\Index::class)->name('discounts.index');
         Route::livewire('/discounts/create', Discounts\Form::class)->name('discounts.create');
         Route::livewire('/discounts/{discount}/edit', Discounts\Form::class)->name('discounts.edit');
+
+        Route::livewire('/pages', Pages\Index::class)->name('pages.index');
+        Route::livewire('/pages/create', Pages\Form::class)->name('pages.create');
+        Route::livewire('/pages/{page}/edit', Pages\Form::class)->name('pages.edit');
+
+        Route::livewire('/navigation', Navigation\Index::class)->name('navigation.index');
+
+        Route::livewire('/themes', Themes\Index::class)->name('themes.index');
+        Route::livewire('/themes/{theme}/editor', Themes\Editor::class)->name('themes.editor');
+
+        Route::livewire('/settings', Settings\Index::class)->name('settings.index');
+        Route::livewire('/settings/shipping', Settings\Shipping::class)->name('settings.shipping');
+        Route::livewire('/settings/taxes', Settings\Taxes::class)->name('settings.taxes');
     });
 });
 

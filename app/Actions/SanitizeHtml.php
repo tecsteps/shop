@@ -89,9 +89,11 @@ class SanitizeHtml
             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING
         );
 
-        // Remove the encoding workaround processing instruction.
+        // Remove the encoding workaround processing instruction. With
+        // LIBXML_HTML_NOIMPLIED it can surface as a comment node instead.
         foreach (iterator_to_array($document->childNodes) as $child) {
-            if ($child instanceof \DOMProcessingInstruction) {
+            if ($child instanceof \DOMProcessingInstruction
+                || ($child instanceof \DOMComment && str_contains($child->nodeValue ?? '', '?xml encoding'))) {
                 $document->removeChild($child);
             }
         }
