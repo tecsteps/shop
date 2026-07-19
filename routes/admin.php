@@ -5,6 +5,9 @@ use App\Http\Controllers\Admin\Auth\LogoutController;
 use App\Livewire\Admin\Auth\ForgotPassword;
 use App\Livewire\Admin\Auth\Login;
 use App\Livewire\Admin\Auth\ResetPassword;
+use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Inventory;
+use App\Livewire\Admin\Products;
 use Illuminate\Support\Facades\Route;
 
 // Admin panel routes. Loaded inside the "web" middleware group (see bootstrap/app.php).
@@ -17,7 +20,13 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
     Route::post('/logout', LogoutController::class)->name('logout');
 
     Route::middleware(['auth', 'verified', 'store.resolve:admin', 'role.check:owner,admin,staff,support'])->group(function (): void {
-        Route::get('/', fn (): string => 'admin ok')->name('dashboard');
+        Route::livewire('/', Dashboard::class)->name('dashboard');
+
+        Route::livewire('/products', Products\Index::class)->name('products.index');
+        Route::livewire('/products/create', Products\Form::class)->name('products.create');
+        Route::livewire('/products/{product}/edit', Products\Form::class)->name('products.edit');
+
+        Route::livewire('/inventory', Inventory\Index::class)->name('inventory.index');
     });
 });
 

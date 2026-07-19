@@ -124,7 +124,7 @@ test('unverified admins are sent to the verification notice', function () {
         ->assertSee('Verify your email');
 });
 
-test('authenticated admins reach the dashboard placeholder', function () {
+test('authenticated admins reach the dashboard', function () {
     $store = $this->createStore();
     $user = $this->createUserWithRole($store, 'owner');
 
@@ -132,7 +132,7 @@ test('authenticated admins reach the dashboard placeholder', function () {
         ->withSession(['current_store_id' => $store->id])
         ->get('/admin')
         ->assertOk()
-        ->assertSee('admin ok');
+        ->assertSee('Dashboard');
 });
 
 test('authenticated admins are redirected away from the login page', function () {
