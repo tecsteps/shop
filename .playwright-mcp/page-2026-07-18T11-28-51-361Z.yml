@@ -1,0 +1,144 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to main content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f1e3]:
+    - generic [ref=f1e4]:
+      - link "Acme Fashion" [ref=f1e5] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main" [ref=f1e6]:
+        - link "Home" [ref=f1e7] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f1e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/new-arrivals
+        - link "T-Shirts" [ref=f1e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/t-shirts
+        - link "Pants & Jeans" [ref=f1e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/pants-jeans
+        - link "Sale" [ref=f1e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/sale
+      - generic [ref=f1e12]:
+        - link "Search" [ref=f1e13] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - generic [ref=f1e16]:
+          - button "Open cart" [ref=f1e17]:
+            - generic [ref=f1e126]: "1"
+          - dialog "Shopping cart" [ref=f1e127]:
+            - generic [ref=f1e129]:
+              - generic [ref=f1e130]:
+                - heading "Your Cart (1)" [level=2] [ref=f1e131]
+                - button "Close cart" [ref=f1e132]
+              - list [ref=f1e136]:
+                - listitem [ref=f1e137]:
+                  - generic [ref=f1e139]:
+                    - paragraph [ref=f1e140]: Classic Cotton T-Shirt
+                    - paragraph [ref=f1e141]: S / White
+                    - generic [ref=f1e142]:
+                      - generic [ref=f1e143]:
+                        - button "Decrease quantity" [disabled] [ref=f1e144]
+                        - generic [ref=f1e146]: Quantity
+                        - spinbutton "Quantity" [ref=f1e147]: "1"
+                        - button "Increase quantity" [ref=f1e148]
+                      - generic [ref=f1e151]: 24.99 EUR
+                  - button "Remove Classic Cotton T-Shirt from cart" [ref=f1e153]
+              - generic [ref=f1e156]:
+                - generic [ref=f1e157]:
+                  - textbox "Discount code" [ref=f1e159]
+                  - button "Apply" [ref=f1e160]
+                - generic [ref=f1e166]:
+                  - generic [ref=f1e167]:
+                    - term [ref=f1e168]: Subtotal
+                    - definition [ref=f1e169]:
+                      - generic [ref=f1e170]: 24.99 EUR
+                  - generic [ref=f1e172]:
+                    - term [ref=f1e173]: Estimated total
+                    - definition [ref=f1e174]:
+                      - generic [ref=f1e175]: 24.99 EUR
+                - paragraph [ref=f1e177]: Shipping and taxes calculated at checkout.
+                - button "Checkout" [ref=f1e178]
+                - button "Continue shopping" [ref=f1e185]
+        - link "Account" [ref=f1e20] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f1e23]:
+    - generic [ref=f1e24]:
+      - navigation "Breadcrumb" [ref=f1e25]:
+        - list [ref=f1e26]:
+          - listitem [ref=f1e27]:
+            - link "Home" [ref=f1e28] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+            - generic [ref=f1e29]: /
+          - listitem [ref=f1e30]:
+            - link "New Arrivals" [ref=f1e31] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+            - generic [ref=f1e32]: /
+          - listitem [ref=f1e33]:
+            - generic [ref=f1e34]: Classic Cotton T-Shirt
+      - generic [ref=f1e35]:
+        - region "Product images" [ref=f1e36]
+        - generic [ref=f1e41]:
+          - heading "Classic Cotton T-Shirt" [level=1] [ref=f1e42]
+          - generic [ref=f1e43]: 24.99 EUR
+          - group "Size" [ref=f1e46]:
+            - generic [ref=f1e48]:
+              - button "S" [pressed] [ref=f1e49]
+              - button "M" [ref=f1e50]
+              - button "L" [ref=f1e51]
+              - button "XL" [ref=f1e52]
+          - group "Color" [ref=f1e53]:
+            - generic [ref=f1e55]:
+              - button "White" [pressed] [ref=f1e56]
+              - button "Black" [ref=f1e57]
+              - button "Navy" [ref=f1e58]
+          - generic [ref=f1e59]: In stock
+          - generic [ref=f1e64]:
+            - button "Decrease quantity" [disabled] [ref=f1e65]
+            - generic [ref=f1e67]: Quantity
+            - spinbutton "Quantity" [ref=f1e68]: "1"
+            - button "Increase quantity" [ref=f1e69]
+          - button "Add to cart" [ref=f1e72]
+          - status [ref=f1e186]: Added to cart
+          - paragraph [ref=f1e79]: A timeless classic cotton t-shirt. Comfortable, breathable, and perfect for everyday wear.
+          - generic [ref=f1e80]:
+            - generic [ref=f1e81]: new
+            - generic [ref=f1e82]: popular
+  - contentinfo [ref=f1e83]:
+    - generic [ref=f1e84]:
+      - generic [ref=f1e85]:
+        - generic [ref=f1e86]:
+          - heading "Shop" [level=3] [ref=f1e87]
+          - list [ref=f1e88]:
+            - listitem [ref=f1e89]:
+              - link "About Us" [ref=f1e90] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/about
+            - listitem [ref=f1e91]:
+              - link "FAQ" [ref=f1e92] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/faq
+            - listitem [ref=f1e93]:
+              - link "Shipping & Returns" [ref=f1e94] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/shipping-returns
+            - listitem [ref=f1e95]:
+              - link "Privacy Policy" [ref=f1e96] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/privacy-policy
+            - listitem [ref=f1e97]:
+              - link "Terms of Service" [ref=f1e98] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/terms
+        - generic [ref=f1e99]:
+          - heading "Acme Fashion" [level=3] [ref=f1e100]
+          - paragraph [ref=f1e102]: Acme Fashion
+          - generic [ref=f1e103]:
+            - link "Acme Fashion on Facebook" [ref=f1e104] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Instagram" [ref=f1e107] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Twitter/X" [ref=f1e110] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on TikTok" [ref=f1e113] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on YouTube" [ref=f1e116] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=f1e119]:
+        - paragraph [ref=f1e120]: © 2026 Acme Fashion. All rights reserved.
+        - generic [ref=f1e121]:
+          - generic [ref=f1e122]: Visa
+          - generic [ref=f1e123]: Mastercard
+          - generic [ref=f1e124]: Amex
+          - generic [ref=f1e125]: PayPal

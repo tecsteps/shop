@@ -1,0 +1,112 @@
+- generic [active] [ref=f2e1]:
+  - link "Skip to main content" [ref=f2e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f2e3]:
+    - generic [ref=f2e4]:
+      - link "Acme Fashion" [ref=f2e5] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main" [ref=f2e6]:
+        - link "Home" [ref=f2e7] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f2e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/new-arrivals
+        - link "T-Shirts" [ref=f2e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/t-shirts
+        - link "Pants & Jeans" [ref=f2e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/pants-jeans
+        - link "Sale" [ref=f2e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/sale
+      - generic [ref=f2e12]:
+        - link "Search" [ref=f2e13] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - button "Open cart" [ref=f2e17]:
+          - generic [ref=f2e20]: "1"
+        - link "Account" [ref=f2e21] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f2e24]:
+    - generic [ref=f2e25]:
+      - heading "Your Cart" [level=1] [ref=f2e26]
+      - generic [ref=f2e27]:
+        - table [ref=f2e29]:
+          - rowgroup [ref=f2e30]:
+            - row [ref=f2e31]:
+              - columnheader "Product" [ref=f2e32]
+              - columnheader "Price" [ref=f2e33]
+              - columnheader "Quantity" [ref=f2e34]
+              - columnheader "Total" [ref=f2e35]
+              - columnheader "Remove" [ref=f2e36]
+          - rowgroup [ref=f2e38]:
+            - row [ref=f2e39]:
+              - cell "Classic Cotton T-Shirt S / White" [ref=f2e40]:
+                - generic [ref=f2e43]:
+                  - paragraph [ref=f2e44]: Classic Cotton T-Shirt
+                  - paragraph [ref=f2e45]: S / White
+              - cell "24.99 EUR" [ref=f2e46]
+              - cell "Decrease quantity Quantity Increase quantity" [ref=f2e49]:
+                - generic [ref=f2e50]:
+                  - button "Decrease quantity" [disabled] [ref=f2e51]
+                  - generic [ref=f2e53]: Quantity
+                  - spinbutton [ref=f2e54]: "1"
+                  - button "Increase quantity" [ref=f2e55]
+              - cell "24.99 EUR" [ref=f2e58]
+              - cell [ref=f2e61]:
+                - button "Remove Classic Cotton T-Shirt from cart" [ref=f2e62]
+        - generic [ref=f2e66]:
+          - generic [ref=f2e67]:
+            - textbox "Discount code" [ref=f2e69]
+            - button "Apply" [ref=f2e70]
+          - generic [ref=f2e76]:
+            - generic [ref=f2e77]:
+              - term [ref=f2e78]: Subtotal
+              - definition [ref=f2e79]:
+                - generic [ref=f2e80]: 24.99 EUR
+            - generic [ref=f2e82]:
+              - term [ref=f2e83]: Total
+              - definition [ref=f2e84]:
+                - generic [ref=f2e85]: 24.99 EUR
+          - paragraph [ref=f2e87]: Shipping and taxes calculated at checkout.
+          - button "Checkout" [ref=f2e88]
+          - link "Continue shopping" [ref=f2e95] [cursor=pointer]:
+            - /url: http://acme-fashion.test
+  - contentinfo [ref=f2e96]:
+    - generic [ref=f2e97]:
+      - generic [ref=f2e98]:
+        - generic [ref=f2e99]:
+          - heading "Shop" [level=3] [ref=f2e100]
+          - list [ref=f2e101]:
+            - listitem [ref=f2e102]:
+              - link "About Us" [ref=f2e103] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/about
+            - listitem [ref=f2e104]:
+              - link "FAQ" [ref=f2e105] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/faq
+            - listitem [ref=f2e106]:
+              - link "Shipping & Returns" [ref=f2e107] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/shipping-returns
+            - listitem [ref=f2e108]:
+              - link "Privacy Policy" [ref=f2e109] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/privacy-policy
+            - listitem [ref=f2e110]:
+              - link "Terms of Service" [ref=f2e111] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/terms
+        - generic [ref=f2e112]:
+          - heading "Acme Fashion" [level=3] [ref=f2e113]
+          - paragraph [ref=f2e115]: Acme Fashion
+          - generic [ref=f2e116]:
+            - link "Acme Fashion on Facebook" [ref=f2e117] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Instagram" [ref=f2e120] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Twitter/X" [ref=f2e123] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on TikTok" [ref=f2e126] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on YouTube" [ref=f2e129] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=f2e132]:
+        - paragraph [ref=f2e133]: © 2026 Acme Fashion. All rights reserved.
+        - generic [ref=f2e134]:
+          - generic [ref=f2e135]: Visa
+          - generic [ref=f2e136]: Mastercard
+          - generic [ref=f2e137]: Amex
+          - generic [ref=f2e138]: PayPal

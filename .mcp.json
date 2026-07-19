@@ -3,8 +3,14 @@
         "laravel-boost": {
             "command": "php",
             "args": [
-                "./artisan",
+                "artisan",
                 "boost:mcp"
+            ]
+        },
+        "playwright": {
+            "command": "npx",
+            "args": [
+                "@playwright/mcp@latest"
             ]
         },
         "herd": {

@@ -1,0 +1,159 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Acme Fashion" [ref=e5] [cursor=pointer]:
+        - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev
+      - navigation "Main" [ref=e6]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=e8] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/new-arrivals
+        - link "T-Shirts" [ref=e9] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/t-shirts
+        - link "Pants & Jeans" [ref=e10] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/pants-jeans
+        - link "Sale" [ref=e11] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/sale
+      - generic [ref=e12]:
+        - link "Search" [ref=e13] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/search
+        - button "Open cart" [ref=e17]
+        - link "Account" [ref=e20] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/account/login
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - generic [ref=e26]:
+        - heading "Welcome to Acme Fashion" [level=1] [ref=e27]
+        - paragraph [ref=e28]: Discover our latest collections and find something you'll love.
+        - link "Shop now" [ref=e30] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections
+      - generic [ref=e31]:
+        - heading "Shop by Collection" [level=2] [ref=e32]
+        - generic [ref=e33]:
+          - link [ref=e34] [cursor=pointer]:
+            - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/new-arrivals
+            - paragraph [ref=e36]: New Arrivals
+          - link [ref=e37] [cursor=pointer]:
+            - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/pants-jeans
+            - paragraph [ref=e39]: Pants & Jeans
+          - link [ref=e40] [cursor=pointer]:
+            - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/sale
+            - paragraph [ref=e42]: Sale
+          - link [ref=e43] [cursor=pointer]:
+            - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/t-shirts
+            - paragraph [ref=e45]: T-Shirts
+      - generic [ref=e46]:
+        - heading "Featured Products" [level=2] [ref=e47]
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - link [ref=e50] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/cashmere-overcoat
+              - heading "Cashmere Overcoat" [level=3] [ref=e55]
+            - generic [ref=e56]: 499.99 EUR
+            - link "Choose options" [ref=e59] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/cashmere-overcoat
+          - generic [ref=e60]:
+            - link [ref=e61] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/gift-card
+              - heading "Gift Card" [level=3] [ref=e66]
+            - generic [ref=e67]: 25.00 EUR
+            - link "Choose options" [ref=e70] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/gift-card
+          - generic [ref=e71]:
+            - link [ref=e72] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/backorder-denim-jacket
+              - heading "Backorder Denim Jacket" [level=3] [ref=e77]
+            - generic [ref=e78]: 99.99 EUR
+            - link "Choose options" [ref=e81] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/backorder-denim-jacket
+          - generic [ref=e82]:
+            - link "Sold out Limited Edition Sneakers" [ref=e83] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/limited-edition-sneakers
+              - generic [ref=e84]: Sold out
+              - heading "Limited Edition Sneakers" [level=3] [ref=e90]
+            - generic [ref=e91]: 159.99 EUR
+            - link "Choose options" [ref=e94] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/limited-edition-sneakers
+          - generic [ref=e95]:
+            - link [ref=e96] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/bucket-hat
+              - heading "Bucket Hat" [level=3] [ref=e101]
+            - generic [ref=e102]: 24.99 EUR
+            - link "Choose options" [ref=e105] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/bucket-hat
+          - generic [ref=e106]:
+            - link [ref=e107] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/canvas-tote-bag
+              - heading "Canvas Tote Bag" [level=3] [ref=e112]
+            - generic [ref=e113]: 19.99 EUR
+            - link "Choose options" [ref=e116] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/canvas-tote-bag
+          - generic [ref=e117]:
+            - link [ref=e118] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/wool-scarf
+              - heading "Wool Scarf" [level=3] [ref=e123]
+            - generic [ref=e124]: 29.99 EUR
+            - link "Choose options" [ref=e127] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/wool-scarf
+          - generic [ref=e128]:
+            - link "Sale Wide Leg Trousers" [ref=e129] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/wide-leg-trousers
+              - generic [ref=e130]: Sale
+              - heading "Wide Leg Trousers" [level=3] [ref=e136]
+            - generic [ref=e138]:
+              - generic [ref=e139]: 49.99 EUR
+              - generic [ref=e140]: 69.99 EUR
+              - generic [ref=e141]: Sale
+            - link "Choose options" [ref=e142] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/wide-leg-trousers
+      - generic [ref=e144]:
+        - heading "Stay in the loop" [level=2] [ref=e145]
+        - paragraph [ref=e146]: Subscribe for exclusive offers and new arrivals.
+        - generic [ref=e147]:
+          - textbox "Email address" [ref=e149]:
+            - /placeholder: Your email address
+          - button "Subscribe" [ref=e150]
+  - contentinfo [ref=e156]:
+    - generic [ref=e157]:
+      - generic [ref=e158]:
+        - generic [ref=e159]:
+          - heading "Shop" [level=3] [ref=e160]
+          - list [ref=e161]:
+            - listitem [ref=e162]:
+              - link "About Us" [ref=e163] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/about
+            - listitem [ref=e164]:
+              - link "FAQ" [ref=e165] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/faq
+            - listitem [ref=e166]:
+              - link "Shipping & Returns" [ref=e167] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/shipping-returns
+            - listitem [ref=e168]:
+              - link "Privacy Policy" [ref=e169] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/privacy-policy
+            - listitem [ref=e170]:
+              - link "Terms of Service" [ref=e171] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/terms
+        - generic [ref=e172]:
+          - heading "Acme Fashion" [level=3] [ref=e173]
+          - paragraph [ref=e175]: Acme Fashion
+          - generic [ref=e176]:
+            - link "Acme Fashion on Facebook" [ref=e177] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Instagram" [ref=e180] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Twitter/X" [ref=e183] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on TikTok" [ref=e186] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on YouTube" [ref=e189] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=e192]:
+        - paragraph [ref=e193]: © 2026 Acme Fashion. All rights reserved.
+        - generic [ref=e194]:
+          - generic [ref=e195]: Visa
+          - generic [ref=e196]: Mastercard
+          - generic [ref=e197]: Amex
+          - generic [ref=e198]: PayPal

@@ -1,0 +1,159 @@
+- generic [ref=f3e1]:
+  - link "Skip to main content" [ref=f3e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - link "Acme Fashion" [ref=f3e5] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main" [ref=f3e6]:
+        - link "Home" [ref=f3e7] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f3e8] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/new-arrivals
+        - link "T-Shirts" [ref=f3e9] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/t-shirts
+        - link "Pants & Jeans" [ref=f3e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/pants-jeans
+        - link "Sale" [ref=f3e11] [cursor=pointer]:
+          - /url: http://acme-fashion.test/collections/sale
+      - generic [ref=f3e12]:
+        - link "Search" [ref=f3e13] [cursor=pointer]:
+          - /url: http://acme-fashion.test/search
+        - button "Open cart" [ref=f3e17]:
+          - generic [ref=f3e20]: "1"
+        - link "Account" [ref=f3e21] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f3e24]:
+    - generic [ref=f3e25]:
+      - heading "Checkout" [level=1] [ref=f3e26]
+      - generic [ref=f3e27]:
+        - generic [ref=f3e28]:
+          - generic [ref=f3e29]:
+            - heading "1. Contact & Shipping Address" [level=2] [ref=f3e31]
+            - generic [ref=f3e32]:
+              - generic [ref=f3e33]:
+                - generic [ref=f3e34]:
+                  - text: Email
+                  - generic [ref=f3e35]: "*"
+                - textbox [active] [ref=f3e37]
+              - paragraph [ref=f3e38]:
+                - link "Already have an account? Log in" [ref=f3e39] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/login
+              - generic [ref=f3e40]:
+                - generic [ref=f3e41]:
+                  - generic [ref=f3e42]:
+                    - text: First name
+                    - generic [ref=f3e43]: "*"
+                  - textbox [ref=f3e45]
+                - generic [ref=f3e46]:
+                  - generic [ref=f3e47]:
+                    - text: Last name
+                    - generic [ref=f3e48]: "*"
+                  - textbox [ref=f3e50]
+                - generic [ref=f3e51]:
+                  - generic [ref=f3e52]:
+                    - text: Address line 1
+                    - generic [ref=f3e53]: "*"
+                  - textbox [ref=f3e55]
+                - generic [ref=f3e56]:
+                  - generic [ref=f3e57]: Address line 2
+                  - textbox [ref=f3e59]
+                - generic [ref=f3e60]:
+                  - generic [ref=f3e61]:
+                    - text: City
+                    - generic [ref=f3e62]: "*"
+                  - textbox [ref=f3e64]
+                - generic [ref=f3e65]:
+                  - generic [ref=f3e66]: State / Province
+                  - textbox [ref=f3e68]
+                - generic [ref=f3e69]:
+                  - generic [ref=f3e70]:
+                    - text: Postal code
+                    - generic [ref=f3e71]: "*"
+                  - textbox [ref=f3e73]
+                - generic [ref=f3e74]:
+                  - generic [ref=f3e75]:
+                    - text: Country
+                    - generic [ref=f3e76]: "*"
+                  - combobox [ref=f3e77]:
+                    - option "Germany" [selected]
+                    - option "Austria"
+                    - option "Switzerland"
+                    - option "United States"
+                    - option "United Kingdom"
+                    - option "France"
+                - generic [ref=f3e78]:
+                  - generic [ref=f3e79]: Phone
+                  - textbox [ref=f3e81]
+              - button "Continue to shipping" [ref=f3e82]
+          - heading "2. Shipping Method" [level=2] [ref=f3e90]
+          - heading "3. Payment Method & Pay" [level=2] [ref=f3e93]
+        - generic [ref=f3e96]:
+          - heading "Order Summary" [level=2] [ref=f3e97]
+          - list [ref=f3e98]:
+            - listitem [ref=f3e99]:
+              - generic [ref=f3e100]: "1"
+              - generic [ref=f3e102]:
+                - paragraph [ref=f3e103]: Classic Cotton T-Shirt
+                - paragraph [ref=f3e104]: S / White
+              - generic [ref=f3e105]: 24.99 EUR
+          - generic [ref=f3e108]:
+            - textbox "Discount code" [ref=f3e110]
+            - button "Apply" [ref=f3e111]
+          - generic [ref=f3e117]:
+            - generic [ref=f3e118]:
+              - term [ref=f3e119]: Subtotal
+              - definition [ref=f3e120]:
+                - generic [ref=f3e121]: 24.99 EUR
+            - generic [ref=f3e123]:
+              - term [ref=f3e124]: Shipping
+              - definition [ref=f3e125]: Calculated at next step
+            - generic [ref=f3e126]:
+              - term [ref=f3e127]: Tax
+              - definition [ref=f3e128]: 0.00 EUR
+            - generic [ref=f3e129]:
+              - term [ref=f3e130]: Total
+              - definition [ref=f3e131]:
+                - generic [ref=f3e132]: 24.99 EUR
+  - contentinfo [ref=f3e134]:
+    - generic [ref=f3e135]:
+      - generic [ref=f3e136]:
+        - generic [ref=f3e137]:
+          - heading "Shop" [level=3] [ref=f3e138]
+          - list [ref=f3e139]:
+            - listitem [ref=f3e140]:
+              - link "About Us" [ref=f3e141] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/about
+            - listitem [ref=f3e142]:
+              - link "FAQ" [ref=f3e143] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/faq
+            - listitem [ref=f3e144]:
+              - link "Shipping & Returns" [ref=f3e145] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/shipping-returns
+            - listitem [ref=f3e146]:
+              - link "Privacy Policy" [ref=f3e147] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/privacy-policy
+            - listitem [ref=f3e148]:
+              - link "Terms of Service" [ref=f3e149] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/terms
+        - generic [ref=f3e150]:
+          - heading "Acme Fashion" [level=3] [ref=f3e151]
+          - paragraph [ref=f3e153]: Acme Fashion
+          - generic [ref=f3e154]:
+            - link "Acme Fashion on Facebook" [ref=f3e155] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Instagram" [ref=f3e158] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Twitter/X" [ref=f3e161] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on TikTok" [ref=f3e164] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on YouTube" [ref=f3e167] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=f3e170]:
+        - paragraph [ref=f3e171]: © 2026 Acme Fashion. All rights reserved.
+        - generic [ref=f3e172]:
+          - generic [ref=f3e173]: Visa
+          - generic [ref=f3e174]: Mastercard
+          - generic [ref=f3e175]: Amex
+          - generic [ref=f3e176]: PayPal
