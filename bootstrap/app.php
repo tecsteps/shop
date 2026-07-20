@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckStoreRole;
+use App\Http\Middleware\CheckTokenAbility;
 use App\Http\Middleware\CustomerAuthenticate;
 use App\Http\Middleware\ResolveStore;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'store.resolve' => ResolveStore::class,
             'role.check' => CheckStoreRole::class,
             'auth.customer' => CustomerAuthenticate::class,
+            'ability' => CheckTokenAbility::class,
         ]);
 
         // Guests hitting the admin panel go to the admin login; everything

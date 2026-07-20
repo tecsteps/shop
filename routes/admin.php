@@ -3,12 +3,14 @@
 use App\Http\Controllers\Admin\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\Auth\LogoutController;
 use App\Livewire\Admin\Analytics;
+use App\Livewire\Admin\Apps;
 use App\Livewire\Admin\Auth\ForgotPassword;
 use App\Livewire\Admin\Auth\Login;
 use App\Livewire\Admin\Auth\ResetPassword;
 use App\Livewire\Admin\Collections;
 use App\Livewire\Admin\Customers;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Developers;
 use App\Livewire\Admin\Discounts;
 use App\Livewire\Admin\Inventory;
 use App\Livewire\Admin\Navigation;
@@ -68,6 +70,11 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::livewire('/search/settings', Search\Settings::class)->name('search.settings');
 
         Route::livewire('/analytics', Analytics\Index::class)->name('analytics.index');
+
+        Route::livewire('/apps', Apps\Index::class)->name('apps.index');
+        Route::livewire('/apps/{installation}', Apps\Show::class)->name('apps.show');
+
+        Route::livewire('/developers', Developers\Index::class)->name('developers.index');
     });
 });
 

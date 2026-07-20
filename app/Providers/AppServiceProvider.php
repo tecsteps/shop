@@ -57,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureGates();
         $this->configureRateLimiting();
         $this->configureAuditLog();
+        $this->configureWebhookDispatch();
 
         // Keep the products_fts full-text index in sync (spec 05 §16.2).
         Product::observe(ProductObserver::class);
@@ -172,6 +173,24 @@ class AppServiceProvider extends ServiceProvider
             OrderRefunded::class,
             FulfillmentShipped::class,
         ], WriteAuditLog::class);
+    }
+
+    /**
+     * Register the webhook dispatcher for all domain events that have
+     * webhook counterparts (spec 05 §13.1).
+     */
+    protected function configureWebhookDispatch(): void
+    {
+        Event::listen([
+            \App\Events\OrderCreated::class,
+            \App\Events\OrderPaid::class,
+            \App\Events\OrderFulfilled::class,
+            \App\Events\OrderRefunded::class,
+            \App\Events\ProductCreated::class,
+            \App\Events\ProductUpdated::class,
+            \App\Events\ProductDeleted::class,
+            \App\Events\CheckoutCompleted::class,
+        ], \App\Listeners\DispatchWebhooks::class);
     }
 
     /**
