@@ -20,7 +20,10 @@ use Illuminate\Validation\ValidationException;
  */
 class CartService
 {
-    public function __construct(private InventoryService $inventory) {}
+    public function __construct(
+        private InventoryService $inventory,
+        private AnalyticsService $analytics,
+    ) {}
 
     /**
      * Create a cart for the store with its default currency, version 1.
@@ -96,6 +99,14 @@ class CartService
 
         $this->touchVersion($cart);
 
+        $this->analytics->trackSafely($cart->store, 'add_to_cart', [
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'quantity' => $quantity,
+            'price_amount' => $variant->price_amount,
+            'currency' => $cart->currency,
+        ], $cart->customer_id);
+
         return $line;
     }
 
@@ -117,6 +128,12 @@ class CartService
         if ($quantity === 0) {
             $line->delete();
             $this->touchVersion($cart);
+
+            $this->analytics->trackSafely($cart->store, 'remove_from_cart', [
+                'product_id' => $line->variant?->product_id,
+                'variant_id' => $line->variant_id,
+                'quantity' => $line->quantity,
+            ], $cart->customer_id);
 
             return $line;
         }
@@ -140,9 +157,16 @@ class CartService
      */
     public function removeLine(Cart $cart, int $lineId): void
     {
-        $cart->lines()->findOrFail($lineId)->delete();
+        $line = $cart->lines()->findOrFail($lineId);
+        $line->delete();
 
         $this->touchVersion($cart);
+
+        $this->analytics->trackSafely($cart->store, 'remove_from_cart', [
+            'product_id' => $line->variant?->product_id,
+            'variant_id' => $line->variant_id,
+            'quantity' => $line->quantity,
+        ], $cart->customer_id);
     }
 
     /**

@@ -35,6 +35,7 @@ class OrderService
         private InventoryService $inventory,
         private PaymentService $payments,
         private FulfillmentService $fulfillments,
+        private AnalyticsService $analytics,
     ) {}
 
     /**
@@ -46,7 +47,7 @@ class OrderService
      */
     public function createFromCheckout(Checkout $checkout, PaymentResult $paymentResult, array $paymentDetails = []): Order
     {
-        return DB::transaction(function () use ($checkout, $paymentResult, $paymentDetails): Order {
+        $order = DB::transaction(function () use ($checkout, $paymentResult, $paymentDetails): Order {
             $existing = Order::query()->where('checkout_id', $checkout->id)->first();
 
             if ($existing !== null) {
@@ -151,6 +152,20 @@ class OrderService
 
             return $order->refresh();
         });
+
+        // Tracked after the transaction commits so analytics can never roll
+        // back an order. The deterministic client_event_id keeps the event
+        // idempotent across repeated calls. The total in properties feeds
+        // the revenue aggregation (spec 05 §14.2).
+        $this->analytics->trackSafely($order->store, 'checkout_completed', [
+            'order_id' => $order->id,
+            'checkout_id' => $checkout->id,
+            'order_number' => $order->order_number,
+            'total' => $order->total_amount,
+            'currency' => $order->currency,
+        ], $order->customer_id, 'checkout_completed:checkout:'.$checkout->id);
+
+        return $order;
     }
 
     /**

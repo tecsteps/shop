@@ -42,6 +42,7 @@ class CheckoutService
         private InventoryService $inventory,
         private PaymentService $payments,
         private OrderService $orders,
+        private AnalyticsService $analytics,
     ) {}
 
     /**
@@ -79,6 +80,12 @@ class CheckoutService
         if ($discountCode !== null && $discountCode !== '') {
             $this->applyDiscount($checkout, $discountCode);
         }
+
+        // Deterministic client_event_id makes the event idempotent.
+        $this->analytics->trackSafely($checkout->store, 'checkout_started', [
+            'checkout_id' => $checkout->id,
+            'cart_id' => $cart->id,
+        ], $checkout->customer_id, 'checkout_started:checkout:'.$checkout->id);
 
         return $checkout->refresh();
     }

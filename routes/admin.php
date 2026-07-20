@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\Auth\LogoutController;
+use App\Livewire\Admin\Analytics;
 use App\Livewire\Admin\Auth\ForgotPassword;
 use App\Livewire\Admin\Auth\Login;
 use App\Livewire\Admin\Auth\ResetPassword;
@@ -65,6 +66,8 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::livewire('/settings/taxes', Settings\Taxes::class)->name('settings.taxes');
 
         Route::livewire('/search/settings', Search\Settings::class)->name('search.settings');
+
+        Route::livewire('/analytics', Analytics\Index::class)->name('analytics.index');
     });
 });
 

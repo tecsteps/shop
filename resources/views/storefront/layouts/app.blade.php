@@ -54,6 +54,82 @@
             document.documentElement.classList.toggle('dark', dark);
         })();
     </script>
+    <script>
+        {{-- Analytics tracking snippet (spec 05 §14.1): batches page_view and
+             product_view (on product pages) to the ingestion API. Vanilla JS,
+             no external libs, fully failure-safe. --}}
+        (function () {
+            var queue = [];
+
+            // Public API for page components: queue an event for the next flush.
+            window.shopAnalytics = {
+                track: function (type, properties) {
+                    queue.push({ type: type, properties: properties || {} });
+                }
+            };
+
+            function uuid() {
+                return (window.crypto && crypto.randomUUID)
+                    ? crypto.randomUUID()
+                    : String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+            }
+
+            function sessionId() {
+                try {
+                    var id = sessionStorage.getItem('shop_analytics_session');
+                    if (! id) {
+                        id = uuid();
+                        sessionStorage.setItem('shop_analytics_session', id);
+                    }
+                    return id;
+                } catch (e) {
+                    return 'anonymous';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                try {
+                    window.shopAnalytics.track('page_view', {
+                        url: window.location.pathname,
+                        referrer: document.referrer || undefined
+                    });
+
+                    var productMarker = document.querySelector('[data-analytics-product-id]');
+                    if (productMarker) {
+                        window.shopAnalytics.track('product_view', {
+                            product_id: parseInt(productMarker.getAttribute('data-analytics-product-id'), 10),
+                            url: window.location.pathname
+                        });
+                    }
+
+                    var sid = sessionId();
+                    var events = queue.map(function (event) {
+                        return {
+                            type: event.type,
+                            session_id: sid,
+                            client_event_id: uuid(),
+                            occurred_at: new Date().toISOString(),
+                            properties: event.properties
+                        };
+                    });
+
+                    var body = JSON.stringify({ events: events });
+                    var endpoint = '/api/storefront/v1/analytics/events';
+
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(endpoint, new Blob([body], { type: 'application/json' }));
+                    } else {
+                        fetch(endpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: body,
+                            keepalive: true
+                        }).catch(function () {});
+                    }
+                } catch (e) { /* analytics must never break the page */ }
+            });
+        })();
+    </script>
 </head>
 <body class="min-h-screen bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100">
     <a href="#main-content"

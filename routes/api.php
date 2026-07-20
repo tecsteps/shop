@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Storefront\AnalyticsController;
 use App\Http\Controllers\Api\Storefront\CartController;
 use App\Http\Controllers\Api\Storefront\CheckoutController;
 use App\Http\Controllers\Api\Storefront\OrderController;
@@ -37,6 +38,10 @@ Route::middleware(['store.resolve:storefront', 'throttle:api.storefront'])
             Route::get('/search', [SearchController::class, 'index']);
             Route::get('/search/suggest', [SearchController::class, 'suggest']);
         });
+
+        // Analytics event ingestion (spec 02 §2.6) with the analytics rate limit on top.
+        Route::post('/analytics/events', [AnalyticsController::class, 'store'])
+            ->middleware('throttle:analytics');
     });
 
 // Admin REST API (Sanctum personal access tokens). Endpoints are added in later phases.
