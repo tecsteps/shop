@@ -31,6 +31,11 @@
 
 | 7 | 2026-07-19 | Phase 7 | Admin panel complete: layout shell (sidebar/topbar/breadcrumbs/toasts), dashboard (KPIs, chart), products (form + variants + media), inventory, orders (fulfill/refund/confirm/cancel), customers, discounts, collections, pages, navigation, settings (general/domains/shipping/taxes/checkout/notifications), themes + editor. 462 tests green. | 9b32c262 |
 
+| 8 | 2026-07-19 | Phase 8 | FTS5 search: products_fts, SearchService (synonyms/stop words/facets), ProductObserver, search API + modal + results page, admin settings. 516 tests green. | 45fae4bf |
+| 9 | 2026-07-19 | Phase 9 | Analytics: event ingestion API (dedupe/validation), server-side + JS tracking, AggregateAnalytics job, admin analytics dashboard (KPIs, charts, funnel). 549 tests green. | 89fe1ab9 |
+| 10 | 2026-07-19 | Phase 10 | Apps/webhooks/API: webhook system (HMAC, retries, circuit breaker), developers UI (Sanctum tokens shop_ prefix, webhook CRUD), apps UI, admin REST API (platform/products/collections/orders+CSV). 634 tests green. | 4d60d582 |
+| 11 | 2026-07-19 | Phase 11 | 19 idempotent seeders with exact spec-07 demo data (2 stores, 30 products/127 variants, orders, discounts, analytics); products_fts reindexed; real-env smoke green. 649 tests green. | 392fff42 |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -88,26 +93,26 @@
 - [x] Tests: DashboardTest, ProductManagementTest, OrderManagementTest, DiscountManagementTest, SettingsTest
 
 ### Phase 8 — Search
-- [ ] FTS5 migration (products_fts), SearchService, ProductObserver
-- [ ] SearchSettings model, admin Search Settings page
-- [ ] Storefront Search Modal + Index
-- [ ] Tests: SearchTest, AutocompleteTest
+- [x] FTS5 migration (products_fts), SearchService, ProductObserver
+- [x] SearchSettings model, admin Search Settings page
+- [x] Storefront Search Modal + Index
+- [x] Tests: SearchTest, AutocompleteTest
 
 ### Phase 9 — Analytics
-- [ ] AnalyticsEvent, AnalyticsDaily models, AnalyticsService, AggregateAnalytics job
-- [ ] Storefront event tracking + API endpoint
-- [ ] Admin Analytics page
-- [ ] Tests: EventIngestionTest, AggregationTest
+- [x] AnalyticsEvent, AnalyticsDaily models, AnalyticsService, AggregateAnalytics job
+- [x] Storefront event tracking + API endpoint
+- [x] Admin Analytics page
+- [x] Tests: EventIngestionTest, AggregationTest
 
 ### Phase 10 — Apps / Webhooks / Developers / Admin REST API
-- [ ] Models: App, AppInstallation, OauthClient, OauthToken, WebhookSubscription, WebhookDelivery
-- [ ] WebhookService, DeliverWebhook job, DispatchWebhooks listener
-- [ ] Admin Apps + Developers pages (Sanctum token management)
-- [ ] Admin REST API (/api/admin/v1): products, collections, orders, customers, discounts, platform
-- [ ] Tests: WebhookDeliveryTest, WebhookSignatureTest, SanctumTokenTest, AdminProductApiTest, AdminOrderApiTest, StorefrontCartApiTest, StorefrontCheckoutApiTest
+- [x] Models: App, AppInstallation, OauthClient, OauthToken, WebhookSubscription, WebhookDelivery
+- [x] WebhookService, DeliverWebhook job, DispatchWebhooks listener
+- [x] Admin Apps + Developers pages (Sanctum token management)
+- [x] Admin REST API (/api/admin/v1): products, collections, orders, customers, discounts, platform
+- [x] Tests: WebhookDeliveryTest, WebhookSignatureTest, SanctumTokenTest, AdminProductApiTest, AdminOrderApiTest, StorefrontCartApiTest, StorefrontCheckoutApiTest
 
 ### Phase 11 — Seeders
-- [ ] Exact demo data per spec 07 (2 stores, 5 users, 20+ products, collections, discounts, shipping, tax, pages, navigation, orders, customers)
+- [x] Exact demo data per spec 07 (2 stores, 5 users, 20+ products, collections, discounts, shipping, tax, pages, navigation, orders, customers)
 
 ### Phase 12 — Polish
 - [ ] Error pages 404/503, dark mode, accessibility, structured logging
