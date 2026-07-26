@@ -40,6 +40,8 @@
 
 | 13 | 2026-07-19 | E2E-1 | Playwright MCP verification round 1: all major suites verified (smoke, auth, admin CRUD, orders lifecycle, discounts, settings, themes, analytics, browsing, cart, checkout CC/PayPal/bank-transfer, customer account, inventory enforcement, tenant isolation, RBAC, responsive, dark mode, Admin API). 9 real bugs found & fixed (Livewire persistent middleware, empty-rules pay, flux radio group, @js in Flux attrs, collection sort, 2x mobile overflow, favicon). 678 tests green. | fac163a3 |
 
+| 14 | 2026-07-26 | E2E-2 | Pest browser suite: 18 files, 143 tests, all green (678 unit/feature + 143 browser = 821). Browser-found bugs fixed: discount valueAmount field never rendered, tax provider values (tax settings unsaveable), address-save toast. | 2350620a |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -123,8 +125,8 @@
 - [x] Pint clean, full test suite green, fresh migrate+seed verified
 
 ### Browser E2E
-- [ ] Pest browser tests per spec 08 (18 files, 143 tests)
-- [ ] Playwright MCP verification of all acceptance criteria
+- [x] Pest browser tests per spec 08 (18 files, 143 tests)
+- [x] Playwright MCP verification of all acceptance criteria
 
 ### Final
 - [ ] Review meeting: showcase all customer + admin features
