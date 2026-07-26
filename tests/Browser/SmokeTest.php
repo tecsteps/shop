@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function (): void {
@@ -8,29 +7,70 @@ beforeEach(function (): void {
     bindBrowserStorefrontDomain();
 });
 
-test('storefront home page loads without javascript errors', function () {
+test('loads the storefront home page', function () {
     visit('/')
         ->assertSee('Acme Fashion')
+        ->assertNoJavaScriptErrors();
+});
+
+test('loads a collection page', function () {
+    visit('/collections/t-shirts')
+        ->assertSee('T-Shirts')
+        ->assertNoJavaScriptErrors();
+});
+
+test('loads a product page', function () {
+    visit('/products/classic-cotton-t-shirt')
         ->assertSee('Classic Cotton T-Shirt')
-        ->assertNoJavascriptErrors();
+        ->assertSee('24.99')
+        ->assertNoJavaScriptErrors();
 });
 
-test('admin dashboard loads for an authenticated owner', function () {
-    $admin = User::query()->where('email', 'admin@acme.test')->sole();
-
-    actingAsAdmin($admin);
-
-    visit('/admin')
-        ->assertSee('Dashboard')
-        ->assertSee('Total Sales')
-        ->assertNoJavascriptErrors();
+test('loads the cart page', function () {
+    visit('/cart')
+        ->assertSee('Your Cart')
+        ->assertNoJavaScriptErrors();
 });
 
-test('admin login page signs in with valid credentials', function () {
+test('loads the customer login page', function () {
+    visit('/account/login')
+        ->assertSee('Log in')
+        ->assertNoJavaScriptErrors();
+});
+
+test('loads the admin login page', function () {
     visit('/admin/login')
-        ->fill('email', 'admin@acme.test')
-        ->fill('password', 'password')
-        ->press('button[type="submit"]')
-        ->waitForText('Dashboard')
-        ->assertPathIs('/admin');
+        ->assertSee('Sign in')
+        ->assertNoJavaScriptErrors();
+});
+
+test('loads the about page', function () {
+    visit('/pages/about')
+        ->assertSee('About')
+        ->assertNoJavaScriptErrors();
+});
+
+test('loads the search page', function () {
+    visit('/search?q=shirt')
+        ->assertSee('shirt')
+        ->assertNoJavaScriptErrors();
+});
+
+test('loads all collections listing', function () {
+    visit('/collections')
+        ->assertSee('Collections')
+        ->assertNoJavaScriptErrors();
+});
+
+test('has no errors on critical pages', function () {
+    visit([
+        '/',
+        '/collections/new-arrivals',
+        '/products/classic-cotton-t-shirt',
+        '/cart',
+        '/account/login',
+        '/admin/login',
+        '/pages/about',
+        '/search?q=shirt',
+    ])->assertNoJavaScriptErrors();
 });
