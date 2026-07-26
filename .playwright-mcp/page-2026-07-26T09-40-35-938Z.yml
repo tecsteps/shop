@@ -1,0 +1,22 @@
+- generic [ref=f83e1]:
+  - link "Skip to main content" [ref=f83e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=f83e3]:
+    - generic [ref=f83e5]:
+      - generic [ref=f83e6]:
+        - heading "Log in" [level=1] [ref=f83e7]
+        - paragraph [ref=f83e8]: Sign in to your admin account
+      - generic [ref=f83e9]:
+        - generic [ref=f83e10]:
+          - generic [ref=f83e11]: Email
+          - textbox "Email" [ref=f83e13]: support@acme.test
+        - generic [ref=f83e14]:
+          - generic [ref=f83e15]: Password
+          - textbox "Password" [active] [ref=f83e17]: password
+        - generic [ref=f83e18]:
+          - generic [ref=f83e19]:
+            - checkbox "Remember me" [ref=f83e20]
+            - generic [ref=f83e22]: Remember me
+          - link "Forgot password?" [ref=f83e23] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/forgot-password
+        - button "Log in" [ref=f83e24]

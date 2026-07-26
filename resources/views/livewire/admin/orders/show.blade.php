@@ -53,7 +53,7 @@
 
     <div class="grid gap-6 lg:grid-cols-3">
         {{-- Left column --}}
-        <div class="space-y-6 lg:col-span-2">
+        <div class="min-w-0 space-y-6 lg:col-span-2">
             {{-- Timeline --}}
             <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
                 <flux:heading size="md">Timeline</flux:heading>
@@ -263,7 +263,7 @@
         </div>
 
         {{-- Right column --}}
-        <div class="space-y-6">
+        <div class="min-w-0 space-y-6">
             {{-- Customer card --}}
             <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
                 <flux:heading size="md">Customer</flux:heading>

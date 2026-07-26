@@ -4,7 +4,7 @@
 
     {{-- Store selector --}}
     <flux:dropdown>
-        <flux:button variant="ghost" icon-trailing="chevron-down" class="max-w-48 truncate font-semibold">
+        <flux:button variant="ghost" icon-trailing="chevron-down" class="max-w-28 truncate font-semibold sm:max-w-48">
             {{ $currentStore->name }}
         </flux:button>
 
@@ -31,7 +31,7 @@
 
     {{-- User profile --}}
     <flux:dropdown position="bottom" align="end">
-        <flux:profile :name="$user->name" :initials="$user->initials()" />
+        <flux:profile :name="$user->name" :initials="$user->initials()" class="[&>span]:hidden sm:[&>span]:block" />
 
         <flux:menu>
             <div class="px-3 py-2">
