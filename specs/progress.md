@@ -38,6 +38,8 @@
 
 | 12 | 2026-07-19 | Phase 12 | Polish: styled error pages (404/503/403/500), a11y pass (skip links, focus traps, ARIA), order emails (4 mailables, failure-safe), audit logging (auth.login, product events). 675 tests green, pint clean, npm build green. | 79f5bfb6 |
 
+| 13 | 2026-07-19 | E2E-1 | Playwright MCP verification round 1: all major suites verified (smoke, auth, admin CRUD, orders lifecycle, discounts, settings, themes, analytics, browsing, cart, checkout CC/PayPal/bank-transfer, customer account, inventory enforcement, tenant isolation, RBAC, responsive, dark mode, Admin API). 9 real bugs found & fixed (Livewire persistent middleware, empty-rules pay, flux radio group, @js in Flux attrs, collection sort, 2x mobile overflow, favicon). 678 tests green. | fac163a3 |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
