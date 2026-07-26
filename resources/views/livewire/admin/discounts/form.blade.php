@@ -49,7 +49,7 @@
             @if ($valueType !== 'free_shipping')
                 <flux:field class="mt-4">
                     <flux:label for="valueAmount">{{ $valueType === 'percent' ? 'Percentage' : 'Amount (cents)' }}</flux:label>
-                    <flux:input id="valueAmount" type="number" min="1" @if ($valueType === 'percent') max="100" @endif wire:model.blur="valueAmount" placeholder="{{ $valueType === 'percent' ? '10' : '500' }}" />
+                    <flux:input id="valueAmount" type="number" min="1" :max="$valueType === 'percent' ? 100 : null" wire:model.blur="valueAmount" placeholder="{{ $valueType === 'percent' ? '10' : '500' }}" />
                     @if ($valueType === 'percent')
                         <flux:description>Whole percentage, 1–100.</flux:description>
                     @else

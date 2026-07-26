@@ -21,7 +21,7 @@
                     <flux:label for="provider">Provider</flux:label>
                     <flux:select id="provider" wire:model="provider">
                         <flux:select.option value="manual">None</flux:select.option>
-                        <flux:select.option value="stripe">Stripe Tax</flux:select.option>
+                        <flux:select.option value="stripe_tax">Stripe Tax</flux:select.option>
                     </flux:select>
                     <flux:error name="provider" />
                 </flux:field>

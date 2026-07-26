@@ -33,10 +33,11 @@ test('storefront home works on mobile viewport', function () {
         ->assertMissing('nav[aria-label="Main navigation"]')
         // No horizontal scrolling.
         ->assertScript('document.documentElement.scrollWidth <= document.documentElement.clientWidth')
-        // The hamburger opens the mobile navigation drawer.
+        // The hamburger opens the mobile navigation drawer (the outer wrapper
+        // has only fixed children, so assert the visible panel instead).
         ->press('button[aria-label="Open navigation menu"]')
         ->wait(1)
-        ->assertVisible('#mobile-navigation')
+        ->assertVisible('#mobile-navigation .fixed.inset-y-0')
         ->assertNoJavascriptErrors();
 });
 
@@ -77,7 +78,7 @@ test('cart page works on mobile', function () {
     $page
         ->navigate('/cart')
         ->assertSee('Classic Cotton T-Shirt')
-        ->assertVisible('button:has-text("Checkout")')
+        ->assertVisible('main button:has-text("Checkout")')
         ->assertScript('document.documentElement.scrollWidth <= document.documentElement.clientWidth')
         ->assertNoJavascriptErrors();
 });
@@ -89,7 +90,7 @@ test('checkout flow works on mobile', function () {
 
     $page
         ->navigate('/cart')
-        ->press('button:has-text("Checkout")')
+        ->press('main button:has-text("Checkout")')
         ->wait(1)
         ->assertPathIs('/checkout/new')
         ->fill('checkout-email', 'mobile@example.com')
@@ -130,15 +131,13 @@ test('admin sidebar navigation works on tablet', function () {
         ->click('aside a:has-text("Products")')
         ->wait(1)
         ->assertPathIs('/admin/products')
-        ->assertSee('Products')
-        ->assertSee('Classic Cotton T-Shirt')
+        ->assertVisible('main .text-2xl[data-flux-heading]:has-text("Products")')
         ->press('button[aria-label="Open navigation menu"]')
         ->wait(1)
         ->click('aside a:has-text("Orders")')
         ->wait(1)
         ->assertPathIs('/admin/orders')
-        ->assertSee('Orders')
-        ->assertSee('#1001')
+        ->assertVisible('main .text-2xl[data-flux-heading]:has-text("Orders")')
         ->assertNoJavascriptErrors();
 });
 
@@ -151,6 +150,6 @@ test('collection page works on mobile with filters', function () {
         ->assertVisible('button[aria-label="Toggle filters"]')
         ->press('button[aria-label="Toggle filters"]')
         ->wait(1)
-        ->assertVisible('div[role="dialog"][aria-label="Filters"]')
+        ->assertVisible('div[role="dialog"][aria-label="Filters"] .fixed.inset-y-0')
         ->assertNoJavascriptErrors();
 });

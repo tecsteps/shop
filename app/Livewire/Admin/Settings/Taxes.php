@@ -14,7 +14,7 @@ class Taxes extends Component
 {
     public string $mode = 'manual';
 
-    public string $provider = 'manual';
+    public string $provider = 'none';
 
     public bool $pricesIncludeTax = false;
 
@@ -36,7 +36,7 @@ class Taxes extends Component
         $config = $settings?->config_json ?? [];
 
         $this->mode = $settings?->mode->value ?? 'manual';
-        $this->provider = $settings?->provider ?? 'manual';
+        $this->provider = $settings?->provider ?? 'none';
         $this->pricesIncludeTax = $settings?->prices_include_tax ?? false;
         $this->defaultRateBps = isset($config['default_rate_bps']) ? (int) $config['default_rate_bps'] : null;
         $this->fallback = (string) ($config['fallback'] ?? 'block');
@@ -54,7 +54,7 @@ class Taxes extends Component
 
         $validated = $this->validate([
             'mode' => ['required', Rule::in(['manual', 'provider'])],
-            'provider' => ['required', Rule::in(['manual', 'stripe'])],
+            'provider' => ['required', Rule::in(['none', 'stripe_tax'])],
             'pricesIncludeTax' => ['boolean'],
             'defaultRateBps' => ['required', 'integer', 'min:0', 'max:10000'],
             'fallback' => ['required', Rule::in(['block', 'allow'])],
@@ -74,7 +74,7 @@ class Taxes extends Component
             ['store_id' => $store->id],
             [
                 'mode' => $validated['mode'],
-                'provider' => $validated['mode'] === 'provider' ? $validated['provider'] : 'manual',
+                'provider' => $validated['mode'] === 'provider' ? $validated['provider'] : 'none',
                 'prices_include_tax' => $this->pricesIncludeTax,
                 'config_json' => [
                     'default_rate_bps' => (int) $validated['defaultRateBps'],

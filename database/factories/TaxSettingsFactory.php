@@ -21,7 +21,7 @@ class TaxSettingsFactory extends Factory
         return [
             'store_id' => Store::factory(),
             'mode' => TaxMode::Manual,
-            'provider' => 'manual',
+            'provider' => 'none',
             'prices_include_tax' => false,
             'config_json' => ['default_rate_bps' => 1900],
         ];

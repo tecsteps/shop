@@ -126,6 +126,8 @@ class Index extends Component
 
         $this->showModal = false;
         $this->resetForm();
+
+        $this->dispatch('toast', type: 'success', message: 'Address saved');
     }
 
     /**

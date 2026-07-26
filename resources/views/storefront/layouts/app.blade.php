@@ -355,6 +355,42 @@
     {{-- Search modal (spec 04 §11.1) --}}
     <livewire:storefront.search.modal />
 
+    {{-- Toast notifications (spec 04 §21) --}}
+    <div x-data="{
+            toasts: [],
+            add(detail) {
+                const id = Date.now() + Math.random();
+                this.toasts.push({ id, type: detail.type ?? 'info', message: detail.message ?? '' });
+                setTimeout(() => this.remove(id), 5000);
+            },
+            remove(id) {
+                this.toasts = this.toasts.filter((toast) => toast.id !== id);
+            },
+        }"
+         @toast.window="add($event.detail)"
+         @if (session('toast')) x-init="add(@js(session('toast')))" @endif
+         class="pointer-events-none fixed top-4 right-4 z-100 flex w-full max-w-sm flex-col gap-2"
+         aria-live="polite">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                 class="pointer-events-auto flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                 :class="{
+                    'border-l-4 border-l-green-500': toast.type === 'success',
+                    'border-l-4 border-l-red-500': toast.type === 'error',
+                    'border-l-4 border-l-blue-500': toast.type === 'info',
+                 }"
+                 role="alert">
+                <svg x-show="toast.type === 'success'" class="mt-0.5 size-5 shrink-0 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>
+                <svg x-show="toast.type === 'error'" class="mt-0.5 size-5 shrink-0 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" /></svg>
+                <p class="flex-1 text-sm text-gray-900 dark:text-gray-100" x-text="toast.message"></p>
+                <button type="button" @click="remove(toast.id)" class="rounded p-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Dismiss">
+                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" /></svg>
+                </button>
+            </div>
+        </template>
+    </div>
+
     @fluxScripts
 </body>
 </html>

@@ -223,7 +223,7 @@ test('saves zone rate overrides and provider fallback', function () {
     Livewire::actingAs($this->user);
     Livewire::test(Taxes::class)
         ->set('mode', 'provider')
-        ->set('provider', 'stripe')
+        ->set('provider', 'stripe_tax')
         ->set('fallback', 'allow')
         ->set('defaultRateBps', 1900)
         ->set('zoneRates', [$zone->id => 700])
@@ -233,7 +233,7 @@ test('saves zone rate overrides and provider fallback', function () {
     $settings = TaxSettings::query()->find($this->store->id);
 
     expect($settings->mode->value)->toBe('provider')
-        ->and($settings->provider)->toBe('stripe')
+        ->and($settings->provider)->toBe('stripe_tax')
         ->and($settings->config_json['zone_rates'][$zone->id])->toBe(700)
         ->and($settings->config_json['fallback'])->toBe('allow');
 });

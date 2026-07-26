@@ -51,7 +51,7 @@ class TaxCalculator
     {
         $settings = $request->taxSettings;
 
-        if ($settings->mode === TaxMode::Provider && $settings->provider === 'stripe') {
+        if ($settings->mode === TaxMode::Provider && $settings->provider === 'stripe_tax') {
             return $this->stripeProvider;
         }
 

@@ -4,8 +4,6 @@ use App\Enums\DiscountValueType;
 use App\Models\Discount;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
-use Pest\Browser\Api\PendingAwaitablePage;
-use Pest\Browser\Api\Webpage;
 
 beforeEach(function (): void {
     $this->seed(DatabaseSeeder::class);
@@ -13,41 +11,6 @@ beforeEach(function (): void {
 
     actingAsAdmin(User::query()->where('email', 'admin@acme.test')->sole());
 });
-
-/**
- * Set the discount form's valueAmount property through the Livewire JS API.
- *
- * Workaround for an app bug: the valueAmount <flux:input> in
- * resources/views/livewire/admin/discounts/form.blade.php is never resolved
- * by the Blade compiler (an inline @if inside the component tag breaks tag
- * matching), so no real <input> is rendered for it in the browser. The
- * property is therefore set through Livewire's client-side API instead of
- * typing into the (missing) field; everything else uses the real UI.
- */
-function setDiscountValueAmount(Webpage|PendingAwaitablePage $page, int $value): void
-{
-    $script = <<<'JS'
-        () => {
-            const snapshots = Array.from(document.querySelectorAll('[wire\\:snapshot]'));
-
-            for (const snapshot of snapshots) {
-                const data = JSON.parse(snapshot.getAttribute('wire:snapshot'));
-
-                if (data.memo && data.memo.name === 'admin.discounts.form') {
-                    Livewire.find(data.memo.id).set('valueAmount', VALUE_PLACEHOLDER);
-
-                    return 'ok';
-                }
-            }
-
-            return 'component not found';
-        }
-    JS;
-
-    $result = $page->script(str_replace('VALUE_PLACEHOLDER', (string) $value, $script));
-
-    expect($result)->toBe('ok');
-}
 
 test('shows seeded discount codes', function () {
     visit('/admin/discounts')
@@ -66,7 +29,7 @@ test('can create a new percentage discount code', function () {
         ->fill('startsAt', '2026-01-01T00:00')
         ->fill('endsAt', '2026-12-31T23:59');
 
-    setDiscountValueAmount($page, 25);
+    $page->fill('valueAmount', '25');
 
     $page->press('Save')
         ->wait(1)
@@ -89,7 +52,7 @@ test('can create a fixed amount discount code', function () {
         ->wait(1)
         ->fill('startsAt', '2026-01-01T00:00');
 
-    setDiscountValueAmount($page, 1000);
+    $page->fill('valueAmount', '1000');
 
     $page->press('Save')
         ->wait(1)
@@ -129,7 +92,7 @@ test('can edit a discount', function () {
 
     $page->click('WELCOME10')->wait(1);
 
-    setDiscountValueAmount($page, 15);
+    $page->fill('valueAmount', '15');
 
     $page->press('Save')
         ->wait(1)

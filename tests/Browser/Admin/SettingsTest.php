@@ -83,11 +83,6 @@ test('can view tax settings', function () {
 test('can update tax inclusion setting', function () {
     $store = Store::query()->where('handle', 'acme-fashion')->sole();
 
-    // The seeder writes provider = "none", which the tax form's validation
-    // (in:manual,stripe) rejects, making every save fail silently in manual
-    // mode (app bug). Normalize it so the form can be saved at all.
-    TaxSettings::query()->where('store_id', $store->id)->update(['provider' => 'manual']);
-
     // Seeded with prices_include_tax = true; the toggle flips it to false.
     visit('/admin/settings/taxes')
         ->press('ui-switch[data-flux-switch]')
