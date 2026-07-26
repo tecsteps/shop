@@ -1,0 +1,18 @@
+[      92ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/themes:54
+[    6383ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/apps:54
+[    6393ms] [WARNING] Alpine Expression Error: Invalid or unexpected token
+
+Expression: "argumentsToArray(@js($entry['name']))"
+
+ JSHandle@node @ http://admin.acme-fashion.test/admin/apps:124
+[    6401ms] SyntaxError: Invalid or unexpected token
+    at new AsyncFunction (<anonymous>)
+    at safeAsyncFunction (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1385:21)
+    at generateFunctionFromString (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1398:16)
+    at generateEvaluatorFromString (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1403:16)
+    at normalEvaluator (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1361:111)
+    at evaluateLater (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1347:12)
+    at Object.evaluate (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1343:5)
+    at Directive.parseOutMethodsAndParams (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:5783:29)
+    at get methods (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:5764:19)
+    at getTargets (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:14665:18)

@@ -5,10 +5,10 @@
     <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:heading size="md">Tax mode</flux:heading>
 
-        <div class="mt-4 space-y-3">
-            <flux:radio wire:model.live="mode" value="manual" label="Manual tax rates" description="Define tax rates per zone manually." />
-            <flux:radio wire:model.live="mode" value="provider" label="Tax provider" description="Use an automated tax calculation service." />
-        </div>
+        <flux:radio.group wire:model.live="mode" label="" class="mt-4">
+            <flux:radio value="manual" label="Manual tax rates" description="Define tax rates per zone manually." />
+            <flux:radio value="provider" label="Tax provider" description="Use an automated tax calculation service." />
+        </flux:radio.group>
         <flux:error name="mode" />
     </div>
 

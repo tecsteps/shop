@@ -1,0 +1,152 @@
+- generic [active] [ref=f70e1]:
+  - link "Skip to main content" [ref=f70e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f70e4]:
+    - paragraph [ref=f70e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f70e6]
+  - banner [ref=f70e9]:
+    - generic [ref=f70e10]:
+      - link "Acme Fashion" [ref=f70e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f70e13]:
+        - link "Home" [ref=f70e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f70e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f70e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f70e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f70e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f70e19]:
+        - button "Search" [ref=f70e20]
+        - link "Account" [ref=f70e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f70e26]
+  - main [ref=f70e29]:
+    - generic [ref=f70e30]:
+      - navigation "Breadcrumb" [ref=f70e31]:
+        - list [ref=f70e32]:
+          - listitem [ref=f70e33]:
+            - link "Home" [ref=f70e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f70e35]:
+            - generic [ref=f70e36]: /
+            - link "Collections" [ref=f70e37] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections
+          - listitem [ref=f70e38]:
+            - generic [ref=f70e39]: /
+            - generic [ref=f70e40]: T-Shirts
+      - generic [ref=f70e41]:
+        - heading "T-Shirts" [level=1] [ref=f70e42]
+        - paragraph [ref=f70e44]: Premium cotton tees for every occasion.
+      - generic [ref=f70e45]:
+        - paragraph [ref=f70e46]: 4 products
+        - generic [ref=f70e47]:
+          - generic [ref=f70e48]: Sort by
+          - combobox "Sort by" [ref=f70e49]:
+            - option "Featured"
+            - 'option "Price: Low to High" [selected]'
+            - 'option "Price: High to Low"'
+            - option "Newest"
+            - option "Best Selling"
+      - generic [ref=f70e50]:
+        - complementary "Product filters" [ref=f70e51]:
+          - generic [ref=f70e52]:
+            - group "Availability" [ref=f70e53]:
+              - generic [ref=f70e56]:
+                - checkbox "In stock" [ref=f70e57]
+                - text: In stock
+            - group "Price" [ref=f70e58]:
+              - generic [ref=f70e60]:
+                - generic [ref=f70e61]: Minimum price
+                - spinbutton "Minimum price Minimum price" [ref=f70e62]
+                - generic [ref=f70e63]: "-"
+                - generic [ref=f70e64]: Maximum price
+                - spinbutton "Maximum price Maximum price" [ref=f70e65]
+            - group "Product type" [ref=f70e66]:
+              - generic [ref=f70e69]:
+                - checkbox "T-Shirts" [ref=f70e70]
+                - text: T-Shirts
+            - group "Vendor" [ref=f70e71]:
+              - generic [ref=f70e74]:
+                - checkbox "Acme Basics" [ref=f70e75]
+                - text: Acme Basics
+        - generic [ref=f70e77]:
+          - generic [ref=f70e78]:
+            - link [ref=f70e80] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+            - link "Classic Cotton T-Shirt 24.99 EUR" [ref=f70e84] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+              - heading "Classic Cotton T-Shirt" [level=3] [ref=f70e85]
+              - generic [ref=f70e86]: 24.99 EUR
+            - link "Choose options" [ref=f70e90] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+          - generic [ref=f70e91]:
+            - link [ref=f70e93] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+            - link "Graphic Print Tee 29.99 EUR" [ref=f70e97] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+              - heading "Graphic Print Tee" [level=3] [ref=f70e98]
+              - generic [ref=f70e99]: 29.99 EUR
+            - link "Choose options" [ref=f70e103] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+          - generic [ref=f70e104]:
+            - link [ref=f70e106] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+            - link "V-Neck Linen Tee 34.99 EUR" [ref=f70e110] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+              - heading "V-Neck Linen Tee" [level=3] [ref=f70e111]
+              - generic [ref=f70e112]: 34.99 EUR
+            - link "Choose options" [ref=f70e116] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+          - generic [ref=f70e117]:
+            - generic [ref=f70e118]:
+              - link [ref=f70e119] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/striped-polo-shirt
+              - generic [ref=f70e124]:
+                - generic [ref=f70e125]: "On sale:"
+                - text: Sale
+            - 'link "Striped Polo Shirt 27.99 EUR 39.99 EUR On sale: Sale" [ref=f70e126] [cursor=pointer]':
+              - /url: http://acme-fashion.test/products/striped-polo-shirt
+              - heading "Striped Polo Shirt" [level=3] [ref=f70e127]
+              - generic [ref=f70e129]:
+                - generic [ref=f70e130]: 27.99 EUR
+                - generic [ref=f70e131]: 39.99 EUR
+                - generic [ref=f70e132]:
+                  - generic [ref=f70e133]: "On sale:"
+                  - text: Sale
+            - link "Choose options" [ref=f70e135] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/striped-polo-shirt
+  - contentinfo [ref=f70e136]:
+    - generic [ref=f70e137]:
+      - generic [ref=f70e138]:
+        - generic [ref=f70e139]:
+          - heading "Shop" [level=2] [ref=f70e140]
+          - list [ref=f70e141]:
+            - listitem [ref=f70e142]:
+              - link "About Us" [ref=f70e143] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f70e144]:
+              - link "FAQ" [ref=f70e145] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f70e146]:
+              - link "Shipping & Returns" [ref=f70e147] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f70e148]:
+              - link "Privacy Policy" [ref=f70e149] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f70e150]:
+              - link "Terms of Service" [ref=f70e151] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f70e152]:
+          - heading "Acme Fashion" [level=2] [ref=f70e153]
+          - paragraph [ref=f70e154]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f70e155]:
+        - paragraph [ref=f70e156]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f70e157]:
+          - generic [ref=f70e158]: VISA
+          - generic [ref=f70e159]: MASTERCARD
+          - generic [ref=f70e160]: AMEX
+          - generic [ref=f70e161]: PAYPAL

@@ -1,0 +1,173 @@
+- generic [active] [ref=f35e1]:
+  - link "Skip to main content" [ref=f35e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f35e3]:
+    - complementary "Admin navigation" [ref=f35e4]:
+      - generic [ref=f35e5]:
+        - link "Acme Fashion" [ref=f35e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f35e12]:
+          - navigation [ref=f35e13]:
+            - link "Dashboard" [ref=f35e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f35e19]: Products
+          - navigation [ref=f35e20]:
+            - link "Products" [ref=f35e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f35e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f35e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f35e36]: Orders
+          - navigation [ref=f35e37]:
+            - link "Orders" [ref=f35e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f35e43]: Customers
+          - navigation [ref=f35e44]:
+            - link "Customers" [ref=f35e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f35e50]: Discounts
+          - navigation [ref=f35e51]:
+            - link "Discounts" [ref=f35e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f35e58]: Content
+          - navigation [ref=f35e59]:
+            - link "Pages" [ref=f35e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f35e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f35e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f35e75]:
+            - link "Analytics" [ref=f35e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f35e82]: Settings
+          - navigation [ref=f35e83]:
+            - link "Settings" [ref=f35e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f35e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f35e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f35e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f35e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f35e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f35e115]:
+      - banner [ref=f35e116]:
+        - button "Acme Fashion" [ref=f35e118]
+        - button "Notifications" [ref=f35e123]
+        - button "AU Admin User" [ref=f35e127]:
+          - generic [ref=f35e128]: AU
+          - generic [ref=f35e131]: Admin User
+      - main [ref=f35e135]:
+        - generic [ref=f35e136]:
+          - link "Home" [ref=f35e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f35e141]: Customers
+        - generic [ref=f35e143]:
+          - generic [ref=f35e144]: Customers
+          - textbox "Search customers" [ref=f35e147]:
+            - /placeholder: Search by name or email...
+          - table [ref=f35e150]:
+            - rowgroup [ref=f35e151]:
+              - row [ref=f35e152]:
+                - columnheader "Name" [ref=f35e153]
+                - columnheader "Email" [ref=f35e154]
+                - columnheader "Orders" [ref=f35e155]
+                - columnheader "Total spent" [ref=f35e156]
+                - columnheader "Marketing" [ref=f35e157]
+                - columnheader "Created" [ref=f35e158]
+            - rowgroup [ref=f35e159]:
+              - row [ref=f35e160]:
+                - cell [ref=f35e161]:
+                  - link "John Doe" [ref=f35e162] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/1
+                - cell "customer@acme.test" [ref=f35e163]
+                - cell "5" [ref=f35e164]
+                - cell "734.37 EUR" [ref=f35e165]
+                - cell "Opted in" [ref=f35e166]
+                - cell "Jul 26, 2026" [ref=f35e168]
+              - row [ref=f35e169]:
+                - cell [ref=f35e170]:
+                  - link "Jane Smith" [ref=f35e171] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/2
+                - cell "jane@example.com" [ref=f35e172]
+                - cell "4" [ref=f35e173]
+                - cell "272.42 EUR" [ref=f35e174]
+                - cell "Opted out" [ref=f35e175]
+                - cell "Jul 26, 2026" [ref=f35e177]
+              - row [ref=f35e178]:
+                - cell [ref=f35e179]:
+                  - link "Michael Brown" [ref=f35e180] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/3
+                - cell "michael@example.com" [ref=f35e181]
+                - cell "1" [ref=f35e182]
+                - cell "124.98 EUR" [ref=f35e183]
+                - cell "Opted in" [ref=f35e184]
+                - cell "Jul 26, 2026" [ref=f35e186]
+              - row [ref=f35e187]:
+                - cell [ref=f35e188]:
+                  - link "Sarah Wilson" [ref=f35e189] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/4
+                - cell "sarah@example.com" [ref=f35e190]
+                - cell "1" [ref=f35e191]
+                - cell "104.96 EUR" [ref=f35e192]
+                - cell "Opted out" [ref=f35e193]
+                - cell "Jul 26, 2026" [ref=f35e195]
+              - row [ref=f35e196]:
+                - cell [ref=f35e197]:
+                  - link "David Lee" [ref=f35e198] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/5
+                - cell "david@example.com" [ref=f35e199]
+                - cell "1" [ref=f35e200]
+                - cell "89.97 EUR" [ref=f35e201]
+                - cell "Opted in" [ref=f35e202]
+                - cell "Jul 26, 2026" [ref=f35e204]
+              - row [ref=f35e205]:
+                - cell [ref=f35e206]:
+                  - link "Emma Garcia" [ref=f35e207] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/6
+                - cell "emma@example.com" [ref=f35e208]
+                - cell "1" [ref=f35e209]
+                - cell "49.97 EUR" [ref=f35e210]
+                - cell "Opted out" [ref=f35e211]
+                - cell "Jul 26, 2026" [ref=f35e213]
+              - row [ref=f35e214]:
+                - cell [ref=f35e215]:
+                  - link "James Taylor" [ref=f35e216] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/7
+                - cell "james@example.com" [ref=f35e217]
+                - cell "1" [ref=f35e218]
+                - cell "32.98 EUR" [ref=f35e219]
+                - cell "Opted out" [ref=f35e220]
+                - cell "Jul 26, 2026" [ref=f35e222]
+              - row [ref=f35e223]:
+                - cell [ref=f35e224]:
+                  - link "Lisa Anderson" [ref=f35e225] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/8
+                - cell "lisa@example.com" [ref=f35e226]
+                - cell "1" [ref=f35e227]
+                - cell "84.97 EUR" [ref=f35e228]
+                - cell "Opted in" [ref=f35e229]
+                - cell "Jul 26, 2026" [ref=f35e231]
+              - row [ref=f35e232]:
+                - cell [ref=f35e233]:
+                  - link "Robert Martinez" [ref=f35e234] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/9
+                - cell "robert@example.com" [ref=f35e235]
+                - cell "1" [ref=f35e236]
+                - cell "84.97 EUR" [ref=f35e237]
+                - cell "Opted out" [ref=f35e238]
+                - cell "Jul 26, 2026" [ref=f35e240]
+              - row [ref=f35e241]:
+                - cell [ref=f35e242]:
+                  - link "Anna Thomas" [ref=f35e243] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/customers/10
+                - cell "anna@example.com" [ref=f35e244]
+                - cell "1" [ref=f35e245]
+                - cell "50.00 EUR" [ref=f35e246]
+                - cell "Opted in" [ref=f35e247]
+                - cell "Jul 26, 2026" [ref=f35e249]

@@ -47,7 +47,7 @@
                         <flux:heading size="md">{{ $entry['name'] }}</flux:heading>
                         <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">{{ $entry['description'] }}</flux:text>
                     </div>
-                    <flux:button variant="primary" wire:click="installApp(@js($entry['name']))">Install</flux:button>
+                    <flux:button variant="primary" wire:click="installApp({{ $loop->index }})">Install</flux:button>
                 </div>
             @endforeach
         @endif

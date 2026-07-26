@@ -1,0 +1,83 @@
+- generic [active] [ref=f65e1]:
+  - link "Skip to main content" [ref=f65e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f65e4]:
+    - paragraph [ref=f65e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f65e6]
+  - banner [ref=f65e9]:
+    - generic [ref=f65e10]:
+      - link "Acme Fashion" [ref=f65e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f65e13]:
+        - link "Home" [ref=f65e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f65e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f65e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f65e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f65e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f65e19]:
+        - button "Search" [ref=f65e20]
+        - link "Account" [ref=f65e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f65e26]
+  - main [ref=f65e29]:
+    - generic [ref=f65e30]:
+      - navigation "Breadcrumb" [ref=f65e31]:
+        - list [ref=f65e32]:
+          - listitem [ref=f65e33]:
+            - link "Home" [ref=f65e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f65e35]:
+            - generic [ref=f65e36]: /
+            - generic [ref=f65e37]: Limited Edition Sneakers
+      - generic [ref=f65e38]:
+        - region "Product images" [ref=f65e39]
+        - generic [ref=f65e45]:
+          - heading "Limited Edition Sneakers" [level=1] [ref=f65e46]
+          - paragraph [ref=f65e47]: Acme Sport
+          - generic [ref=f65e48]: 159.99 EUR
+          - group "SizeEU 40" [ref=f65e50]:
+            - generic [ref=f65e52]:
+              - button "EU 40" [disabled] [pressed] [ref=f65e53]
+              - button "EU 42" [disabled] [ref=f65e54]
+              - button "EU 44" [disabled] [ref=f65e55]
+          - paragraph [ref=f65e56]: Out of stock
+          - button "Sold out" [disabled] [ref=f65e60]
+          - separator [ref=f65e61]
+          - paragraph [ref=f65e63]: Limited edition collaboration sneakers. Once they are gone, they are gone.
+          - generic [ref=f65e64]: limited
+  - contentinfo [ref=f65e66]:
+    - generic [ref=f65e67]:
+      - generic [ref=f65e68]:
+        - generic [ref=f65e69]:
+          - heading "Shop" [level=2] [ref=f65e70]
+          - list [ref=f65e71]:
+            - listitem [ref=f65e72]:
+              - link "About Us" [ref=f65e73] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f65e74]:
+              - link "FAQ" [ref=f65e75] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f65e76]:
+              - link "Shipping & Returns" [ref=f65e77] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f65e78]:
+              - link "Privacy Policy" [ref=f65e79] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f65e80]:
+              - link "Terms of Service" [ref=f65e81] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f65e82]:
+          - heading "Acme Fashion" [level=2] [ref=f65e83]
+          - paragraph [ref=f65e84]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f65e85]:
+        - paragraph [ref=f65e86]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f65e87]:
+          - generic [ref=f65e88]: VISA
+          - generic [ref=f65e89]: MASTERCARD
+          - generic [ref=f65e90]: AMEX
+          - generic [ref=f65e91]: PAYPAL

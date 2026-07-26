@@ -1,0 +1,94 @@
+- generic [ref=f53e1]:
+  - link "Skip to main content" [ref=f53e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f53e3]:
+    - complementary "Admin navigation" [ref=f53e4]:
+      - generic [ref=f53e5]:
+        - link "Acme Fashion" [ref=f53e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f53e12]:
+          - navigation [ref=f53e13]:
+            - link "Dashboard" [ref=f53e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f53e19]: Products
+          - navigation [ref=f53e20]:
+            - link "Products" [ref=f53e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f53e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f53e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f53e36]: Orders
+          - navigation [ref=f53e37]:
+            - link "Orders" [ref=f53e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f53e43]: Customers
+          - navigation [ref=f53e44]:
+            - link "Customers" [ref=f53e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f53e50]: Discounts
+          - navigation [ref=f53e51]:
+            - link "Discounts" [ref=f53e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f53e58]: Content
+          - navigation [ref=f53e59]:
+            - link "Pages" [ref=f53e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f53e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f53e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f53e75]:
+            - link "Analytics" [ref=f53e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f53e82]: Settings
+          - navigation [ref=f53e83]:
+            - link "Settings" [ref=f53e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f53e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f53e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f53e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f53e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f53e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f53e115]:
+      - banner [ref=f53e116]:
+        - button "Acme Fashion" [ref=f53e118]
+        - button "Notifications" [ref=f53e123]
+        - button "AU Admin User" [ref=f53e127]:
+          - generic [ref=f53e128]: AU
+          - generic [ref=f53e131]: Admin User
+      - main [ref=f53e135]:
+        - generic [ref=f53e136]:
+          - link "Home" [ref=f53e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f53e141]: Apps
+        - generic [ref=f53e143]:
+          - generic [ref=f53e144]: Apps
+          - link "My Integration App Installed 0 seconds ago Active" [ref=f53e192] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/apps/1
+            - generic [ref=f53e196]:
+              - generic [ref=f53e197]: My Integration App
+              - paragraph [ref=f53e198]: Installed 0 seconds ago
+            - generic [ref=f53e199]: Active
+          - generic [ref=f53e149]:
+            - generic [ref=f53e150]:
+              - generic [ref=f53e151]: Available apps
+              - paragraph [ref=f53e152]: Apps that can be installed on this store.
+            - generic [ref=f53e153]:
+              - generic [ref=f53e157]:
+                - generic [ref=f53e158]: Analytics Plugin
+                - paragraph [ref=f53e159]: Sends storefront and order events to your analytics warehouse.
+              - button "Install" [active] [ref=f53e160]
+            - generic [ref=f53e166]:
+              - generic [ref=f53e170]:
+                - generic [ref=f53e171]: Review Connector
+                - paragraph [ref=f53e172]: Imports product reviews from your review provider.
+              - button "Install" [ref=f53e173]
+  - alert [ref=f53e200]:
+    - paragraph [ref=f53e203]: My Integration App installed
+    - button "Dismiss" [ref=f53e204]

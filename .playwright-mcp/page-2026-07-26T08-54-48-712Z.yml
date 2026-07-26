@@ -1,0 +1,173 @@
+- generic [active] [ref=f30e1]:
+  - link "Skip to main content" [ref=f30e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f30e3]:
+    - complementary "Admin navigation" [ref=f30e4]:
+      - generic [ref=f30e5]:
+        - link "Acme Fashion" [ref=f30e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f30e12]:
+          - navigation [ref=f30e13]:
+            - link "Dashboard" [ref=f30e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f30e19]: Products
+          - navigation [ref=f30e20]:
+            - link "Products" [ref=f30e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f30e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f30e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f30e36]: Orders
+          - navigation [ref=f30e37]:
+            - link "Orders" [ref=f30e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f30e43]: Customers
+          - navigation [ref=f30e44]:
+            - link "Customers" [ref=f30e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f30e50]: Discounts
+          - navigation [ref=f30e51]:
+            - link "Discounts" [ref=f30e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f30e58]: Content
+          - navigation [ref=f30e59]:
+            - link "Pages" [ref=f30e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f30e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f30e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f30e75]:
+            - link "Analytics" [ref=f30e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f30e82]: Settings
+          - navigation [ref=f30e83]:
+            - link "Settings" [ref=f30e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f30e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f30e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f30e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f30e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f30e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f30e115]:
+      - banner [ref=f30e116]:
+        - button "Acme Fashion" [ref=f30e118]
+        - button "Notifications" [ref=f30e123]
+        - button "AU Admin User" [ref=f30e127]:
+          - generic [ref=f30e128]: AU
+          - generic [ref=f30e131]: Admin User
+      - main [ref=f30e135]:
+        - generic [ref=f30e136]:
+          - link "Home" [ref=f30e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f30e141]: Discounts
+        - generic [ref=f30e143]:
+          - generic [ref=f30e144]:
+            - generic [ref=f30e145]: Discounts
+            - link "Create discount" [ref=f30e146] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts/create
+          - generic [ref=f30e150]:
+            - textbox "Search discounts" [ref=f30e152]:
+              - /placeholder: Search by code...
+            - combobox "Status filter" [ref=f30e154]:
+              - option "All statuses" [selected]
+              - option "Draft"
+              - option "Active"
+              - option "Scheduled"
+              - option "Expired"
+              - option "Disabled"
+            - combobox "Type filter" [ref=f30e155]:
+              - option "All types" [selected]
+              - option "Code"
+              - option "Automatic"
+          - table [ref=f30e157]:
+            - rowgroup [ref=f30e158]:
+              - row [ref=f30e159]:
+                - columnheader "Code" [ref=f30e160]
+                - columnheader "Type" [ref=f30e161]
+                - columnheader "Value" [ref=f30e162]
+                - columnheader "Usage" [ref=f30e163]
+                - columnheader "Dates" [ref=f30e164]
+                - columnheader "Status" [ref=f30e165]
+                - columnheader "Actions" [ref=f30e166]
+            - rowgroup [ref=f30e168]:
+              - row [ref=f30e169]:
+                - cell [ref=f30e170]:
+                  - link "WELCOME10" [ref=f30e171] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/discounts/1/edit
+                - cell "Code" [ref=f30e172]
+                - cell "10%" [ref=f30e174]
+                - cell "4 / Unlimited" [ref=f30e175]
+                - cell "Jan 1, 2025 → Dec 31, 2027" [ref=f30e176]
+                - cell "Active" [ref=f30e177]
+                - cell [ref=f30e179]:
+                  - generic [ref=f30e180]:
+                    - link "Edit WELCOME10" [ref=f30e181] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/discounts/1/edit
+                    - button "Disable" [ref=f30e184]
+                    - button "Delete WELCOME10" [ref=f30e190]
+              - row [ref=f30e197]:
+                - cell [ref=f30e198]:
+                  - link "FLAT5" [ref=f30e199] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/discounts/2/edit
+                - cell "Code" [ref=f30e200]
+                - cell "5.00 EUR" [ref=f30e202]
+                - cell "0 / Unlimited" [ref=f30e203]
+                - cell "Jan 1, 2025 → Dec 31, 2027" [ref=f30e204]
+                - cell "Active" [ref=f30e205]
+                - cell [ref=f30e207]:
+                  - generic [ref=f30e208]:
+                    - link "Edit FLAT5" [ref=f30e209] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/discounts/2/edit
+                    - button "Disable" [ref=f30e212]
+                    - button "Delete FLAT5" [ref=f30e218]
+              - row [ref=f30e225]:
+                - cell [ref=f30e226]:
+                  - link "FREESHIP" [ref=f30e227] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/discounts/3/edit
+                - cell "Code" [ref=f30e228]
+                - cell "Free shipping" [ref=f30e230]
+                - cell "1 / Unlimited" [ref=f30e231]
+                - cell "Jan 1, 2025 → Dec 31, 2027" [ref=f30e232]
+                - cell "Active" [ref=f30e233]
+                - cell [ref=f30e235]:
+                  - generic [ref=f30e236]:
+                    - link "Edit FREESHIP" [ref=f30e237] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/discounts/3/edit
+                    - button "Disable" [ref=f30e240]
+                    - button "Delete FREESHIP" [ref=f30e246]
+              - row [ref=f30e253]:
+                - cell [ref=f30e254]:
+                  - link "EXPIRED20" [ref=f30e255] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/discounts/4/edit
+                - cell "Code" [ref=f30e256]
+                - cell "20%" [ref=f30e258]
+                - cell "0 / Unlimited" [ref=f30e259]
+                - cell "Jan 1, 2024 → Dec 31, 2024" [ref=f30e260]
+                - cell "Expired" [ref=f30e261]
+                - cell [ref=f30e263]:
+                  - generic [ref=f30e264]:
+                    - link "Edit EXPIRED20" [ref=f30e265] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/discounts/4/edit
+                    - button "Delete EXPIRED20" [ref=f30e268]
+              - row [ref=f30e275]:
+                - cell [ref=f30e276]:
+                  - link "MAXED" [ref=f30e277] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/discounts/5/edit
+                - cell "Code" [ref=f30e278]
+                - cell "10%" [ref=f30e280]
+                - cell "5 / 5" [ref=f30e281]
+                - cell "Jan 1, 2025 → Dec 31, 2027" [ref=f30e282]
+                - cell "Active" [ref=f30e283]
+                - cell [ref=f30e285]:
+                  - generic [ref=f30e286]:
+                    - link "Edit MAXED" [ref=f30e287] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/discounts/5/edit
+                    - button "Disable" [ref=f30e290]
+                    - button "Delete MAXED" [ref=f30e296]

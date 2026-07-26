@@ -1,0 +1,254 @@
+- generic [active] [ref=f19e1]:
+  - link "Skip to main content" [ref=f19e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f19e3]:
+    - complementary "Admin navigation" [ref=f19e4]:
+      - generic [ref=f19e5]:
+        - link "Acme Fashion" [ref=f19e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f19e12]:
+          - navigation [ref=f19e13]:
+            - link "Dashboard" [ref=f19e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f19e19]: Products
+          - navigation [ref=f19e20]:
+            - link "Products" [ref=f19e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f19e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f19e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f19e36]: Orders
+          - navigation [ref=f19e37]:
+            - link "Orders" [ref=f19e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f19e43]: Customers
+          - navigation [ref=f19e44]:
+            - link "Customers" [ref=f19e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f19e50]: Discounts
+          - navigation [ref=f19e51]:
+            - link "Discounts" [ref=f19e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f19e58]: Content
+          - navigation [ref=f19e59]:
+            - link "Pages" [ref=f19e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f19e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f19e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f19e75]:
+            - link "Analytics" [ref=f19e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f19e82]: Settings
+          - navigation [ref=f19e83]:
+            - link "Settings" [ref=f19e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f19e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f19e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f19e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f19e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f19e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f19e115]:
+      - banner [ref=f19e116]:
+        - button "Acme Fashion" [ref=f19e118]
+        - button "Notifications" [ref=f19e123]
+        - button "AU Admin User" [ref=f19e127]:
+          - generic [ref=f19e128]: AU
+          - generic [ref=f19e131]: Admin User
+      - main [ref=f19e135]:
+        - generic [ref=f19e136]:
+          - link "Home" [ref=f19e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f19e141]: Orders
+        - generic [ref=f19e143]:
+          - generic [ref=f19e144]: Orders
+          - generic [ref=f19e146]:
+            - textbox "Search orders" [ref=f19e148]:
+              - /placeholder: "Search by order # or email..."
+            - combobox "Financial status filter" [ref=f19e150]:
+              - option "All payments" [selected]
+              - option "Pending"
+              - option "Authorized"
+              - option "Paid"
+              - option "Partially Refunded"
+              - option "Refunded"
+              - option "Voided"
+            - combobox "Fulfillment status filter" [ref=f19e151]:
+              - option "All fulfillments" [selected]
+              - option "Unfulfilled"
+              - option "Partial"
+              - option "Fulfilled"
+            - generic [ref=f19e152]:
+              - textbox "Placed from" [ref=f19e154]
+              - paragraph [ref=f19e156]: –
+              - textbox "Placed to" [ref=f19e158]
+          - tablist "Status filter" [ref=f19e160]:
+            - tab "All" [selected] [ref=f19e161]
+            - tab "Pending" [ref=f19e162]
+            - tab "Paid" [ref=f19e163]
+            - tab "Fulfilled" [ref=f19e164]
+            - tab "Cancelled" [ref=f19e165]
+            - tab "Refunded" [ref=f19e166]
+          - table [ref=f19e168]:
+            - rowgroup [ref=f19e169]:
+              - row [ref=f19e170]:
+                - columnheader [ref=f19e171]:
+                  - button "Order" [ref=f19e172]
+                - columnheader [ref=f19e173]:
+                  - button "Date" [ref=f19e174]
+                - columnheader "Customer" [ref=f19e177]
+                - columnheader "Payment" [ref=f19e178]
+                - columnheader "Fulfillment" [ref=f19e179]
+                - columnheader [ref=f19e180]:
+                  - button "Total" [ref=f19e181]
+            - rowgroup [ref=f19e182]:
+              - row [ref=f19e183]:
+                - cell [ref=f19e184]:
+                  - link "#1017" [ref=f19e185] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/20
+                - cell "Jul 26, 2026 8:41 AM" [ref=f19e186]
+                - cell "Jane Smith" [ref=f19e187]
+                - cell "Pending" [ref=f19e188]
+                - cell "Unfulfilled" [ref=f19e190]
+                - cell "84.98 EUR" [ref=f19e192]
+              - row [ref=f19e193]:
+                - cell [ref=f19e194]:
+                  - link "#1016" [ref=f19e195] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/19
+                - cell "Jul 26, 2026 8:34 AM" [ref=f19e196]
+                - cell "Jane Smith" [ref=f19e197]
+                - cell "Paid" [ref=f19e198]
+                - cell "Unfulfilled" [ref=f19e200]
+                - cell "27.49 EUR" [ref=f19e202]
+              - row [ref=f19e203]:
+                - cell [ref=f19e204]:
+                  - link "#1015" [ref=f19e205] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/15
+                - cell "Jul 26, 2026 8:14 AM" [ref=f19e206]
+                - cell "John Doe" [ref=f19e207]
+                - cell "Paid" [ref=f19e208]
+                - cell "Unfulfilled" [ref=f19e210]
+                - cell "54.47 EUR" [ref=f19e212]
+              - row [ref=f19e213]:
+                - cell [ref=f19e214]:
+                  - link "#1005" [ref=f19e215] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/5
+                - cell "Jul 26, 2026 6:14 AM" [ref=f19e216]
+                - cell "Jane Smith" [ref=f19e217]
+                - cell "Pending" [ref=f19e218]
+                - cell "Unfulfilled" [ref=f19e220]
+                - cell "39.98 EUR" [ref=f19e222]
+              - row [ref=f19e223]:
+                - cell [ref=f19e224]:
+                  - link "#1013" [ref=f19e225] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/13
+                - cell "Jul 25, 2026 8:14 AM" [ref=f19e226]
+                - cell "Robert Martinez" [ref=f19e227]
+                - cell "Paid" [ref=f19e228]
+                - cell "Unfulfilled" [ref=f19e230]
+                - cell "84.97 EUR" [ref=f19e232]
+              - row [ref=f19e233]:
+                - cell [ref=f19e234]:
+                  - link "#1010" [ref=f19e235] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/10
+                - cell "Jul 25, 2026 8:14 AM" [ref=f19e236]
+                - cell "John Doe" [ref=f19e237]
+                - cell "Paid" [ref=f19e238]
+                - cell "Unfulfilled" [ref=f19e240]
+                - cell "504.98 EUR" [ref=f19e242]
+              - row [ref=f19e243]:
+                - cell [ref=f19e244]:
+                  - link "#1006" [ref=f19e245] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/6
+                - cell "Jul 25, 2026 8:14 AM" [ref=f19e246]
+                - cell "Michael Brown" [ref=f19e247]
+                - cell "Paid" [ref=f19e248]
+                - cell "Unfulfilled" [ref=f19e250]
+                - cell "124.98 EUR" [ref=f19e252]
+              - row [ref=f19e253]:
+                - cell [ref=f19e254]:
+                  - link "#1001" [ref=f19e255] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/1
+                - cell "Jul 24, 2026 8:14 AM" [ref=f19e256]
+                - cell "John Doe" [ref=f19e257]
+                - cell "Paid" [ref=f19e258]
+                - cell "Unfulfilled" [ref=f19e260]
+                - cell "54.97 EUR" [ref=f19e262]
+              - row [ref=f19e263]:
+                - cell [ref=f19e264]:
+                  - link "#1009" [ref=f19e265] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/9
+                - cell "Jul 23, 2026 8:14 AM" [ref=f19e266]
+                - cell "Emma Garcia" [ref=f19e267]
+                - cell "Paid" [ref=f19e268]
+                - cell "Unfulfilled" [ref=f19e270]
+                - cell "49.97 EUR" [ref=f19e272]
+              - row [ref=f19e273]:
+                - cell [ref=f19e274]:
+                  - link "#1012" [ref=f19e275] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/12
+                - cell "Jul 22, 2026 8:14 AM" [ref=f19e276]
+                - cell "Lisa Anderson" [ref=f19e277]
+                - cell "Paid" [ref=f19e278]
+                - cell "Unfulfilled" [ref=f19e280]
+                - cell "84.97 EUR" [ref=f19e282]
+              - row [ref=f19e283]:
+                - cell [ref=f19e284]:
+                  - link "#1003" [ref=f19e285] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/3
+                - cell "Jul 21, 2026 8:14 AM" [ref=f19e286]
+                - cell "Jane Smith" [ref=f19e287]
+                - cell "Paid" [ref=f19e288]
+                - cell "Partial" [ref=f19e290]
+                - cell "119.97 EUR" [ref=f19e292]
+              - row [ref=f19e293]:
+                - cell [ref=f19e294]:
+                  - link "#1002" [ref=f19e295] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/2
+                - cell "Jul 16, 2026 8:14 AM" [ref=f19e296]
+                - cell "John Doe" [ref=f19e297]
+                - cell "Paid" [ref=f19e298]
+                - cell "Fulfilled" [ref=f19e300]
+                - cell "89.97 EUR" [ref=f19e302]
+              - row [ref=f19e303]:
+                - cell [ref=f19e304]:
+                  - link "#1008" [ref=f19e305] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/8
+                - cell "Jul 14, 2026 8:14 AM" [ref=f19e306]
+                - cell "David Lee" [ref=f19e307]
+                - cell "Partially Refunded" [ref=f19e308]
+                - cell "Fulfilled" [ref=f19e310]
+                - cell "89.97 EUR" [ref=f19e312]
+              - row [ref=f19e313]:
+                - cell [ref=f19e314]:
+                  - link "#1014" [ref=f19e315] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/14
+                - cell "Jul 12, 2026 8:14 AM" [ref=f19e316]
+                - cell "Anna Thomas" [ref=f19e317]
+                - cell "Paid" [ref=f19e318]
+                - cell "Fulfilled" [ref=f19e320]
+                - cell "50.00 EUR" [ref=f19e322]
+              - row [ref=f19e323]:
+                - cell [ref=f19e324]:
+                  - link "#1004" [ref=f19e325] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/orders/4
+                - cell "Jul 11, 2026 8:14 AM" [ref=f19e326]
+                - cell "John Doe" [ref=f19e327]
+                - cell "Refunded" [ref=f19e328]
+                - cell "Unfulfilled" [ref=f19e330]
+                - cell "29.98 EUR" [ref=f19e332]
+          - navigation "Pagination Navigation" [ref=f19e334]:
+            - generic [ref=f19e335]:
+              - paragraph [ref=f19e337]: Showing 1 to 15 of 17 results
+              - generic [ref=f19e339]:
+                - generic "&laquo; Previous" [ref=f19e341]
+                - generic [ref=f19e345]: "1"
+                - button "Go to page 2" [ref=f19e349]: "2"
+                - button "Next &raquo;" [ref=f19e351]

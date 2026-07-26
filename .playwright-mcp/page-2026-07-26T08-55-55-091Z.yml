@@ -1,0 +1,170 @@
+- generic [active] [ref=f38e1]:
+  - link "Skip to main content" [ref=f38e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f38e3]:
+    - complementary "Admin navigation" [ref=f38e4]:
+      - generic [ref=f38e5]:
+        - link "Acme Fashion" [ref=f38e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f38e12]:
+          - navigation [ref=f38e13]:
+            - link "Dashboard" [ref=f38e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f38e19]: Products
+          - navigation [ref=f38e20]:
+            - link "Products" [ref=f38e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f38e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f38e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f38e36]: Orders
+          - navigation [ref=f38e37]:
+            - link "Orders" [ref=f38e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f38e43]: Customers
+          - navigation [ref=f38e44]:
+            - link "Customers" [ref=f38e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f38e50]: Discounts
+          - navigation [ref=f38e51]:
+            - link "Discounts" [ref=f38e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f38e58]: Content
+          - navigation [ref=f38e59]:
+            - link "Pages" [ref=f38e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f38e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f38e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f38e75]:
+            - link "Analytics" [ref=f38e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f38e82]: Settings
+          - navigation [ref=f38e83]:
+            - link "Settings" [ref=f38e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f38e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f38e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f38e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f38e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f38e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f38e115]:
+      - banner [ref=f38e116]:
+        - button "Acme Fashion" [ref=f38e118]
+        - button "Notifications" [ref=f38e123]
+        - button "AU Admin User" [ref=f38e127]:
+          - generic [ref=f38e128]: AU
+          - generic [ref=f38e131]: Admin User
+      - main [ref=f38e135]:
+        - generic [ref=f38e136]:
+          - link "Home" [ref=f38e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Settings" [ref=f38e142] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/settings
+          - generic [ref=f38e145]: Shipping
+        - generic [ref=f38e147]:
+          - generic [ref=f38e148]:
+            - generic [ref=f38e149]: Shipping
+            - button "Add zone" [ref=f38e150]
+          - generic [ref=f38e158]:
+            - generic [ref=f38e159]:
+              - generic [ref=f38e160]:
+                - generic [ref=f38e161]:
+                  - generic [ref=f38e162]: Domestic
+                  - paragraph [ref=f38e163]: "Countries: DE"
+                - generic [ref=f38e164]:
+                  - button "Edit Domestic" [ref=f38e165]
+                  - button "Delete Domestic" [ref=f38e172]
+              - table [ref=f38e180]:
+                - rowgroup [ref=f38e181]:
+                  - row [ref=f38e182]:
+                    - columnheader "Name" [ref=f38e183]
+                    - columnheader "Type" [ref=f38e184]
+                    - columnheader "Config" [ref=f38e185]
+                    - columnheader "Active" [ref=f38e186]
+                    - columnheader "Actions" [ref=f38e187]
+                - rowgroup [ref=f38e189]:
+                  - row [ref=f38e190]:
+                    - cell "Standard Shipping" [ref=f38e191]
+                    - cell "flat" [ref=f38e192]
+                    - cell "4.99" [ref=f38e194]
+                    - cell [ref=f38e195]:
+                      - switch "Toggle Standard Shipping" [checked] [ref=f38e196]
+                    - cell [ref=f38e198]:
+                      - generic [ref=f38e199]:
+                        - button "Edit Standard Shipping" [ref=f38e200]
+                        - button "Delete Standard Shipping" [ref=f38e207]
+                  - row [ref=f38e214]:
+                    - cell "Express Shipping" [ref=f38e215]
+                    - cell "flat" [ref=f38e216]
+                    - cell "9.99" [ref=f38e218]
+                    - cell [ref=f38e219]:
+                      - switch "Toggle Express Shipping" [checked] [ref=f38e220]
+                    - cell [ref=f38e222]:
+                      - generic [ref=f38e223]:
+                        - button "Edit Express Shipping" [ref=f38e224]
+                        - button "Delete Express Shipping" [ref=f38e231]
+              - button "Add rate" [ref=f38e239]
+            - generic [ref=f38e247]:
+              - generic [ref=f38e248]:
+                - generic [ref=f38e249]:
+                  - generic [ref=f38e250]: EU
+                  - paragraph [ref=f38e251]: "Countries: AT, FR, IT, ES, NL, BE, PL"
+                - generic [ref=f38e252]:
+                  - button "Edit EU" [ref=f38e253]
+                  - button "Delete EU" [ref=f38e260]
+              - table [ref=f38e268]:
+                - rowgroup [ref=f38e269]:
+                  - row [ref=f38e270]:
+                    - columnheader "Name" [ref=f38e271]
+                    - columnheader "Type" [ref=f38e272]
+                    - columnheader "Config" [ref=f38e273]
+                    - columnheader "Active" [ref=f38e274]
+                    - columnheader "Actions" [ref=f38e275]
+                - rowgroup [ref=f38e277]:
+                  - row [ref=f38e278]:
+                    - cell "EU Standard" [ref=f38e279]
+                    - cell "flat" [ref=f38e280]
+                    - cell "8.99" [ref=f38e282]
+                    - cell [ref=f38e283]:
+                      - switch "Toggle EU Standard" [checked] [ref=f38e284]
+                    - cell [ref=f38e286]:
+                      - generic [ref=f38e287]:
+                        - button "Edit EU Standard" [ref=f38e288]
+                        - button "Delete EU Standard" [ref=f38e295]
+              - button "Add rate" [ref=f38e303]
+            - generic [ref=f38e311]:
+              - generic [ref=f38e312]:
+                - generic [ref=f38e313]:
+                  - generic [ref=f38e314]: Rest of World
+                  - paragraph [ref=f38e315]: "Countries: US, GB, CA, AU"
+                - generic [ref=f38e316]:
+                  - button "Edit Rest of World" [ref=f38e317]
+                  - button "Delete Rest of World" [ref=f38e324]
+              - table [ref=f38e332]:
+                - rowgroup [ref=f38e333]:
+                  - row [ref=f38e334]:
+                    - columnheader "Name" [ref=f38e335]
+                    - columnheader "Type" [ref=f38e336]
+                    - columnheader "Config" [ref=f38e337]
+                    - columnheader "Active" [ref=f38e338]
+                    - columnheader "Actions" [ref=f38e339]
+                - rowgroup [ref=f38e341]:
+                  - row [ref=f38e342]:
+                    - cell "International" [ref=f38e343]
+                    - cell "flat" [ref=f38e344]
+                    - cell "14.99" [ref=f38e346]
+                    - cell [ref=f38e347]:
+                      - switch "Toggle International" [checked] [ref=f38e348]
+                    - cell [ref=f38e350]:
+                      - generic [ref=f38e351]:
+                        - button "Edit International" [ref=f38e352]
+                        - button "Delete International" [ref=f38e359]
+              - button "Add rate" [ref=f38e367]

@@ -1,0 +1,15 @@
+[     103ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/settings/taxes:54
+[     120ms] TypeError: ((intermediate value) || (intermediate value))(...) is not a function
+    at set checked (http://admin.acme-fashion.test/flux/flux.js?id=dca30f4a:128:2900)
+    at bindInputValue (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:2250:22)
+    at bind (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:2224:9)
+    at http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:3732:23
+    at mutateDom (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1067:18)
+    at el._x_forceModelUpdate (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:3732:7)
+    at http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:3739:10
+    at reactiveEffect (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:2693:18)
+    at Object.effect2 [as effect] (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:2668:7)
+    at effect (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:935:35)
+[   15844ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/navigation:54
+[   45971ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/analytics:54
+[   76095ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/search/settings:54

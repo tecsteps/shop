@@ -1,0 +1,89 @@
+- generic [ref=f59e2]:
+  - generic [ref=f59e4]:
+    - generic [ref=f59e5]: Method Not Allowed
+    - button "Copy as Markdown" [ref=f59e11] [cursor=pointer]
+  - generic [ref=f59e18]:
+    - generic [ref=f59e19]:
+      - heading "Symfony\\Component\\HttpKernel\\Exception\\MethodNotAllowedHttpException" [level=1] [ref=f59e20]
+      - generic [ref=f59e21]: vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php:131
+      - paragraph [ref=f59e23]: "The GET method is not supported for route account/logout. Supported methods: POST."
+    - generic [ref=f59e24]:
+      - generic [ref=f59e25]:
+        - generic [ref=f59e26]:
+          - generic [ref=f59e27]: LARAVEL
+          - generic [ref=f59e28]: 12.51.0
+        - generic [ref=f59e29]:
+          - generic [ref=f59e30]: PHP
+          - generic [ref=f59e31]: 8.4.17
+      - generic [ref=f59e32]: UNHANDLED
+      - generic [ref=f59e36]: CODE 0
+    - generic [ref=f59e38]:
+      - generic [ref=f59e39]: "405"
+      - generic [ref=f59e43]: GET
+      - generic [ref=f59e47]: http://acme-fashion.test/account/logout
+      - button [ref=f59e48] [cursor=pointer]
+  - generic [ref=f59e53]:
+    - generic [ref=f59e54]:
+      - heading "Exception trace" [level=3] [ref=f59e60]
+      - generic [ref=f59e61]:
+        - generic [ref=f59e63] [cursor=pointer]:
+          - generic [ref=f59e68]: 33 vendor frames
+          - button [ref=f59e69]
+        - generic [ref=f59e74]:
+          - generic [ref=f59e75] [cursor=pointer]:
+            - generic [ref=f59e78]:
+              - code [ref=f59e82]:
+                - generic [ref=f59e83]: public/index.php
+              - generic [ref=f59e84]: public/index.php:20
+            - button [ref=f59e87]
+          - code [ref=f59e96]:
+            - generic [ref=f59e97]: "15"
+            - generic [ref=f59e98]: 16// Bootstrap Laravel and handle the request...
+            - generic [ref=f59e99]: 17/** @var Application $app */
+            - generic [ref=f59e100]: 18$app = require_once __DIR__.'/../bootstrap/app.php';
+            - generic [ref=f59e101]: "19"
+            - generic [ref=f59e102]: 20$app->handleRequest(Request::capture());
+            - generic [ref=f59e103]: "21"
+        - generic [ref=f59e105] [cursor=pointer]:
+          - generic [ref=f59e110]: 1 vendor frame
+          - button [ref=f59e111]
+    - generic [ref=f59e116]:
+      - heading "Queries" [level=3] [ref=f59e122]
+      - generic [ref=f59e123]: // No queries executed
+  - generic [ref=f59e126]:
+    - generic [ref=f59e127]:
+      - heading "Headers" [level=2] [ref=f59e128]
+      - generic [ref=f59e129]:
+        - generic [ref=f59e130]:
+          - generic [ref=f59e131]: cookie
+          - generic [ref=f59e133]: XSRF-TOKEN=eyJpdiI6InNESnptY25sQU5GTExSb1NZbElEQ3c9PSIsInZhbHVlIjoiMFhNUWt6RVcxTmtsMkQrYmphdDhGWWxDejhWYjZGRmhBVVlNNFlIMGE3VEZYNnpFOHN0cC9rc2k0OTBwSVJETm9DbGRyRStyNVVwMFYwODVsZ1gxSTZtV2pmNG5vMHd0T3ozb0hKUlFFaSt5MGkzVTRtWFdzRFU2U1dqRDhWaFkiLCJtYWMiOiI2OTRkODAxODY5YWRmYjA5Y2M4NzkwMjliZDM1YjBmYzEzNTBhMzk1NTdlZTg5YTE0ZTZiMTc0NDIzYmE3Nzc0IiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6InFEazg0eVVGRVBsNkZFR21FaWxWQWc9PSIsInZhbHVlIjoiVXhaRWU2WGFMRmQ4U1JSUGdVZG1wdDRXSzA3VVN3blprZU9iSXIyK3lLaDhqSDFLdWdSd3M1SGJ2UTE1eW13NWNpRUNMcG5tWE40L0pGSFJYYitIQ3laNFFiYWNBSHc4MGdyVTFIeDdZdElPMFFkNi9tVXBycWxXRlJpbzRocUciLCJtYWMiOiJjZTI2ZDAyODM4YzRmODVmZGNmNjQyNzI0OGI4ODZmMmIwYWIzNDBkYzdjYTAzZGY2MjY4NTg2MDdkZTcyOTliIiwidGFnIjoiIn0%3D
+        - generic [ref=f59e134]:
+          - generic [ref=f59e135]: accept-language
+          - generic [ref=f59e137]: en-GB,en-US;q=0.9,en;q=0.8
+        - generic [ref=f59e138]:
+          - generic [ref=f59e139]: accept-encoding
+          - generic [ref=f59e141]: gzip, deflate
+        - generic [ref=f59e142]:
+          - generic [ref=f59e143]: accept
+          - generic [ref=f59e145]: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        - generic [ref=f59e146]:
+          - generic [ref=f59e147]: user-agent
+          - generic [ref=f59e149]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36
+        - generic [ref=f59e150]:
+          - generic [ref=f59e151]: upgrade-insecure-requests
+          - generic [ref=f59e153]: "1"
+        - generic [ref=f59e154]:
+          - generic [ref=f59e155]: connection
+          - generic [ref=f59e157]: keep-alive
+        - generic [ref=f59e158]:
+          - generic [ref=f59e159]: host
+          - generic [ref=f59e161]: acme-fashion.test
+    - generic [ref=f59e162]:
+      - heading "Body" [level=2] [ref=f59e163]
+      - generic [ref=f59e164]: // No request body
+    - generic [ref=f59e165]:
+      - heading "Routing" [level=2] [ref=f59e166]
+      - generic [ref=f59e167]: // No routing context
+    - generic [ref=f59e169]:
+      - heading "Routing parameters" [level=2] [ref=f59e170]
+      - generic [ref=f59e171]: // No routing parameters

@@ -288,3 +288,31 @@ test('navigation cache is invalidated when menu items change', function () {
 
     expect(collect($service->forHandle('main-menu'))->pluck('label')->all())->toBe(['First Link', 'Second Link']);
 });
+
+test('collection show sorts products by price ascending and descending', function () {
+    $store = $this->createStore();
+    $this->bindStore($store);
+    $collection = Collection::factory()->create(['store_id' => $store->id]);
+
+    $cheap = Product::factory()->active()->create(['store_id' => $store->id, 'title' => 'Cheap Tee']);
+    \App\Models\ProductVariant::factory()->withInventory(5)->create(['product_id' => $cheap->id, 'price_amount' => 1000]);
+
+    $mid = Product::factory()->active()->create(['store_id' => $store->id, 'title' => 'Mid Tee']);
+    \App\Models\ProductVariant::factory()->withInventory(5)->create(['product_id' => $mid->id, 'price_amount' => 2000]);
+
+    $pricey = Product::factory()->active()->create(['store_id' => $store->id, 'title' => 'Pricey Tee']);
+    \App\Models\ProductVariant::factory()->withInventory(5)->create(['product_id' => $pricey->id, 'price_amount' => 3000]);
+
+    // Attach in reverse-price order so pivot position disagrees with price.
+    $collection->products()->attach($pricey->id, ['position' => 0]);
+    $collection->products()->attach($mid->id, ['position' => 1]);
+    $collection->products()->attach($cheap->id, ['position' => 2]);
+
+    \Livewire\Livewire::test(\App\Livewire\Storefront\Collections\Show::class, ['handle' => $collection->handle])
+        ->set('sort', 'price-asc')
+        ->assertSeeInOrder(['Cheap Tee', 'Mid Tee', 'Pricey Tee'])
+        ->set('sort', 'price-desc')
+        ->assertSeeInOrder(['Pricey Tee', 'Mid Tee', 'Cheap Tee'])
+        ->set('sort', 'featured')
+        ->assertSeeInOrder(['Pricey Tee', 'Mid Tee', 'Cheap Tee']);
+});

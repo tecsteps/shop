@@ -1,0 +1,17 @@
+[     134ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/developers:54
+[  148542ms] [WARNING] Alpine Expression Error: Invalid or unexpected token
+
+Expression: "navigator.clipboard.writeText(@js($generatedToken))"
+
+ JSHandle@node @ http://admin.acme-fashion.test/admin/developers:124
+[  148560ms] SyntaxError: Invalid or unexpected token
+    at new AsyncFunction (<anonymous>)
+    at safeAsyncFunction (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1385:21)
+    at generateFunctionFromString (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1398:16)
+    at generateEvaluatorFromString (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1403:16)
+    at normalEvaluator (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1361:111)
+    at evaluateLater (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1347:12)
+    at http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:4206:35
+    at Function.<anonymous> (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:2162:58)
+    at flushHandlers (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1527:48)
+    at stopDeferring (http://admin.acme-fashion.test/livewire-0972654c/livewire.js?id=cfc5c1ae:1532:7)

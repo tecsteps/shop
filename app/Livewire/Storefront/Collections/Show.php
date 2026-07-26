@@ -146,6 +146,13 @@ class Show extends Component
      */
     private function applySort(BelongsToMany $query): void
     {
+        if ($this->sort !== 'featured') {
+            // The products() relation has a default orderBy on the pivot
+            // position; a later orderBy would only act as a tie-breaker, so
+            // reset the ordering before applying the requested sort.
+            $query->reorder();
+        }
+
         match ($this->sort) {
             'price-asc' => $query->orderBy($this->minimumPriceSubquery()),
             'price-desc' => $query->orderByDesc($this->minimumPriceSubquery()),

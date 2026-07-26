@@ -1,0 +1,137 @@
+- generic [active] [ref=f62e1]:
+  - link "Skip to main content" [ref=f62e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f62e4]:
+    - paragraph [ref=f62e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f62e6]
+  - banner [ref=f62e9]:
+    - generic [ref=f62e10]:
+      - link "Acme Fashion" [ref=f62e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f62e13]:
+        - link "Home" [ref=f62e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f62e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f62e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f62e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f62e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f62e19]:
+        - button "Search" [ref=f62e20]
+        - link "Account" [ref=f62e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f62e26]
+  - main [ref=f62e29]:
+    - generic [ref=f62e30]:
+      - heading "Welcome back, John Doe!" [level=1] [ref=f62e31]
+      - paragraph [ref=f62e32]: customer@acme.test
+      - generic [ref=f62e33]:
+        - link [ref=f62e34] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders
+          - paragraph [ref=f62e37]: Order history
+          - paragraph [ref=f62e38]: View all your orders
+        - link [ref=f62e39] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/addresses
+          - paragraph [ref=f62e43]: Addresses
+          - paragraph [ref=f62e44]: Manage your addresses
+        - button "Log out Sign out of your account" [ref=f62e46]:
+          - generic [ref=f62e49]: Log out
+          - generic [ref=f62e50]: Sign out of your account
+      - generic [ref=f62e51]:
+        - generic [ref=f62e52]:
+          - heading "Recent orders" [level=2] [ref=f62e53]
+          - link "View all" [ref=f62e54] [cursor=pointer]:
+            - /url: http://acme-fashion.test/account/orders
+        - table [ref=f62e56]:
+          - rowgroup [ref=f62e57]:
+            - row [ref=f62e58]:
+              - columnheader "Order" [ref=f62e59]
+              - columnheader "Date" [ref=f62e60]
+              - columnheader "Status" [ref=f62e61]
+              - columnheader "Total" [ref=f62e62]
+              - columnheader "View" [ref=f62e63]
+          - rowgroup [ref=f62e65]:
+            - row [ref=f62e66]:
+              - cell "#1015" [ref=f62e67]
+              - cell "Jul 26, 2026" [ref=f62e68]
+              - cell "paid" [ref=f62e69]
+              - cell "54.47 EUR" [ref=f62e71]
+              - cell [ref=f62e72]:
+                - link "View" [ref=f62e73] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/orders/1015
+            - row [ref=f62e74]:
+              - cell "#1010" [ref=f62e75]
+              - cell "Jul 25, 2026" [ref=f62e76]
+              - cell "paid" [ref=f62e77]
+              - cell "504.98 EUR" [ref=f62e79]
+              - cell [ref=f62e80]:
+                - link "View" [ref=f62e81] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/orders/1010
+            - row [ref=f62e82]:
+              - cell "#1001" [ref=f62e83]
+              - cell "Jul 24, 2026" [ref=f62e84]
+              - cell "paid" [ref=f62e85]
+              - cell "54.97 EUR" [ref=f62e87]
+              - cell [ref=f62e88]:
+                - link "View" [ref=f62e89] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/orders/1001
+            - row [ref=f62e90]:
+              - cell "#1002" [ref=f62e91]
+              - cell "Jul 16, 2026" [ref=f62e92]
+              - cell "fulfilled" [ref=f62e93]
+              - cell "89.97 EUR" [ref=f62e95]
+              - cell [ref=f62e96]:
+                - link "View" [ref=f62e97] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/orders/1002
+            - row [ref=f62e98]:
+              - cell "#1004" [ref=f62e99]
+              - cell "Jul 11, 2026" [ref=f62e100]
+              - cell "cancelled" [ref=f62e101]
+              - cell "29.98 EUR" [ref=f62e103]
+              - cell [ref=f62e104]:
+                - link "View" [ref=f62e105] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/orders/1004
+      - generic [ref=f62e106]:
+        - heading "Profile" [level=2] [ref=f62e107]
+        - generic [ref=f62e108]:
+          - generic [ref=f62e109]:
+            - generic [ref=f62e110]: Name
+            - textbox "Name" [ref=f62e112]: John Doe
+          - generic [ref=f62e113]:
+            - checkbox "Subscribe to marketing emails" [checked] [ref=f62e114]
+            - generic [ref=f62e118]: Subscribe to marketing emails
+          - button "Save" [ref=f62e119]
+  - contentinfo [ref=f62e125]:
+    - generic [ref=f62e126]:
+      - generic [ref=f62e127]:
+        - generic [ref=f62e128]:
+          - heading "Shop" [level=2] [ref=f62e129]
+          - list [ref=f62e130]:
+            - listitem [ref=f62e131]:
+              - link "About Us" [ref=f62e132] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f62e133]:
+              - link "FAQ" [ref=f62e134] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f62e135]:
+              - link "Shipping & Returns" [ref=f62e136] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f62e137]:
+              - link "Privacy Policy" [ref=f62e138] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f62e139]:
+              - link "Terms of Service" [ref=f62e140] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f62e141]:
+          - heading "Acme Fashion" [level=2] [ref=f62e142]
+          - paragraph [ref=f62e143]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f62e144]:
+        - paragraph [ref=f62e145]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f62e146]:
+          - generic [ref=f62e147]: VISA
+          - generic [ref=f62e148]: MASTERCARD
+          - generic [ref=f62e149]: AMEX
+          - generic [ref=f62e150]: PAYPAL

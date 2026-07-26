@@ -1,0 +1,89 @@
+- generic [active] [ref=f60e1]:
+  - link "Skip to main content" [ref=f60e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f60e4]:
+    - paragraph [ref=f60e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f60e6]
+  - banner [ref=f60e9]:
+    - generic [ref=f60e10]:
+      - link "Acme Fashion" [ref=f60e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f60e13]:
+        - link "Home" [ref=f60e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f60e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f60e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f60e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f60e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f60e19]:
+        - button "Search" [ref=f60e20]
+        - link "Account" [ref=f60e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f60e26]
+  - main [ref=f60e29]:
+    - generic [ref=f60e30]:
+      - heading "Welcome back, Max Mustermann!" [level=1] [ref=f60e31]
+      - paragraph [ref=f60e32]: max@example.com
+      - generic [ref=f60e33]:
+        - link [ref=f60e34] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/orders
+          - paragraph [ref=f60e37]: Order history
+          - paragraph [ref=f60e38]: View all your orders
+        - link [ref=f60e39] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/addresses
+          - paragraph [ref=f60e43]: Addresses
+          - paragraph [ref=f60e44]: Manage your addresses
+        - button "Log out Sign out of your account" [ref=f60e46]:
+          - generic [ref=f60e49]: Log out
+          - generic [ref=f60e50]: Sign out of your account
+      - generic [ref=f60e51]:
+        - generic [ref=f60e52]:
+          - heading "Recent orders" [level=2] [ref=f60e53]
+          - link "View all" [ref=f60e54] [cursor=pointer]:
+            - /url: http://acme-fashion.test/account/orders
+        - paragraph [ref=f60e55]: You haven't placed any orders yet.
+      - generic [ref=f60e56]:
+        - heading "Profile" [level=2] [ref=f60e57]
+        - generic [ref=f60e58]:
+          - generic [ref=f60e59]:
+            - generic [ref=f60e60]: Name
+            - textbox "Name" [ref=f60e62]: Max Mustermann
+          - generic [ref=f60e63]:
+            - checkbox "Subscribe to marketing emails" [ref=f60e64]
+            - generic [ref=f60e66]: Subscribe to marketing emails
+          - button "Save" [ref=f60e67]
+  - contentinfo [ref=f60e73]:
+    - generic [ref=f60e74]:
+      - generic [ref=f60e75]:
+        - generic [ref=f60e76]:
+          - heading "Shop" [level=2] [ref=f60e77]
+          - list [ref=f60e78]:
+            - listitem [ref=f60e79]:
+              - link "About Us" [ref=f60e80] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f60e81]:
+              - link "FAQ" [ref=f60e82] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f60e83]:
+              - link "Shipping & Returns" [ref=f60e84] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f60e85]:
+              - link "Privacy Policy" [ref=f60e86] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f60e87]:
+              - link "Terms of Service" [ref=f60e88] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f60e89]:
+          - heading "Acme Fashion" [level=2] [ref=f60e90]
+          - paragraph [ref=f60e91]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f60e92]:
+        - paragraph [ref=f60e93]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f60e94]:
+          - generic [ref=f60e95]: VISA
+          - generic [ref=f60e96]: MASTERCARD
+          - generic [ref=f60e97]: AMEX
+          - generic [ref=f60e98]: PAYPAL

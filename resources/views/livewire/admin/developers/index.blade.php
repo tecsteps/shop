@@ -12,7 +12,7 @@
                 <flux:callout.text>
                     <div class="mt-2 flex items-center gap-2">
                         <code class="flex-1 break-all rounded bg-zinc-100 px-2 py-1 text-sm dark:bg-zinc-800">{{ $generatedToken }}</code>
-                        <flux:button variant="ghost" icon="clipboard" x-data @click="navigator.clipboard.writeText(@js($generatedToken))">Copy</flux:button>
+                        <flux:button variant="ghost" icon="clipboard" x-data @click="navigator.clipboard.writeText('{{ $generatedToken }}')">Copy</flux:button>
                     </div>
                 </flux:callout.text>
             </flux:callout>
@@ -75,7 +75,7 @@
                 <flux:callout.text>
                     <div class="mt-2 flex items-center gap-2">
                         <code class="flex-1 break-all rounded bg-zinc-100 px-2 py-1 text-sm dark:bg-zinc-800">{{ $generatedWebhookSecret }}</code>
-                        <flux:button variant="ghost" icon="clipboard" x-data @click="navigator.clipboard.writeText(@js($generatedWebhookSecret))">Copy</flux:button>
+                        <flux:button variant="ghost" icon="clipboard" x-data @click="navigator.clipboard.writeText('{{ $generatedWebhookSecret }}')">Copy</flux:button>
                     </div>
                 </flux:callout.text>
             </flux:callout>

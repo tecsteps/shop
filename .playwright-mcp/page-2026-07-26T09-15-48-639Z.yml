@@ -1,0 +1,165 @@
+- generic [active] [ref=f68e1]:
+  - link "Skip to main content" [ref=f68e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f68e4]:
+    - paragraph [ref=f68e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f68e6]
+  - banner [ref=f68e9]:
+    - generic [ref=f68e10]:
+      - link "Acme Fashion" [ref=f68e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f68e13]:
+        - link "Home" [ref=f68e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f68e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f68e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f68e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f68e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f68e19]:
+        - button "Search" [ref=f68e20]
+        - link "Account" [ref=f68e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f68e26]
+  - main [ref=f68e29]:
+    - generic [ref=f68e30]:
+      - navigation "Breadcrumb" [ref=f68e31]:
+        - list [ref=f68e32]:
+          - listitem [ref=f68e33]:
+            - link "Home" [ref=f68e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f68e35]:
+            - generic [ref=f68e36]: /
+            - generic [ref=f68e37]: Search results
+      - generic [ref=f68e38]:
+        - heading "5 results for “cotton”" [level=1] [ref=f68e39]
+        - search [ref=f68e40]:
+          - generic [ref=f68e41]: Search products
+          - searchbox "Search products" [ref=f68e43]: cotton
+      - generic [ref=f68e44]:
+        - paragraph [ref=f68e45]: 5 results
+        - generic [ref=f68e46]:
+          - generic [ref=f68e47]: Sort by
+          - combobox "Sort by" [ref=f68e48]:
+            - option "Relevance" [selected]
+            - 'option "Price: Low to High"'
+            - 'option "Price: High to Low"'
+            - option "Newest"
+            - option "Best Selling"
+      - generic [ref=f68e49]:
+        - complementary "Search filters" [ref=f68e50]:
+          - generic [ref=f68e51]:
+            - group "Availability" [ref=f68e52]:
+              - generic [ref=f68e55]:
+                - checkbox "In stock" [ref=f68e56]
+                - text: In stock
+            - group "Price" [ref=f68e57]:
+              - generic [ref=f68e59]:
+                - generic [ref=f68e60]: Minimum price
+                - spinbutton "Minimum price Minimum price" [ref=f68e61]
+                - generic [ref=f68e62]: "-"
+                - generic [ref=f68e63]: Maximum price
+                - spinbutton "Maximum price Maximum price" [ref=f68e64]
+            - group "Collection" [ref=f68e65]:
+              - generic [ref=f68e67]:
+                - generic [ref=f68e68]: Collection
+                - combobox "Collection Collection" [ref=f68e69]:
+                  - option "All collections" [selected]
+                  - option "New Arrivals"
+                  - option "Pants & Jeans"
+                  - option "Sale"
+                  - option "T-Shirts"
+            - group "Vendor" [ref=f68e70]:
+              - generic [ref=f68e72]:
+                - generic [ref=f68e73]:
+                  - checkbox "Acme Accessories (1)" [ref=f68e74]
+                  - text: Acme Accessories
+                  - generic [ref=f68e75]: (1)
+                - generic [ref=f68e76]:
+                  - checkbox "Acme Basics (3)" [ref=f68e77]
+                  - text: Acme Basics
+                  - generic [ref=f68e78]: (3)
+                - generic [ref=f68e79]:
+                  - checkbox "Acme Workwear (1)" [ref=f68e80]
+                  - text: Acme Workwear
+                  - generic [ref=f68e81]: (1)
+        - generic [ref=f68e83]:
+          - generic [ref=f68e84]:
+            - link [ref=f68e86] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+            - link "Classic Cotton T-Shirt 24.99 EUR" [ref=f68e90] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+              - heading "Classic Cotton T-Shirt" [level=3] [ref=f68e91]
+              - generic [ref=f68e92]: 24.99 EUR
+            - link "Choose options" [ref=f68e96] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+          - generic [ref=f68e97]:
+            - link [ref=f68e99] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/cargo-pants
+            - link "Cargo Pants 54.99 EUR" [ref=f68e103] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/cargo-pants
+              - heading "Cargo Pants" [level=3] [ref=f68e104]
+              - generic [ref=f68e105]: 54.99 EUR
+            - link "Choose options" [ref=f68e109] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/cargo-pants
+          - generic [ref=f68e110]:
+            - link [ref=f68e112] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/organic-hoodie
+            - link "Organic Hoodie 59.99 EUR" [ref=f68e116] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/organic-hoodie
+              - heading "Organic Hoodie" [level=3] [ref=f68e117]
+              - generic [ref=f68e118]: 59.99 EUR
+            - link "Choose options" [ref=f68e122] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/organic-hoodie
+          - generic [ref=f68e123]:
+            - link [ref=f68e125] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/bucket-hat
+            - link "Bucket Hat 24.99 EUR" [ref=f68e129] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/bucket-hat
+              - heading "Bucket Hat" [level=3] [ref=f68e130]
+              - generic [ref=f68e131]: 24.99 EUR
+            - link "Choose options" [ref=f68e135] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/bucket-hat
+          - generic [ref=f68e136]:
+            - link [ref=f68e138] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+            - link "Graphic Print Tee 29.99 EUR" [ref=f68e142] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+              - heading "Graphic Print Tee" [level=3] [ref=f68e143]
+              - generic [ref=f68e144]: 29.99 EUR
+            - link "Choose options" [ref=f68e148] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+  - contentinfo [ref=f68e149]:
+    - generic [ref=f68e150]:
+      - generic [ref=f68e151]:
+        - generic [ref=f68e152]:
+          - heading "Shop" [level=2] [ref=f68e153]
+          - list [ref=f68e154]:
+            - listitem [ref=f68e155]:
+              - link "About Us" [ref=f68e156] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f68e157]:
+              - link "FAQ" [ref=f68e158] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f68e159]:
+              - link "Shipping & Returns" [ref=f68e160] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f68e161]:
+              - link "Privacy Policy" [ref=f68e162] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f68e163]:
+              - link "Terms of Service" [ref=f68e164] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f68e165]:
+          - heading "Acme Fashion" [level=2] [ref=f68e166]
+          - paragraph [ref=f68e167]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f68e168]:
+        - paragraph [ref=f68e169]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f68e170]:
+          - generic [ref=f68e171]: VISA
+          - generic [ref=f68e172]: MASTERCARD
+          - generic [ref=f68e173]: AMEX
+          - generic [ref=f68e174]: PAYPAL

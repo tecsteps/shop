@@ -1,0 +1,9 @@
+[     102ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/products:54
+[  139815ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/discounts:54
+[  169965ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/collections:54
+[  200102ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/customers:54
+[  214554ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/discounts:54
+[  230272ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/settings:54
+[  244668ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/collections:54
+[  260426ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/settings/shipping:54
+[  274779ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/customers:54

@@ -45,11 +45,13 @@ class Index extends Component
      * Install a catalog app: creates the app record on first use and an
      * active installation with the catalog's default scopes.
      */
-    public function installApp(string $appName): void
+    public function installApp(int|string $catalogKey): void
     {
         Gate::authorize('manage-apps');
 
-        $entry = collect(self::CATALOG)->firstWhere('name', $appName);
+        $entry = is_int($catalogKey) || ctype_digit((string) $catalogKey)
+            ? self::CATALOG[(int) $catalogKey] ?? null
+            : collect(self::CATALOG)->firstWhere('name', $catalogKey);
 
         abort_if($entry === null, 404);
 
