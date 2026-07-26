@@ -36,6 +36,8 @@
 | 10 | 2026-07-19 | Phase 10 | Apps/webhooks/API: webhook system (HMAC, retries, circuit breaker), developers UI (Sanctum tokens shop_ prefix, webhook CRUD), apps UI, admin REST API (platform/products/collections/orders+CSV). 634 tests green. | 4d60d582 |
 | 11 | 2026-07-19 | Phase 11 | 19 idempotent seeders with exact spec-07 demo data (2 stores, 30 products/127 variants, orders, discounts, analytics); products_fts reindexed; real-env smoke green. 649 tests green. | 392fff42 |
 
+| 12 | 2026-07-19 | Phase 12 | Polish: styled error pages (404/503/403/500), a11y pass (skip links, focus traps, ARIA), order emails (4 mailables, failure-safe), audit logging (auth.login, product events). 675 tests green, pint clean, npm build green. | 79f5bfb6 |
+
 ## Phase Checklist
 
 ### Phase 1 — Foundation
@@ -115,8 +117,8 @@
 - [x] Exact demo data per spec 07 (2 stores, 5 users, 20+ products, collections, discounts, shipping, tax, pages, navigation, orders, customers)
 
 ### Phase 12 — Polish
-- [ ] Error pages 404/503, dark mode, accessibility, structured logging
-- [ ] Pint clean, full test suite green, fresh migrate+seed verified
+- [x] Error pages 404/503, dark mode, accessibility, structured logging
+- [x] Pint clean, full test suite green, fresh migrate+seed verified
 
 ### Browser E2E
 - [ ] Pest browser tests per spec 08 (18 files, 143 tests)
