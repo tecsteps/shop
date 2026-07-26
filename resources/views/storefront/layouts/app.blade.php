@@ -336,7 +336,7 @@
     <div x-data="{ open: false }"
          @cart-drawer-open.window="open = true"
          @keydown.escape.window="open = false">
-        <div x-show="open" x-cloak role="dialog" aria-modal="true" aria-label="Shopping cart">
+        <div x-show="open" x-cloak x-trap="open" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title">
             <div x-show="open"
                  x-transition:enter="transition-opacity ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                  x-transition:leave="transition-opacity ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"

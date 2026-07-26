@@ -1,6 +1,6 @@
 <flux:card>
     <div class="mb-6 text-center">
-        <flux:heading size="lg">Log in</flux:heading>
+        <flux:heading size="lg" level="1">Log in</flux:heading>
         <flux:text class="mt-1">Sign in to your admin account</flux:text>
     </div>
 

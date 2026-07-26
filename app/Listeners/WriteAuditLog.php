@@ -2,14 +2,15 @@
 
 namespace App\Listeners;
 
+use App\Events\ProductCreated;
+use App\Events\ProductUpdated;
 use App\Models\Order;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Writes order lifecycle events to the audit log channel (spec 06 §4.6 /
- * spec 05 §17). Registered explicitly in AppServiceProvider for the order
- * and fulfillment events that exist so far; mailables arrive in a later
- * phase.
+ * Writes order lifecycle and product events to the audit log channel
+ * (spec 06 §4.6 / spec 05 §17). Registered explicitly in
+ * AppServiceProvider.
  */
 class WriteAuditLog
 {
@@ -18,6 +19,12 @@ class WriteAuditLog
      */
     public function handle(object $event): void
     {
+        if ($event instanceof ProductCreated || $event instanceof ProductUpdated) {
+            $this->logProduct($event);
+
+            return;
+        }
+
         $order = $this->orderOf($event);
 
         Log::channel('audit')->info('order.'.$this->eventName($event), array_filter([
@@ -31,6 +38,22 @@ class WriteAuditLog
             'refund_id' => $event->refund->id ?? null,
             'reason' => $event->reason ?? null,
         ], fn ($value): bool => $value !== null));
+    }
+
+    /**
+     * Write a product.created / product.updated audit entry.
+     */
+    private function logProduct(ProductCreated|ProductUpdated $event): void
+    {
+        $product = $event->product;
+
+        Log::channel('audit')->info('product.'.($event instanceof ProductCreated ? 'created' : 'updated'), [
+            'event' => $event::class,
+            'store_id' => $product->store_id,
+            'product_id' => $product->id,
+            'handle' => $product->handle,
+            'status' => $product->status->value,
+        ]);
     }
 
     /**

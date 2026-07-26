@@ -12,7 +12,7 @@
 
 <div class="space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
-        <flux:heading size="xl">Dashboard</flux:heading>
+        <flux:heading size="xl" level="1">Dashboard</flux:heading>
 
         <flux:select wire:model.live="dateRange" class="w-40" aria-label="Date range">
             <flux:select.option value="7">Last 7 days</flux:select.option>
@@ -42,7 +42,7 @@
 
     {{-- Orders chart --}}
     <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
-        <flux:heading size="lg">Orders over time</flux:heading>
+        <flux:heading size="lg" level="2">Orders over time</flux:heading>
 
         <div class="relative mt-4" wire:loading.class="opacity-50" wire:target="dateRange">
             @if ($chart['max'] > 1 || array_sum(array_column($chart['days'], 'count')) > 0)
@@ -68,7 +68,7 @@
 
     {{-- Recent orders --}}
     <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
-        <flux:heading size="lg">Recent orders</flux:heading>
+        <flux:heading size="lg" level="2">Recent orders</flux:heading>
 
         @if ($recentOrders->isEmpty())
             <p class="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">No orders yet.</p>

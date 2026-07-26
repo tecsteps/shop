@@ -1,7 +1,7 @@
 <div class="flex h-full flex-col">
     {{-- Header --}}
     <div class="flex items-center justify-between border-b border-gray-200 px-4 py-4 dark:border-gray-800">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h2 id="cart-drawer-title" class="text-lg font-semibold text-gray-900 dark:text-white">
             Your Cart @if ($cart !== null && $cart->itemCount() > 0) ({{ $cart->itemCount() }}) @endif
         </h2>
         <button type="button"

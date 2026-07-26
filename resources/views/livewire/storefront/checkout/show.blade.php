@@ -258,7 +258,7 @@
                                     </div>
                                 @endif
                                 <div class="min-w-0 flex-1">
-                                    <p class="truncate text-sm font-medium text-gray-900 dark:text-white">{{ $line->variant?->product?->title }} <span class="text-gray-500">×{{ $line->quantity }}</span></p>
+                                    <p class="truncate text-sm font-medium text-gray-900 dark:text-white">{{ $line->variant?->product?->title }} <span class="text-gray-500 dark:text-gray-400">×{{ $line->quantity }}</span></p>
                                     <p class="truncate text-xs text-gray-500 dark:text-gray-400">{{ $line->variant?->title() }}</p>
                                 </div>
                                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ \App\Support\Money::format($line->line_total_amount, $summaryCurrency) }}</p>

@@ -13,7 +13,7 @@
      @keydown.escape.window="open = false"
      @keydown.arrow-down.prevent="move(1)"
      @keydown.arrow-up.prevent="move(-1)">
-    <div x-show="open" x-cloak role="dialog" aria-modal="true" aria-label="Search">
+    <div x-show="open" x-cloak x-trap="open" role="dialog" aria-modal="true" aria-label="Search">
         <div x-show="open"
              x-transition:enter="transition-opacity ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="transition-opacity ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"

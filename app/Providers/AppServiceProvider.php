@@ -172,7 +172,21 @@ class AppServiceProvider extends ServiceProvider
             OrderCancelled::class,
             OrderRefunded::class,
             FulfillmentShipped::class,
+            \App\Events\ProductCreated::class,
+            \App\Events\ProductUpdated::class,
         ], WriteAuditLog::class);
+
+        // Admin panel logins (spec 06 §4.6); the customer guard is ignored.
+        Event::listen(\Illuminate\Auth\Events\Login::class, \App\Listeners\WriteAuthAuditLog::class);
+
+        // Customer-facing order lifecycle emails (spec 05 §17). The listener
+        // is failure-safe: mail errors are reported, never propagated.
+        Event::listen([
+            OrderCreated::class,
+            OrderCancelled::class,
+            OrderRefunded::class,
+            FulfillmentShipped::class,
+        ], \App\Listeners\SendOrderEmails::class);
     }
 
     /**
