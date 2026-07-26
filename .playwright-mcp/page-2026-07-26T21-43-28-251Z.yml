@@ -1,0 +1,144 @@
+- generic [active] [ref=f11e1]:
+  - link "Skip to main content" [ref=f11e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f11e3]:
+    - complementary "Admin navigation" [ref=f11e4]:
+      - generic [ref=f11e5]:
+        - link "Acme Fashion" [ref=f11e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f11e12]:
+          - navigation [ref=f11e13]:
+            - link "Dashboard" [ref=f11e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f11e19]: Products
+          - navigation [ref=f11e20]:
+            - link "Products" [ref=f11e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f11e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f11e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f11e36]: Orders
+          - navigation [ref=f11e37]:
+            - link "Orders" [ref=f11e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f11e43]: Customers
+          - navigation [ref=f11e44]:
+            - link "Customers" [ref=f11e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f11e50]: Discounts
+          - navigation [ref=f11e51]:
+            - link "Discounts" [ref=f11e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f11e58]: Content
+          - navigation [ref=f11e59]:
+            - link "Pages" [ref=f11e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f11e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f11e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f11e75]:
+            - link "Analytics" [ref=f11e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f11e82]: Settings
+          - navigation [ref=f11e83]:
+            - link "Settings" [ref=f11e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f11e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f11e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f11e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f11e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f11e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f11e115]:
+      - banner [ref=f11e116]:
+        - button "Acme Fashion" [ref=f11e118]
+        - button "Notifications" [ref=f11e123]
+        - button "AU Admin User" [ref=f11e127]:
+          - generic [ref=f11e128]: AU
+          - generic [ref=f11e131]: Admin User
+      - main [ref=f11e135]:
+        - generic [ref=f11e136]:
+          - link "Home" [ref=f11e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Orders" [ref=f11e142] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/orders
+          - generic [ref=f11e145]: "#1016"
+        - generic [ref=f11e147]:
+          - generic [ref=f11e148]:
+            - generic [ref=f11e149]: "#1016"
+            - generic [ref=f11e150]: Paid
+            - generic [ref=f11e151]: Unfulfilled
+            - paragraph [ref=f11e152]: Jul 26, 2026 9:41 PM
+          - generic [ref=f11e153]:
+            - button "Create fulfillment" [ref=f11e154]
+            - button "Refund" [ref=f11e160]
+            - button "Cancel order" [ref=f11e166]
+          - generic [ref=f11e172]:
+            - generic [ref=f11e173]:
+              - generic [ref=f11e174]:
+                - generic [ref=f11e175]: Timeline
+                - list [ref=f11e176]:
+                  - listitem [ref=f11e177]:
+                    - paragraph [ref=f11e179]: Order placed
+                    - paragraph [ref=f11e180]: Jul 26, 2026 9:41 PM
+                  - listitem [ref=f11e181]:
+                    - paragraph [ref=f11e183]: Payment received
+                    - paragraph [ref=f11e184]: Jul 26, 2026 9:41 PM
+              - generic [ref=f11e185]:
+                - generic [ref=f11e186]: Order lines
+                - table [ref=f11e188]:
+                  - rowgroup [ref=f11e189]:
+                    - row [ref=f11e190]:
+                      - columnheader "Image" [ref=f11e191]
+                      - columnheader "Product" [ref=f11e193]
+                      - columnheader "Qty" [ref=f11e194]
+                      - columnheader "Unit price" [ref=f11e195]
+                      - columnheader "Total" [ref=f11e196]
+                  - rowgroup [ref=f11e197]:
+                    - row [ref=f11e198]:
+                      - cell [ref=f11e199]
+                      - 'cell "Classic Cotton T-Shirt - S / White SKU: ACME-CTSH-S-WHT" [ref=f11e203]':
+                        - generic [ref=f11e204]: Classic Cotton T-Shirt - S / White
+                        - generic [ref=f11e205]: "SKU: ACME-CTSH-S-WHT"
+                      - cell "1" [ref=f11e206]
+                      - cell "24.99 EUR" [ref=f11e207]
+                      - cell "24.99 EUR" [ref=f11e208]
+                - generic [ref=f11e209]:
+                  - generic [ref=f11e210]:
+                    - generic [ref=f11e211]: Subtotal
+                    - generic [ref=f11e212]: 24.99 EUR
+                  - generic [ref=f11e213]:
+                    - generic [ref=f11e214]: Shipping
+                    - generic [ref=f11e215]: 4.99 EUR
+                  - generic [ref=f11e216]:
+                    - generic [ref=f11e217]: Tax
+                    - generic [ref=f11e218]: 4.79 EUR
+                  - generic [ref=f11e219]:
+                    - generic [ref=f11e220]: Total
+                    - generic [ref=f11e221]: 29.98 EUR
+              - generic [ref=f11e222]:
+                - generic [ref=f11e223]: Payment details
+                - generic [ref=f11e225]:
+                  - generic [ref=f11e226]:
+                    - paragraph [ref=f11e227]: Credit Card
+                    - paragraph [ref=f11e228]: "29.98 EUR · Ref: mock_kGFTit2meXG1Zddw · Jul 26, 2026 9:41 PM"
+                  - generic [ref=f11e229]: Captured
+            - generic [ref=f11e230]:
+              - generic [ref=f11e231]:
+                - generic [ref=f11e232]: Customer
+                - paragraph [ref=f11e233]: Jane Smith
+                - paragraph [ref=f11e234]: jane@example.com
+                - link "View customer" [ref=f11e236] [cursor=pointer]:
+                  - /url: http://admin.acme-fashion.test/admin/customers/2
+              - generic [ref=f11e237]:
+                - generic [ref=f11e238]: Shipping address
+                - generic [ref=f11e239]: Jane Doe 123 Main St Berlin 10115 DE
+              - generic [ref=f11e240]:
+                - generic [ref=f11e241]: Billing address
+                - generic [ref=f11e242]: Jane Doe 123 Main St Berlin 10115 DE

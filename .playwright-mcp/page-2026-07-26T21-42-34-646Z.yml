@@ -1,0 +1,311 @@
+- generic [active] [ref=f9e1]:
+  - link "Skip to main content" [ref=f9e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f9e3]:
+    - complementary "Admin navigation" [ref=f9e4]:
+      - generic [ref=f9e5]:
+        - link "Acme Fashion" [ref=f9e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f9e12]:
+          - navigation [ref=f9e13]:
+            - link "Dashboard" [ref=f9e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f9e19]: Products
+          - navigation [ref=f9e20]:
+            - link "Products" [ref=f9e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f9e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f9e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f9e36]: Orders
+          - navigation [ref=f9e37]:
+            - link "Orders" [ref=f9e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f9e43]: Customers
+          - navigation [ref=f9e44]:
+            - link "Customers" [ref=f9e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f9e50]: Discounts
+          - navigation [ref=f9e51]:
+            - link "Discounts" [ref=f9e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f9e58]: Content
+          - navigation [ref=f9e59]:
+            - link "Pages" [ref=f9e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f9e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f9e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f9e75]:
+            - link "Analytics" [ref=f9e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f9e82]: Settings
+          - navigation [ref=f9e83]:
+            - link "Settings" [ref=f9e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f9e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f9e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f9e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f9e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f9e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f9e115]:
+      - banner [ref=f9e116]:
+        - button "Acme Fashion" [ref=f9e118]
+        - button "Notifications" [ref=f9e123]
+        - button "AU Admin User" [ref=f9e127]:
+          - generic [ref=f9e128]: AU
+          - generic [ref=f9e131]: Admin User
+      - main [ref=f9e135]:
+        - generic [ref=f9e136]:
+          - link "Home" [ref=f9e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f9e141]: Products
+        - generic [ref=f9e143]:
+          - generic [ref=f9e144]:
+            - generic [ref=f9e145]: Products
+            - link "Add product" [ref=f9e146] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products/create
+          - generic [ref=f9e150]:
+            - textbox "Search products" [ref=f9e152]:
+              - /placeholder: Search products...
+            - tablist "Status filter" [ref=f9e154]:
+              - tab "All" [selected] [ref=f9e155]
+              - tab "Draft" [ref=f9e156]
+              - tab "Active" [ref=f9e157]
+              - tab "Archived" [ref=f9e158]
+            - combobox "Product type filter" [ref=f9e159]:
+              - option "All types" [selected]
+              - option "Accessories"
+              - option "Gift Cards"
+              - option "Hoodies"
+              - option "Jackets"
+              - option "Pants"
+              - option "Shoes"
+              - option "T-Shirts"
+          - table [ref=f9e161]:
+            - rowgroup [ref=f9e162]:
+              - row [ref=f9e163]:
+                - columnheader [ref=f9e164]:
+                  - checkbox "Select all products" [ref=f9e165]
+                - columnheader "Image" [ref=f9e167]
+                - columnheader [ref=f9e169]:
+                  - button "Title" [ref=f9e170]
+                - columnheader "Status" [ref=f9e171]
+                - columnheader [ref=f9e172]:
+                  - button "Inventory" [ref=f9e173]
+                - columnheader "Variants" [ref=f9e174]
+                - columnheader "Type" [ref=f9e175]
+                - columnheader "Vendor" [ref=f9e176]
+                - columnheader [ref=f9e177]:
+                  - button "Updated" [ref=f9e178]
+            - rowgroup [ref=f9e181]:
+              - row [ref=f9e182]:
+                - cell [ref=f9e183]:
+                  - checkbox "Select Gift Card" [ref=f9e184]
+                - cell [ref=f9e186]
+                - cell [ref=f9e190]:
+                  - link "Gift Card" [ref=f9e191] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/19/edit
+                - cell "Active" [ref=f9e192]
+                - cell "29997" [ref=f9e194]
+                - cell "3" [ref=f9e195]
+                - cell "Gift Cards" [ref=f9e196]
+                - cell "Acme Fashion" [ref=f9e197]
+                - cell "7 minutes ago" [ref=f9e198]
+              - row [ref=f9e199]:
+                - cell [ref=f9e200]:
+                  - checkbox "Select Cashmere Overcoat" [ref=f9e201]
+                - cell [ref=f9e203]
+                - cell [ref=f9e207]:
+                  - link "Cashmere Overcoat" [ref=f9e208] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/20/edit
+                - cell "Active" [ref=f9e209]
+                - cell "18" [ref=f9e211]
+                - cell "6" [ref=f9e212]
+                - cell "Jackets" [ref=f9e213]
+                - cell "Acme Premium" [ref=f9e214]
+                - cell "7 minutes ago" [ref=f9e215]
+              - row [ref=f9e216]:
+                - cell [ref=f9e217]:
+                  - checkbox "Select Leather Belt" [ref=f9e218]
+                - cell [ref=f9e220]
+                - cell [ref=f9e224]:
+                  - link "Leather Belt" [ref=f9e225] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/4/edit
+                - cell "Active" [ref=f9e226]
+                - cell "100" [ref=f9e228]
+                - cell "4" [ref=f9e229]
+                - cell "Accessories" [ref=f9e230]
+                - cell "Acme Accessories" [ref=f9e231]
+                - cell "7 minutes ago" [ref=f9e232]
+              - row [ref=f9e233]:
+                - cell [ref=f9e234]:
+                  - checkbox "Select Wool Scarf" [ref=f9e235]
+                - cell [ref=f9e237]
+                - cell [ref=f9e241]:
+                  - link "Wool Scarf" [ref=f9e242] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/12/edit
+                - cell "Active" [ref=f9e243]
+                - cell "90" [ref=f9e245]
+                - cell "3" [ref=f9e246]
+                - cell "Accessories" [ref=f9e247]
+                - cell "Acme Accessories" [ref=f9e248]
+                - cell "7 minutes ago" [ref=f9e249]
+              - row [ref=f9e250]:
+                - cell [ref=f9e251]:
+                  - checkbox "Select Canvas Tote Bag" [ref=f9e252]
+                - cell [ref=f9e254]
+                - cell [ref=f9e258]:
+                  - link "Canvas Tote Bag" [ref=f9e259] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/13/edit
+                - cell "Active" [ref=f9e260]
+                - cell "80" [ref=f9e262]
+                - cell "2" [ref=f9e263]
+                - cell "Accessories" [ref=f9e264]
+                - cell "Acme Accessories" [ref=f9e265]
+                - cell "7 minutes ago" [ref=f9e266]
+              - row [ref=f9e267]:
+                - cell [ref=f9e268]:
+                  - checkbox "Select Bucket Hat" [ref=f9e269]
+                - cell [ref=f9e271]
+                - cell [ref=f9e275]:
+                  - link "Bucket Hat" [ref=f9e276] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/14/edit
+                - cell "Active" [ref=f9e277]
+                - cell "132" [ref=f9e279]
+                - cell "6" [ref=f9e280]
+                - cell "Accessories" [ref=f9e281]
+                - cell "Acme Accessories" [ref=f9e282]
+                - cell "7 minutes ago" [ref=f9e283]
+              - row [ref=f9e284]:
+                - cell [ref=f9e285]:
+                  - checkbox "Select Organic Hoodie" [ref=f9e286]
+                - cell [ref=f9e288]
+                - cell [ref=f9e292]:
+                  - link "Organic Hoodie" [ref=f9e293] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/3/edit
+                - cell "Active" [ref=f9e294]
+                - cell "80" [ref=f9e296]
+                - cell "4" [ref=f9e297]
+                - cell "Hoodies" [ref=f9e298]
+                - cell "Acme Basics" [ref=f9e299]
+                - cell "7 minutes ago" [ref=f9e300]
+              - row [ref=f9e301]:
+                - cell [ref=f9e302]:
+                  - checkbox "Select Unreleased Winter Jacket" [ref=f9e303]
+                - cell [ref=f9e305]
+                - cell [ref=f9e309]:
+                  - link "Unreleased Winter Jacket" [ref=f9e310] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/15/edit
+                - cell "Draft" [ref=f9e311]
+                - cell "0" [ref=f9e313]
+                - cell "4" [ref=f9e314]
+                - cell "Jackets" [ref=f9e315]
+                - cell "Acme Outerwear" [ref=f9e316]
+                - cell "7 minutes ago" [ref=f9e317]
+              - row [ref=f9e318]:
+                - cell [ref=f9e319]:
+                  - checkbox "Select Discontinued Raincoat" [ref=f9e320]
+                - cell [ref=f9e322]
+                - cell [ref=f9e326]:
+                  - link "Discontinued Raincoat" [ref=f9e327] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/16/edit
+                - cell "Archived" [ref=f9e328]
+                - cell "6" [ref=f9e330]
+                - cell "2" [ref=f9e331]
+                - cell "Jackets" [ref=f9e332]
+                - cell "Acme Outerwear" [ref=f9e333]
+                - cell "7 minutes ago" [ref=f9e334]
+              - row [ref=f9e335]:
+                - cell [ref=f9e336]:
+                  - checkbox "Select Backorder Denim Jacket" [ref=f9e337]
+                - cell [ref=f9e339]
+                - cell [ref=f9e343]:
+                  - link "Backorder Denim Jacket" [ref=f9e344] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/18/edit
+                - cell "Active" [ref=f9e345]
+                - cell "0" [ref=f9e347]
+                - cell "4" [ref=f9e348]
+                - cell "Jackets" [ref=f9e349]
+                - cell "Acme Denim" [ref=f9e350]
+                - cell "7 minutes ago" [ref=f9e351]
+              - row [ref=f9e352]:
+                - cell [ref=f9e353]:
+                  - checkbox "Select Premium Slim Fit Jeans" [ref=f9e354]
+                - cell [ref=f9e356]
+                - cell [ref=f9e360]:
+                  - link "Premium Slim Fit Jeans" [ref=f9e361] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/2/edit
+                - cell "Active" [ref=f9e362]
+                - cell "80" [ref=f9e364]
+                - cell "10" [ref=f9e365]
+                - cell "Pants" [ref=f9e366]
+                - cell "Acme Denim" [ref=f9e367]
+                - cell "7 minutes ago" [ref=f9e368]
+              - row [ref=f9e369]:
+                - cell [ref=f9e370]:
+                  - checkbox "Select Cargo Pants" [ref=f9e371]
+                - cell [ref=f9e373]
+                - cell [ref=f9e377]:
+                  - link "Cargo Pants" [ref=f9e378] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/9/edit
+                - cell "Active" [ref=f9e379]
+                - cell "168" [ref=f9e381]
+                - cell "12" [ref=f9e382]
+                - cell "Pants" [ref=f9e383]
+                - cell "Acme Workwear" [ref=f9e384]
+                - cell "7 minutes ago" [ref=f9e385]
+              - row [ref=f9e386]:
+                - cell [ref=f9e387]:
+                  - checkbox "Select Chino Shorts" [ref=f9e388]
+                - cell [ref=f9e390]
+                - cell [ref=f9e394]:
+                  - link "Chino Shorts" [ref=f9e395] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/10/edit
+                - cell "Active" [ref=f9e396]
+                - cell "128" [ref=f9e398]
+                - cell "8" [ref=f9e399]
+                - cell "Pants" [ref=f9e400]
+                - cell "Acme Basics" [ref=f9e401]
+                - cell "7 minutes ago" [ref=f9e402]
+              - row [ref=f9e403]:
+                - cell [ref=f9e404]:
+                  - checkbox "Select Wide Leg Trousers" [ref=f9e405]
+                - cell [ref=f9e407]
+                - cell [ref=f9e411]:
+                  - link "Wide Leg Trousers" [ref=f9e412] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/11/edit
+                - cell "Active" [ref=f9e413]
+                - cell "21" [ref=f9e415]
+                - cell "3" [ref=f9e416]
+                - cell "Pants" [ref=f9e417]
+                - cell "Acme Denim" [ref=f9e418]
+                - cell "7 minutes ago" [ref=f9e419]
+              - row [ref=f9e420]:
+                - cell [ref=f9e421]:
+                  - checkbox "Select Running Sneakers" [ref=f9e422]
+                - cell [ref=f9e424]
+                - cell [ref=f9e428]:
+                  - link "Running Sneakers" [ref=f9e429] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/5/edit
+                - cell "Active" [ref=f9e430]
+                - cell "70" [ref=f9e432]
+                - cell "14" [ref=f9e433]
+                - cell "Shoes" [ref=f9e434]
+                - cell "Acme Sport" [ref=f9e435]
+                - cell "7 minutes ago" [ref=f9e436]
+          - navigation "Pagination Navigation" [ref=f9e438]:
+            - generic [ref=f9e439]:
+              - paragraph [ref=f9e441]: Showing 1 to 15 of 20 results
+              - generic [ref=f9e443]:
+                - generic "&laquo; Previous" [ref=f9e445]
+                - generic [ref=f9e449]: "1"
+                - button "Go to page 2" [ref=f9e453]: "2"
+                - button "Next &raquo;" [ref=f9e455]
