@@ -31,7 +31,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
     Route::post('/logout', LogoutController::class)->name('logout');
 
-    Route::middleware(['auth', 'verified', 'store.resolve:admin', 'role.check:owner,admin,staff,support'])->group(function (): void {
+    Route::middleware(['auth', 'verified', 'store.resolve.admin', 'role.check.any'])->group(function (): void {
         Route::livewire('/', Dashboard::class)->name('dashboard');
 
         Route::livewire('/products', Products\Index::class)->name('products.index');

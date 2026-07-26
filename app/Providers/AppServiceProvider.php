@@ -11,6 +11,10 @@ use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
 use App\Events\OrderPaid;
 use App\Events\OrderRefunded;
+use App\Http\Middleware\CheckAnyStoreRole;
+use App\Http\Middleware\CustomerAuthenticate;
+use App\Http\Middleware\ResolveAdminStore;
+use App\Http\Middleware\ResolveStorefrontStore;
 use App\Listeners\WriteAuditLog;
 use App\Models\Customer;
 use App\Models\Product;
@@ -33,6 +37,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -67,6 +72,17 @@ class AppServiceProvider extends ServiceProvider
 
         // Anonymous admin views (layouts): <x-admin::layouts.auth ... />
         Blade::anonymousComponentPath(resource_path('views/admin'), 'admin');
+
+        // Tenant/auth middleware must be re-applied to Livewire update
+        // requests (Livewire persists route middleware across network
+        // requests, but only for parameter-less middleware classes).
+        Livewire::addPersistentMiddleware([
+            ResolveStorefrontStore::class,
+            ResolveAdminStore::class,
+            CheckAnyStoreRole::class,
+            CustomerAuthenticate::class,
+            \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        ]);
     }
 
     /**

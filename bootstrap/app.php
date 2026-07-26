@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Middleware\CheckAnyStoreRole;
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\CheckTokenAbility;
 use App\Http\Middleware\CustomerAuthenticate;
+use App\Http\Middleware\ResolveAdminStore;
 use App\Http\Middleware\ResolveStore;
+use App\Http\Middleware\ResolveStorefrontStore;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,7 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'store.resolve' => ResolveStore::class,
+            'store.resolve.storefront' => ResolveStorefrontStore::class,
+            'store.resolve.admin' => ResolveAdminStore::class,
             'role.check' => CheckStoreRole::class,
+            'role.check.any' => CheckAnyStoreRole::class,
             'auth.customer' => CustomerAuthenticate::class,
             'ability' => CheckTokenAbility::class,
         ]);

@@ -182,3 +182,64 @@ test('checkout new page renders the address step over http', function () {
         ->assertOk()
         ->assertSee('Contact & shipping address');
 });
+
+test('bank transfer pay through the checkout page creates a pending order', function () {
+    [$store, $variant, $rate] = cartUiSetup();
+    [$cart] = sessionCartWithLine($store, $variant);
+
+    $checkoutService = app(\App\Services\CheckoutService::class);
+    $checkout = $checkoutService->createFromCart($cart, 'jane@example.com');
+    $checkoutService->setAddress($checkout, [
+        'email' => 'jane@example.com',
+        'shipping_address' => [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'address1' => '123 Main St',
+            'city' => 'Berlin',
+            'country_code' => 'DE',
+            'postal_code' => '10115',
+        ],
+    ]);
+    $checkoutService->setShippingMethod($checkout, $rate->id);
+    $checkoutService->selectPaymentMethod($checkout, 'bank_transfer');
+
+    Livewire::test(CheckoutPage::class, ['checkoutId' => $checkout->id])
+        ->call('pay')
+        ->assertRedirect(route('storefront.checkout.confirmation', ['checkoutId' => $checkout->id]));
+
+    $order = \App\Models\Order::query()->where('store_id', $store->id)->sole();
+
+    expect($order->financial_status->value)->toBe('pending')
+        ->and($order->payment_method->value)->toBe('bank_transfer')
+        ->and($checkout->refresh()->status)->toBe(CheckoutStatus::Completed);
+});
+
+test('paypal pay through the checkout page creates a paid order', function () {
+    [$store, $variant, $rate] = cartUiSetup();
+    [$cart] = sessionCartWithLine($store, $variant);
+
+    $checkoutService = app(\App\Services\CheckoutService::class);
+    $checkout = $checkoutService->createFromCart($cart, 'jane@example.com');
+    $checkoutService->setAddress($checkout, [
+        'email' => 'jane@example.com',
+        'shipping_address' => [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'address1' => '123 Main St',
+            'city' => 'Berlin',
+            'country_code' => 'DE',
+            'postal_code' => '10115',
+        ],
+    ]);
+    $checkoutService->setShippingMethod($checkout, $rate->id);
+    $checkoutService->selectPaymentMethod($checkout, 'paypal');
+
+    Livewire::test(CheckoutPage::class, ['checkoutId' => $checkout->id])
+        ->call('pay')
+        ->assertRedirect(route('storefront.checkout.confirmation', ['checkoutId' => $checkout->id]));
+
+    $order = \App\Models\Order::query()->where('store_id', $store->id)->sole();
+
+    expect($order->financial_status->value)->toBe('paid')
+        ->and($order->status->value)->toBe('paid');
+});

@@ -1,0 +1,137 @@
+- generic [active] [ref=f7e1]:
+  - link "Skip to main content" [ref=f7e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f7e4]:
+    - paragraph [ref=f7e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f7e6]
+  - banner [ref=f7e9]:
+    - generic [ref=f7e10]:
+      - link "Acme Fashion" [ref=f7e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f7e13]:
+        - link "Home" [ref=f7e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f7e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f7e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f7e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f7e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f7e19]:
+        - button "Search" [ref=f7e20]
+        - link "Account" [ref=f7e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f7e26]:
+          - generic [ref=f7e111]: "1"
+  - main [ref=f7e29]:
+    - generic [ref=f7e30]:
+      - navigation "Breadcrumb" [ref=f7e31]:
+        - list [ref=f7e32]:
+          - listitem [ref=f7e33]:
+            - link "Home" [ref=f7e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f7e35]:
+            - generic [ref=f7e36]: /
+            - link "New Arrivals" [ref=f7e37] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+          - listitem [ref=f7e38]:
+            - generic [ref=f7e39]: /
+            - generic [ref=f7e40]: Classic Cotton T-Shirt
+      - generic [ref=f7e41]:
+        - region "Product images" [ref=f7e42]
+        - generic [ref=f7e48]:
+          - heading "Classic Cotton T-Shirt" [level=1] [ref=f7e49]
+          - paragraph [ref=f7e50]: Acme Basics
+          - generic [ref=f7e51]: 24.99 EUR
+          - group "SizeS" [ref=f7e53]:
+            - generic [ref=f7e55]:
+              - button "S" [pressed] [ref=f7e56]
+              - button "M" [ref=f7e57]
+              - button "L" [ref=f7e58]
+              - button "XL" [ref=f7e59]
+          - group "ColorWhite" [ref=f7e60]:
+            - generic [ref=f7e62]:
+              - button "White" [pressed] [ref=f7e63]
+              - button "Black" [ref=f7e64]
+              - button "Navy" [ref=f7e65]
+          - paragraph [ref=f7e66]: In stock
+          - generic [ref=f7e69]:
+            - generic [ref=f7e70]:
+              - button "Decrease quantity" [disabled] [ref=f7e71]
+              - generic [ref=f7e73]: Quantity
+              - spinbutton "Quantity" [ref=f7e74]: "1"
+              - button "Increase quantity" [ref=f7e75]
+            - button "Add to cart" [ref=f7e78]
+          - separator [ref=f7e79]
+          - paragraph [ref=f7e81]: A timeless classic cotton t-shirt. Comfortable, breathable, and perfect for everyday wear.
+          - generic [ref=f7e82]:
+            - generic [ref=f7e83]: new
+            - generic [ref=f7e84]: popular
+  - contentinfo [ref=f7e85]:
+    - generic [ref=f7e86]:
+      - generic [ref=f7e87]:
+        - generic [ref=f7e88]:
+          - heading "Shop" [level=2] [ref=f7e89]
+          - list [ref=f7e90]:
+            - listitem [ref=f7e91]:
+              - link "About Us" [ref=f7e92] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f7e93]:
+              - link "FAQ" [ref=f7e94] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f7e95]:
+              - link "Shipping & Returns" [ref=f7e96] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f7e97]:
+              - link "Privacy Policy" [ref=f7e98] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f7e99]:
+              - link "Terms of Service" [ref=f7e100] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f7e101]:
+          - heading "Acme Fashion" [level=2] [ref=f7e102]
+          - paragraph [ref=f7e103]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f7e104]:
+        - paragraph [ref=f7e105]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f7e106]:
+          - generic [ref=f7e107]: VISA
+          - generic [ref=f7e108]: MASTERCARD
+          - generic [ref=f7e109]: AMEX
+          - generic [ref=f7e110]: PAYPAL
+  - generic:
+    - dialog "Your Cart (1)":
+      - generic [ref=f7e114]:
+        - generic [ref=f7e115]:
+          - heading "Your Cart (1)" [level=2] [ref=f7e116]
+          - button "Close cart" [ref=f7e117]
+        - list [ref=f7e120]:
+          - listitem [ref=f7e121]:
+            - generic [ref=f7e125]:
+              - paragraph [ref=f7e126]: Classic Cotton T-Shirt
+              - paragraph [ref=f7e127]: S / White
+              - generic [ref=f7e128]:
+                - generic [ref=f7e129]:
+                  - button "Decrease quantity of Classic Cotton T-Shirt" [ref=f7e130]
+                  - generic [ref=f7e132]: "1"
+                  - button "Increase quantity of Classic Cotton T-Shirt" [ref=f7e133]
+                - paragraph [ref=f7e136]: 24.99 EUR
+              - button "Remove Classic Cotton T-Shirt from cart" [ref=f7e138]
+        - generic [ref=f7e158]:
+          - paragraph [ref=f7e159]: WELCOME10 (-10%)
+          - button "Remove" [ref=f7e160]
+        - generic [ref=f7e146]:
+          - generic [ref=f7e147]:
+            - generic [ref=f7e148]:
+              - term [ref=f7e149]: Subtotal
+              - definition [ref=f7e150]: 24.99 EUR
+            - generic [ref=f7e161]:
+              - term [ref=f7e162]: Discount (WELCOME10)
+              - definition [ref=f7e163]: "-2.49 EUR"
+            - generic [ref=f7e151]:
+              - term [ref=f7e152]: Estimated total
+              - definition [ref=f7e153]: 22.50 EUR
+          - paragraph [ref=f7e154]: Shipping and taxes calculated at checkout
+          - button "Checkout" [ref=f7e155]
+          - button "Continue shopping" [ref=f7e157]

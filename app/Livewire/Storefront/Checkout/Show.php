@@ -243,7 +243,9 @@ class Show extends Component
             ];
         }
 
-        $this->validate($rules);
+        if ($rules !== []) {
+            $this->validate($rules);
+        }
 
         try {
             app(CheckoutService::class)->completeCheckout($checkout, [

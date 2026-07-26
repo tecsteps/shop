@@ -13,7 +13,7 @@ use App\Http\Middleware\ResolveStoreFromRoute;
 use Illuminate\Support\Facades\Route;
 
 // Storefront API (cart, checkout, search). Endpoints are added in later phases.
-Route::middleware(['store.resolve:storefront', 'throttle:api.storefront'])
+Route::middleware(['store.resolve.storefront', 'throttle:api.storefront'])
     ->prefix('storefront/v1')
     ->group(function (): void {
         // Cart endpoints (spec 02 §2.1).

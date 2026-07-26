@@ -21,7 +21,7 @@ use App\Livewire\Storefront\Search\Index as SearchIndex;
 use Illuminate\Support\Facades\Route;
 
 // Storefront routes (spec 04).
-Route::middleware(['store.resolve:storefront'])->group(function (): void {
+Route::middleware(['store.resolve.storefront'])->group(function (): void {
     Route::livewire('/', Home::class)->name('storefront.home');
     Route::livewire('/collections', CollectionsIndex::class)->name('storefront.collections.index');
     Route::livewire('/collections/{handle}', CollectionsShow::class)->name('storefront.collections.show');

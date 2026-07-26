@@ -1,0 +1,100 @@
+- generic [active] [ref=f10e1]:
+  - link "Skip to main content" [ref=f10e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f10e4]:
+    - paragraph [ref=f10e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f10e6]
+  - banner [ref=f10e9]:
+    - generic [ref=f10e10]:
+      - link "Acme Fashion" [ref=f10e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f10e13]:
+        - link "Home" [ref=f10e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f10e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f10e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f10e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f10e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f10e19]:
+        - button "Search" [ref=f10e20]
+        - link "Account" [ref=f10e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f10e26]
+  - main [ref=f10e29]:
+    - generic [ref=f10e30]:
+      - generic [ref=f10e31]:
+        - heading "Thank you for your order!" [level=1] [ref=f10e35]
+        - paragraph [ref=f10e36]: "Order #1016"
+        - paragraph [ref=f10e37]: We've sent a confirmation to jane@example.com
+      - region [ref=f10e38]:
+        - heading "Order Summary" [level=2] [ref=f10e39]
+        - list [ref=f10e40]:
+          - listitem [ref=f10e41]:
+            - generic [ref=f10e42]:
+              - paragraph [ref=f10e43]: Classic Cotton T-Shirt - S / White
+              - paragraph [ref=f10e44]: "SKU: ACME-CTSH-S-WHT"
+            - paragraph [ref=f10e45]: ×1
+            - paragraph [ref=f10e46]: 22.50 EUR
+      - generic [ref=f10e47]:
+        - region [ref=f10e48]:
+          - heading "Shipping Address" [level=2] [ref=f10e49]
+          - generic [ref=f10e50]: Jane Doe 123 Main St 10115 Berlin DE
+        - region [ref=f10e51]:
+          - heading "Payment Method" [level=2] [ref=f10e52]
+          - paragraph [ref=f10e53]: Credit Card ending in 4242
+      - generic [ref=f10e54]:
+        - generic [ref=f10e55]:
+          - term [ref=f10e56]: Subtotal
+          - definition [ref=f10e57]: 24.99 EUR
+        - generic [ref=f10e58]:
+          - term [ref=f10e59]: Discount
+          - definition [ref=f10e60]: "-2.49 EUR"
+        - generic [ref=f10e61]:
+          - term [ref=f10e62]: Shipping
+          - definition [ref=f10e63]: 4.99 EUR
+        - generic [ref=f10e64]:
+          - term [ref=f10e65]: Tax
+          - definition [ref=f10e66]: 4.40 EUR
+        - generic [ref=f10e67]:
+          - term [ref=f10e68]: Total
+          - definition [ref=f10e69]: 27.49 EUR
+      - generic [ref=f10e70]:
+        - link "Continue shopping" [ref=f10e71] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "View order status" [ref=f10e72] [cursor=pointer]:
+          - /url: /api/storefront/v1/orders/%231016?token=bc7fc02b48bc4b0591260b51eaddfbb23a69e5db1858694c5e0a7f0b30c92c3f
+  - contentinfo [ref=f10e73]:
+    - generic [ref=f10e74]:
+      - generic [ref=f10e75]:
+        - generic [ref=f10e76]:
+          - heading "Shop" [level=2] [ref=f10e77]
+          - list [ref=f10e78]:
+            - listitem [ref=f10e79]:
+              - link "About Us" [ref=f10e80] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f10e81]:
+              - link "FAQ" [ref=f10e82] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f10e83]:
+              - link "Shipping & Returns" [ref=f10e84] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f10e85]:
+              - link "Privacy Policy" [ref=f10e86] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f10e87]:
+              - link "Terms of Service" [ref=f10e88] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f10e89]:
+          - heading "Acme Fashion" [level=2] [ref=f10e90]
+          - paragraph [ref=f10e91]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f10e92]:
+        - paragraph [ref=f10e93]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f10e94]:
+          - generic [ref=f10e95]: VISA
+          - generic [ref=f10e96]: MASTERCARD
+          - generic [ref=f10e97]: AMEX
+          - generic [ref=f10e98]: PAYPAL

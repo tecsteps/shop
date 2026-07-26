@@ -1,0 +1,3 @@
+[      87ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/products/classic-cotton-t-shirt:107
+[   24681ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://acme-fashion.test/livewire-0972654c/update:0
+[   24694ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ :7

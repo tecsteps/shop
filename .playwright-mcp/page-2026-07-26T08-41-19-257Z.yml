@@ -1,0 +1,117 @@
+- generic [active] [ref=f16e1]:
+  - link "Skip to main content" [ref=f16e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f16e4]:
+    - paragraph [ref=f16e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f16e6]
+  - banner [ref=f16e9]:
+    - generic [ref=f16e10]:
+      - link "Acme Fashion" [ref=f16e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f16e13]:
+        - link "Home" [ref=f16e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f16e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f16e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f16e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f16e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f16e19]:
+        - button "Search" [ref=f16e20]
+        - link "Account" [ref=f16e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f16e26]
+  - main [ref=f16e29]:
+    - generic [ref=f16e30]:
+      - generic [ref=f16e31]:
+        - heading "Thank you for your order!" [level=1] [ref=f16e35]
+        - paragraph [ref=f16e36]: "Order #1017"
+        - paragraph [ref=f16e37]: We've sent a confirmation to jane@example.com
+      - region [ref=f16e38]:
+        - heading "Order Summary" [level=2] [ref=f16e39]
+        - list [ref=f16e40]:
+          - listitem [ref=f16e41]:
+            - generic [ref=f16e42]:
+              - paragraph [ref=f16e43]: Premium Slim Fit Jeans - 28 / Blue
+              - paragraph [ref=f16e44]: "SKU: ACME-PSFJ-28-BLUE"
+            - paragraph [ref=f16e45]: ×1
+            - paragraph [ref=f16e46]: 79.99 EUR
+      - generic [ref=f16e47]:
+        - region [ref=f16e48]:
+          - heading "Shipping Address" [level=2] [ref=f16e49]
+          - generic [ref=f16e50]: Jane Doe 123 Main St 10115 Berlin DE
+        - region [ref=f16e51]:
+          - heading "Payment Method" [level=2] [ref=f16e52]
+          - paragraph [ref=f16e53]: Bank Transfer
+      - region [ref=f16e54]:
+        - heading "Bank Transfer Instructions" [level=2] [ref=f16e55]
+        - paragraph [ref=f16e58]: "Please transfer the total amount to the following account:"
+        - generic [ref=f16e59]:
+          - generic [ref=f16e60]:
+            - term [ref=f16e61]: Bank
+            - definition [ref=f16e62]: Mock Bank AG
+          - generic [ref=f16e63]:
+            - term [ref=f16e64]: IBAN
+            - definition [ref=f16e65]: DE89 3704 0044 0532 0130 00
+          - generic [ref=f16e66]:
+            - term [ref=f16e67]: BIC
+            - definition [ref=f16e68]: COBADEFFXXX
+          - generic [ref=f16e69]:
+            - term [ref=f16e70]: Amount
+            - definition [ref=f16e71]: 84.98 EUR
+          - generic [ref=f16e72]:
+            - term [ref=f16e73]: Reference
+            - definition [ref=f16e74]: "#1017"
+        - paragraph [ref=f16e75]: Please complete your transfer within 7 days. Your order will be processed once payment is confirmed by our team.
+      - generic [ref=f16e76]:
+        - generic [ref=f16e77]:
+          - term [ref=f16e78]: Subtotal
+          - definition [ref=f16e79]: 79.99 EUR
+        - generic [ref=f16e80]:
+          - term [ref=f16e81]: Shipping
+          - definition [ref=f16e82]: 4.99 EUR
+        - generic [ref=f16e83]:
+          - term [ref=f16e84]: Tax
+          - definition [ref=f16e85]: 13.58 EUR
+        - generic [ref=f16e86]:
+          - term [ref=f16e87]: Total
+          - definition [ref=f16e88]: 84.98 EUR
+      - generic [ref=f16e89]:
+        - link "Continue shopping" [ref=f16e90] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+        - link "View order status" [ref=f16e91] [cursor=pointer]:
+          - /url: /api/storefront/v1/orders/%231017?token=0dd2cf7c54960f0399c37d1a544f26564e28b2d2c75cd13344bd3312541699b0
+  - contentinfo [ref=f16e92]:
+    - generic [ref=f16e93]:
+      - generic [ref=f16e94]:
+        - generic [ref=f16e95]:
+          - heading "Shop" [level=2] [ref=f16e96]
+          - list [ref=f16e97]:
+            - listitem [ref=f16e98]:
+              - link "About Us" [ref=f16e99] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f16e100]:
+              - link "FAQ" [ref=f16e101] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f16e102]:
+              - link "Shipping & Returns" [ref=f16e103] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f16e104]:
+              - link "Privacy Policy" [ref=f16e105] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f16e106]:
+              - link "Terms of Service" [ref=f16e107] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f16e108]:
+          - heading "Acme Fashion" [level=2] [ref=f16e109]
+          - paragraph [ref=f16e110]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f16e111]:
+        - paragraph [ref=f16e112]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f16e113]:
+          - generic [ref=f16e114]: VISA
+          - generic [ref=f16e115]: MASTERCARD
+          - generic [ref=f16e116]: AMEX
+          - generic [ref=f16e117]: PAYPAL

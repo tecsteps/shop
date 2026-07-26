@@ -1,0 +1,126 @@
+- generic [active] [ref=f8e1]:
+  - link "Skip to main content" [ref=f8e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f8e4]:
+    - paragraph [ref=f8e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f8e6]
+  - banner [ref=f8e9]:
+    - generic [ref=f8e10]:
+      - link "Acme Fashion" [ref=f8e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f8e13]:
+        - link "Home" [ref=f8e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f8e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f8e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f8e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f8e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f8e19]:
+        - button "Search" [ref=f8e20]
+        - link "Account" [ref=f8e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f8e26]
+  - main [ref=f8e29]:
+    - generic [ref=f8e30]:
+      - heading "Checkout" [level=1] [ref=f8e31]
+      - generic [ref=f8e32]:
+        - generic [ref=f8e33]:
+          - region [ref=f8e34]:
+            - heading "1. Contact & shipping address" [level=2] [ref=f8e35]
+            - generic [ref=f8e37]:
+              - generic [ref=f8e38]:
+                - generic [ref=f8e39]: Email *
+                - textbox "Email" [ref=f8e40]
+              - generic [ref=f8e41]:
+                - generic [ref=f8e42]:
+                  - generic [ref=f8e43]: First name *
+                  - textbox "First name" [ref=f8e44]
+                - generic [ref=f8e45]:
+                  - generic [ref=f8e46]: Last name *
+                  - textbox "Last name" [ref=f8e47]
+                - generic [ref=f8e48]:
+                  - generic [ref=f8e49]: Address line 1 *
+                  - textbox "Address line 1" [ref=f8e50]
+                - generic [ref=f8e51]:
+                  - generic [ref=f8e52]: Address line 2 (optional)
+                  - textbox "Address line 2 (optional)" [ref=f8e53]
+                - generic [ref=f8e54]:
+                  - generic [ref=f8e55]: City *
+                  - textbox "City" [ref=f8e56]
+                - generic [ref=f8e57]:
+                  - generic [ref=f8e58]: State / Province (optional)
+                  - textbox "State / Province (optional)" [ref=f8e59]
+                - generic [ref=f8e60]:
+                  - generic [ref=f8e61]: Postal code *
+                  - textbox "Postal code" [ref=f8e62]
+                - generic [ref=f8e63]:
+                  - generic [ref=f8e64]: Country code (e.g. DE) *
+                  - textbox "Country code (e.g. DE)" [ref=f8e65]
+                - generic [ref=f8e66]:
+                  - generic [ref=f8e67]: Phone (optional)
+                  - textbox "Phone (optional)" [ref=f8e68]
+              - generic [ref=f8e69]:
+                - checkbox "Billing address same as shipping" [checked] [ref=f8e70]
+                - text: Billing address same as shipping
+              - button "Continue to shipping" [ref=f8e71]
+          - region [ref=f8e72]:
+            - heading "2. Shipping method" [level=2] [ref=f8e73]
+          - region [ref=f8e74]:
+            - heading "3. Payment" [level=2] [ref=f8e75]
+        - complementary "Order summary" [ref=f8e76]:
+          - generic [ref=f8e77]:
+            - heading "Order Summary" [level=2] [ref=f8e78]
+            - list [ref=f8e79]:
+              - listitem [ref=f8e80]:
+                - generic [ref=f8e84]:
+                  - paragraph [ref=f8e85]: Classic Cotton T-Shirt ×1
+                  - paragraph [ref=f8e86]: S / White
+                - paragraph [ref=f8e87]: 24.99 EUR
+            - generic [ref=f8e88]:
+              - generic [ref=f8e89]:
+                - term [ref=f8e90]: Subtotal
+                - definition [ref=f8e91]: 24.99 EUR
+              - generic [ref=f8e92]:
+                - term [ref=f8e93]: Shipping
+                - definition [ref=f8e94]: Calculated at next step
+              - generic [ref=f8e95]:
+                - term [ref=f8e96]: Tax
+                - definition [ref=f8e97]: 0.00 EUR
+              - generic [ref=f8e98]:
+                - term [ref=f8e99]: Total
+                - definition [ref=f8e100]: 24.99 EUR
+  - contentinfo [ref=f8e101]:
+    - generic [ref=f8e102]:
+      - generic [ref=f8e103]:
+        - generic [ref=f8e104]:
+          - heading "Shop" [level=2] [ref=f8e105]
+          - list [ref=f8e106]:
+            - listitem [ref=f8e107]:
+              - link "About Us" [ref=f8e108] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f8e109]:
+              - link "FAQ" [ref=f8e110] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f8e111]:
+              - link "Shipping & Returns" [ref=f8e112] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f8e113]:
+              - link "Privacy Policy" [ref=f8e114] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f8e115]:
+              - link "Terms of Service" [ref=f8e116] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f8e117]:
+          - heading "Acme Fashion" [level=2] [ref=f8e118]
+          - paragraph [ref=f8e119]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f8e120]:
+        - paragraph [ref=f8e121]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f8e122]:
+          - generic [ref=f8e123]: VISA
+          - generic [ref=f8e124]: MASTERCARD
+          - generic [ref=f8e125]: AMEX
+          - generic [ref=f8e126]: PAYPAL
