@@ -1,0 +1,106 @@
+- generic [active] [ref=f11e1]:
+  - link "Skip to main content" [ref=f11e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f11e4]:
+    - paragraph [ref=f11e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f11e6]
+  - banner [ref=f11e9]:
+    - generic [ref=f11e10]:
+      - link "Acme Fashion" [ref=f11e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f11e13]:
+        - link "Home" [ref=f11e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f11e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f11e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f11e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f11e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f11e19]:
+        - button "Search" [ref=f11e20]
+        - link "Account" [ref=f11e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f11e26]
+  - main [ref=f11e29]:
+    - generic [ref=f11e30]:
+      - navigation "Breadcrumb" [ref=f11e31]:
+        - list [ref=f11e32]:
+          - listitem [ref=f11e33]:
+            - link "Home" [ref=f11e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f11e35]:
+            - generic [ref=f11e36]: /
+            - link "Pants & Jeans" [ref=f11e37] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/pants-jeans
+          - listitem [ref=f11e38]:
+            - generic [ref=f11e39]: /
+            - generic [ref=f11e40]: Premium Slim Fit Jeans
+      - generic [ref=f11e41]:
+        - region "Product images" [ref=f11e42]
+        - generic [ref=f11e48]:
+          - heading "Premium Slim Fit Jeans" [level=1] [ref=f11e49]
+          - paragraph [ref=f11e50]: Acme Denim
+          - generic [ref=f11e51]:
+            - generic [ref=f11e52]: 79.99 EUR
+            - generic [ref=f11e53]: 99.99 EUR
+            - generic [ref=f11e54]:
+              - generic [ref=f11e55]: "On sale:"
+              - text: Sale
+          - group "Size28" [ref=f11e56]:
+            - generic [ref=f11e58]:
+              - button "28" [pressed] [ref=f11e59]
+              - button "30" [ref=f11e60]
+              - button "32" [ref=f11e61]
+              - button "34" [ref=f11e62]
+              - button "36" [ref=f11e63]
+          - group "ColorBlue" [ref=f11e64]:
+            - generic [ref=f11e66]:
+              - button "Blue" [pressed] [ref=f11e67]
+              - button "Black" [ref=f11e68]
+          - paragraph [ref=f11e69]: Only 8 left in stock
+          - generic [ref=f11e72]:
+            - generic [ref=f11e73]:
+              - button "Decrease quantity" [disabled] [ref=f11e74]
+              - generic [ref=f11e76]: Quantity
+              - spinbutton "Quantity" [ref=f11e77]: "1"
+              - button "Increase quantity" [ref=f11e78]
+            - button "Add to cart" [ref=f11e81]
+          - separator [ref=f11e82]
+          - paragraph [ref=f11e84]: Slim fit jeans crafted from premium stretch denim. Comfortable all-day wear with a modern silhouette.
+          - generic [ref=f11e85]:
+            - generic [ref=f11e86]: new
+            - generic [ref=f11e87]: sale
+  - contentinfo [ref=f11e88]:
+    - generic [ref=f11e89]:
+      - generic [ref=f11e90]:
+        - generic [ref=f11e91]:
+          - heading "Shop" [level=2] [ref=f11e92]
+          - list [ref=f11e93]:
+            - listitem [ref=f11e94]:
+              - link "About Us" [ref=f11e95] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f11e96]:
+              - link "FAQ" [ref=f11e97] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f11e98]:
+              - link "Shipping & Returns" [ref=f11e99] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f11e100]:
+              - link "Privacy Policy" [ref=f11e101] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f11e102]:
+              - link "Terms of Service" [ref=f11e103] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f11e104]:
+          - heading "Acme Fashion" [level=2] [ref=f11e105]
+          - paragraph [ref=f11e106]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f11e107]:
+        - paragraph [ref=f11e108]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f11e109]:
+          - generic [ref=f11e110]: VISA
+          - generic [ref=f11e111]: MASTERCARD
+          - generic [ref=f11e112]: AMEX
+          - generic [ref=f11e113]: PAYPAL

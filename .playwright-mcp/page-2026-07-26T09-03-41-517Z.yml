@@ -1,0 +1,193 @@
+- generic [ref=f54e1]:
+  - link "Skip to main content" [ref=f54e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f54e3]:
+    - complementary "Admin navigation" [ref=f54e4]:
+      - generic [ref=f54e5]:
+        - link "Acme Fashion" [ref=f54e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f54e12]:
+          - navigation [ref=f54e13]:
+            - link "Dashboard" [ref=f54e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f54e19]: Products
+          - navigation [ref=f54e20]:
+            - link "Products" [ref=f54e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f54e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f54e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f54e36]: Orders
+          - navigation [ref=f54e37]:
+            - link "Orders" [ref=f54e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f54e43]: Customers
+          - navigation [ref=f54e44]:
+            - link "Customers" [ref=f54e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f54e50]: Discounts
+          - navigation [ref=f54e51]:
+            - link "Discounts" [ref=f54e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f54e58]: Content
+          - navigation [ref=f54e59]:
+            - link "Pages" [ref=f54e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f54e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f54e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f54e75]:
+            - link "Analytics" [ref=f54e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f54e82]: Settings
+          - navigation [ref=f54e83]:
+            - link "Settings" [ref=f54e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f54e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f54e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f54e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f54e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f54e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f54e115]:
+      - banner [ref=f54e116]:
+        - button "Acme Fashion" [ref=f54e118]
+        - button "Notifications" [ref=f54e123]
+        - button "AU Admin User" [ref=f54e127]:
+          - generic [ref=f54e128]: AU
+          - generic [ref=f54e131]: Admin User
+      - main [ref=f54e135]:
+        - generic [ref=f54e136]:
+          - link "Home" [ref=f54e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f54e141]: Developers
+        - generic [ref=f54e143]:
+          - generic [ref=f54e144]: Developers
+          - generic [ref=f54e145]:
+            - generic [ref=f54e146]: API tokens
+            - paragraph [ref=f54e147]: Manage personal access tokens for the Admin API.
+            - table [ref=f54e149]:
+              - rowgroup [ref=f54e150]:
+                - row [ref=f54e151]:
+                  - columnheader "Name" [ref=f54e152]
+                  - columnheader "Abilities" [ref=f54e153]
+                  - columnheader "Last used" [ref=f54e154]
+                  - columnheader "Expires" [ref=f54e155]
+                  - columnheader "Created" [ref=f54e156]
+                  - columnheader "Actions" [ref=f54e157]
+              - rowgroup [ref=f54e158]:
+                - row [ref=f54e159]:
+                  - cell "No API tokens yet." [ref=f54e160]
+            - button "Generate new token" [ref=f54e162]
+          - generic [ref=f54e168]:
+            - generic [ref=f54e169]: Webhooks
+            - paragraph [ref=f54e170]: Manage webhook subscriptions for real-time event notifications.
+            - table [ref=f54e172]:
+              - rowgroup [ref=f54e173]:
+                - row [ref=f54e174]:
+                  - columnheader "Event type" [ref=f54e175]
+                  - columnheader "URL" [ref=f54e176]
+                  - columnheader "Status" [ref=f54e177]
+                  - columnheader "Actions" [ref=f54e178]
+              - rowgroup [ref=f54e179]:
+                - row [ref=f54e180]:
+                  - cell "No webhooks configured." [ref=f54e181]
+            - button "Add webhook" [ref=f54e183]
+          - dialog [ref=f54e191]:
+            - generic [ref=f54e192]:
+              - generic [ref=f54e193]: Generate API token
+              - generic [ref=f54e194]:
+                - generic [ref=f54e195]: Token name
+                - textbox "Token name" [ref=f54e197]:
+                  - /placeholder: My integration
+                  - text: E2E Test Token
+              - generic [ref=f54e198]:
+                - generic [ref=f54e199]: Abilities
+                - generic [ref=f54e200]:
+                  - generic [ref=f54e201]:
+                    - checkbox "Read products" [checked] [ref=f54e202]
+                    - generic [ref=f54e204]: Read products
+                    - alert [ref=f54e296]: The new token abilities field is required.
+                  - generic [ref=f54e205]:
+                    - checkbox "Write products" [ref=f54e206]
+                    - generic [ref=f54e208]: Write products
+                    - alert [ref=f54e299]: The new token abilities field is required.
+                  - generic [ref=f54e209]:
+                    - checkbox "Read orders" [checked] [active] [ref=f54e210]
+                    - generic [ref=f54e212]: Read orders
+                    - alert [ref=f54e302]: The new token abilities field is required.
+                  - generic [ref=f54e213]:
+                    - checkbox "Write orders" [ref=f54e214]
+                    - generic [ref=f54e216]: Write orders
+                    - alert [ref=f54e305]: The new token abilities field is required.
+                  - generic [ref=f54e217]:
+                    - checkbox "Read customers" [ref=f54e218]
+                    - generic [ref=f54e220]: Read customers
+                    - alert [ref=f54e308]: The new token abilities field is required.
+                  - generic [ref=f54e221]:
+                    - checkbox "Write customers" [ref=f54e222]
+                    - generic [ref=f54e224]: Write customers
+                    - alert [ref=f54e311]: The new token abilities field is required.
+                  - generic [ref=f54e225]:
+                    - checkbox "Read collections" [ref=f54e226]
+                    - generic [ref=f54e228]: Read collections
+                    - alert [ref=f54e314]: The new token abilities field is required.
+                  - generic [ref=f54e229]:
+                    - checkbox "Write collections" [ref=f54e230]
+                    - generic [ref=f54e232]: Write collections
+                    - alert [ref=f54e317]: The new token abilities field is required.
+                  - generic [ref=f54e233]:
+                    - checkbox "Read discounts" [ref=f54e234]
+                    - generic [ref=f54e236]: Read discounts
+                    - alert [ref=f54e320]: The new token abilities field is required.
+                  - generic [ref=f54e237]:
+                    - checkbox "Write discounts" [ref=f54e238]
+                    - generic [ref=f54e240]: Write discounts
+                    - alert [ref=f54e323]: The new token abilities field is required.
+                  - generic [ref=f54e241]:
+                    - checkbox "Read analytics" [ref=f54e242]
+                    - generic [ref=f54e244]: Read analytics
+                    - alert [ref=f54e326]: The new token abilities field is required.
+                  - generic [ref=f54e245]:
+                    - checkbox "Read settings" [ref=f54e246]
+                    - generic [ref=f54e248]: Read settings
+                    - alert [ref=f54e329]: The new token abilities field is required.
+                  - generic [ref=f54e249]:
+                    - checkbox "Write settings" [ref=f54e250]
+                    - generic [ref=f54e252]: Write settings
+                    - alert [ref=f54e332]: The new token abilities field is required.
+                  - generic [ref=f54e253]:
+                    - checkbox "Read themes" [ref=f54e254]
+                    - generic [ref=f54e256]: Read themes
+                    - alert [ref=f54e335]: The new token abilities field is required.
+                  - generic [ref=f54e257]:
+                    - checkbox "Write themes" [ref=f54e258]
+                    - generic [ref=f54e260]: Write themes
+                    - alert [ref=f54e338]: The new token abilities field is required.
+                  - generic [ref=f54e261]:
+                    - checkbox "Read content" [ref=f54e262]
+                    - generic [ref=f54e264]: Read content
+                    - alert [ref=f54e341]: The new token abilities field is required.
+                  - generic [ref=f54e265]:
+                    - checkbox "Write content" [ref=f54e266]
+                    - generic [ref=f54e268]: Write content
+                    - alert [ref=f54e344]: The new token abilities field is required.
+                  - generic [ref=f54e269]:
+                    - checkbox "Manage platform" [ref=f54e270]
+                    - generic [ref=f54e272]: Manage platform
+                    - alert [ref=f54e347]: The new token abilities field is required.
+                - alert [ref=f54e350]: The new token abilities field is required.
+              - generic [ref=f54e273]:
+                - generic [ref=f54e274]: Expires at (optional)
+                - textbox "Expires at (optional)" [ref=f54e276]
+                - generic [ref=f54e277]: Defaults to one year from now.
+              - generic [ref=f54e278]:
+                - button "Cancel" [ref=f54e279]
+                - button "Generate" [ref=f54e285]
+            - button "Close modal" [ref=f54e293]

@@ -1,0 +1,22 @@
+- generic [active] [ref=f79e1]:
+  - link "Skip to main content" [ref=f79e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f79e3]:
+    - link "Acme Fashion" [ref=f79e5] [cursor=pointer]:
+      - /url: /
+  - main [ref=f79e6]:
+    - generic [ref=f79e7]:
+      - paragraph: "403"
+      - generic [ref=f79e8]:
+        - heading "Access denied" [level=1] [ref=f79e9]
+        - paragraph [ref=f79e10]: This action is unauthorized.
+        - link "Go to home page" [ref=f79e11] [cursor=pointer]:
+          - /url: /
+  - contentinfo [ref=f79e12]:
+    - navigation "Helpful links" [ref=f79e13]:
+      - link "Home" [ref=f79e14] [cursor=pointer]:
+        - /url: /
+      - link "Collections" [ref=f79e15] [cursor=pointer]:
+        - /url: /collections
+      - link "Search" [ref=f79e16] [cursor=pointer]:
+        - /url: /search

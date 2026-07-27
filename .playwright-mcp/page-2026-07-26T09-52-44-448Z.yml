@@ -1,0 +1,170 @@
+- generic [active] [ref=f96e1]:
+  - link "Skip to main content" [ref=f96e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f96e3]:
+    - complementary "Admin navigation" [ref=f96e4]:
+      - generic [ref=f96e5]:
+        - link "Acme Electronics" [ref=f96e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f96e12]:
+          - navigation [ref=f96e13]:
+            - link "Dashboard" [ref=f96e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f96e19]: Products
+          - navigation [ref=f96e20]:
+            - link "Products" [ref=f96e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f96e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f96e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f96e36]: Orders
+          - navigation [ref=f96e37]:
+            - link "Orders" [ref=f96e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f96e43]: Customers
+          - navigation [ref=f96e44]:
+            - link "Customers" [ref=f96e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f96e50]: Discounts
+          - navigation [ref=f96e51]:
+            - link "Discounts" [ref=f96e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f96e58]: Content
+          - navigation [ref=f96e59]:
+            - link "Pages" [ref=f96e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f96e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f96e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f96e75]:
+            - link "Analytics" [ref=f96e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f96e82]: Settings
+          - navigation [ref=f96e83]:
+            - link "Settings" [ref=f96e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f96e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f96e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f96e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f96e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f96e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f96e115]:
+      - banner [ref=f96e116]:
+        - button "Open navigation menu" [ref=f96e117]
+        - button "Acme Electronics" [ref=f96e121]
+        - button "Notifications" [ref=f96e126]
+        - button "AT" [ref=f96e130]
+      - main [ref=f96e137]:
+        - generic [ref=f96e138]:
+          - link "Home" [ref=f96e140] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f96e143]: Products
+        - generic [ref=f96e145]:
+          - generic [ref=f96e146]:
+            - generic [ref=f96e147]: Products
+            - link "Add product" [ref=f96e148] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products/create
+          - generic [ref=f96e152]:
+            - textbox "Search products" [ref=f96e154]:
+              - /placeholder: Search products...
+            - tablist "Status filter" [ref=f96e156]:
+              - tab "All" [selected] [ref=f96e157]
+              - tab "Draft" [ref=f96e158]
+              - tab "Active" [ref=f96e159]
+              - tab "Archived" [ref=f96e160]
+            - combobox "Product type filter" [ref=f96e161]:
+              - option "All types" [selected]
+              - option "Accessories"
+              - option "Audio"
+              - option "Cables"
+              - option "Laptops"
+              - option "Peripherals"
+          - table [ref=f96e163]:
+            - rowgroup [ref=f96e164]:
+              - row [ref=f96e165]:
+                - columnheader [ref=f96e166]:
+                  - checkbox "Select all products" [ref=f96e167]
+                - columnheader "Image" [ref=f96e169]
+                - columnheader [ref=f96e171]:
+                  - button "Title" [ref=f96e172]
+                - columnheader "Status" [ref=f96e173]
+                - columnheader [ref=f96e174]:
+                  - button "Inventory" [ref=f96e175]
+                - columnheader "Variants" [ref=f96e176]
+                - columnheader "Type" [ref=f96e177]
+                - columnheader "Vendor" [ref=f96e178]
+                - columnheader [ref=f96e179]:
+                  - button "Updated" [ref=f96e180]
+            - rowgroup [ref=f96e183]:
+              - row [ref=f96e184]:
+                - cell [ref=f96e185]:
+                  - checkbox "Select Monitor Stand" [ref=f96e186]
+                - cell [ref=f96e188]
+                - cell [ref=f96e192]:
+                  - link "Monitor Stand" [ref=f96e193] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/25/edit
+                - cell "Active" [ref=f96e194]
+                - cell "30" [ref=f96e196]
+                - cell "1" [ref=f96e197]
+                - cell "Accessories" [ref=f96e198]
+                - cell "DeskGear" [ref=f96e199]
+                - cell "1 hour ago" [ref=f96e200]
+              - row [ref=f96e201]:
+                - cell [ref=f96e202]:
+                  - checkbox "Select Wireless Headphones" [ref=f96e203]
+                - cell [ref=f96e205]
+                - cell [ref=f96e209]:
+                  - link "Wireless Headphones" [ref=f96e210] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/22/edit
+                - cell "Active" [ref=f96e211]
+                - cell "50" [ref=f96e213]
+                - cell "2" [ref=f96e214]
+                - cell "Audio" [ref=f96e215]
+                - cell "AudioMax" [ref=f96e216]
+                - cell "1 hour ago" [ref=f96e217]
+              - row [ref=f96e218]:
+                - cell [ref=f96e219]:
+                  - checkbox "Select USB-C Cable 2m" [ref=f96e220]
+                - cell [ref=f96e222]
+                - cell [ref=f96e226]:
+                  - link "USB-C Cable 2m" [ref=f96e227] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/23/edit
+                - cell "Active" [ref=f96e228]
+                - cell "200" [ref=f96e230]
+                - cell "1" [ref=f96e231]
+                - cell "Cables" [ref=f96e232]
+                - cell "CablePro" [ref=f96e233]
+                - cell "1 hour ago" [ref=f96e234]
+              - row [ref=f96e235]:
+                - cell [ref=f96e236]:
+                  - checkbox "Select Pro Laptop 15" [ref=f96e237]
+                - cell [ref=f96e239]
+                - cell [ref=f96e243]:
+                  - link "Pro Laptop 15" [ref=f96e244] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/21/edit
+                - cell "Active" [ref=f96e245]
+                - cell "30" [ref=f96e247]
+                - cell "3" [ref=f96e248]
+                - cell "Laptops" [ref=f96e249]
+                - cell "TechCorp" [ref=f96e250]
+                - cell "1 hour ago" [ref=f96e251]
+              - row [ref=f96e252]:
+                - cell [ref=f96e253]:
+                  - checkbox "Select Mechanical Keyboard" [ref=f96e254]
+                - cell [ref=f96e256]
+                - cell [ref=f96e260]:
+                  - link "Mechanical Keyboard" [ref=f96e261] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/products/24/edit
+                - cell "Active" [ref=f96e262]
+                - cell "45" [ref=f96e264]
+                - cell "3" [ref=f96e265]
+                - cell "Peripherals" [ref=f96e266]
+                - cell "KeyTech" [ref=f96e267]
+                - cell "1 hour ago" [ref=f96e268]

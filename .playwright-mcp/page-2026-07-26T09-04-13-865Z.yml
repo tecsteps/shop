@@ -1,0 +1,118 @@
+- generic [ref=f54e1]:
+  - link "Skip to main content" [ref=f54e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f54e3]:
+    - complementary "Admin navigation" [ref=f54e4]:
+      - generic [ref=f54e5]:
+        - link "Acme Fashion" [ref=f54e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f54e12]:
+          - navigation [ref=f54e13]:
+            - link "Dashboard" [ref=f54e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f54e19]: Products
+          - navigation [ref=f54e20]:
+            - link "Products" [ref=f54e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f54e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f54e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f54e36]: Orders
+          - navigation [ref=f54e37]:
+            - link "Orders" [ref=f54e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f54e43]: Customers
+          - navigation [ref=f54e44]:
+            - link "Customers" [ref=f54e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f54e50]: Discounts
+          - navigation [ref=f54e51]:
+            - link "Discounts" [ref=f54e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f54e58]: Content
+          - navigation [ref=f54e59]:
+            - link "Pages" [ref=f54e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f54e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f54e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f54e75]:
+            - link "Analytics" [ref=f54e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f54e82]: Settings
+          - navigation [ref=f54e83]:
+            - link "Settings" [ref=f54e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f54e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f54e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f54e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f54e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f54e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f54e115]:
+      - banner [ref=f54e116]:
+        - button "Acme Fashion" [ref=f54e118]
+        - button "Notifications" [ref=f54e123]
+        - button "AU Admin User" [ref=f54e127]:
+          - generic [ref=f54e128]: AU
+          - generic [ref=f54e131]: Admin User
+      - main [ref=f54e135]:
+        - generic [ref=f54e136]:
+          - link "Home" [ref=f54e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f54e141]: Developers
+        - generic [ref=f54e143]:
+          - generic [ref=f54e144]: Developers
+          - generic [ref=f54e145]:
+            - generic [ref=f54e146]: API tokens
+            - paragraph [ref=f54e147]: Manage personal access tokens for the Admin API.
+            - generic [ref=f54e362]:
+              - generic [ref=f54e363]: Copy this token now. It will not be shown again.
+              - generic [ref=f54e365]:
+                - code [ref=f54e366]: shop_0LZoxgtB0epf6FUXdZSRkMaXl405b7nhrZy85XUB
+                - button "Copy" [ref=f54e367]
+            - table [ref=f54e149]:
+              - rowgroup [ref=f54e150]:
+                - row [ref=f54e151]:
+                  - columnheader "Name" [ref=f54e152]
+                  - columnheader "Abilities" [ref=f54e153]
+                  - columnheader "Last used" [ref=f54e154]
+                  - columnheader "Expires" [ref=f54e155]
+                  - columnheader "Created" [ref=f54e156]
+                  - columnheader "Actions" [ref=f54e157]
+              - rowgroup [ref=f54e158]:
+                - row [ref=f54e371]:
+                  - cell "E2E Test Token" [ref=f54e372]
+                  - cell "read-products read-orders" [ref=f54e373]:
+                    - generic [ref=f54e374]:
+                      - generic [ref=f54e375]: read-products
+                      - generic [ref=f54e376]: read-orders
+                  - cell "Never" [ref=f54e377]
+                  - cell "Jul 26, 2027" [ref=f54e378]
+                  - cell "Jul 26, 2026" [ref=f54e379]
+                  - cell [ref=f54e380]:
+                    - button "Revoke" [ref=f54e381]
+            - button "Generate new token" [active] [ref=f54e162]
+          - generic [ref=f54e168]:
+            - generic [ref=f54e169]: Webhooks
+            - paragraph [ref=f54e170]: Manage webhook subscriptions for real-time event notifications.
+            - table [ref=f54e172]:
+              - rowgroup [ref=f54e173]:
+                - row [ref=f54e174]:
+                  - columnheader "Event type" [ref=f54e175]
+                  - columnheader "URL" [ref=f54e176]
+                  - columnheader "Status" [ref=f54e177]
+                  - columnheader "Actions" [ref=f54e178]
+              - rowgroup [ref=f54e179]:
+                - row [ref=f54e180]:
+                  - cell "No webhooks configured." [ref=f54e181]
+            - button "Add webhook" [ref=f54e183]
+  - alert [ref=f54e387]:
+    - paragraph [ref=f54e390]: API token created
+    - button "Dismiss" [ref=f54e391]

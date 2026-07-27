@@ -1,0 +1,424 @@
+- generic [active] [ref=f21e475]:
+  - link "Skip to main content" [ref=f21e476] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f21e477]:
+    - complementary "Admin navigation" [ref=f21e478]:
+      - generic [ref=f21e479]:
+        - link "Acme Fashion" [ref=f21e481] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f21e486]:
+          - navigation [ref=f21e487]:
+            - link "Dashboard" [ref=f21e488] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f21e493]: Products
+          - navigation [ref=f21e494]:
+            - link "Products" [ref=f21e495] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f21e500] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f21e505] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f21e510]: Orders
+          - navigation [ref=f21e511]:
+            - link "Orders" [ref=f21e512] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f21e517]: Customers
+          - navigation [ref=f21e518]:
+            - link "Customers" [ref=f21e519] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f21e524]: Discounts
+          - navigation [ref=f21e525]:
+            - link "Discounts" [ref=f21e526] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f21e532]: Content
+          - navigation [ref=f21e533]:
+            - link "Pages" [ref=f21e534] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f21e539] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f21e544] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f21e549]:
+            - link "Analytics" [ref=f21e550] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f21e556]: Settings
+          - navigation [ref=f21e557]:
+            - link "Settings" [ref=f21e558] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f21e564] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f21e569] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f21e574] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f21e579] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f21e584] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f21e589]:
+      - banner [ref=f21e590]:
+        - button "Acme Fashion" [ref=f21e592]
+        - button "Notifications" [ref=f21e597]
+        - button "AU Admin User" [ref=f21e601]:
+          - generic [ref=f21e602]: AU
+          - generic [ref=f21e605]: Admin User
+      - main [ref=f21e609]:
+        - generic [ref=f21e610]:
+          - link "Home" [ref=f21e612] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Products" [ref=f21e616] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/products
+          - generic [ref=f21e619]: Classic Cotton T-Shirt
+        - generic [ref=f21e621]:
+          - generic [ref=f21e622]:
+            - generic [ref=f21e623]: Classic Cotton T-Shirt
+            - button "Delete" [ref=f21e624]
+          - generic [ref=f21e632]:
+            - generic [ref=f21e633]:
+              - generic [ref=f21e634]:
+                - generic [ref=f21e635]:
+                  - generic [ref=f21e636]: Title
+                  - textbox "Title" [ref=f21e638]:
+                    - /placeholder: Short Sleeve T-Shirt
+                    - text: Classic Cotton T-Shirt
+                - generic [ref=f21e639]:
+                  - generic [ref=f21e640]: Description
+                  - textbox "Description" [ref=f21e641]:
+                    - /placeholder: Describe your product...
+                    - text: <p>A timeless classic cotton t-shirt. Comfortable, breathable, and perfect for everyday wear.</p>
+              - generic [ref=f21e642]:
+                - generic [ref=f21e643]: Media
+                - generic [ref=f21e644] [cursor=pointer]:
+                  - paragraph [ref=f21e647]: Drag and drop images or click to upload
+                  - button "Drag and drop images or click to upload" [ref=f21e648]
+              - generic [ref=f21e649]:
+                - generic [ref=f21e650]: Variants
+                - generic [ref=f21e651]:
+                  - generic [ref=f21e652]:
+                    - generic [ref=f21e653]:
+                      - generic [ref=f21e654]: Option name
+                      - textbox "Option name" [ref=f21e656]:
+                        - /placeholder: Size
+                        - text: Size
+                    - generic [ref=f21e657]:
+                      - generic [ref=f21e658]: Values (comma-separated)
+                      - textbox "Values (comma-separated)" [ref=f21e660]:
+                        - /placeholder: S, M, L, XL
+                        - text: S, M, L, XL
+                    - button "Remove option" [ref=f21e661]
+                  - generic [ref=f21e668]:
+                    - generic [ref=f21e669]:
+                      - generic [ref=f21e670]: Option name
+                      - textbox "Option name" [ref=f21e672]:
+                        - /placeholder: Size
+                        - text: Color
+                    - generic [ref=f21e673]:
+                      - generic [ref=f21e674]: Values (comma-separated)
+                      - textbox "Values (comma-separated)" [ref=f21e676]:
+                        - /placeholder: S, M, L, XL
+                        - text: White, Black, Navy
+                    - button "Remove option" [ref=f21e677]
+                - button "Add another option" [ref=f21e684]
+                - table [ref=f21e693]:
+                  - rowgroup [ref=f21e694]:
+                    - row [ref=f21e695]:
+                      - columnheader "Variant" [ref=f21e696]
+                      - columnheader "SKU" [ref=f21e697]
+                      - columnheader "Barcode" [ref=f21e698]
+                      - columnheader "Price (cents)" [ref=f21e699]
+                      - columnheader "Compare at" [ref=f21e700]
+                      - columnheader "Weight (g)" [ref=f21e701]
+                      - columnheader "Qty" [ref=f21e702]
+                      - columnheader "Policy" [ref=f21e703]
+                      - columnheader "Ship" [ref=f21e704]
+                  - rowgroup [ref=f21e705]:
+                    - row [ref=f21e706]:
+                      - cell "S / White Default" [ref=f21e707]:
+                        - text: S / White
+                        - generic [ref=f21e708]: Default
+                      - cell [ref=f21e709]:
+                        - textbox "SKU" [ref=f21e710]: ACME-CTSH-S-WHT
+                      - cell [ref=f21e711]:
+                        - textbox "Barcode" [ref=f21e712]
+                      - cell [ref=f21e713]:
+                        - spinbutton "Price in cents" [ref=f21e714]: "2499"
+                      - cell [ref=f21e715]:
+                        - spinbutton "Compare at price in cents" [ref=f21e716]
+                      - cell [ref=f21e717]:
+                        - spinbutton "Weight in grams" [ref=f21e718]: "200"
+                      - cell [ref=f21e719]:
+                        - spinbutton "Quantity on hand" [ref=f21e720]: "14"
+                      - cell "Deny" [ref=f21e721]:
+                        - combobox "Inventory policy" [ref=f21e722]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e723]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e724]
+                    - row [ref=f21e728]:
+                      - cell "S / Black" [ref=f21e729]
+                      - cell [ref=f21e730]:
+                        - textbox "SKU" [ref=f21e731]: ACME-CTSH-S-BLK
+                      - cell [ref=f21e732]:
+                        - textbox "Barcode" [ref=f21e733]
+                      - cell [ref=f21e734]:
+                        - spinbutton "Price in cents" [ref=f21e735]: "2499"
+                      - cell [ref=f21e736]:
+                        - spinbutton "Compare at price in cents" [ref=f21e737]
+                      - cell [ref=f21e738]:
+                        - spinbutton "Weight in grams" [ref=f21e739]: "200"
+                      - cell [ref=f21e740]:
+                        - spinbutton "Quantity on hand" [ref=f21e741]: "15"
+                      - cell "Deny" [ref=f21e742]:
+                        - combobox "Inventory policy" [ref=f21e743]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e744]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e745]
+                    - row [ref=f21e749]:
+                      - cell "S / Navy" [ref=f21e750]
+                      - cell [ref=f21e751]:
+                        - textbox "SKU" [ref=f21e752]: ACME-CTSH-S-NAV
+                      - cell [ref=f21e753]:
+                        - textbox "Barcode" [ref=f21e754]
+                      - cell [ref=f21e755]:
+                        - spinbutton "Price in cents" [ref=f21e756]: "2499"
+                      - cell [ref=f21e757]:
+                        - spinbutton "Compare at price in cents" [ref=f21e758]
+                      - cell [ref=f21e759]:
+                        - spinbutton "Weight in grams" [ref=f21e760]: "200"
+                      - cell [ref=f21e761]:
+                        - spinbutton "Quantity on hand" [ref=f21e762]: "15"
+                      - cell "Deny" [ref=f21e763]:
+                        - combobox "Inventory policy" [ref=f21e764]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e765]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e766]
+                    - row [ref=f21e770]:
+                      - cell "M / White" [ref=f21e771]
+                      - cell [ref=f21e772]:
+                        - textbox "SKU" [ref=f21e773]: ACME-CTSH-M-WHT
+                      - cell [ref=f21e774]:
+                        - textbox "Barcode" [ref=f21e775]
+                      - cell [ref=f21e776]:
+                        - spinbutton "Price in cents" [ref=f21e777]: "2499"
+                      - cell [ref=f21e778]:
+                        - spinbutton "Compare at price in cents" [ref=f21e779]
+                      - cell [ref=f21e780]:
+                        - spinbutton "Weight in grams" [ref=f21e781]: "200"
+                      - cell [ref=f21e782]:
+                        - spinbutton "Quantity on hand" [ref=f21e783]: "15"
+                      - cell "Deny" [ref=f21e784]:
+                        - combobox "Inventory policy" [ref=f21e785]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e786]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e787]
+                    - row [ref=f21e791]:
+                      - cell "M / Black" [ref=f21e792]
+                      - cell [ref=f21e793]:
+                        - textbox "SKU" [ref=f21e794]: ACME-CTSH-M-BLK
+                      - cell [ref=f21e795]:
+                        - textbox "Barcode" [ref=f21e796]
+                      - cell [ref=f21e797]:
+                        - spinbutton "Price in cents" [ref=f21e798]: "2499"
+                      - cell [ref=f21e799]:
+                        - spinbutton "Compare at price in cents" [ref=f21e800]
+                      - cell [ref=f21e801]:
+                        - spinbutton "Weight in grams" [ref=f21e802]: "200"
+                      - cell [ref=f21e803]:
+                        - spinbutton "Quantity on hand" [ref=f21e804]: "15"
+                      - cell "Deny" [ref=f21e805]:
+                        - combobox "Inventory policy" [ref=f21e806]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e807]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e808]
+                    - row [ref=f21e812]:
+                      - cell "M / Navy" [ref=f21e813]
+                      - cell [ref=f21e814]:
+                        - textbox "SKU" [ref=f21e815]: ACME-CTSH-M-NAV
+                      - cell [ref=f21e816]:
+                        - textbox "Barcode" [ref=f21e817]
+                      - cell [ref=f21e818]:
+                        - spinbutton "Price in cents" [ref=f21e819]: "2499"
+                      - cell [ref=f21e820]:
+                        - spinbutton "Compare at price in cents" [ref=f21e821]
+                      - cell [ref=f21e822]:
+                        - spinbutton "Weight in grams" [ref=f21e823]: "200"
+                      - cell [ref=f21e824]:
+                        - spinbutton "Quantity on hand" [ref=f21e825]: "15"
+                      - cell "Deny" [ref=f21e826]:
+                        - combobox "Inventory policy" [ref=f21e827]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e828]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e829]
+                    - row [ref=f21e833]:
+                      - cell "L / White" [ref=f21e834]
+                      - cell [ref=f21e835]:
+                        - textbox "SKU" [ref=f21e836]: ACME-CTSH-L-WHT
+                      - cell [ref=f21e837]:
+                        - textbox "Barcode" [ref=f21e838]
+                      - cell [ref=f21e839]:
+                        - spinbutton "Price in cents" [ref=f21e840]: "2499"
+                      - cell [ref=f21e841]:
+                        - spinbutton "Compare at price in cents" [ref=f21e842]
+                      - cell [ref=f21e843]:
+                        - spinbutton "Weight in grams" [ref=f21e844]: "200"
+                      - cell [ref=f21e845]:
+                        - spinbutton "Quantity on hand" [ref=f21e846]: "15"
+                      - cell "Deny" [ref=f21e847]:
+                        - combobox "Inventory policy" [ref=f21e848]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e849]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e850]
+                    - row [ref=f21e854]:
+                      - cell "L / Black" [ref=f21e855]
+                      - cell [ref=f21e856]:
+                        - textbox "SKU" [ref=f21e857]: ACME-CTSH-L-BLK
+                      - cell [ref=f21e858]:
+                        - textbox "Barcode" [ref=f21e859]
+                      - cell [ref=f21e860]:
+                        - spinbutton "Price in cents" [ref=f21e861]: "2499"
+                      - cell [ref=f21e862]:
+                        - spinbutton "Compare at price in cents" [ref=f21e863]
+                      - cell [ref=f21e864]:
+                        - spinbutton "Weight in grams" [ref=f21e865]: "200"
+                      - cell [ref=f21e866]:
+                        - spinbutton "Quantity on hand" [ref=f21e867]: "15"
+                      - cell "Deny" [ref=f21e868]:
+                        - combobox "Inventory policy" [ref=f21e869]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e870]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e871]
+                    - row [ref=f21e875]:
+                      - cell "L / Navy" [ref=f21e876]
+                      - cell [ref=f21e877]:
+                        - textbox "SKU" [ref=f21e878]: ACME-CTSH-L-NAV
+                      - cell [ref=f21e879]:
+                        - textbox "Barcode" [ref=f21e880]
+                      - cell [ref=f21e881]:
+                        - spinbutton "Price in cents" [ref=f21e882]: "2499"
+                      - cell [ref=f21e883]:
+                        - spinbutton "Compare at price in cents" [ref=f21e884]
+                      - cell [ref=f21e885]:
+                        - spinbutton "Weight in grams" [ref=f21e886]: "200"
+                      - cell [ref=f21e887]:
+                        - spinbutton "Quantity on hand" [ref=f21e888]: "15"
+                      - cell "Deny" [ref=f21e889]:
+                        - combobox "Inventory policy" [ref=f21e890]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e891]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e892]
+                    - row [ref=f21e896]:
+                      - cell "XL / White" [ref=f21e897]
+                      - cell [ref=f21e898]:
+                        - textbox "SKU" [ref=f21e899]: ACME-CTSH-XL-WHT
+                      - cell [ref=f21e900]:
+                        - textbox "Barcode" [ref=f21e901]
+                      - cell [ref=f21e902]:
+                        - spinbutton "Price in cents" [ref=f21e903]: "2499"
+                      - cell [ref=f21e904]:
+                        - spinbutton "Compare at price in cents" [ref=f21e905]
+                      - cell [ref=f21e906]:
+                        - spinbutton "Weight in grams" [ref=f21e907]: "200"
+                      - cell [ref=f21e908]:
+                        - spinbutton "Quantity on hand" [ref=f21e909]: "15"
+                      - cell "Deny" [ref=f21e910]:
+                        - combobox "Inventory policy" [ref=f21e911]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e912]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e913]
+                    - row [ref=f21e917]:
+                      - cell "XL / Black" [ref=f21e918]
+                      - cell [ref=f21e919]:
+                        - textbox "SKU" [ref=f21e920]: ACME-CTSH-XL-BLK
+                      - cell [ref=f21e921]:
+                        - textbox "Barcode" [ref=f21e922]
+                      - cell [ref=f21e923]:
+                        - spinbutton "Price in cents" [ref=f21e924]: "2499"
+                      - cell [ref=f21e925]:
+                        - spinbutton "Compare at price in cents" [ref=f21e926]
+                      - cell [ref=f21e927]:
+                        - spinbutton "Weight in grams" [ref=f21e928]: "200"
+                      - cell [ref=f21e929]:
+                        - spinbutton "Quantity on hand" [ref=f21e930]: "15"
+                      - cell "Deny" [ref=f21e931]:
+                        - combobox "Inventory policy" [ref=f21e932]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e933]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e934]
+                    - row [ref=f21e938]:
+                      - cell "XL / Navy" [ref=f21e939]
+                      - cell [ref=f21e940]:
+                        - textbox "SKU" [ref=f21e941]: ACME-CTSH-XL-NAV
+                      - cell [ref=f21e942]:
+                        - textbox "Barcode" [ref=f21e943]
+                      - cell [ref=f21e944]:
+                        - spinbutton "Price in cents" [ref=f21e945]: "2499"
+                      - cell [ref=f21e946]:
+                        - spinbutton "Compare at price in cents" [ref=f21e947]
+                      - cell [ref=f21e948]:
+                        - spinbutton "Weight in grams" [ref=f21e949]: "200"
+                      - cell [ref=f21e950]:
+                        - spinbutton "Quantity on hand" [ref=f21e951]: "15"
+                      - cell "Deny" [ref=f21e952]:
+                        - combobox "Inventory policy" [ref=f21e953]:
+                          - option "Deny" [selected]
+                          - option "Continue"
+                      - cell [ref=f21e954]:
+                        - checkbox "Requires shipping" [checked] [ref=f21e955]
+              - button "Search engine listing" [ref=f21e960]
+            - generic [ref=f21e963]:
+              - generic [ref=f21e965]:
+                - generic [ref=f21e966]: Status
+                - combobox "Status" [ref=f21e967]:
+                  - option "Draft"
+                  - option "Active" [selected]
+                  - option "Archived"
+              - generic [ref=f21e969]:
+                - generic [ref=f21e970]: Published at
+                - textbox "Published at" [ref=f21e972]: 2026-07-26T08:14
+              - generic [ref=f21e973]:
+                - generic [ref=f21e974]: Organization
+                - generic [ref=f21e975]:
+                  - generic [ref=f21e976]: Vendor
+                  - textbox "Vendor" [ref=f21e978]:
+                    - /placeholder: Nike
+                    - text: Acme Basics
+                - generic [ref=f21e979]:
+                  - generic [ref=f21e980]: Product type
+                  - textbox "Product type" [ref=f21e982]:
+                    - /placeholder: T-Shirts
+                    - text: T-Shirts
+                - generic [ref=f21e983]:
+                  - generic [ref=f21e984]: Tags
+                  - textbox "Tags" [ref=f21e986]:
+                    - /placeholder: summer, cotton, sale
+                    - text: new, popular
+                  - generic [ref=f21e987]: Separate tags with commas
+              - generic [ref=f21e988]:
+                - generic [ref=f21e989]: Collections
+                - generic [ref=f21e990]:
+                  - generic [ref=f21e991]:
+                    - checkbox "New Arrivals" [checked] [ref=f21e992]
+                    - generic [ref=f21e996]: New Arrivals
+                  - generic [ref=f21e997]:
+                    - checkbox "Pants & Jeans" [ref=f21e998]
+                    - generic [ref=f21e1000]: Pants & Jeans
+                  - generic [ref=f21e1001]:
+                    - checkbox "Sale" [ref=f21e1002]
+                    - generic [ref=f21e1004]: Sale
+                  - generic [ref=f21e1005]:
+                    - checkbox "T-Shirts" [checked] [ref=f21e1006]
+                    - generic [ref=f21e1010]: T-Shirts
+          - generic [ref=f21e1012]:
+            - link "Discard" [ref=f21e1013] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - button "Save" [ref=f21e1014]

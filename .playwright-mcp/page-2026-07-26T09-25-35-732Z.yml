@@ -1,0 +1,130 @@
+- generic [ref=f71e1]:
+  - link "Skip to main content" [ref=f71e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f71e4]:
+    - paragraph [ref=f71e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f71e6]
+  - banner [ref=f71e9]:
+    - generic [ref=f71e10]:
+      - link "Acme Fashion" [ref=f71e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f71e13]:
+        - link "Home" [ref=f71e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f71e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f71e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f71e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f71e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f71e19]:
+        - button "Search" [ref=f71e20]
+        - link "Account" [ref=f71e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f71e26]:
+          - generic [ref=f71e105]: "1"
+  - main [ref=f71e29]:
+    - generic [ref=f71e30]:
+      - navigation "Breadcrumb" [ref=f71e31]:
+        - list [ref=f71e32]:
+          - listitem [ref=f71e33]:
+            - link "Home" [ref=f71e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f71e35]:
+            - generic [ref=f71e36]: /
+            - link "New Arrivals" [ref=f71e37] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+          - listitem [ref=f71e38]:
+            - generic [ref=f71e39]: /
+            - generic [ref=f71e40]: Organic Hoodie
+      - generic [ref=f71e41]:
+        - region "Product images" [ref=f71e42]
+        - generic [ref=f71e48]:
+          - heading "Organic Hoodie" [level=1] [ref=f71e49]
+          - paragraph [ref=f71e50]: Acme Basics
+          - generic [ref=f71e51]: 59.99 EUR
+          - group "SizeS" [ref=f71e53]:
+            - generic [ref=f71e55]:
+              - button "S" [pressed] [ref=f71e56]
+              - button "M" [ref=f71e57]
+              - button "L" [ref=f71e58]
+              - button "XL" [ref=f71e59]
+          - paragraph [ref=f71e60]: In stock
+          - generic [ref=f71e63]:
+            - generic [ref=f71e64]:
+              - button "Decrease quantity" [disabled] [ref=f71e65]
+              - generic [ref=f71e67]: Quantity
+              - spinbutton "Quantity" [ref=f71e68]: "1"
+              - button "Increase quantity" [ref=f71e69]
+            - button "Add to cart" [ref=f71e72]
+          - separator [ref=f71e73]
+          - paragraph [ref=f71e75]: Made from 100% organic cotton. Warm, soft, and sustainably produced.
+          - generic [ref=f71e76]:
+            - generic [ref=f71e77]: new
+            - generic [ref=f71e78]: trending
+  - contentinfo [ref=f71e79]:
+    - generic [ref=f71e80]:
+      - generic [ref=f71e81]:
+        - generic [ref=f71e82]:
+          - heading "Shop" [level=2] [ref=f71e83]
+          - list [ref=f71e84]:
+            - listitem [ref=f71e85]:
+              - link "About Us" [ref=f71e86] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f71e87]:
+              - link "FAQ" [ref=f71e88] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f71e89]:
+              - link "Shipping & Returns" [ref=f71e90] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f71e91]:
+              - link "Privacy Policy" [ref=f71e92] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f71e93]:
+              - link "Terms of Service" [ref=f71e94] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f71e95]:
+          - heading "Acme Fashion" [level=2] [ref=f71e96]
+          - paragraph [ref=f71e97]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f71e98]:
+        - paragraph [ref=f71e99]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f71e100]:
+          - generic [ref=f71e101]: VISA
+          - generic [ref=f71e102]: MASTERCARD
+          - generic [ref=f71e103]: AMEX
+          - generic [ref=f71e104]: PAYPAL
+  - generic:
+    - dialog "Your Cart (1)":
+      - generic [ref=f71e108]:
+        - generic [ref=f71e109]:
+          - heading "Your Cart (1)" [level=2] [ref=f71e110]
+          - button "Close cart" [active] [ref=f71e111]
+        - list [ref=f71e114]:
+          - listitem [ref=f71e115]:
+            - generic [ref=f71e119]:
+              - paragraph [ref=f71e120]: Organic Hoodie
+              - paragraph [ref=f71e121]: S
+              - generic [ref=f71e122]:
+                - generic [ref=f71e123]:
+                  - button "Decrease quantity of Organic Hoodie" [ref=f71e124]
+                  - generic [ref=f71e126]: "1"
+                  - button "Increase quantity of Organic Hoodie" [ref=f71e127]
+                - paragraph [ref=f71e130]: 59.99 EUR
+              - button "Remove Organic Hoodie from cart" [ref=f71e132]
+        - generic [ref=f71e136]:
+          - generic [ref=f71e137]: Discount code
+          - textbox "Discount code" [ref=f71e138]
+          - button "Apply" [ref=f71e139]
+        - generic [ref=f71e140]:
+          - generic [ref=f71e141]:
+            - generic [ref=f71e142]:
+              - term [ref=f71e143]: Subtotal
+              - definition [ref=f71e144]: 59.99 EUR
+            - generic [ref=f71e145]:
+              - term [ref=f71e146]: Estimated total
+              - definition [ref=f71e147]: 59.99 EUR
+          - paragraph [ref=f71e148]: Shipping and taxes calculated at checkout
+          - button "Checkout" [ref=f71e149]
+          - button "Continue shopping" [ref=f71e151]

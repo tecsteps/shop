@@ -1,0 +1,274 @@
+- generic [active] [ref=f13e1]:
+  - dialog [ref=f13e125]:
+    - iframe [ref=f13e126]:
+      - generic [ref=f14e2]:
+        - generic [ref=f14e4]:
+          - generic [ref=f14e5]: Internal Server Error
+          - button "Copy as Markdown" [ref=f14e11] [cursor=pointer]
+        - generic [ref=f14e18]:
+          - generic [ref=f14e19]:
+            - heading "Livewire\\Exceptions\\MissingRulesException" [level=1] [ref=f14e20]
+            - generic [ref=f14e21]: vendor/livewire/livewire/src/Features/SupportValidation/HandlesValidation.php:493
+            - paragraph [ref=f14e23]: "Missing [$rules/rules()] property/method on: [App\\Livewire\\Storefront\\Checkout\\Show]."
+          - generic [ref=f14e24]:
+            - generic [ref=f14e25]:
+              - generic [ref=f14e26]:
+                - generic [ref=f14e27]: LARAVEL
+                - generic [ref=f14e28]: 12.51.0
+              - generic [ref=f14e29]:
+                - generic [ref=f14e30]: PHP
+                - generic [ref=f14e31]: 8.4.17
+            - generic [ref=f14e32]: UNHANDLED
+            - generic [ref=f14e36]: CODE 0
+          - generic [ref=f14e38]:
+            - generic [ref=f14e39]: "500"
+            - generic [ref=f14e43]: POST
+            - generic [ref=f14e47]: http://acme-fashion.test/livewire-0972654c/update
+            - button [ref=f14e48] [cursor=pointer]
+        - generic [ref=f14e53]:
+          - generic [ref=f14e54]:
+            - heading "Exception trace" [level=3] [ref=f14e60]
+            - generic [ref=f14e61]:
+              - generic [ref=f14e63] [cursor=pointer]:
+                - generic [ref=f14e68]: 2 vendor frames
+                - button [ref=f14e69]
+              - generic [ref=f14e74]:
+                - generic [ref=f14e75] [cursor=pointer]:
+                  - generic [ref=f14e78]:
+                    - code [ref=f14e82]:
+                      - generic [ref=f14e83]: app/Livewire/Storefront/Checkout/Show.php
+                    - generic [ref=f14e84]: app/Livewire/Storefront/Checkout/Show.php:246
+                  - button [ref=f14e87]
+                - code [ref=f14e96]:
+                  - generic [ref=f14e97]: 241 'cardCvc' => ['required', 'string', 'max:4'],
+                  - generic [ref=f14e98]: 242 'cardHolder' => ['required', 'string', 'max:255'],
+                  - generic [ref=f14e99]: 243 ];
+                  - generic [ref=f14e100]: "244 }"
+                  - generic [ref=f14e101]: "245"
+                  - generic [ref=f14e102]: 246 $this->validate($rules);
+                  - generic [ref=f14e103]: "247"
+                  - generic [ref=f14e104]: "248 try {"
+                  - generic [ref=f14e105]: 249 app(CheckoutService::class)->completeCheckout($checkout, [
+                  - generic [ref=f14e106]: 250 'payment_method' => $method,
+                  - generic [ref=f14e107]: 251 'card_number' => $this->cardNumber,
+                  - generic [ref=f14e108]: 252 'card_expiry' => $this->cardExpiry,
+                  - generic [ref=f14e109]: 253 'card_cvc' => $this->cardCvc,
+                  - generic [ref=f14e110]: 254 'card_holder' => $this->cardHolder,
+                  - generic [ref=f14e111]: 255 ]);
+                  - generic [ref=f14e112]: "256 } catch (PaymentFailedException $exception) {"
+                  - generic [ref=f14e113]: "257 $this->paymentError = 'Payment declined: '.$exception->getMessage();"
+                  - generic [ref=f14e114]: "258"
+              - generic [ref=f14e116] [cursor=pointer]:
+                - generic [ref=f14e121]: 58 vendor frames
+                - button [ref=f14e122]
+              - generic [ref=f14e128] [cursor=pointer]:
+                - generic [ref=f14e131]:
+                  - code [ref=f14e135]:
+                    - generic [ref=f14e136]: public/index.php
+                  - generic [ref=f14e137]: public/index.php:20
+                - button [ref=f14e140]
+              - generic [ref=f14e146] [cursor=pointer]:
+                - generic [ref=f14e151]: 1 vendor frame
+                - button [ref=f14e152]
+          - generic [ref=f14e157]:
+            - generic [ref=f14e158]:
+              - heading "Queries" [level=3] [ref=f14e163]
+              - generic [ref=f14e164]: 1-2 of 2
+            - generic [ref=f14e166]:
+              - generic [ref=f14e167]:
+                - generic [ref=f14e168]:
+                  - generic [ref=f14e169]: sqlite
+                  - code [ref=f14e176]:
+                    - generic [ref=f14e177]: select * from "stores" where "stores"."id" = 1 limit 1
+                - generic [ref=f14e178]: 1.55ms
+              - generic [ref=f14e179]:
+                - generic [ref=f14e180]:
+                  - generic [ref=f14e181]: sqlite
+                  - code [ref=f14e188]:
+                    - generic [ref=f14e189]: select * from "checkouts" where "checkouts"."id" = 2 and "checkouts"."store_id" = 1 limit 1
+                - generic [ref=f14e190]: 0.05ms
+        - generic [ref=f14e192]:
+          - generic [ref=f14e193]:
+            - heading "Headers" [level=2] [ref=f14e194]
+            - generic [ref=f14e195]:
+              - generic [ref=f14e196]:
+                - generic [ref=f14e197]: cookie
+                - generic [ref=f14e199]: XSRF-TOKEN=eyJpdiI6IkNTMElkQWNiaks3ZHFROUlwRkVPbmc9PSIsInZhbHVlIjoia0t2bEpMYVRjZjNYc2xFb3FBWnBwOVhSMThvY0diQ1BQY1RxYjVKTG1CRDRHQ0l2b0F5dlcwMHlDVnkrZHVGaTNlR25nMkhJbFRWZVd4UHQ2cUQ0ZHVYWTFjenpib1dsM2FMcGk1dnViWlNKMzFkTk1FNjlJTy9ITjZRaE43MHMiLCJtYWMiOiI0NDVmYzdlNGZjZmFjOTIwMjMyZDIxY2NiNTI4YWU2YzZhNWI2ZWNmNzNiNGQxYTgzNzBmNmJkYzRlZjg3MWJiIiwidGFnIjoiIn0%3D; shop_session=eyJpdiI6Im1qZTFUN1ZyQzdrUElrVkRGYkw3M2c9PSIsInZhbHVlIjoia2k5UnFiRzhxWkZ5NXd0Z3NoVmFzNVZ0YUsrK3cxQjVmL0V5L0VRMko1dWNnVXV0aEtQcjRhelJoeWQ4R3pTVG14VDF5SkQ4MDBsUTlwZHB3aHIycmxZT1VndDFtK3l1NnZETGlDOTFxMDZxZDlLaDFRSUNTaFltTlFKajFjenAiLCJtYWMiOiIzZGEyOWM1MDYyNDY4ODU5YmNlYmI1ODJiZmIxMmM5YzhmYmE4OThkN2I4ZGRmODBlYjRmZjEyMTc3MmJiZTA3IiwidGFnIjoiIn0%3D
+              - generic [ref=f14e200]:
+                - generic [ref=f14e201]: accept-language
+                - generic [ref=f14e203]: en-GB,en-US;q=0.9,en;q=0.8
+              - generic [ref=f14e204]:
+                - generic [ref=f14e205]: accept-encoding
+                - generic [ref=f14e207]: gzip, deflate
+              - generic [ref=f14e208]:
+                - generic [ref=f14e209]: referer
+                - generic [ref=f14e211]: http://acme-fashion.test/checkout/2
+              - generic [ref=f14e212]:
+                - generic [ref=f14e213]: origin
+                - generic [ref=f14e215]: http://acme-fashion.test
+              - generic [ref=f14e216]:
+                - generic [ref=f14e217]: accept
+                - generic [ref=f14e219]: "*/*"
+              - generic [ref=f14e220]:
+                - generic [ref=f14e221]: x-livewire
+                - generic [ref=f14e223]: "1"
+              - generic [ref=f14e224]:
+                - generic [ref=f14e225]: content-type
+                - generic [ref=f14e227]: application/json
+              - generic [ref=f14e228]:
+                - generic [ref=f14e229]: user-agent
+                - generic [ref=f14e231]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36
+              - generic [ref=f14e232]:
+                - generic [ref=f14e233]: content-length
+                - generic [ref=f14e235]: "1085"
+              - generic [ref=f14e236]:
+                - generic [ref=f14e237]: connection
+                - generic [ref=f14e239]: keep-alive
+              - generic [ref=f14e240]:
+                - generic [ref=f14e241]: host
+                - generic [ref=f14e243]: acme-fashion.test
+          - generic [ref=f14e244]:
+            - heading "Body" [level=2] [ref=f14e245]
+            - code [ref=f14e250]:
+              - generic [ref=f14e251]: "{"
+              - generic [ref=f14e252]: "\"_token\": \"J5t0ymZWZtEVqNMQv9kh8UuSJPnsTQyuighCl8F6\","
+              - generic [ref=f14e253]: "\"components\": ["
+              - generic [ref=f14e254]: "{"
+              - generic [ref=f14e255]: "\"snapshot\": \"{\"data\":{\"checkoutDbId\":2,\"expired\":false,\"step\":3,\"email\":\"jane@example.com\",\"address\":[{\"first_name\":\"Jane\",\"last_name\":\"Doe\",\"company\":\"\",\"address1\":\"123 Main St\",\"address2\":\"\",\"city\":\"Berlin\",\"province\":\"\",\"province_code\":\"\",\"country\":\"DE\",\"country_code\":\"DE\",\"postal_code\":\"10115\",\"phone\":\"\"},{\"s\":\"arr\"}],\"useShippingAsBilling\":true,\"paymentMethod\":\"bank_transfer\",\"paymentSelected\":true,\"cardNumber\":\"\",\"cardExpiry\":\"\",\"cardCvc\":\"\",\"cardHolder\":\"\",\"paymentError\":null,\"discountCode\":\"\",\"discountError\":null},\"memo\":{\"id\":\"g3TYRglm2H0cHit3iG8v\",\"name\":\"storefront.checkout.show\",\"path\":\"checkout/2\",\"method\":\"GET\",\"release\":\"a-a-a\",\"children\":[],\"scripts\":[],\"assets\":[],\"errors\":[],\"locale\":\"en\",\"islands\":[]},\"checksum\":\"485f1b64ea47f9f94a89f902fd51d6eae5fdf36fe2495ec8a6143aa46a82bffb\"}\","
+              - generic [ref=f14e256]: "\"updates\": [],"
+              - generic [ref=f14e257]: "\"calls\": ["
+              - generic [ref=f14e258]: "{"
+              - generic [ref=f14e259]: "\"method\": \"pay\","
+              - generic [ref=f14e260]: "\"params\": [],"
+              - generic [ref=f14e261]: "\"metadata\": []"
+              - generic [ref=f14e262]: "}"
+              - generic [ref=f14e263]: "]"
+              - generic [ref=f14e264]: "}"
+              - generic [ref=f14e265]: "]"
+              - generic [ref=f14e266]: "}"
+          - generic [ref=f14e267]:
+            - heading "Routing" [level=2] [ref=f14e268]
+            - generic [ref=f14e269]:
+              - generic [ref=f14e270]:
+                - generic [ref=f14e271]: controller
+                - generic [ref=f14e273]: Livewire\Mechanisms\HandleRequests\HandleRequests@handleUpdate
+              - generic [ref=f14e274]:
+                - generic [ref=f14e275]: route name
+                - generic [ref=f14e277]: default-livewire.update
+              - generic [ref=f14e278]:
+                - generic [ref=f14e279]: middleware
+                - generic [ref=f14e281]: web
+          - generic [ref=f14e282]:
+            - heading "Routing parameters" [level=2] [ref=f14e283]
+            - generic [ref=f14e284]: // No routing parameters
+  - link "Skip to main content" [ref=f13e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f13e4]:
+    - paragraph [ref=f13e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f13e6]
+  - banner [ref=f13e9]:
+    - generic [ref=f13e10]:
+      - link "Acme Fashion" [ref=f13e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f13e13]:
+        - link "Home" [ref=f13e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f13e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f13e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f13e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f13e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f13e19]:
+        - button "Search" [ref=f13e20]
+        - link "Account" [ref=f13e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f13e26]
+  - main [ref=f13e29]:
+    - generic [ref=f13e30]:
+      - heading "Checkout" [level=1] [ref=f13e31]
+      - generic [ref=f13e32]:
+        - generic [ref=f13e33]:
+          - region [ref=f13e34]:
+            - heading "1. Contact & shipping address jane@example.com" [level=2] [ref=f13e35]:
+              - generic [ref=f13e36]: 1. Contact & shipping address
+              - generic [ref=f13e37]: jane@example.com
+            - generic [ref=f13e38]: Jane Doe, 123 Main St, 10115 Berlin, DE
+          - region [ref=f13e39]:
+            - heading "2. Shipping method" [level=2] [ref=f13e40]
+            - generic [ref=f13e107]: Shipping method selected
+          - region [ref=f13e49]:
+            - heading "3. Payment" [level=2] [ref=f13e50]
+            - generic [ref=f13e108]:
+              - group "Select a payment method" [ref=f13e109]:
+                - generic [ref=f13e111] [cursor=pointer]:
+                  - radio "Credit Card" [disabled] [ref=f13e112]
+                  - generic [ref=f13e113]: Credit Card
+                - generic [ref=f13e114] [cursor=pointer]:
+                  - radio "PayPal" [disabled] [ref=f13e115]
+                  - generic [ref=f13e116]: PayPal
+                - generic [ref=f13e117] [cursor=pointer]:
+                  - radio "Bank Transfer" [checked] [disabled] [ref=f13e118]
+                  - generic [ref=f13e119]: Bank Transfer
+              - generic [ref=f13e121]:
+                - paragraph [ref=f13e122]: After placing your order, you will receive bank transfer instructions. Your order will be held while we await your payment.
+                - button "Place order - 84.98 EUR" [ref=f13e123]
+        - complementary "Order summary" [ref=f13e51]:
+          - generic [ref=f13e52]:
+            - heading "Order Summary" [level=2] [ref=f13e53]
+            - list [ref=f13e54]:
+              - listitem [ref=f13e55]:
+                - generic [ref=f13e59]:
+                  - paragraph [ref=f13e60]: Premium Slim Fit Jeans ×1
+                  - paragraph [ref=f13e61]: 28 / Blue
+                - paragraph [ref=f13e62]: 79.99 EUR
+            - generic [ref=f13e64]:
+              - generic [ref=f13e65]: Discount code
+              - textbox "Discount code" [ref=f13e66]
+              - button "Apply" [ref=f13e67]
+            - generic [ref=f13e68]:
+              - generic [ref=f13e69]:
+                - term [ref=f13e70]: Subtotal
+                - definition [ref=f13e71]: 79.99 EUR
+              - generic [ref=f13e72]:
+                - term [ref=f13e73]: Shipping
+                - definition [ref=f13e74]: 4.99 EUR
+              - generic [ref=f13e75]:
+                - term [ref=f13e76]: Tax
+                - definition [ref=f13e77]: 13.58 EUR
+              - generic [ref=f13e78]:
+                - term [ref=f13e79]: Total
+                - definition [ref=f13e80]: 84.98 EUR
+  - contentinfo [ref=f13e81]:
+    - generic [ref=f13e82]:
+      - generic [ref=f13e83]:
+        - generic [ref=f13e84]:
+          - heading "Shop" [level=2] [ref=f13e85]
+          - list [ref=f13e86]:
+            - listitem [ref=f13e87]:
+              - link "About Us" [ref=f13e88] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f13e89]:
+              - link "FAQ" [ref=f13e90] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f13e91]:
+              - link "Shipping & Returns" [ref=f13e92] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f13e93]:
+              - link "Privacy Policy" [ref=f13e94] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f13e95]:
+              - link "Terms of Service" [ref=f13e96] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f13e97]:
+          - heading "Acme Fashion" [level=2] [ref=f13e98]
+          - paragraph [ref=f13e99]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f13e100]:
+        - paragraph [ref=f13e101]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f13e102]:
+          - generic [ref=f13e103]: VISA
+          - generic [ref=f13e104]: MASTERCARD
+          - generic [ref=f13e105]: AMEX
+          - generic [ref=f13e106]: PAYPAL

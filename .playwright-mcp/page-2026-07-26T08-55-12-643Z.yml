@@ -1,0 +1,144 @@
+- generic [active] [ref=f33e1]:
+  - link "Skip to main content" [ref=f33e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f33e3]:
+    - complementary "Admin navigation" [ref=f33e4]:
+      - generic [ref=f33e5]:
+        - link "Acme Fashion" [ref=f33e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f33e12]:
+          - navigation [ref=f33e13]:
+            - link "Dashboard" [ref=f33e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f33e19]: Products
+          - navigation [ref=f33e20]:
+            - link "Products" [ref=f33e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f33e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f33e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f33e36]: Orders
+          - navigation [ref=f33e37]:
+            - link "Orders" [ref=f33e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f33e43]: Customers
+          - navigation [ref=f33e44]:
+            - link "Customers" [ref=f33e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f33e50]: Discounts
+          - navigation [ref=f33e51]:
+            - link "Discounts" [ref=f33e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f33e58]: Content
+          - navigation [ref=f33e59]:
+            - link "Pages" [ref=f33e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f33e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f33e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f33e75]:
+            - link "Analytics" [ref=f33e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f33e82]: Settings
+          - navigation [ref=f33e83]:
+            - link "Settings" [ref=f33e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f33e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f33e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f33e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f33e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f33e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f33e115]:
+      - banner [ref=f33e116]:
+        - button "Acme Fashion" [ref=f33e118]
+        - button "Notifications" [ref=f33e123]
+        - button "AU Admin User" [ref=f33e127]:
+          - generic [ref=f33e128]: AU
+          - generic [ref=f33e131]: Admin User
+      - main [ref=f33e135]:
+        - generic [ref=f33e136]:
+          - link "Home" [ref=f33e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f33e141]: Collections
+        - generic [ref=f33e143]:
+          - generic [ref=f33e144]:
+            - generic [ref=f33e145]: Collections
+            - link "Add collection" [ref=f33e146] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections/create
+          - generic [ref=f33e150]:
+            - textbox "Search collections" [ref=f33e152]:
+              - /placeholder: Search collections...
+            - combobox "Status filter" [ref=f33e154]:
+              - option "All statuses" [selected]
+              - option "Draft"
+              - option "Active"
+              - option "Archived"
+          - table [ref=f33e156]:
+            - rowgroup [ref=f33e157]:
+              - row [ref=f33e158]:
+                - columnheader "Title" [ref=f33e159]
+                - columnheader "Type" [ref=f33e160]
+                - columnheader "Products" [ref=f33e161]
+                - columnheader "Status" [ref=f33e162]
+                - columnheader "Updated" [ref=f33e163]
+                - columnheader "Actions" [ref=f33e164]
+            - rowgroup [ref=f33e166]:
+              - row [ref=f33e167]:
+                - cell [ref=f33e168]:
+                  - link "New Arrivals" [ref=f33e169] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/collections/1/edit
+                - cell "Manual" [ref=f33e170]
+                - cell "7" [ref=f33e172]
+                - cell "Active" [ref=f33e173]
+                - cell "40 minutes ago" [ref=f33e175]
+                - cell [ref=f33e176]:
+                  - generic [ref=f33e177]:
+                    - link "Edit New Arrivals" [ref=f33e178] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/collections/1/edit
+                    - button "Delete New Arrivals" [ref=f33e181]
+              - row [ref=f33e188]:
+                - cell [ref=f33e189]:
+                  - link "T-Shirts" [ref=f33e190] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/collections/2/edit
+                - cell "Manual" [ref=f33e191]
+                - cell "4" [ref=f33e193]
+                - cell "Active" [ref=f33e194]
+                - cell "40 minutes ago" [ref=f33e196]
+                - cell [ref=f33e197]:
+                  - generic [ref=f33e198]:
+                    - link "Edit T-Shirts" [ref=f33e199] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/collections/2/edit
+                    - button "Delete T-Shirts" [ref=f33e202]
+              - row [ref=f33e209]:
+                - cell [ref=f33e210]:
+                  - link "Pants & Jeans" [ref=f33e211] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/collections/3/edit
+                - cell "Manual" [ref=f33e212]
+                - cell "4" [ref=f33e214]
+                - cell "Active" [ref=f33e215]
+                - cell "40 minutes ago" [ref=f33e217]
+                - cell [ref=f33e218]:
+                  - generic [ref=f33e219]:
+                    - link "Edit Pants & Jeans" [ref=f33e220] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/collections/3/edit
+                    - button "Delete Pants & Jeans" [ref=f33e223]
+              - row [ref=f33e230]:
+                - cell [ref=f33e231]:
+                  - link "Sale" [ref=f33e232] [cursor=pointer]:
+                    - /url: http://admin.acme-fashion.test/admin/collections/4/edit
+                - cell "Manual" [ref=f33e233]
+                - cell "3" [ref=f33e235]
+                - cell "Active" [ref=f33e236]
+                - cell "40 minutes ago" [ref=f33e238]
+                - cell [ref=f33e239]:
+                  - generic [ref=f33e240]:
+                    - link "Edit Sale" [ref=f33e241] [cursor=pointer]:
+                      - /url: http://admin.acme-fashion.test/admin/collections/4/edit
+                    - button "Delete Sale" [ref=f33e244]

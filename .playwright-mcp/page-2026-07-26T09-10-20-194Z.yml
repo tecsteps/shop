@@ -1,0 +1,70 @@
+- generic [ref=f58e1]:
+  - link "Skip to main content" [ref=f58e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f58e4]:
+    - paragraph [ref=f58e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f58e6]
+  - banner [ref=f58e9]:
+    - generic [ref=f58e10]:
+      - link "Acme Fashion" [ref=f58e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f58e13]:
+        - link "Home" [ref=f58e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f58e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f58e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f58e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f58e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f58e19]:
+        - button "Search" [ref=f58e20]
+        - link "Account" [ref=f58e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f58e26]
+  - main [ref=f58e29]:
+    - generic [ref=f58e30]:
+      - generic [ref=f58e31]:
+        - heading "Your addresses" [level=1] [ref=f58e32]
+        - button "Add new address" [active] [ref=f58e33]
+      - generic [ref=f58e147]:
+        - generic [ref=f58e148]:
+          - paragraph [ref=f58e149]: Home
+          - generic [ref=f58e150]: Default
+        - generic [ref=f58e151]: Max Mustermann Hauptstrasse 1 Berlin 10115 Germany
+        - generic [ref=f58e152]:
+          - button "Edit" [ref=f58e153]
+          - button "Delete" [ref=f58e154]
+  - contentinfo [ref=f58e42]:
+    - generic [ref=f58e43]:
+      - generic [ref=f58e44]:
+        - generic [ref=f58e45]:
+          - heading "Shop" [level=2] [ref=f58e46]
+          - list [ref=f58e47]:
+            - listitem [ref=f58e48]:
+              - link "About Us" [ref=f58e49] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f58e50]:
+              - link "FAQ" [ref=f58e51] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f58e52]:
+              - link "Shipping & Returns" [ref=f58e53] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f58e54]:
+              - link "Privacy Policy" [ref=f58e55] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f58e56]:
+              - link "Terms of Service" [ref=f58e57] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f58e58]:
+          - heading "Acme Fashion" [level=2] [ref=f58e59]
+          - paragraph [ref=f58e60]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f58e61]:
+        - paragraph [ref=f58e62]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f58e63]:
+          - generic [ref=f58e64]: VISA
+          - generic [ref=f58e65]: MASTERCARD
+          - generic [ref=f58e66]: AMEX
+          - generic [ref=f58e67]: PAYPAL

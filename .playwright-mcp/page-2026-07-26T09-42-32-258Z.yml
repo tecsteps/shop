@@ -1,0 +1,124 @@
+- generic [active] [ref=f85e1]:
+  - link "Skip to main content" [ref=f85e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f85e3]:
+    - complementary "Admin navigation" [ref=f85e4]:
+      - generic [ref=f85e5]:
+        - link "Acme Fashion" [ref=f85e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f85e12]:
+          - navigation [ref=f85e13]:
+            - link "Dashboard" [ref=f85e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f85e19]: Products
+          - navigation [ref=f85e20]:
+            - link "Products" [ref=f85e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f85e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f85e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f85e36]: Orders
+          - navigation [ref=f85e37]:
+            - link "Orders" [ref=f85e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f85e43]: Customers
+          - navigation [ref=f85e44]:
+            - link "Customers" [ref=f85e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+    - generic [ref=f85e50]:
+      - banner [ref=f85e51]:
+        - button "Acme Fashion" [ref=f85e53]
+        - button "Notifications" [ref=f85e58]
+        - button "SU Support User" [ref=f85e62]:
+          - generic [ref=f85e63]: SU
+          - generic [ref=f85e66]: Support User
+      - main [ref=f85e70]:
+        - generic [ref=f85e71]:
+          - link "Home" [ref=f85e73] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Orders" [ref=f85e77] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/orders
+          - generic [ref=f85e80]: "#1016"
+        - generic [ref=f85e82]:
+          - generic [ref=f85e83]:
+            - generic [ref=f85e84]: "#1016"
+            - generic [ref=f85e85]: Partially Refunded
+            - generic [ref=f85e86]: Unfulfilled
+            - paragraph [ref=f85e87]: Jul 26, 2026 8:34 AM
+          - generic [ref=f85e88]:
+            - generic [ref=f85e89]:
+              - generic [ref=f85e90]:
+                - generic [ref=f85e91]: Timeline
+                - list [ref=f85e92]:
+                  - listitem [ref=f85e93]:
+                    - paragraph [ref=f85e95]: Order placed
+                    - paragraph [ref=f85e96]: Jul 26, 2026 8:34 AM
+                  - listitem [ref=f85e97]:
+                    - paragraph [ref=f85e99]: Payment received
+                    - paragraph [ref=f85e100]: Jul 26, 2026 8:34 AM
+                  - listitem [ref=f85e101]:
+                    - paragraph [ref=f85e103]: Refund issued (10.00 EUR)
+                    - paragraph [ref=f85e104]: Jul 26, 2026 8:49 AM
+              - generic [ref=f85e105]:
+                - generic [ref=f85e106]: Order lines
+                - table [ref=f85e108]:
+                  - rowgroup [ref=f85e109]:
+                    - row [ref=f85e110]:
+                      - columnheader "Image" [ref=f85e111]
+                      - columnheader "Product" [ref=f85e113]
+                      - columnheader "Qty" [ref=f85e114]
+                      - columnheader "Unit price" [ref=f85e115]
+                      - columnheader "Total" [ref=f85e116]
+                  - rowgroup [ref=f85e117]:
+                    - row [ref=f85e118]:
+                      - cell [ref=f85e119]
+                      - 'cell "Classic Cotton T-Shirt - S / White SKU: ACME-CTSH-S-WHT" [ref=f85e123]':
+                        - generic [ref=f85e124]: Classic Cotton T-Shirt - S / White
+                        - generic [ref=f85e125]: "SKU: ACME-CTSH-S-WHT"
+                      - cell "1" [ref=f85e126]
+                      - cell "24.99 EUR" [ref=f85e127]
+                      - cell "22.50 EUR" [ref=f85e128]
+                - generic [ref=f85e129]:
+                  - generic [ref=f85e130]:
+                    - generic [ref=f85e131]: Subtotal
+                    - generic [ref=f85e132]: 24.99 EUR
+                  - generic [ref=f85e133]:
+                    - generic [ref=f85e134]: Discount
+                    - generic [ref=f85e135]: "-2.49 EUR"
+                  - generic [ref=f85e136]:
+                    - generic [ref=f85e137]: Shipping
+                    - generic [ref=f85e138]: 4.99 EUR
+                  - generic [ref=f85e139]:
+                    - generic [ref=f85e140]: Tax
+                    - generic [ref=f85e141]: 4.40 EUR
+                  - generic [ref=f85e142]:
+                    - generic [ref=f85e143]: Total
+                    - generic [ref=f85e144]: 27.49 EUR
+              - generic [ref=f85e145]:
+                - generic [ref=f85e146]: Payment details
+                - generic [ref=f85e148]:
+                  - generic [ref=f85e149]:
+                    - paragraph [ref=f85e150]: Credit Card
+                    - paragraph [ref=f85e151]: "27.49 EUR · Ref: mock_RuUajoEnFLV6EEVn · Jul 26, 2026 8:34 AM"
+                  - generic [ref=f85e152]: Captured
+              - generic [ref=f85e153]:
+                - generic [ref=f85e154]: Refunds
+                - generic [ref=f85e156]:
+                  - generic [ref=f85e157]:
+                    - paragraph [ref=f85e158]: 10.00 EUR
+                    - paragraph [ref=f85e159]: Jul 26, 2026 8:49 AM · Partial goodwill refund
+                  - generic [ref=f85e160]: Processed
+            - generic [ref=f85e161]:
+              - generic [ref=f85e162]:
+                - generic [ref=f85e163]: Customer
+                - paragraph [ref=f85e164]: Jane Smith
+                - paragraph [ref=f85e165]: jane@example.com
+                - link "View customer" [ref=f85e167] [cursor=pointer]:
+                  - /url: http://admin.acme-fashion.test/admin/customers/2
+              - generic [ref=f85e168]:
+                - generic [ref=f85e169]: Shipping address
+                - generic [ref=f85e170]: Jane Doe 123 Main St Berlin 10115 DE
+              - generic [ref=f85e171]:
+                - generic [ref=f85e172]: Billing address
+                - generic [ref=f85e173]: Jane Doe 123 Main St Berlin 10115 DE

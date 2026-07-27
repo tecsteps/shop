@@ -1,0 +1,129 @@
+- generic [active] [ref=f64e1]:
+  - link "Skip to main content" [ref=f64e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f64e4]:
+    - paragraph [ref=f64e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f64e6]
+  - banner [ref=f64e9]:
+    - generic [ref=f64e10]:
+      - link "Acme Fashion" [ref=f64e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f64e13]:
+        - link "Home" [ref=f64e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f64e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f64e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f64e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f64e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f64e19]:
+        - button "Search" [ref=f64e20]
+        - link "Account" [ref=f64e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f64e26]
+  - main [ref=f64e29]:
+    - generic [ref=f64e30]:
+      - navigation "Breadcrumb" [ref=f64e31]:
+        - list [ref=f64e32]:
+          - listitem [ref=f64e33]:
+            - link "Account" [ref=f64e34] [cursor=pointer]:
+              - /url: http://acme-fashion.test/account
+          - listitem [ref=f64e35]:
+            - generic [ref=f64e36]: /
+            - link "Orders" [ref=f64e37] [cursor=pointer]:
+              - /url: http://acme-fashion.test/account/orders
+          - listitem [ref=f64e38]:
+            - generic [ref=f64e39]: /
+            - generic [ref=f64e40]: "#1001"
+      - generic [ref=f64e41]:
+        - 'heading "Order #1001" [level=1] [ref=f64e42]'
+        - generic [ref=f64e43]:
+          - generic [ref=f64e44]: paid
+          - generic [ref=f64e45]: unfulfilled
+      - paragraph [ref=f64e46]: Placed on July 24, 2026
+      - list "Order progress" [ref=f64e47]:
+        - listitem [ref=f64e48]:
+          - generic [ref=f64e52]:
+            - text: Placed
+            - generic [ref=f64e53]: Jul 24, 2026
+        - listitem [ref=f64e54]:
+          - generic [ref=f64e59]:
+            - text: Paid
+            - generic [ref=f64e60]: Jul 26, 2026
+        - listitem [ref=f64e61]:
+          - generic [ref=f64e63]: Shipped
+        - listitem [ref=f64e67]:
+          - generic [ref=f64e69]: Delivered
+      - generic [ref=f64e73]:
+        - heading "Items" [level=2] [ref=f64e74]
+        - table [ref=f64e75]:
+          - rowgroup [ref=f64e76]:
+            - row [ref=f64e77]:
+              - cell [ref=f64e78]:
+                - generic [ref=f64e83]:
+                  - paragraph [ref=f64e84]: Classic Cotton T-Shirt
+                  - paragraph [ref=f64e85]: "SKU: ACME-CTSH-S-WHT"
+              - cell "×2" [ref=f64e86]
+              - cell "49.98 EUR" [ref=f64e87]
+      - generic [ref=f64e88]:
+        - generic [ref=f64e89]:
+          - heading "Shipping address" [level=2] [ref=f64e90]
+          - generic [ref=f64e91]: John Doe Hauptstrasse 1 Berlin 10115 Germany +49 30 12345678
+        - generic [ref=f64e92]:
+          - heading "Billing address" [level=2] [ref=f64e93]
+          - generic [ref=f64e94]: Same as shipping
+        - generic [ref=f64e95]:
+          - heading "Payment" [level=2] [ref=f64e96]
+          - paragraph [ref=f64e97]:
+            - text: Credit card
+            - generic [ref=f64e98]: 54.97 EUR · captured
+      - generic [ref=f64e99]:
+        - generic [ref=f64e100]:
+          - term [ref=f64e101]: Subtotal
+          - definition [ref=f64e102]: 49.98 EUR
+        - generic [ref=f64e103]:
+          - term [ref=f64e104]: Shipping
+          - definition [ref=f64e105]: 4.99 EUR
+        - generic [ref=f64e106]:
+          - term [ref=f64e107]: Tax
+          - definition [ref=f64e108]: 7.98 EUR
+        - generic [ref=f64e109]:
+          - term [ref=f64e110]: Discount
+          - definition [ref=f64e111]: "-0.00 EUR"
+        - generic [ref=f64e112]:
+          - term [ref=f64e113]: Total
+          - definition [ref=f64e114]: 54.97 EUR
+  - contentinfo [ref=f64e115]:
+    - generic [ref=f64e116]:
+      - generic [ref=f64e117]:
+        - generic [ref=f64e118]:
+          - heading "Shop" [level=2] [ref=f64e119]
+          - list [ref=f64e120]:
+            - listitem [ref=f64e121]:
+              - link "About Us" [ref=f64e122] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f64e123]:
+              - link "FAQ" [ref=f64e124] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f64e125]:
+              - link "Shipping & Returns" [ref=f64e126] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f64e127]:
+              - link "Privacy Policy" [ref=f64e128] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f64e129]:
+              - link "Terms of Service" [ref=f64e130] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f64e131]:
+          - heading "Acme Fashion" [level=2] [ref=f64e132]
+          - paragraph [ref=f64e133]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f64e134]:
+        - paragraph [ref=f64e135]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f64e136]:
+          - generic [ref=f64e137]: VISA
+          - generic [ref=f64e138]: MASTERCARD
+          - generic [ref=f64e139]: AMEX
+          - generic [ref=f64e140]: PAYPAL

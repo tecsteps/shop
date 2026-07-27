@@ -1,0 +1,170 @@
+- generic [active] [ref=f86e1]:
+  - link "Skip to main content" [ref=f86e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f86e4]:
+    - paragraph [ref=f86e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f86e6]
+  - banner [ref=f86e9]:
+    - generic [ref=f86e10]:
+      - button "Open navigation menu" [ref=f86e11]
+      - link "Acme Fashion" [ref=f86e14] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - button "Open cart" [ref=f86e17]
+  - main [ref=f86e20]:
+    - generic [ref=f86e21]:
+      - generic [ref=f86e25]:
+        - heading "Welcome to Acme Fashion" [level=1] [ref=f86e26]
+        - paragraph [ref=f86e27]: Discover our curated collection of modern essentials
+        - link "Shop New Arrivals" [ref=f86e28] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+      - region [ref=f86e29]:
+        - heading "Featured collections" [level=2] [ref=f86e30]
+        - generic [ref=f86e31]:
+          - link "New Arrivals" [ref=f86e32] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/new-arrivals
+            - generic [ref=f86e34]:
+              - generic [ref=f86e35]: New Arrivals
+              - generic [ref=f86e36]: Shop now
+          - link "T-Shirts" [ref=f86e37] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/t-shirts
+            - generic [ref=f86e39]:
+              - generic [ref=f86e40]: T-Shirts
+              - generic [ref=f86e41]: Shop now
+          - link "Sale" [ref=f86e42] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/sale
+            - generic [ref=f86e44]:
+              - generic [ref=f86e45]: Sale
+              - generic [ref=f86e46]: Shop now
+      - region [ref=f86e47]:
+        - heading "Featured products" [level=2] [ref=f86e48]
+        - generic [ref=f86e49]:
+          - generic [ref=f86e50]:
+            - link [ref=f86e52] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+            - link "Classic Cotton T-Shirt 24.99 EUR" [ref=f86e56] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+              - heading "Classic Cotton T-Shirt" [level=3] [ref=f86e57]
+              - generic [ref=f86e58]: 24.99 EUR
+            - link "Choose options" [ref=f86e62] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+          - generic [ref=f86e63]:
+            - generic [ref=f86e64]:
+              - link [ref=f86e65] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+              - generic [ref=f86e70]:
+                - generic [ref=f86e71]: "On sale:"
+                - text: Sale
+            - 'link "Premium Slim Fit Jeans 79.99 EUR 99.99 EUR On sale: Sale" [ref=f86e72] [cursor=pointer]':
+              - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+              - heading "Premium Slim Fit Jeans" [level=3] [ref=f86e73]
+              - generic [ref=f86e75]:
+                - generic [ref=f86e76]: 79.99 EUR
+                - generic [ref=f86e77]: 99.99 EUR
+                - generic [ref=f86e78]:
+                  - generic [ref=f86e79]: "On sale:"
+                  - text: Sale
+            - link "Choose options" [ref=f86e81] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+          - generic [ref=f86e82]:
+            - link [ref=f86e84] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/organic-hoodie
+            - link "Organic Hoodie 59.99 EUR" [ref=f86e88] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/organic-hoodie
+              - heading "Organic Hoodie" [level=3] [ref=f86e89]
+              - generic [ref=f86e90]: 59.99 EUR
+            - link "Choose options" [ref=f86e94] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/organic-hoodie
+          - generic [ref=f86e95]:
+            - link [ref=f86e97] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/leather-belt
+            - link "Leather Belt 34.99 EUR" [ref=f86e101] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/leather-belt
+              - heading "Leather Belt" [level=3] [ref=f86e102]
+              - generic [ref=f86e103]: 34.99 EUR
+            - link "Choose options" [ref=f86e107] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/leather-belt
+          - generic [ref=f86e108]:
+            - link [ref=f86e110] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/running-sneakers
+            - link "Running Sneakers 119.99 EUR" [ref=f86e114] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/running-sneakers
+              - heading "Running Sneakers" [level=3] [ref=f86e115]
+              - generic [ref=f86e116]: 119.99 EUR
+            - link "Choose options" [ref=f86e120] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/running-sneakers
+          - generic [ref=f86e121]:
+            - link [ref=f86e123] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+            - link "Graphic Print Tee 29.99 EUR" [ref=f86e127] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+              - heading "Graphic Print Tee" [level=3] [ref=f86e128]
+              - generic [ref=f86e129]: 29.99 EUR
+            - link "Choose options" [ref=f86e133] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+          - generic [ref=f86e134]:
+            - link [ref=f86e136] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+            - link "V-Neck Linen Tee 34.99 EUR" [ref=f86e140] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+              - heading "V-Neck Linen Tee" [level=3] [ref=f86e141]
+              - generic [ref=f86e142]: 34.99 EUR
+            - link "Choose options" [ref=f86e146] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+          - generic [ref=f86e147]:
+            - generic [ref=f86e148]:
+              - link [ref=f86e149] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/striped-polo-shirt
+              - generic [ref=f86e154]:
+                - generic [ref=f86e155]: "On sale:"
+                - text: Sale
+            - 'link "Striped Polo Shirt 27.99 EUR 39.99 EUR On sale: Sale" [ref=f86e156] [cursor=pointer]':
+              - /url: http://acme-fashion.test/products/striped-polo-shirt
+              - heading "Striped Polo Shirt" [level=3] [ref=f86e157]
+              - generic [ref=f86e159]:
+                - generic [ref=f86e160]: 27.99 EUR
+                - generic [ref=f86e161]: 39.99 EUR
+                - generic [ref=f86e162]:
+                  - generic [ref=f86e163]: "On sale:"
+                  - text: Sale
+            - link "Choose options" [ref=f86e165] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/striped-polo-shirt
+      - region [ref=f86e166]:
+        - generic [ref=f86e167]:
+          - heading "Stay in the loop" [level=2] [ref=f86e168]
+          - paragraph [ref=f86e169]: Subscribe for exclusive offers and updates.
+          - generic [ref=f86e171]:
+            - generic [ref=f86e172]: Email address
+            - textbox "Email address" [ref=f86e173]:
+              - /placeholder: Enter your email
+            - button "Subscribe" [ref=f86e174]
+  - contentinfo [ref=f86e175]:
+    - generic [ref=f86e176]:
+      - generic [ref=f86e177]:
+        - generic [ref=f86e178]:
+          - heading "Shop" [level=2] [ref=f86e179]
+          - list [ref=f86e180]:
+            - listitem [ref=f86e181]:
+              - link "About Us" [ref=f86e182] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f86e183]:
+              - link "FAQ" [ref=f86e184] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f86e185]:
+              - link "Shipping & Returns" [ref=f86e186] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f86e187]:
+              - link "Privacy Policy" [ref=f86e188] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f86e189]:
+              - link "Terms of Service" [ref=f86e190] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f86e191]:
+          - heading "Acme Fashion" [level=2] [ref=f86e192]
+          - paragraph [ref=f86e193]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f86e194]:
+        - paragraph [ref=f86e195]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f86e196]:
+          - generic [ref=f86e197]: VISA
+          - generic [ref=f86e198]: MASTERCARD
+          - generic [ref=f86e199]: AMEX
+          - generic [ref=f86e200]: PAYPAL

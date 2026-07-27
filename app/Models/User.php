@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +24,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password_hash',
+        'status',
     ];
 
     /**
@@ -31,10 +34,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
+        'remember_token',
         'two_factor_secret',
         'two_factor_recovery_codes',
-        'remember_token',
     ];
 
     /**
@@ -46,8 +49,45 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'last_login_at' => 'datetime',
+            'two_factor_confirmed_at' => 'datetime',
+            'password_hash' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the password for authentication (custom column name).
+     */
+    public function getAuthPassword(): string
+    {
+        return $this->password_hash;
+    }
+
+    /**
+     * Get the stores the user is a member of.
+     *
+     * @return BelongsToMany<Store, $this, StoreUser>
+     */
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')
+            ->withPivot('role')
+            ->using(StoreUser::class);
+    }
+
+    /**
+     * Get the user's role for a given store, or null when the user has
+     * no access to that store.
+     */
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        /** @var Store|null $membership */
+        $membership = $this->stores()->where('stores.id', $store->getKey())->first();
+
+        /** @var StoreUserRole|null $role */
+        $role = $membership?->pivot->role;
+
+        return $role;
     }
 
     /**

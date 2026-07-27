@@ -1,0 +1,5 @@
+[      91ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/products/premium-slim-fit-jeans:107
+[   27153ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/checkout/new:100
+[   83160ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/checkout/2:100
+[  193825ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://acme-fashion.test/livewire-0972654c/update:0
+[  193839ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ :7

@@ -1,0 +1,107 @@
+- generic [active] [ref=f39e1]:
+  - link "Skip to main content" [ref=f39e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f39e3]:
+    - complementary "Admin navigation" [ref=f39e4]:
+      - generic [ref=f39e5]:
+        - link "Acme Fashion" [ref=f39e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f39e12]:
+          - navigation [ref=f39e13]:
+            - link "Dashboard" [ref=f39e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f39e19]: Products
+          - navigation [ref=f39e20]:
+            - link "Products" [ref=f39e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f39e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f39e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f39e36]: Orders
+          - navigation [ref=f39e37]:
+            - link "Orders" [ref=f39e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f39e43]: Customers
+          - navigation [ref=f39e44]:
+            - link "Customers" [ref=f39e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f39e50]: Discounts
+          - navigation [ref=f39e51]:
+            - link "Discounts" [ref=f39e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f39e58]: Content
+          - navigation [ref=f39e59]:
+            - link "Pages" [ref=f39e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f39e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f39e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f39e75]:
+            - link "Analytics" [ref=f39e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f39e82]: Settings
+          - navigation [ref=f39e83]:
+            - link "Settings" [ref=f39e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f39e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f39e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f39e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f39e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f39e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f39e115]:
+      - banner [ref=f39e116]:
+        - button "Acme Fashion" [ref=f39e118]
+        - button "Notifications" [ref=f39e123]
+        - button "AU Admin User" [ref=f39e127]:
+          - generic [ref=f39e128]: AU
+          - generic [ref=f39e131]: Admin User
+      - main [ref=f39e135]:
+        - generic [ref=f39e136]:
+          - link "Home" [ref=f39e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Settings" [ref=f39e142] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/settings
+          - generic [ref=f39e145]: Taxes
+        - generic [ref=f39e147]:
+          - generic [ref=f39e148]: Taxes
+          - generic [ref=f39e149]:
+            - generic [ref=f39e150]: Tax mode
+            - generic [ref=f39e151]:
+              - generic [ref=f39e152]:
+                - radio "Manual tax rates" [ref=f39e153]
+                - generic [ref=f39e155]: Manual tax rates
+                - generic [ref=f39e156]: Define tax rates per zone manually.
+              - generic [ref=f39e157]:
+                - radio "Tax provider" [ref=f39e158]
+                - generic [ref=f39e160]: Tax provider
+                - generic [ref=f39e161]: Use an automated tax calculation service.
+          - generic [ref=f39e162]:
+            - generic [ref=f39e163]: Rates
+            - generic [ref=f39e164]:
+              - generic [ref=f39e165]: Default rate (basis points)
+              - spinbutton "Default rate (basis points)" [ref=f39e167]
+              - generic [ref=f39e168]: 1900 = 19.00%. Applied when no zone override matches.
+            - paragraph [ref=f39e169]: Zone overrides
+            - paragraph [ref=f39e170]: Optional per-zone rates. Leave empty to use the default rate.
+            - generic [ref=f39e171]:
+              - generic [ref=f39e172]:
+                - generic [ref=f39e173]: Domestic
+                - spinbutton "Domestic" [ref=f39e175]
+              - generic [ref=f39e176]:
+                - generic [ref=f39e177]: EU
+                - spinbutton "EU" [ref=f39e179]
+              - generic [ref=f39e180]:
+                - generic [ref=f39e181]: Rest of World
+                - spinbutton "Rest of World" [ref=f39e183]
+          - generic [ref=f39e185]:
+            - generic [ref=f39e186]: Prices include tax
+            - generic [ref=f39e187]: When enabled, the listed price includes tax. Tax is calculated backwards from the price.
+            - switch "Prices include tax" [ref=f39e188]
+          - button "Save" [ref=f39e191]

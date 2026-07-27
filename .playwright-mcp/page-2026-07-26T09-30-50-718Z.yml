@@ -1,0 +1,189 @@
+- generic:
+  - link "Skip to main content":
+    - /url: "#main-content"
+  - generic:
+    - complementary "Admin navigation":
+      - generic:
+        - generic:
+          - link "Acme Fashion":
+            - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin":
+          - navigation:
+            - link "Dashboard":
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph: Products
+          - navigation:
+            - link "Products":
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections":
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory":
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph: Orders
+          - navigation:
+            - link "Orders":
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph: Customers
+          - navigation:
+            - link "Customers":
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph: Discounts
+          - navigation:
+            - link "Discounts":
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph: Content
+          - navigation:
+            - link "Pages":
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation":
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes":
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation:
+            - link "Analytics":
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph: Settings
+          - navigation:
+            - link "Settings":
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping":
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes":
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search":
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps":
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers":
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic:
+      - banner:
+        - generic:
+          - button "Acme Fashion"
+        - generic:
+          - button "Notifications"
+        - generic:
+          - button "AU Admin User" [expanded]:
+            - generic: AU
+            - generic: Admin User
+          - menu [active] [ref=f76e271]:
+            - generic [ref=f76e272]:
+              - paragraph [ref=f76e273]: Admin User
+              - paragraph [ref=f76e274]: admin@acme.test
+              - generic [ref=f76e275]: owner
+            - menuitem "Settings" [ref=f76e277] [cursor=pointer]
+            - menuitem "Log out" [ref=f76e282]
+      - main:
+        - generic:
+          - generic: Home
+          - generic: Dashboard
+        - generic:
+          - generic:
+            - heading "Dashboard" [level=1]
+            - combobox "Date range":
+              - option "Last 7 days"
+              - option "Last 30 days" [selected]
+              - option "Last 90 days"
+          - generic:
+            - generic:
+              - paragraph: Total Sales
+              - generic: 1,689.58 EUR
+            - generic:
+              - paragraph: Orders
+              - generic: "18"
+            - generic:
+              - paragraph: Avg. Order Value
+              - generic: 93.86 EUR
+            - generic:
+              - paragraph: Conversion Rate
+              - generic: 48.6%
+          - generic:
+            - heading "Orders over time" [level=2]
+            - generic:
+              - img "Daily order counts for the selected period"
+              - generic:
+                - generic: 2026-06-27
+                - generic: 2026-07-26
+          - generic:
+            - heading "Recent orders" [level=2]
+            - generic:
+              - table:
+                - rowgroup:
+                  - row "Order Date Customer Payment Fulfillment Total":
+                    - columnheader "Order"
+                    - columnheader "Date"
+                    - columnheader "Customer"
+                    - columnheader "Payment"
+                    - columnheader "Fulfillment"
+                    - columnheader "Total"
+                - rowgroup:
+                  - row "#1018 Jul 26, 2026 John Doe Paid Unfulfilled 59.99 EUR":
+                    - cell "#1018"
+                    - cell "Jul 26, 2026"
+                    - cell "John Doe"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "59.99 EUR"
+                  - row "#1017 Jul 26, 2026 Jane Smith Paid Fulfilled 84.98 EUR":
+                    - cell "#1017"
+                    - cell "Jul 26, 2026"
+                    - cell "Jane Smith"
+                    - cell "Paid"
+                    - cell "Fulfilled"
+                    - cell "84.98 EUR"
+                  - row "#1016 Jul 26, 2026 Jane Smith Partially refunded Unfulfilled 27.49 EUR":
+                    - cell "#1016"
+                    - cell "Jul 26, 2026"
+                    - cell "Jane Smith"
+                    - cell "Partially refunded"
+                    - cell "Unfulfilled"
+                    - cell "27.49 EUR"
+                  - row "#1015 Jul 26, 2026 John Doe Paid Unfulfilled 54.47 EUR":
+                    - cell "#1015"
+                    - cell "Jul 26, 2026"
+                    - cell "John Doe"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "54.47 EUR"
+                  - row "#1005 Jul 26, 2026 Jane Smith Pending Unfulfilled 39.98 EUR":
+                    - cell "#1005"
+                    - cell "Jul 26, 2026"
+                    - cell "Jane Smith"
+                    - cell "Pending"
+                    - cell "Unfulfilled"
+                    - cell "39.98 EUR"
+                  - row "#1013 Jul 25, 2026 Robert Martinez Paid Unfulfilled 84.97 EUR":
+                    - cell "#1013"
+                    - cell "Jul 25, 2026"
+                    - cell "Robert Martinez"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "84.97 EUR"
+                  - row "#1010 Jul 25, 2026 John Doe Paid Unfulfilled 504.98 EUR":
+                    - cell "#1010"
+                    - cell "Jul 25, 2026"
+                    - cell "John Doe"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "504.98 EUR"
+                  - row "#1006 Jul 25, 2026 Michael Brown Paid Unfulfilled 124.98 EUR":
+                    - cell "#1006"
+                    - cell "Jul 25, 2026"
+                    - cell "Michael Brown"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "124.98 EUR"
+                  - row "#1001 Jul 24, 2026 John Doe Paid Unfulfilled 54.97 EUR":
+                    - cell "#1001"
+                    - cell "Jul 24, 2026"
+                    - cell "John Doe"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "54.97 EUR"
+                  - row "#1009 Jul 23, 2026 Emma Garcia Paid Unfulfilled 49.97 EUR":
+                    - cell "#1009"
+                    - cell "Jul 23, 2026"
+                    - cell "Emma Garcia"
+                    - cell "Paid"
+                    - cell "Unfulfilled"
+                    - cell "49.97 EUR"

@@ -1,0 +1,78 @@
+- generic [ref=f1e1]:
+  - link "Skip to main content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f1e4]:
+    - paragraph [ref=f1e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f1e6]
+  - banner [ref=f1e9]:
+    - generic [ref=f1e10]:
+      - link "Acme Fashion" [ref=f1e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f1e13]:
+        - link "Home" [ref=f1e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f1e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f1e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f1e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f1e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f1e19]:
+        - button "Search" [ref=f1e20]
+        - link "Account" [ref=f1e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f1e26]
+  - main [ref=f1e29]:
+    - generic [ref=f1e30]:
+      - heading "Log in to your account" [level=1] [ref=f1e31]
+      - generic [ref=f1e32]:
+        - generic [ref=f1e33]:
+          - generic [ref=f1e34]: Email
+          - textbox "Email" [active] [ref=f1e36]
+        - generic [ref=f1e37]:
+          - generic [ref=f1e38]: Password
+          - textbox "Password" [ref=f1e40]
+        - generic [ref=f1e41]:
+          - generic [ref=f1e42]:
+            - checkbox "Remember me" [ref=f1e43]
+            - generic [ref=f1e45]: Remember me
+          - link "Forgot password?" [ref=f1e46] [cursor=pointer]:
+            - /url: http://acme-fashion.test/forgot-password
+        - button "Log in" [ref=f1e47]
+      - paragraph [ref=f1e53]:
+        - text: Don't have an account?
+        - link "Create one" [ref=f1e54] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/register
+  - contentinfo [ref=f1e55]:
+    - generic [ref=f1e56]:
+      - generic [ref=f1e57]:
+        - generic [ref=f1e58]:
+          - heading "Shop" [level=2] [ref=f1e59]
+          - list [ref=f1e60]:
+            - listitem [ref=f1e61]:
+              - link "About Us" [ref=f1e62] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f1e63]:
+              - link "FAQ" [ref=f1e64] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f1e65]:
+              - link "Shipping & Returns" [ref=f1e66] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f1e67]:
+              - link "Privacy Policy" [ref=f1e68] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f1e69]:
+              - link "Terms of Service" [ref=f1e70] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f1e71]:
+          - heading "Acme Fashion" [level=2] [ref=f1e72]
+          - paragraph [ref=f1e73]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f1e74]:
+        - paragraph [ref=f1e75]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f1e76]:
+          - generic [ref=f1e77]: VISA
+          - generic [ref=f1e78]: MASTERCARD
+          - generic [ref=f1e79]: AMEX
+          - generic [ref=f1e80]: PAYPAL

@@ -1,0 +1,197 @@
+- generic [active] [ref=e199]:
+  - link "Skip to main content" [ref=e200] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e201]:
+    - generic [ref=e202]:
+      - link "Acme Fashion" [ref=e203] [cursor=pointer]:
+        - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev
+      - navigation "Main" [ref=e204]:
+        - link "Home" [ref=e205] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=e206] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/new-arrivals
+        - link "T-Shirts" [ref=e207] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/t-shirts
+        - link "Pants & Jeans" [ref=e208] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/pants-jeans
+        - link "Sale" [ref=e209] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections/sale
+      - generic [ref=e210]:
+        - link "Search" [ref=e211] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/search
+        - button "Open cart" [ref=e215]
+        - link "Account" [ref=e218] [cursor=pointer]:
+          - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/account/login
+  - main [ref=e221]:
+    - generic [ref=e222]:
+      - navigation "Breadcrumb" [ref=e223]:
+        - list [ref=e224]:
+          - listitem [ref=e225]:
+            - link "Home" [ref=e226] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev
+            - generic [ref=e227]: /
+          - listitem [ref=e228]:
+            - link "Collections" [ref=e229] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/collections
+            - generic [ref=e230]: /
+          - listitem [ref=e231]:
+            - generic [ref=e232]: New Arrivals
+      - generic [ref=e233]:
+        - generic [ref=e234]:
+          - heading "New Arrivals" [level=1] [ref=e235]
+          - paragraph [ref=e237]: Discover the latest additions to our store.
+        - generic [ref=e238]:
+          - generic [ref=e239]: Sort by
+          - combobox "Sort by" [ref=e240]:
+            - option "Featured" [selected]
+            - option "Newest"
+            - 'option "Price: Low to High"'
+            - 'option "Price: High to Low"'
+      - generic [ref=e241]:
+        - complementary "Filters" [ref=e242]:
+          - heading "Filters" [level=2] [ref=e244]
+          - generic [ref=e245]:
+            - generic [ref=e246]:
+              - checkbox "In stock only" [ref=e247]
+              - text: In stock only
+            - generic [ref=e248]:
+              - paragraph [ref=e249]: Price
+              - generic [ref=e250]:
+                - spinbutton "Minimum price" [ref=e252]
+                - generic [ref=e254]: "-"
+                - spinbutton "Maximum price" [ref=e256]
+            - generic [ref=e258]:
+              - paragraph [ref=e259]: Product type
+              - generic [ref=e260]:
+                - generic [ref=e261]:
+                  - checkbox "Accessories" [ref=e262]
+                  - text: Accessories
+                - generic [ref=e263]:
+                  - checkbox "Hoodies" [ref=e264]
+                  - text: Hoodies
+                - generic [ref=e265]:
+                  - checkbox "Jackets" [ref=e266]
+                  - text: Jackets
+                - generic [ref=e267]:
+                  - checkbox "Pants" [ref=e268]
+                  - text: Pants
+                - generic [ref=e269]:
+                  - checkbox "Shoes" [ref=e270]
+                  - text: Shoes
+                - generic [ref=e271]:
+                  - checkbox "T-Shirts" [ref=e272]
+                  - text: T-Shirts
+            - generic [ref=e273]:
+              - paragraph [ref=e274]: Vendor
+              - generic [ref=e275]:
+                - generic [ref=e276]:
+                  - checkbox "Acme Accessories" [ref=e277]
+                  - text: Acme Accessories
+                - generic [ref=e278]:
+                  - checkbox "Acme Basics" [ref=e279]
+                  - text: Acme Basics
+                - generic [ref=e280]:
+                  - checkbox "Acme Denim" [ref=e281]
+                  - text: Acme Denim
+                - generic [ref=e282]:
+                  - checkbox "Acme Premium" [ref=e283]
+                  - text: Acme Premium
+                - generic [ref=e284]:
+                  - checkbox "Acme Sport" [ref=e285]
+                  - text: Acme Sport
+        - generic [ref=e287]:
+          - generic [ref=e288]:
+            - link [ref=e289] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/classic-cotton-t-shirt
+              - heading "Classic Cotton T-Shirt" [level=3] [ref=e294]
+            - generic [ref=e295]: 24.99 EUR
+            - link "Choose options" [ref=e298] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/classic-cotton-t-shirt
+          - generic [ref=e299]:
+            - link "Sale Premium Slim Fit Jeans" [ref=e300] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/premium-slim-fit-jeans
+              - generic [ref=e301]: Sale
+              - heading "Premium Slim Fit Jeans" [level=3] [ref=e307]
+            - generic [ref=e309]:
+              - generic [ref=e310]: 79.99 EUR
+              - generic [ref=e311]: 99.99 EUR
+              - generic [ref=e312]: Sale
+            - link "Choose options" [ref=e313] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/premium-slim-fit-jeans
+          - generic [ref=e314]:
+            - link [ref=e315] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/organic-hoodie
+              - heading "Organic Hoodie" [level=3] [ref=e320]
+            - generic [ref=e321]: 59.99 EUR
+            - link "Choose options" [ref=e324] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/organic-hoodie
+          - generic [ref=e325]:
+            - link [ref=e326] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/running-sneakers
+              - heading "Running Sneakers" [level=3] [ref=e331]
+            - generic [ref=e332]: 119.99 EUR
+            - link "Choose options" [ref=e335] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/running-sneakers
+          - generic [ref=e336]:
+            - link [ref=e337] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/chino-shorts
+              - heading "Chino Shorts" [level=3] [ref=e342]
+            - generic [ref=e343]: 39.99 EUR
+            - link "Choose options" [ref=e346] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/chino-shorts
+          - generic [ref=e347]:
+            - link [ref=e348] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/bucket-hat
+              - heading "Bucket Hat" [level=3] [ref=e353]
+            - generic [ref=e354]: 24.99 EUR
+            - link "Choose options" [ref=e357] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/bucket-hat
+          - generic [ref=e358]:
+            - link [ref=e359] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/cashmere-overcoat
+              - heading "Cashmere Overcoat" [level=3] [ref=e364]
+            - generic [ref=e365]: 499.99 EUR
+            - link "Choose options" [ref=e368] [cursor=pointer]:
+              - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/products/cashmere-overcoat
+  - contentinfo [ref=e369]:
+    - generic [ref=e370]:
+      - generic [ref=e371]:
+        - generic [ref=e372]:
+          - heading "Shop" [level=3] [ref=e373]
+          - list [ref=e374]:
+            - listitem [ref=e375]:
+              - link "About Us" [ref=e376] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/about
+            - listitem [ref=e377]:
+              - link "FAQ" [ref=e378] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/faq
+            - listitem [ref=e379]:
+              - link "Shipping & Returns" [ref=e380] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/shipping-returns
+            - listitem [ref=e381]:
+              - link "Privacy Policy" [ref=e382] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/privacy-policy
+            - listitem [ref=e383]:
+              - link "Terms of Service" [ref=e384] [cursor=pointer]:
+                - /url: https://2026-07-18-cursor-grok-4-5.agentic-engineers.dev/pages/terms
+        - generic [ref=e385]:
+          - heading "Acme Fashion" [level=3] [ref=e386]
+          - paragraph [ref=e388]: Acme Fashion
+          - generic [ref=e389]:
+            - link "Acme Fashion on Facebook" [ref=e390] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Instagram" [ref=e393] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on Twitter/X" [ref=e396] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on TikTok" [ref=e399] [cursor=pointer]:
+              - /url: "#"
+            - link "Acme Fashion on YouTube" [ref=e402] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=e405]:
+        - paragraph [ref=e406]: © 2026 Acme Fashion. All rights reserved.
+        - generic [ref=e407]:
+          - generic [ref=e408]: Visa
+          - generic [ref=e409]: Mastercard
+          - generic [ref=e410]: Amex
+          - generic [ref=e411]: PayPal

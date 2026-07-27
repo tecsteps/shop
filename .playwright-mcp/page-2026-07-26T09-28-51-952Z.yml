@@ -1,0 +1,103 @@
+- generic [active] [ref=f74e1]:
+  - link "Skip to main content" [ref=f74e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f74e4]:
+    - paragraph [ref=f74e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f74e6]
+  - banner [ref=f74e9]:
+    - generic [ref=f74e10]:
+      - link "Acme Fashion" [ref=f74e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f74e13]:
+        - link "Home" [ref=f74e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f74e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f74e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f74e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f74e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f74e19]:
+        - button "Search" [ref=f74e20]
+        - link "Account" [ref=f74e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f74e26]
+  - main [ref=f74e29]:
+    - generic [ref=f74e30]:
+      - heading "Checkout" [level=1] [ref=f74e31]
+      - generic [ref=f74e32]:
+        - generic [ref=f74e33]:
+          - region [ref=f74e34]:
+            - heading "1. Contact & shipping address jane@example.com" [level=2] [ref=f74e35]:
+              - generic [ref=f74e36]: 1. Contact & shipping address
+              - generic [ref=f74e37]: jane@example.com
+            - generic [ref=f74e38]: Jane Doe, 123 Main St, 10115 Berlin, DE
+          - region [ref=f74e39]:
+            - heading "2. Shipping method" [level=2] [ref=f74e40]
+            - group "Available shipping methods" [ref=f74e41]:
+              - button "Standard Shipping 4.99 EUR" [ref=f74e43]:
+                - generic [ref=f74e44]: Standard Shipping
+                - generic [ref=f74e45]: 4.99 EUR
+              - button "Express Shipping 9.99 EUR" [ref=f74e46]:
+                - generic [ref=f74e47]: Express Shipping
+                - generic [ref=f74e48]: 9.99 EUR
+          - region [ref=f74e49]:
+            - heading "3. Payment" [level=2] [ref=f74e50]
+        - complementary "Order summary" [ref=f74e51]:
+          - generic [ref=f74e52]:
+            - heading "Order Summary" [level=2] [ref=f74e53]
+            - list [ref=f74e54]:
+              - listitem [ref=f74e55]:
+                - generic [ref=f74e59]:
+                  - paragraph [ref=f74e60]: Organic Hoodie ×1
+                  - paragraph [ref=f74e61]: S
+                - paragraph [ref=f74e62]: 59.99 EUR
+            - generic [ref=f74e64]:
+              - paragraph [ref=f74e65]: FREESHIP
+              - button "Remove" [ref=f74e66]
+            - generic [ref=f74e67]:
+              - generic [ref=f74e68]:
+                - term [ref=f74e69]: Subtotal
+                - definition [ref=f74e70]: 59.99 EUR
+              - generic [ref=f74e71]:
+                - term [ref=f74e72]: Shipping
+                - definition [ref=f74e73]: 0.00 EUR
+              - generic [ref=f74e74]:
+                - term [ref=f74e75]: Tax
+                - definition [ref=f74e76]: 9.58 EUR
+              - generic [ref=f74e77]:
+                - term [ref=f74e78]: Total
+                - definition [ref=f74e79]: 59.99 EUR
+  - contentinfo [ref=f74e80]:
+    - generic [ref=f74e81]:
+      - generic [ref=f74e82]:
+        - generic [ref=f74e83]:
+          - heading "Shop" [level=2] [ref=f74e84]
+          - list [ref=f74e85]:
+            - listitem [ref=f74e86]:
+              - link "About Us" [ref=f74e87] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f74e88]:
+              - link "FAQ" [ref=f74e89] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f74e90]:
+              - link "Shipping & Returns" [ref=f74e91] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f74e92]:
+              - link "Privacy Policy" [ref=f74e93] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f74e94]:
+              - link "Terms of Service" [ref=f74e95] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f74e96]:
+          - heading "Acme Fashion" [level=2] [ref=f74e97]
+          - paragraph [ref=f74e98]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f74e99]:
+        - paragraph [ref=f74e100]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f74e101]:
+          - generic [ref=f74e102]: VISA
+          - generic [ref=f74e103]: MASTERCARD
+          - generic [ref=f74e104]: AMEX
+          - generic [ref=f74e105]: PAYPAL

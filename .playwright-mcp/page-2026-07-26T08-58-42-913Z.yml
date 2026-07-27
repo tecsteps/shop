@@ -1,0 +1,105 @@
+- generic [active] [ref=f50e1]:
+  - link "Skip to main content" [ref=f50e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f50e3]:
+    - complementary "Admin navigation" [ref=f50e4]:
+      - generic [ref=f50e5]:
+        - link "Acme Fashion" [ref=f50e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f50e12]:
+          - navigation [ref=f50e13]:
+            - link "Dashboard" [ref=f50e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f50e19]: Products
+          - navigation [ref=f50e20]:
+            - link "Products" [ref=f50e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f50e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f50e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f50e36]: Orders
+          - navigation [ref=f50e37]:
+            - link "Orders" [ref=f50e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f50e43]: Customers
+          - navigation [ref=f50e44]:
+            - link "Customers" [ref=f50e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f50e50]: Discounts
+          - navigation [ref=f50e51]:
+            - link "Discounts" [ref=f50e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f50e58]: Content
+          - navigation [ref=f50e59]:
+            - link "Pages" [ref=f50e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f50e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f50e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f50e75]:
+            - link "Analytics" [ref=f50e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f50e82]: Settings
+          - navigation [ref=f50e83]:
+            - link "Settings" [ref=f50e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f50e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f50e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f50e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f50e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f50e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f50e115]:
+      - banner [ref=f50e116]:
+        - button "Acme Fashion" [ref=f50e118]
+        - button "Notifications" [ref=f50e123]
+        - button "AU Admin User" [ref=f50e127]:
+          - generic [ref=f50e128]: AU
+          - generic [ref=f50e131]: Admin User
+      - main [ref=f50e135]:
+        - generic [ref=f50e136]:
+          - link "Home" [ref=f50e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Search" [ref=f50e142] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/search/settings
+          - generic [ref=f50e145]: Settings
+        - generic [ref=f50e147]:
+          - generic [ref=f50e148]: Search Settings
+          - generic [ref=f50e149]:
+            - generic [ref=f50e150]: Synonyms
+            - paragraph [ref=f50e151]: Define groups of words that should be treated as equivalent.
+            - generic [ref=f50e152]:
+              - generic [ref=f50e153]:
+                - textbox "t-shirt, tee, tshirt" [ref=f50e156]: tee, t-shirt, tshirt
+                - button "Remove synonym group" [ref=f50e157]
+              - generic [ref=f50e164]:
+                - textbox "t-shirt, tee, tshirt" [ref=f50e167]: pants, trousers, jeans
+                - button "Remove synonym group" [ref=f50e168]
+              - generic [ref=f50e175]:
+                - textbox "t-shirt, tee, tshirt" [ref=f50e178]: sneakers, trainers, shoes
+                - button "Remove synonym group" [ref=f50e179]
+              - generic [ref=f50e186]:
+                - textbox "t-shirt, tee, tshirt" [ref=f50e189]: hoodie, sweatshirt
+                - button "Remove synonym group" [ref=f50e190]
+              - button "Add synonym group" [ref=f50e197]
+          - generic [ref=f50e205]:
+            - generic [ref=f50e206]: Stop words
+            - paragraph [ref=f50e207]: Words that are excluded from search.
+            - generic [ref=f50e208]:
+              - textbox "the, a, an, is, are..." [ref=f50e209]: the, a, an, and, or, but, in, on, at, to, for, of, is
+              - generic [ref=f50e210]: Separate words with commas.
+          - generic [ref=f50e211]:
+            - generic [ref=f50e212]: Search index
+            - generic [ref=f50e213]:
+              - button "Reindex now" [ref=f50e214]
+              - paragraph [ref=f50e220]: "Last indexed: Sun, Jul 26, 2026 8:14 AM"
+          - generic [ref=f50e221]:
+            - generic [ref=f50e222]: Recent search queries
+            - paragraph [ref=f50e223]: No searches recorded yet.
+          - button "Save" [ref=f50e225]

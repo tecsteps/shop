@@ -1,0 +1,112 @@
+- generic [active] [ref=f15e1]:
+  - link "Skip to main content" [ref=f15e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f15e4]:
+    - paragraph [ref=f15e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f15e6]
+  - banner [ref=f15e9]:
+    - generic [ref=f15e10]:
+      - link "Acme Fashion" [ref=f15e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f15e13]:
+        - link "Home" [ref=f15e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f15e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f15e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f15e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f15e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f15e19]:
+        - button "Search" [ref=f15e20]
+        - link "Account" [ref=f15e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f15e26]
+  - main [ref=f15e29]:
+    - generic [ref=f15e30]:
+      - heading "Checkout" [level=1] [ref=f15e31]
+      - generic [ref=f15e32]:
+        - generic [ref=f15e33]:
+          - region [ref=f15e34]:
+            - heading "1. Contact & shipping address jane@example.com" [level=2] [ref=f15e35]:
+              - generic [ref=f15e36]: 1. Contact & shipping address
+              - generic [ref=f15e37]: jane@example.com
+            - generic [ref=f15e38]: Jane Doe, 123 Main St, 10115 Berlin, DE
+          - region [ref=f15e39]:
+            - heading "2. Shipping method" [level=2] [ref=f15e40]
+            - generic [ref=f15e41]: Shipping method selected
+          - region [ref=f15e42]:
+            - heading "3. Payment" [level=2] [ref=f15e43]
+            - generic [ref=f15e44]:
+              - group "Select a payment method" [ref=f15e45]:
+                - generic [ref=f15e47] [cursor=pointer]:
+                  - radio "Credit Card" [disabled] [ref=f15e48]
+                  - generic [ref=f15e49]: Credit Card
+                - generic [ref=f15e50] [cursor=pointer]:
+                  - radio "PayPal" [disabled] [ref=f15e51]
+                  - generic [ref=f15e52]: PayPal
+                - generic [ref=f15e53] [cursor=pointer]:
+                  - radio "Bank Transfer" [checked] [disabled] [ref=f15e54]
+                  - generic [ref=f15e55]: Bank Transfer
+              - generic [ref=f15e56]:
+                - paragraph [ref=f15e57]: After placing your order, you will receive bank transfer instructions. Your order will be held while we await your payment.
+                - button "Place order - 84.98 EUR" [ref=f15e58]
+        - complementary "Order summary" [ref=f15e60]:
+          - generic [ref=f15e61]:
+            - heading "Order Summary" [level=2] [ref=f15e62]
+            - list [ref=f15e63]:
+              - listitem [ref=f15e64]:
+                - generic [ref=f15e68]:
+                  - paragraph [ref=f15e69]: Premium Slim Fit Jeans ×1
+                  - paragraph [ref=f15e70]: 28 / Blue
+                - paragraph [ref=f15e71]: 79.99 EUR
+            - generic [ref=f15e73]:
+              - generic [ref=f15e74]: Discount code
+              - textbox "Discount code" [ref=f15e75]
+              - button "Apply" [ref=f15e76]
+            - generic [ref=f15e77]:
+              - generic [ref=f15e78]:
+                - term [ref=f15e79]: Subtotal
+                - definition [ref=f15e80]: 79.99 EUR
+              - generic [ref=f15e81]:
+                - term [ref=f15e82]: Shipping
+                - definition [ref=f15e83]: 4.99 EUR
+              - generic [ref=f15e84]:
+                - term [ref=f15e85]: Tax
+                - definition [ref=f15e86]: 13.58 EUR
+              - generic [ref=f15e87]:
+                - term [ref=f15e88]: Total
+                - definition [ref=f15e89]: 84.98 EUR
+  - contentinfo [ref=f15e90]:
+    - generic [ref=f15e91]:
+      - generic [ref=f15e92]:
+        - generic [ref=f15e93]:
+          - heading "Shop" [level=2] [ref=f15e94]
+          - list [ref=f15e95]:
+            - listitem [ref=f15e96]:
+              - link "About Us" [ref=f15e97] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f15e98]:
+              - link "FAQ" [ref=f15e99] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f15e100]:
+              - link "Shipping & Returns" [ref=f15e101] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f15e102]:
+              - link "Privacy Policy" [ref=f15e103] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f15e104]:
+              - link "Terms of Service" [ref=f15e105] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f15e106]:
+          - heading "Acme Fashion" [level=2] [ref=f15e107]
+          - paragraph [ref=f15e108]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f15e109]:
+        - paragraph [ref=f15e110]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f15e111]:
+          - generic [ref=f15e112]: VISA
+          - generic [ref=f15e113]: MASTERCARD
+          - generic [ref=f15e114]: AMEX
+          - generic [ref=f15e115]: PAYPAL

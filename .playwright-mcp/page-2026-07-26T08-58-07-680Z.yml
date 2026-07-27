@@ -1,0 +1,125 @@
+- generic [active] [ref=f47e1]:
+  - link "Skip to main content" [ref=f47e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f47e3]:
+    - complementary "Admin navigation" [ref=f47e4]:
+      - generic [ref=f47e5]:
+        - link "Acme Fashion" [ref=f47e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f47e12]:
+          - navigation [ref=f47e13]:
+            - link "Dashboard" [ref=f47e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f47e19]: Products
+          - navigation [ref=f47e20]:
+            - link "Products" [ref=f47e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f47e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f47e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f47e36]: Orders
+          - navigation [ref=f47e37]:
+            - link "Orders" [ref=f47e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f47e43]: Customers
+          - navigation [ref=f47e44]:
+            - link "Customers" [ref=f47e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f47e50]: Discounts
+          - navigation [ref=f47e51]:
+            - link "Discounts" [ref=f47e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f47e58]: Content
+          - navigation [ref=f47e59]:
+            - link "Pages" [ref=f47e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f47e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f47e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f47e75]:
+            - link "Analytics" [ref=f47e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f47e82]: Settings
+          - navigation [ref=f47e83]:
+            - link "Settings" [ref=f47e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f47e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f47e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f47e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f47e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f47e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f47e115]:
+      - banner [ref=f47e116]:
+        - button "Acme Fashion" [ref=f47e118]
+        - button "Notifications" [ref=f47e123]
+        - button "AU Admin User" [ref=f47e127]:
+          - generic [ref=f47e128]: AU
+          - generic [ref=f47e131]: Admin User
+      - main [ref=f47e135]:
+        - generic [ref=f47e136]:
+          - link "Home" [ref=f47e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f47e141]: Navigation
+        - generic [ref=f47e143]:
+          - generic [ref=f47e144]:
+            - generic [ref=f47e145]: Navigation
+            - button "Create menu" [ref=f47e146]
+          - generic [ref=f47e154]:
+            - button "Main Menu main-menu · 5 items" [ref=f47e155]:
+              - generic [ref=f47e156]: Main Menu
+              - generic [ref=f47e157]: main-menu · 5 items
+            - button "Footer Menu footer-menu · 5 items" [ref=f47e158]:
+              - generic [ref=f47e159]: Footer Menu
+              - generic [ref=f47e160]: footer-menu · 5 items
+          - generic [ref=f47e161]:
+            - generic [ref=f47e162]:
+              - generic [ref=f47e163]: Main Menu
+              - button "Add item" [ref=f47e164]
+            - list [ref=f47e172]:
+              - listitem [ref=f47e173]:
+                - generic [ref=f47e174]:
+                  - generic [ref=f47e175]: Home
+                  - generic [ref=f47e176]: "link: /"
+                - button "Move Home up" [disabled]
+                - button "Move Home down" [ref=f47e177]
+                - button "Edit Home" [ref=f47e184]
+                - button "Remove Home" [ref=f47e191]
+              - listitem [ref=f47e198]:
+                - generic [ref=f47e199]:
+                  - generic [ref=f47e200]: New Arrivals
+                  - generic [ref=f47e201]: "collection: New Arrivals"
+                - button "Move New Arrivals up" [ref=f47e202]
+                - button "Move New Arrivals down" [ref=f47e209]
+                - button "Edit New Arrivals" [ref=f47e216]
+                - button "Remove New Arrivals" [ref=f47e223]
+              - listitem [ref=f47e230]:
+                - generic [ref=f47e231]:
+                  - generic [ref=f47e232]: T-Shirts
+                  - generic [ref=f47e233]: "collection: T-Shirts"
+                - button "Move T-Shirts up" [ref=f47e234]
+                - button "Move T-Shirts down" [ref=f47e241]
+                - button "Edit T-Shirts" [ref=f47e248]
+                - button "Remove T-Shirts" [ref=f47e255]
+              - listitem [ref=f47e262]:
+                - generic [ref=f47e263]:
+                  - generic [ref=f47e264]: Pants & Jeans
+                  - generic [ref=f47e265]: "collection: Pants & Jeans"
+                - button "Move Pants & Jeans up" [ref=f47e266]
+                - button "Move Pants & Jeans down" [ref=f47e273]
+                - button "Edit Pants & Jeans" [ref=f47e280]
+                - button "Remove Pants & Jeans" [ref=f47e287]
+              - listitem [ref=f47e294]:
+                - generic [ref=f47e295]:
+                  - generic [ref=f47e296]: Sale
+                  - generic [ref=f47e297]: "collection: Sale"
+                - button "Move Sale up" [ref=f47e298]
+                - button "Move Sale down" [disabled]
+                - button "Edit Sale" [ref=f47e305]
+                - button "Remove Sale" [ref=f47e312]

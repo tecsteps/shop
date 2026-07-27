@@ -1,0 +1,84 @@
+- generic [active] [ref=f44e1]:
+  - link "Skip to main content" [ref=f44e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f44e3]:
+    - complementary "Admin navigation" [ref=f44e4]:
+      - generic [ref=f44e5]:
+        - link "Acme Fashion" [ref=f44e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f44e12]:
+          - navigation [ref=f44e13]:
+            - link "Dashboard" [ref=f44e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f44e19]: Products
+          - navigation [ref=f44e20]:
+            - link "Products" [ref=f44e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f44e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f44e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f44e36]: Orders
+          - navigation [ref=f44e37]:
+            - link "Orders" [ref=f44e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f44e43]: Customers
+          - navigation [ref=f44e44]:
+            - link "Customers" [ref=f44e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f44e50]: Discounts
+          - navigation [ref=f44e51]:
+            - link "Discounts" [ref=f44e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f44e58]: Content
+          - navigation [ref=f44e59]:
+            - link "Pages" [ref=f44e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f44e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f44e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f44e75]:
+            - link "Analytics" [ref=f44e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f44e82]: Settings
+          - navigation [ref=f44e83]:
+            - link "Settings" [ref=f44e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f44e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f44e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f44e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f44e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f44e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f44e115]:
+      - banner [ref=f44e116]:
+        - button "Acme Fashion" [ref=f44e118]
+        - button "Notifications" [ref=f44e123]
+        - button "AU Admin User" [ref=f44e127]:
+          - generic [ref=f44e128]: AU
+          - generic [ref=f44e131]: Admin User
+      - main [ref=f44e135]:
+        - generic [ref=f44e136]:
+          - link "Home" [ref=f44e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f44e141]: Themes
+        - generic [ref=f44e143]:
+          - generic [ref=f44e144]:
+            - generic [ref=f44e145]: Themes
+            - button "Add theme" [ref=f44e146]
+          - generic [ref=f44e159]:
+            - generic [ref=f44e160]:
+              - generic [ref=f44e161]: Default Theme
+              - paragraph [ref=f44e162]: v1.0.0
+            - generic [ref=f44e163]:
+              - generic [ref=f44e164]: Published
+              - paragraph [ref=f44e165]: 43 minutes ago
+            - generic [ref=f44e166]:
+              - link "Customize" [ref=f44e167] [cursor=pointer]:
+                - /url: http://admin.acme-fashion.test/admin/themes/1/editor
+              - button "More actions for Default Theme" [ref=f44e169]

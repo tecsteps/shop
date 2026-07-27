@@ -1,0 +1,165 @@
+- generic [active] [ref=f20e1]:
+  - link "Skip to main content" [ref=f20e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f20e3]:
+    - complementary "Admin navigation" [ref=f20e4]:
+      - generic [ref=f20e5]:
+        - link "Acme Fashion" [ref=f20e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f20e12]:
+          - navigation [ref=f20e13]:
+            - link "Dashboard" [ref=f20e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f20e19]: Products
+          - navigation [ref=f20e20]:
+            - link "Products" [ref=f20e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f20e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f20e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f20e36]: Orders
+          - navigation [ref=f20e37]:
+            - link "Orders" [ref=f20e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f20e43]: Customers
+          - navigation [ref=f20e44]:
+            - link "Customers" [ref=f20e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f20e50]: Discounts
+          - navigation [ref=f20e51]:
+            - link "Discounts" [ref=f20e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f20e58]: Content
+          - navigation [ref=f20e59]:
+            - link "Pages" [ref=f20e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f20e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f20e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f20e75]:
+            - link "Analytics" [ref=f20e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f20e82]: Settings
+          - navigation [ref=f20e83]:
+            - link "Settings" [ref=f20e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f20e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f20e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f20e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f20e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f20e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f20e115]:
+      - banner [ref=f20e116]:
+        - button "Acme Fashion" [ref=f20e118]
+        - button "Notifications" [ref=f20e123]
+        - button "AU Admin User" [ref=f20e127]:
+          - generic [ref=f20e128]: AU
+          - generic [ref=f20e131]: Admin User
+      - main [ref=f20e135]:
+        - generic [ref=f20e136]:
+          - link "Home" [ref=f20e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Orders" [ref=f20e142] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/orders
+          - generic [ref=f20e145]: "#1016"
+        - generic [ref=f20e147]:
+          - generic [ref=f20e148]:
+            - generic [ref=f20e149]: "#1016"
+            - generic [ref=f20e150]: Paid
+            - generic [ref=f20e151]: Unfulfilled
+            - paragraph [ref=f20e152]: Jul 26, 2026 8:34 AM
+          - generic [ref=f20e153]:
+            - button "Create fulfillment" [ref=f20e154]
+            - button "Refund" [ref=f20e160]
+            - button "Cancel order" [ref=f20e166]
+          - generic [ref=f20e172]:
+            - generic [ref=f20e173]:
+              - generic [ref=f20e174]:
+                - generic [ref=f20e175]: Timeline
+                - list [ref=f20e176]:
+                  - listitem [ref=f20e177]:
+                    - paragraph [ref=f20e179]: Order placed
+                    - paragraph [ref=f20e180]: Jul 26, 2026 8:34 AM
+                  - listitem [ref=f20e181]:
+                    - paragraph [ref=f20e183]: Payment received
+                    - paragraph [ref=f20e184]: Jul 26, 2026 8:34 AM
+              - generic [ref=f20e185]:
+                - generic [ref=f20e186]: Order lines
+                - table [ref=f20e188]:
+                  - rowgroup [ref=f20e189]:
+                    - row [ref=f20e190]:
+                      - columnheader "Image" [ref=f20e191]
+                      - columnheader "Product" [ref=f20e193]
+                      - columnheader "Qty" [ref=f20e194]
+                      - columnheader "Unit price" [ref=f20e195]
+                      - columnheader "Total" [ref=f20e196]
+                  - rowgroup [ref=f20e197]:
+                    - row [ref=f20e198]:
+                      - cell [ref=f20e199]
+                      - 'cell "Classic Cotton T-Shirt - S / White SKU: ACME-CTSH-S-WHT" [ref=f20e203]':
+                        - generic [ref=f20e204]: Classic Cotton T-Shirt - S / White
+                        - generic [ref=f20e205]: "SKU: ACME-CTSH-S-WHT"
+                      - cell "1" [ref=f20e206]
+                      - cell "24.99 EUR" [ref=f20e207]
+                      - cell "22.50 EUR" [ref=f20e208]
+                - generic [ref=f20e209]:
+                  - generic [ref=f20e210]:
+                    - generic [ref=f20e211]: Subtotal
+                    - generic [ref=f20e212]: 24.99 EUR
+                  - generic [ref=f20e213]:
+                    - generic [ref=f20e214]: Discount
+                    - generic [ref=f20e215]: "-2.49 EUR"
+                  - generic [ref=f20e216]:
+                    - generic [ref=f20e217]: Shipping
+                    - generic [ref=f20e218]: 4.99 EUR
+                  - generic [ref=f20e219]:
+                    - generic [ref=f20e220]: Tax
+                    - generic [ref=f20e221]: 4.40 EUR
+                  - generic [ref=f20e222]:
+                    - generic [ref=f20e223]: Total
+                    - generic [ref=f20e224]: 27.49 EUR
+              - generic [ref=f20e225]:
+                - generic [ref=f20e226]: Payment details
+                - generic [ref=f20e228]:
+                  - generic [ref=f20e229]:
+                    - paragraph [ref=f20e230]: Credit Card
+                    - paragraph [ref=f20e231]: "27.49 EUR · Ref: mock_RuUajoEnFLV6EEVn · Jul 26, 2026 8:34 AM"
+                  - generic [ref=f20e232]: Captured
+            - generic [ref=f20e233]:
+              - generic [ref=f20e234]:
+                - generic [ref=f20e235]: Customer
+                - paragraph [ref=f20e236]: Jane Smith
+                - paragraph [ref=f20e237]: jane@example.com
+                - link "View customer" [ref=f20e239] [cursor=pointer]:
+                  - /url: http://admin.acme-fashion.test/admin/customers/2
+              - generic [ref=f20e240]:
+                - generic [ref=f20e241]: Shipping address
+                - generic [ref=f20e242]: Jane Doe 123 Main St Berlin 10115 DE
+              - generic [ref=f20e243]:
+                - generic [ref=f20e244]: Billing address
+                - generic [ref=f20e245]: Jane Doe 123 Main St Berlin 10115 DE
+          - dialog [ref=f20e246]:
+            - generic [ref=f20e247]:
+              - generic [ref=f20e248]: Refund order
+              - generic [ref=f20e249]:
+                - generic [ref=f20e250]: Amount (cents)
+                - spinbutton "Amount (cents)" [ref=f20e252]: "2749"
+                - generic [ref=f20e253]: "Refundable: 27.49 EUR"
+              - generic [ref=f20e254]:
+                - generic [ref=f20e255]: Reason
+                - textbox "Reason" [ref=f20e256]:
+                  - /placeholder: Reason for refund...
+              - generic [ref=f20e257]:
+                - checkbox "Restock returned items" [ref=f20e258]
+                - generic [ref=f20e260]: Restock returned items
+              - generic [ref=f20e261]:
+                - button "Cancel" [ref=f20e262]
+                - button "Create refund" [ref=f20e268]
+            - button "Close modal" [ref=f20e276]

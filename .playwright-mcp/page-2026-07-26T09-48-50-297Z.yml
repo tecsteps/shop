@@ -1,0 +1,125 @@
+- generic [active] [ref=f90e1]:
+  - link "Skip to main content" [ref=f90e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f90e3]:
+    - complementary "Admin navigation" [ref=f90e4]:
+      - generic [ref=f90e5]:
+        - link "Acme Fashion" [ref=f90e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f90e12]:
+          - navigation [ref=f90e13]:
+            - link "Dashboard" [ref=f90e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f90e19]: Products
+          - navigation [ref=f90e20]:
+            - link "Products" [ref=f90e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f90e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f90e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f90e36]: Orders
+          - navigation [ref=f90e37]:
+            - link "Orders" [ref=f90e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f90e43]: Customers
+          - navigation [ref=f90e44]:
+            - link "Customers" [ref=f90e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+    - generic [ref=f90e50]:
+      - banner [ref=f90e51]:
+        - button "Open navigation menu" [ref=f90e52]
+        - button "Acme Fashion" [ref=f90e56]
+        - button "Notifications" [ref=f90e61]
+        - button "SU" [ref=f90e65]
+      - main [ref=f90e72]:
+        - generic [ref=f90e73]:
+          - link "Home" [ref=f90e75] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - link "Orders" [ref=f90e79] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin/orders
+          - generic [ref=f90e82]: "#1017"
+        - generic [ref=f90e84]:
+          - generic [ref=f90e85]:
+            - generic [ref=f90e86]: "#1017"
+            - generic [ref=f90e87]: Paid
+            - generic [ref=f90e88]: Fulfilled
+            - paragraph [ref=f90e89]: Jul 26, 2026 8:41 AM
+          - generic [ref=f90e90]:
+            - generic [ref=f90e91]:
+              - generic [ref=f90e92]:
+                - generic [ref=f90e93]: Timeline
+                - list [ref=f90e94]:
+                  - listitem [ref=f90e95]:
+                    - paragraph [ref=f90e97]: Order placed
+                    - paragraph [ref=f90e98]: Jul 26, 2026 8:41 AM
+                  - listitem [ref=f90e99]:
+                    - paragraph [ref=f90e101]: Payment received
+                    - paragraph [ref=f90e102]: Jul 26, 2026 8:41 AM
+                  - listitem [ref=f90e103]:
+                    - paragraph [ref=f90e105]: Fulfillment created
+                    - paragraph [ref=f90e106]: Jul 26, 2026 8:46 AM
+                  - listitem [ref=f90e107]:
+                    - paragraph [ref=f90e109]: Fulfillment shipped
+                    - paragraph [ref=f90e110]: Jul 26, 2026 8:47 AM
+              - generic [ref=f90e111]:
+                - generic [ref=f90e112]: Order lines
+                - table [ref=f90e114]:
+                  - rowgroup [ref=f90e115]:
+                    - row [ref=f90e116]:
+                      - columnheader "Image" [ref=f90e117]
+                      - columnheader "Product" [ref=f90e119]
+                      - columnheader "Qty" [ref=f90e120]
+                      - columnheader "Unit price" [ref=f90e121]
+                      - columnheader "Total" [ref=f90e122]
+                  - rowgroup [ref=f90e123]:
+                    - row [ref=f90e124]:
+                      - cell [ref=f90e125]
+                      - 'cell "Premium Slim Fit Jeans - 28 / Blue SKU: ACME-PSFJ-28-BLUE" [ref=f90e129]':
+                        - generic [ref=f90e130]: Premium Slim Fit Jeans - 28 / Blue
+                        - generic [ref=f90e131]: "SKU: ACME-PSFJ-28-BLUE"
+                      - cell "1" [ref=f90e132]
+                      - cell "79.99 EUR" [ref=f90e133]
+                      - cell "79.99 EUR" [ref=f90e134]
+                - generic [ref=f90e135]:
+                  - generic [ref=f90e136]:
+                    - generic [ref=f90e137]: Subtotal
+                    - generic [ref=f90e138]: 79.99 EUR
+                  - generic [ref=f90e139]:
+                    - generic [ref=f90e140]: Shipping
+                    - generic [ref=f90e141]: 4.99 EUR
+                  - generic [ref=f90e142]:
+                    - generic [ref=f90e143]: Tax
+                    - generic [ref=f90e144]: 13.58 EUR
+                  - generic [ref=f90e145]:
+                    - generic [ref=f90e146]: Total
+                    - generic [ref=f90e147]: 84.98 EUR
+              - generic [ref=f90e148]:
+                - generic [ref=f90e149]: Payment details
+                - generic [ref=f90e151]:
+                  - generic [ref=f90e152]:
+                    - paragraph [ref=f90e153]: Bank Transfer
+                    - paragraph [ref=f90e154]: "84.98 EUR · Ref: mock_xFqqZ3TJnXOxLjhZ · Jul 26, 2026 8:41 AM"
+                  - generic [ref=f90e155]: Captured
+              - generic [ref=f90e157]:
+                - generic [ref=f90e159]:
+                  - generic [ref=f90e160]: "Fulfillment #8"
+                  - generic [ref=f90e161]: Delivered
+                - paragraph [ref=f90e162]: "Tracking: DHL 1234567890"
+                - list [ref=f90e163]:
+                  - listitem [ref=f90e164]:
+                    - generic [ref=f90e165]: Premium Slim Fit Jeans - 28 / Blue
+                    - generic [ref=f90e166]: × 1
+            - generic [ref=f90e167]:
+              - generic [ref=f90e168]:
+                - generic [ref=f90e169]: Customer
+                - paragraph [ref=f90e170]: Jane Smith
+                - paragraph [ref=f90e171]: jane@example.com
+                - link "View customer" [ref=f90e173] [cursor=pointer]:
+                  - /url: http://admin.acme-fashion.test/admin/customers/2
+              - generic [ref=f90e174]:
+                - generic [ref=f90e175]: Shipping address
+                - generic [ref=f90e176]: Jane Doe 123 Main St Berlin 10115 DE
+              - generic [ref=f90e177]:
+                - generic [ref=f90e178]: Billing address
+                - generic [ref=f90e179]: Jane Doe 123 Main St Berlin 10115 DE

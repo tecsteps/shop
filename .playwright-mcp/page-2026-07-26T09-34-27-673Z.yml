@@ -1,0 +1,159 @@
+- generic [active] [ref=f81e1]:
+  - link "Skip to main content" [ref=f81e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f81e3]:
+    - complementary "Admin navigation" [ref=f81e4]:
+      - generic [ref=f81e5]:
+        - link "Acme Fashion" [ref=f81e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f81e12]:
+          - navigation [ref=f81e13]:
+            - link "Dashboard" [ref=f81e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f81e19]: Products
+          - navigation [ref=f81e20]:
+            - link "Products" [ref=f81e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f81e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f81e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f81e36]: Orders
+          - navigation [ref=f81e37]:
+            - link "Orders" [ref=f81e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f81e43]: Customers
+          - navigation [ref=f81e44]:
+            - link "Customers" [ref=f81e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f81e50]: Discounts
+          - navigation [ref=f81e51]:
+            - link "Discounts" [ref=f81e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f81e58]: Content
+          - navigation [ref=f81e59]:
+            - link "Pages" [ref=f81e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+          - navigation [ref=f81e65]:
+            - link "Analytics" [ref=f81e66] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+    - generic [ref=f81e72]:
+      - banner [ref=f81e73]:
+        - button "Acme Fashion" [ref=f81e75]
+        - button "Notifications" [ref=f81e80]
+        - button "SU Staff User" [ref=f81e84]:
+          - generic [ref=f81e85]: SU
+          - generic [ref=f81e88]: Staff User
+      - main [ref=f81e92]:
+        - generic [ref=f81e93]:
+          - generic [ref=f81e94]: Home
+          - generic [ref=f81e98]: Dashboard
+        - generic [ref=f81e100]:
+          - generic [ref=f81e101]:
+            - heading "Dashboard" [level=1] [ref=f81e102]
+            - combobox "Date range" [ref=f81e103]:
+              - option "Last 7 days"
+              - option "Last 30 days" [selected]
+              - option "Last 90 days"
+          - generic [ref=f81e104]:
+            - generic [ref=f81e105]:
+              - paragraph [ref=f81e106]: Total Sales
+              - generic [ref=f81e107]: 1,689.58 EUR
+            - generic [ref=f81e108]:
+              - paragraph [ref=f81e109]: Orders
+              - generic [ref=f81e110]: "18"
+            - generic [ref=f81e111]:
+              - paragraph [ref=f81e112]: Avg. Order Value
+              - generic [ref=f81e113]: 93.86 EUR
+            - generic [ref=f81e114]:
+              - paragraph [ref=f81e115]: Conversion Rate
+              - generic [ref=f81e116]: 48.6%
+          - generic [ref=f81e117]:
+            - heading "Orders over time" [level=2] [ref=f81e118]
+            - generic [ref=f81e119]:
+              - img "Daily order counts for the selected period" [ref=f81e120]
+              - generic [ref=f81e122]:
+                - generic [ref=f81e123]: 2026-06-27
+                - generic [ref=f81e124]: 2026-07-26
+          - generic [ref=f81e125]:
+            - heading "Recent orders" [level=2] [ref=f81e126]
+            - table [ref=f81e128]:
+              - rowgroup [ref=f81e129]:
+                - row [ref=f81e130]:
+                  - columnheader "Order" [ref=f81e131]
+                  - columnheader "Date" [ref=f81e132]
+                  - columnheader "Customer" [ref=f81e133]
+                  - columnheader "Payment" [ref=f81e134]
+                  - columnheader "Fulfillment" [ref=f81e135]
+                  - columnheader "Total" [ref=f81e136]
+              - rowgroup [ref=f81e137]:
+                - row [ref=f81e138]:
+                  - cell "#1018" [ref=f81e139]
+                  - cell "Jul 26, 2026" [ref=f81e140]
+                  - cell "John Doe" [ref=f81e141]
+                  - cell "Paid" [ref=f81e142]
+                  - cell "Unfulfilled" [ref=f81e144]
+                  - cell "59.99 EUR" [ref=f81e146]
+                - row [ref=f81e147]:
+                  - cell "#1017" [ref=f81e148]
+                  - cell "Jul 26, 2026" [ref=f81e149]
+                  - cell "Jane Smith" [ref=f81e150]
+                  - cell "Paid" [ref=f81e151]
+                  - cell "Fulfilled" [ref=f81e153]
+                  - cell "84.98 EUR" [ref=f81e155]
+                - row [ref=f81e156]:
+                  - cell "#1016" [ref=f81e157]
+                  - cell "Jul 26, 2026" [ref=f81e158]
+                  - cell "Jane Smith" [ref=f81e159]
+                  - cell "Partially refunded" [ref=f81e160]
+                  - cell "Unfulfilled" [ref=f81e162]
+                  - cell "27.49 EUR" [ref=f81e164]
+                - row [ref=f81e165]:
+                  - cell "#1015" [ref=f81e166]
+                  - cell "Jul 26, 2026" [ref=f81e167]
+                  - cell "John Doe" [ref=f81e168]
+                  - cell "Paid" [ref=f81e169]
+                  - cell "Unfulfilled" [ref=f81e171]
+                  - cell "54.47 EUR" [ref=f81e173]
+                - row [ref=f81e174]:
+                  - cell "#1005" [ref=f81e175]
+                  - cell "Jul 26, 2026" [ref=f81e176]
+                  - cell "Jane Smith" [ref=f81e177]
+                  - cell "Pending" [ref=f81e178]
+                  - cell "Unfulfilled" [ref=f81e180]
+                  - cell "39.98 EUR" [ref=f81e182]
+                - row [ref=f81e183]:
+                  - cell "#1013" [ref=f81e184]
+                  - cell "Jul 25, 2026" [ref=f81e185]
+                  - cell "Robert Martinez" [ref=f81e186]
+                  - cell "Paid" [ref=f81e187]
+                  - cell "Unfulfilled" [ref=f81e189]
+                  - cell "84.97 EUR" [ref=f81e191]
+                - row [ref=f81e192]:
+                  - cell "#1010" [ref=f81e193]
+                  - cell "Jul 25, 2026" [ref=f81e194]
+                  - cell "John Doe" [ref=f81e195]
+                  - cell "Paid" [ref=f81e196]
+                  - cell "Unfulfilled" [ref=f81e198]
+                  - cell "504.98 EUR" [ref=f81e200]
+                - row [ref=f81e201]:
+                  - cell "#1006" [ref=f81e202]
+                  - cell "Jul 25, 2026" [ref=f81e203]
+                  - cell "Michael Brown" [ref=f81e204]
+                  - cell "Paid" [ref=f81e205]
+                  - cell "Unfulfilled" [ref=f81e207]
+                  - cell "124.98 EUR" [ref=f81e209]
+                - row [ref=f81e210]:
+                  - cell "#1001" [ref=f81e211]
+                  - cell "Jul 24, 2026" [ref=f81e212]
+                  - cell "John Doe" [ref=f81e213]
+                  - cell "Paid" [ref=f81e214]
+                  - cell "Unfulfilled" [ref=f81e216]
+                  - cell "54.97 EUR" [ref=f81e218]
+                - row [ref=f81e219]:
+                  - cell "#1009" [ref=f81e220]
+                  - cell "Jul 23, 2026" [ref=f81e221]
+                  - cell "Emma Garcia" [ref=f81e222]
+                  - cell "Paid" [ref=f81e223]
+                  - cell "Unfulfilled" [ref=f81e225]
+                  - cell "49.97 EUR" [ref=f81e227]

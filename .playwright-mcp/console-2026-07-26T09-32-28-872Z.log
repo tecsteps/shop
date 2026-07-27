@@ -1,0 +1,4 @@
+[     104ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin:54
+[   72600ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ http://admin.acme-fashion.test/admin/logout:0
+[   72696ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin:54
+[  273500ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://admin.acme-fashion.test/_boost/browser-logs @ http://admin.acme-fashion.test/admin/login:45

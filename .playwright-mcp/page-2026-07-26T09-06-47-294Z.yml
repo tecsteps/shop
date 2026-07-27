@@ -1,0 +1,183 @@
+- generic [ref=f55e1]:
+  - link "Skip to main content" [ref=f55e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f55e3]:
+    - complementary "Admin navigation" [ref=f55e4]:
+      - generic [ref=f55e5]:
+        - link "Acme Fashion" [ref=f55e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f55e12]:
+          - navigation [ref=f55e13]:
+            - link "Dashboard" [ref=f55e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f55e19]: Products
+          - navigation [ref=f55e20]:
+            - link "Products" [ref=f55e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f55e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f55e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f55e36]: Orders
+          - navigation [ref=f55e37]:
+            - link "Orders" [ref=f55e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f55e43]: Customers
+          - navigation [ref=f55e44]:
+            - link "Customers" [ref=f55e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f55e50]: Discounts
+          - navigation [ref=f55e51]:
+            - link "Discounts" [ref=f55e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f55e58]: Content
+          - navigation [ref=f55e59]:
+            - link "Pages" [ref=f55e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f55e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f55e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f55e75]:
+            - link "Analytics" [ref=f55e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f55e82]: Settings
+          - navigation [ref=f55e83]:
+            - link "Settings" [ref=f55e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f55e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f55e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f55e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f55e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f55e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f55e115]:
+      - banner [ref=f55e116]:
+        - button "Acme Fashion" [ref=f55e118]
+        - button "Notifications" [ref=f55e123]
+        - button "AU Admin User" [ref=f55e127]:
+          - generic [ref=f55e128]: AU
+          - generic [ref=f55e131]: Admin User
+      - main [ref=f55e135]:
+        - generic [ref=f55e136]:
+          - link "Home" [ref=f55e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f55e141]: Developers
+        - generic [ref=f55e143]:
+          - generic [ref=f55e144]: Developers
+          - generic [ref=f55e145]:
+            - generic [ref=f55e146]: API tokens
+            - paragraph [ref=f55e147]: Manage personal access tokens for the Admin API.
+            - table [ref=f55e149]:
+              - rowgroup [ref=f55e150]:
+                - row [ref=f55e151]:
+                  - columnheader "Name" [ref=f55e152]
+                  - columnheader "Abilities" [ref=f55e153]
+                  - columnheader "Last used" [ref=f55e154]
+                  - columnheader "Expires" [ref=f55e155]
+                  - columnheader "Created" [ref=f55e156]
+                  - columnheader "Actions" [ref=f55e157]
+              - rowgroup [ref=f55e158]:
+                - row [ref=f55e159]:
+                  - cell "E2E Test Token" [ref=f55e160]
+                  - cell "read-products read-orders" [ref=f55e161]:
+                    - generic [ref=f55e162]:
+                      - generic [ref=f55e163]: read-products
+                      - generic [ref=f55e164]: read-orders
+                  - cell "Never" [ref=f55e165]
+                  - cell "Jul 26, 2027" [ref=f55e166]
+                  - cell "Jul 26, 2026" [ref=f55e167]
+                  - cell [ref=f55e168]:
+                    - button "Revoke" [ref=f55e169]
+            - button "Generate new token" [ref=f55e176]
+          - generic [ref=f55e182]:
+            - generic [ref=f55e183]: Webhooks
+            - paragraph [ref=f55e184]: Manage webhook subscriptions for real-time event notifications.
+            - table [ref=f55e186]:
+              - rowgroup [ref=f55e187]:
+                - row [ref=f55e188]:
+                  - columnheader "Event type" [ref=f55e189]
+                  - columnheader "URL" [ref=f55e190]
+                  - columnheader "Status" [ref=f55e191]
+                  - columnheader "Actions" [ref=f55e192]
+              - rowgroup [ref=f55e193]:
+                - row [ref=f55e194]:
+                  - cell "No webhooks configured." [ref=f55e195]
+            - button "Add webhook" [ref=f55e197]
+          - dialog [ref=f55e205]:
+            - generic [ref=f55e206]:
+              - generic [ref=f55e207]: Generate API token
+              - generic [ref=f55e208]:
+                - generic [ref=f55e209]: Token name
+                - textbox "Token name" [ref=f55e211]:
+                  - /placeholder: My integration
+                  - text: E2E API Token
+              - generic [ref=f55e212]:
+                - generic [ref=f55e213]: Abilities
+                - generic [ref=f55e214]:
+                  - generic [ref=f55e215]:
+                    - checkbox "Read products" [checked] [ref=f55e216]
+                    - generic [ref=f55e218]: Read products
+                  - generic [ref=f55e219]:
+                    - checkbox "Write products" [ref=f55e220]
+                    - generic [ref=f55e222]: Write products
+                  - generic [ref=f55e223]:
+                    - checkbox "Read orders" [checked] [active] [ref=f55e224]
+                    - generic [ref=f55e226]: Read orders
+                  - generic [ref=f55e227]:
+                    - checkbox "Write orders" [ref=f55e228]
+                    - generic [ref=f55e230]: Write orders
+                  - generic [ref=f55e231]:
+                    - checkbox "Read customers" [ref=f55e232]
+                    - generic [ref=f55e234]: Read customers
+                  - generic [ref=f55e235]:
+                    - checkbox "Write customers" [ref=f55e236]
+                    - generic [ref=f55e238]: Write customers
+                  - generic [ref=f55e239]:
+                    - checkbox "Read collections" [ref=f55e240]
+                    - generic [ref=f55e242]: Read collections
+                  - generic [ref=f55e243]:
+                    - checkbox "Write collections" [ref=f55e244]
+                    - generic [ref=f55e246]: Write collections
+                  - generic [ref=f55e247]:
+                    - checkbox "Read discounts" [ref=f55e248]
+                    - generic [ref=f55e250]: Read discounts
+                  - generic [ref=f55e251]:
+                    - checkbox "Write discounts" [ref=f55e252]
+                    - generic [ref=f55e254]: Write discounts
+                  - generic [ref=f55e255]:
+                    - checkbox "Read analytics" [ref=f55e256]
+                    - generic [ref=f55e258]: Read analytics
+                  - generic [ref=f55e259]:
+                    - checkbox "Read settings" [ref=f55e260]
+                    - generic [ref=f55e262]: Read settings
+                  - generic [ref=f55e263]:
+                    - checkbox "Write settings" [ref=f55e264]
+                    - generic [ref=f55e266]: Write settings
+                  - generic [ref=f55e267]:
+                    - checkbox "Read themes" [ref=f55e268]
+                    - generic [ref=f55e270]: Read themes
+                  - generic [ref=f55e271]:
+                    - checkbox "Write themes" [ref=f55e272]
+                    - generic [ref=f55e274]: Write themes
+                  - generic [ref=f55e275]:
+                    - checkbox "Read content" [ref=f55e276]
+                    - generic [ref=f55e278]: Read content
+                  - generic [ref=f55e279]:
+                    - checkbox "Write content" [ref=f55e280]
+                    - generic [ref=f55e282]: Write content
+                  - generic [ref=f55e283]:
+                    - checkbox "Manage platform" [ref=f55e284]
+                    - generic [ref=f55e286]: Manage platform
+              - generic [ref=f55e287]:
+                - generic [ref=f55e288]: Expires at (optional)
+                - textbox "Expires at (optional)" [ref=f55e290]
+                - generic [ref=f55e291]: Defaults to one year from now.
+              - generic [ref=f55e292]:
+                - button "Cancel" [ref=f55e293]
+                - button "Generate" [ref=f55e299]
+            - button "Close modal" [ref=f55e307]

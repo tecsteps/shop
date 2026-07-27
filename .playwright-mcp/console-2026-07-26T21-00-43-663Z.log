@@ -1,0 +1,2 @@
+[      93ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/account/login:0
+[     125ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/account/login:24

@@ -1,0 +1,201 @@
+- generic [active] [ref=f48e1]:
+  - link "Skip to main content" [ref=f48e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f48e3]:
+    - complementary "Admin navigation" [ref=f48e4]:
+      - generic [ref=f48e5]:
+        - link "Acme Fashion" [ref=f48e7] [cursor=pointer]:
+          - /url: http://admin.acme-fashion.test/admin
+        - navigation "Admin" [ref=f48e12]:
+          - navigation [ref=f48e13]:
+            - link "Dashboard" [ref=f48e14] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin
+          - paragraph [ref=f48e19]: Products
+          - navigation [ref=f48e20]:
+            - link "Products" [ref=f48e21] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/products
+            - link "Collections" [ref=f48e26] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/collections
+            - link "Inventory" [ref=f48e31] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/inventory
+          - paragraph [ref=f48e36]: Orders
+          - navigation [ref=f48e37]:
+            - link "Orders" [ref=f48e38] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/orders
+          - paragraph [ref=f48e43]: Customers
+          - navigation [ref=f48e44]:
+            - link "Customers" [ref=f48e45] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/customers
+          - paragraph [ref=f48e50]: Discounts
+          - navigation [ref=f48e51]:
+            - link "Discounts" [ref=f48e52] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/discounts
+          - paragraph [ref=f48e58]: Content
+          - navigation [ref=f48e59]:
+            - link "Pages" [ref=f48e60] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/pages
+            - link "Navigation" [ref=f48e65] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/navigation
+            - link "Themes" [ref=f48e70] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/themes
+          - navigation [ref=f48e75]:
+            - link "Analytics" [ref=f48e76] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/analytics
+          - paragraph [ref=f48e82]: Settings
+          - navigation [ref=f48e83]:
+            - link "Settings" [ref=f48e84] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings
+            - link "Shipping" [ref=f48e90] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/shipping
+            - link "Taxes" [ref=f48e95] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/settings/taxes
+            - link "Search" [ref=f48e100] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/search/settings
+            - link "Apps" [ref=f48e105] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/apps
+            - link "Developers" [ref=f48e110] [cursor=pointer]:
+              - /url: http://admin.acme-fashion.test/admin/developers
+    - generic [ref=f48e115]:
+      - banner [ref=f48e116]:
+        - button "Acme Fashion" [ref=f48e118]
+        - button "Notifications" [ref=f48e123]
+        - button "AU Admin User" [ref=f48e127]:
+          - generic [ref=f48e128]: AU
+          - generic [ref=f48e131]: Admin User
+      - main [ref=f48e135]:
+        - generic [ref=f48e136]:
+          - link "Home" [ref=f48e138] [cursor=pointer]:
+            - /url: http://admin.acme-fashion.test/admin
+          - generic [ref=f48e141]: Analytics
+        - generic [ref=f48e143]:
+          - generic [ref=f48e144]:
+            - generic [ref=f48e145]: Analytics
+            - combobox "Date range" [ref=f48e146]:
+              - option "Last 7 days"
+              - option "Last 30 days" [selected]
+              - option "Last 90 days"
+          - generic [ref=f48e147]:
+            - generic [ref=f48e148]:
+              - paragraph [ref=f48e149]: Total Sales
+              - generic [ref=f48e150]: 9,120.58 EUR
+            - generic [ref=f48e151]:
+              - paragraph [ref=f48e152]: Orders
+              - generic [ref=f48e153]: "147"
+            - generic [ref=f48e154]:
+              - paragraph [ref=f48e155]: Avg. Order Value
+              - generic [ref=f48e156]: 62.04 EUR
+            - generic [ref=f48e157]:
+              - paragraph [ref=f48e158]: Conversion Rate
+              - generic [ref=f48e159]: 4.3%
+          - generic [ref=f48e160]:
+            - generic [ref=f48e161]: Sales over time
+            - generic [ref=f48e162]:
+              - img "Daily revenue for the selected period" [ref=f48e163]
+              - generic [ref=f48e165]:
+                - generic [ref=f48e166]: 2026-06-27
+                - generic [ref=f48e167]: 2026-07-26
+          - generic [ref=f48e168]:
+            - generic [ref=f48e169]:
+              - generic [ref=f48e170]: Visits over time
+              - generic [ref=f48e171]:
+                - img "Daily visits for the selected period" [ref=f48e172]
+                - generic [ref=f48e174]:
+                  - generic [ref=f48e175]: 2026-06-27
+                  - generic [ref=f48e176]: 2026-07-26
+            - generic [ref=f48e177]:
+              - generic [ref=f48e178]: Conversion funnel
+              - generic [ref=f48e179]:
+                - generic [ref=f48e180]:
+                  - generic [ref=f48e181]:
+                    - paragraph [ref=f48e182]: Visits
+                    - paragraph [ref=f48e183]: 3,387 (100%)
+                  - 'img "Visits: 3387" [ref=f48e184]'
+                - generic [ref=f48e186]:
+                  - generic [ref=f48e187]:
+                    - paragraph [ref=f48e188]: Added to cart
+                    - paragraph [ref=f48e189]: 749 (22.1%)
+                  - 'img "Added to cart: 749" [ref=f48e190]'
+                - generic [ref=f48e192]:
+                  - generic [ref=f48e193]:
+                    - paragraph [ref=f48e194]: Checkout started
+                    - paragraph [ref=f48e195]: 352 (10.4%)
+                  - 'img "Checkout started: 352" [ref=f48e196]'
+                - generic [ref=f48e198]:
+                  - generic [ref=f48e199]:
+                    - paragraph [ref=f48e200]: Checkout completed
+                    - paragraph [ref=f48e201]: 147 (4.3%)
+                  - 'img "Checkout completed: 147" [ref=f48e202]'
+          - generic [ref=f48e204]:
+            - generic [ref=f48e205]: Top products
+            - table [ref=f48e207]:
+              - rowgroup [ref=f48e208]:
+                - row [ref=f48e209]:
+                  - columnheader "Rank" [ref=f48e210]
+                  - columnheader "Product" [ref=f48e211]
+                  - columnheader "Units Sold" [ref=f48e212]
+                  - columnheader "Revenue" [ref=f48e213]
+                  - columnheader "% of Total" [ref=f48e214]
+              - rowgroup [ref=f48e215]:
+                - row [ref=f48e216]:
+                  - cell "1" [ref=f48e217]
+                  - cell "Cashmere Overcoat" [ref=f48e218]
+                  - cell "1" [ref=f48e219]
+                  - cell "499.99 EUR" [ref=f48e220]
+                  - cell "32.1%" [ref=f48e221]
+                - row [ref=f48e222]:
+                  - cell "2" [ref=f48e223]
+                  - cell "Classic Cotton T-Shirt" [ref=f48e224]
+                  - cell "5" [ref=f48e225]
+                  - cell "124.95 EUR" [ref=f48e226]
+                  - cell "8%" [ref=f48e227]
+                - row [ref=f48e228]:
+                  - cell "3" [ref=f48e229]
+                  - cell "Running Sneakers" [ref=f48e230]
+                  - cell "1" [ref=f48e231]
+                  - cell "119.99 EUR" [ref=f48e232]
+                  - cell "7.7%" [ref=f48e233]
+                - row [ref=f48e234]:
+                  - cell "4" [ref=f48e235]
+                  - cell "Premium Slim Fit Jeans" [ref=f48e236]
+                  - cell "1" [ref=f48e237]
+                  - cell "79.99 EUR" [ref=f48e238]
+                  - cell "5.1%" [ref=f48e239]
+                - row [ref=f48e240]:
+                  - cell "5" [ref=f48e241]
+                  - cell "Premium Slim Fit Jeans - 28 / Blue" [ref=f48e242]
+                  - cell "1" [ref=f48e243]
+                  - cell "79.99 EUR" [ref=f48e244]
+                  - cell "5.1%" [ref=f48e245]
+                - row [ref=f48e246]:
+                  - cell "6" [ref=f48e247]
+                  - cell "Chino Shorts" [ref=f48e248]
+                  - cell "2" [ref=f48e249]
+                  - cell "79.98 EUR" [ref=f48e250]
+                  - cell "5.1%" [ref=f48e251]
+                - row [ref=f48e252]:
+                  - cell "7" [ref=f48e253]
+                  - cell "Leather Belt" [ref=f48e254]
+                  - cell "2" [ref=f48e255]
+                  - cell "69.98 EUR" [ref=f48e256]
+                  - cell "4.5%" [ref=f48e257]
+                - row [ref=f48e258]:
+                  - cell "8" [ref=f48e259]
+                  - cell "V-Neck Linen Tee" [ref=f48e260]
+                  - cell "2" [ref=f48e261]
+                  - cell "69.98 EUR" [ref=f48e262]
+                  - cell "4.5%" [ref=f48e263]
+                - row [ref=f48e264]:
+                  - cell "9" [ref=f48e265]
+                  - cell "Organic Hoodie" [ref=f48e266]
+                  - cell "1" [ref=f48e267]
+                  - cell "59.99 EUR" [ref=f48e268]
+                  - cell "3.9%" [ref=f48e269]
+                - row [ref=f48e270]:
+                  - cell "10" [ref=f48e271]
+                  - cell "Graphic Print Tee" [ref=f48e272]
+                  - cell "2" [ref=f48e273]
+                  - cell "59.98 EUR" [ref=f48e274]
+                  - cell "3.9%" [ref=f48e275]
+          - generic [ref=f48e276]:
+            - generic [ref=f48e277]: Recent search queries
+            - paragraph [ref=f48e278]: No search queries yet.

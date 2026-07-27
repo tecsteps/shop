@@ -1,0 +1,101 @@
+- generic [active] [ref=f72e1]:
+  - link "Skip to main content" [ref=f72e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f72e4]:
+    - paragraph [ref=f72e5]: Free shipping on orders over 50 EUR - Use code FREESHIP
+    - button "Dismiss announcement" [ref=f72e6]
+  - banner [ref=f72e9]:
+    - generic [ref=f72e10]:
+      - link "Acme Fashion" [ref=f72e11] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f72e13]:
+        - link "Home" [ref=f72e14] [cursor=pointer]:
+          - /url: /
+        - link "New Arrivals" [ref=f72e15] [cursor=pointer]:
+          - /url: /collections/new-arrivals
+        - link "T-Shirts" [ref=f72e16] [cursor=pointer]:
+          - /url: /collections/t-shirts
+        - link "Pants & Jeans" [ref=f72e17] [cursor=pointer]:
+          - /url: /collections/pants-jeans
+        - link "Sale" [ref=f72e18] [cursor=pointer]:
+          - /url: /collections/sale
+      - generic [ref=f72e19]:
+        - button "Search" [ref=f72e20]
+        - link "Account" [ref=f72e23] [cursor=pointer]:
+          - /url: /account
+        - button "Open cart" [ref=f72e26]
+  - main [ref=f72e29]:
+    - generic [ref=f72e30]:
+      - heading "Your Cart" [level=1] [ref=f72e31]
+      - generic [ref=f72e32]:
+        - table [ref=f72e34]:
+          - rowgroup [ref=f72e35]:
+            - row [ref=f72e36]:
+              - columnheader "Product" [ref=f72e37]
+              - columnheader "Price" [ref=f72e38]
+              - columnheader "Quantity" [ref=f72e39]
+              - columnheader "Total" [ref=f72e40]
+              - columnheader "Remove" [ref=f72e41]
+          - rowgroup [ref=f72e43]:
+            - row [ref=f72e44]:
+              - cell [ref=f72e45]:
+                - generic [ref=f72e50]:
+                  - paragraph [ref=f72e51]: Organic Hoodie
+                  - paragraph [ref=f72e52]: S
+              - cell "59.99 EUR" [ref=f72e53]
+              - cell "Decrease quantity of Organic Hoodie 1 Increase quantity of Organic Hoodie" [ref=f72e54]:
+                - generic [ref=f72e55]:
+                  - button "Decrease quantity of Organic Hoodie" [ref=f72e56]
+                  - generic [ref=f72e58]: "1"
+                  - button "Increase quantity of Organic Hoodie" [ref=f72e59]
+              - cell "59.99 EUR" [ref=f72e62]
+              - cell [ref=f72e63]:
+                - button "Remove Organic Hoodie from cart" [ref=f72e64]
+        - generic [ref=f72e68]:
+          - heading "Order summary" [level=2] [ref=f72e69]
+          - generic [ref=f72e71]:
+            - generic [ref=f72e72]: Discount code
+            - textbox "Discount code" [ref=f72e73]
+            - button "Apply" [ref=f72e74]
+          - generic [ref=f72e75]:
+            - generic [ref=f72e76]:
+              - term [ref=f72e77]: Subtotal
+              - definition [ref=f72e78]: 59.99 EUR
+            - generic [ref=f72e79]:
+              - term [ref=f72e80]: Total
+              - definition [ref=f72e81]: 59.99 EUR
+          - paragraph [ref=f72e82]: Shipping estimated at checkout. Taxes calculated at checkout.
+          - button "Checkout" [ref=f72e83]
+          - link "Continue shopping" [ref=f72e85] [cursor=pointer]:
+            - /url: http://acme-fashion.test
+  - contentinfo [ref=f72e86]:
+    - generic [ref=f72e87]:
+      - generic [ref=f72e88]:
+        - generic [ref=f72e89]:
+          - heading "Shop" [level=2] [ref=f72e90]
+          - list [ref=f72e91]:
+            - listitem [ref=f72e92]:
+              - link "About Us" [ref=f72e93] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f72e94]:
+              - link "FAQ" [ref=f72e95] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f72e96]:
+              - link "Shipping & Returns" [ref=f72e97] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f72e98]:
+              - link "Privacy Policy" [ref=f72e99] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f72e100]:
+              - link "Terms of Service" [ref=f72e101] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f72e102]:
+          - heading "Acme Fashion" [level=2] [ref=f72e103]
+          - paragraph [ref=f72e104]: 2025 Acme Fashion. All rights reserved.
+      - generic [ref=f72e105]:
+        - paragraph [ref=f72e106]: © 2026 Acme Fashion. All rights reserved.
+        - generic "Accepted payment methods" [ref=f72e107]:
+          - generic [ref=f72e108]: VISA
+          - generic [ref=f72e109]: MASTERCARD
+          - generic [ref=f72e110]: AMEX
+          - generic [ref=f72e111]: PAYPAL
