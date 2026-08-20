@@ -9,6 +9,7 @@ use App\Models\StoreDomain;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,13 @@ class ResolveStore
 {
     public function handle(Request $request, Closure $next, string $context = 'storefront'): Response
     {
+        if (! Schema::hasTable('stores')) {
+            return $next($request);
+        }
+
+        if ($this->isPublicAdminAuthRequest($request)) {
+            return $next($request);
+        }
         $context = $context === 'storefront' && $this->isAdminRequest($request)
             ? 'admin'
             : $context;
@@ -24,6 +32,10 @@ class ResolveStore
         $store = $context === 'admin'
             ? $this->resolveAdminStore($request)
             : $this->resolveStorefrontStore($request);
+
+        if ($store === null && $context === 'storefront' && $this->isPublicCustomerAuthRequest($request)) {
+            return $next($request);
+        }
 
         abort_unless($store instanceof Store, $context === 'admin' ? 403 : 404);
 
@@ -77,6 +89,20 @@ class ResolveStore
     {
         $prefix = trim((string) config('tenancy.admin_path_prefix', 'admin'), '/');
 
-        return $request->is($prefix, $prefix.'/*') || $request->routeIs($prefix.'.*');
+        if ($request->is($prefix, $prefix.'/*') || $request->routeIs($prefix.'.*')) {
+            return true;
+        }
+
+        return $request->is('livewire/update') && str_contains((string) $request->headers->get('referer'), '/admin');
+    }
+
+    private function isPublicAdminAuthRequest(Request $request): bool
+    {
+        return $request->is('admin/login', 'admin/forgot-password', 'admin/reset-password/*');
+    }
+
+    private function isPublicCustomerAuthRequest(Request $request): bool
+    {
+        return $request->is('forgot-password', 'reset-password/*');
     }
 }

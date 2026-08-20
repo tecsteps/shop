@@ -19,6 +19,6 @@ class FulfillmentPolicy
 
     public function view(User $user, Fulfillment $fulfillment): bool
     {
-        return $this->userHasModelStoreRole($user, $fulfillment, StoreUserRole::cases());
+        return $this->userHasModelStoreRole($user, $fulfillment->loadMissing('order')->order, StoreUserRole::cases());
     }
 }

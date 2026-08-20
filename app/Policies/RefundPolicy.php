@@ -19,6 +19,6 @@ class RefundPolicy
 
     public function view(User $user, Refund $refund): bool
     {
-        return $this->userHasModelStoreRole($user, $refund, StoreUserRole::cases());
+        return $this->userHasModelStoreRole($user, $refund->loadMissing('order')->order, StoreUserRole::cases());
     }
 }
