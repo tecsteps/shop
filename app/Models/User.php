@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -23,6 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
+        'last_login_at',
     ];
 
     /**
@@ -47,7 +51,25 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')->using(StoreUser::class)->withPivot('role')->withTimestamps();
+    }
+
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        $pivot = $this->stores()->where('stores.id', $store->getKey())->first()?->pivot;
+
+        return $pivot?->role instanceof StoreUserRole ? $pivot->role : ($pivot?->role ? StoreUserRole::tryFrom($pivot->role) : null);
+    }
+
+    public function canManageStore(Store $store): bool
+    {
+        return in_array($this->roleForStore($store), [StoreUserRole::Owner, StoreUserRole::Admin], true);
     }
 
     /**
