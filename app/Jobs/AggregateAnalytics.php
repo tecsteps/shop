@@ -37,6 +37,7 @@ class AggregateAnalytics implements ShouldQueue
                     'visits_count' => $events->where('type', 'page_view')->count(),
                     'add_to_cart_count' => $events->where('type', 'add_to_cart')->count(),
                     'checkout_started_count' => $events->where('type', 'checkout_started')->count(),
+                    'checkout_completed_count' => $events->where('type', 'checkout_completed')->count(),
                 ],
             );
         }

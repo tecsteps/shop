@@ -11,7 +11,7 @@ class AnalyticsDaily extends Model
 
     protected $table = 'analytics_daily';
 
-    protected $fillable = ['store_id', 'date', 'orders_count', 'revenue_amount', 'aov_amount', 'visits_count', 'add_to_cart_count', 'checkout_started_count'];
+    protected $fillable = ['store_id', 'date', 'orders_count', 'revenue_amount', 'aov_amount', 'visits_count', 'add_to_cart_count', 'checkout_started_count', 'checkout_completed_count'];
 
     public $incrementing = false;
 

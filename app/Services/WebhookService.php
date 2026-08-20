@@ -12,11 +12,13 @@ class WebhookService
     {
         WebhookSubscription::withoutGlobalScopes()
             ->where('store_id', $store->getKey())
-            ->where('event', $eventType)
+            ->where(function ($query) use ($eventType): void {
+                $query->where('event', $eventType)->orWhere('event_type', $eventType);
+            })
             ->where('status', 'active')
             ->get()
             ->each(function (WebhookSubscription $subscription) use ($eventType, $payload): void {
-                $delivery = $subscription->deliveries()->create(['event' => $eventType, 'payload' => $payload, 'attempts' => 0, 'next_attempt_at' => now()]);
+                $delivery = $subscription->deliveries()->create(['event' => $eventType, 'event_id' => (string) str()->uuid(), 'payload' => $payload, 'attempts' => 0, 'attempt_count' => 0, 'next_attempt_at' => now()]);
                 DeliverWebhook::dispatch($delivery);
             });
     }

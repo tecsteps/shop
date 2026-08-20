@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NavigationItem extends Model
 {
-    protected $fillable = ['navigation_menu_id', 'label', 'type', 'url', 'resource_id', 'position', 'parent_id'];
+    protected $fillable = ['navigation_menu_id', 'menu_id', 'label', 'type', 'url', 'resource_id', 'position', 'parent_id'];
 
     public function menu(): BelongsTo
     {

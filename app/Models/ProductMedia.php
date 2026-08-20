@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductMedia extends Model
 {
-    protected $fillable = ['product_id', 'type', 'path', 'storage_key', 'url', 'alt_text', 'mime_type', 'byte_size', 'checksum', 'status', 'position', 'metadata'];
+    protected $fillable = ['product_id', 'type', 'path', 'storage_key', 'url', 'alt_text', 'width', 'height', 'mime_type', 'byte_size', 'checksum', 'status', 'position', 'metadata'];
 
     protected function casts(): array
     {

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
-    protected $fillable = ['order_id', 'provider', 'provider_payment_id', 'method', 'status', 'amount', 'raw_json_encrypted'];
+    protected $fillable = ['order_id', 'provider', 'provider_payment_id', 'method', 'status', 'amount', 'currency', 'raw_json_encrypted'];
 
     protected $hidden = ['raw_json_encrypted'];
 

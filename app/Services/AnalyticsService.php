@@ -25,7 +25,7 @@ class AnalyticsService
             }
         }
 
-        return AnalyticsEvent::withoutGlobalScopes()->create(['store_id' => $store->getKey(), 'type' => $type, 'session_id' => $sessionId, 'customer_id' => $customerId, 'client_event_id' => $clientEventId, 'payload' => $properties]);
+        return AnalyticsEvent::withoutGlobalScopes()->create(['store_id' => $store->getKey(), 'type' => $type, 'session_id' => $sessionId, 'customer_id' => $customerId, 'client_event_id' => $clientEventId, 'payload' => $properties, 'properties_json' => $properties, 'occurred_at' => now()]);
     }
 
     public function getDailyMetrics(Store $store, string $startDate, string $endDate): Collection

@@ -25,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'password_hash',
         'status',
         'last_login_at',
     ];
@@ -36,6 +37,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'password_hash',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
@@ -53,6 +55,17 @@ class User extends Authenticatable
             'password' => 'hashed',
             'last_login_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (User $user): void {
+            if ($user->isDirty('password')) {
+                $user->password_hash = $user->password;
+            } elseif ($user->isDirty('password_hash')) {
+                $user->password = $user->password_hash;
+            }
+        });
     }
 
     public function stores(): BelongsToMany
