@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +26,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'password_hash',
+        'status',
+        'last_login_at',
+        'is_platform_admin',
     ];
 
     /**
@@ -32,6 +39,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'password_hash',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
@@ -47,7 +55,52 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime',
+            'is_platform_admin' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (User $user): void {
+            if ($user->isDirty('password')) {
+                $user->password_hash = $user->password;
+            } elseif ($user->isDirty('password_hash')) {
+                $user->password = $user->password_hash;
+            }
+        });
+    }
+
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')->using(StoreUser::class)->withPivot('role')->withTimestamps();
+    }
+
+    public function getAuthPasswordName(): string
+    {
+        return 'password_hash';
+    }
+
+    public function getAuthPassword(): ?string
+    {
+        return $this->password_hash;
+    }
+
+    public function isPlatformAdmin(): bool
+    {
+        return (bool) $this->is_platform_admin;
+    }
+
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        $pivot = $this->stores()->where('stores.id', $store->getKey())->first()?->pivot;
+
+        return $pivot?->role instanceof StoreUserRole ? $pivot->role : ($pivot?->role ? StoreUserRole::tryFrom($pivot->role) : null);
+    }
+
+    public function canManageStore(Store $store): bool
+    {
+        return in_array($this->roleForStore($store), [StoreUserRole::Owner, StoreUserRole::Admin], true);
     }
 
     /**

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" class="bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>{{ $title ?? 'Admin · '.($currentStore?->name ?? 'Shop') }}</title>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
+    </head>
+    <body x-data="{ sidebarOpen: false, dark: localStorage.getItem('shop-admin-dark') === '1', toast: '', profileOpen: false }" x-init="document.documentElement.classList.toggle('dark', dark)" x-on:toast.window="toast = $event.detail.message; setTimeout(() => toast = '', 3000)" class="min-h-screen bg-zinc-100 dark:bg-zinc-950">
+        <div x-show="toast" x-cloak x-transition class="fixed right-5 top-5 z-[100] rounded-xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white shadow-xl" role="status" x-text="toast"></div>
+        <div class="flex min-h-screen">
+            <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-black/40 lg:hidden" x-on:click="sidebarOpen = false"></div>
+            <aside x-show="sidebarOpen || window.innerWidth >= 1024" x-transition class="fixed inset-y-0 left-0 z-50 w-72 shrink-0 border-r border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900 lg:static lg:block" aria-label="Admin navigation">
+                <div class="flex items-center justify-between"><a href="{{ route('admin.dashboard') }}" class="text-xl font-bold" wire:navigate>{{ $currentStore?->name ?? 'Shop' }}</a><button class="rounded-lg p-2 lg:hidden" x-on:click="sidebarOpen = false" aria-label="Close navigation">×</button></div>
+                <nav x-data x-init="$nextTick(() => { const path = window.location.pathname; $el.querySelectorAll('a').forEach(link => { if (new URL(link.href).pathname === path) { link.setAttribute('aria-current', 'page'); link.classList.add('bg-zinc-100', 'font-semibold', 'dark:bg-zinc-800'); } }); })" class="mt-8 space-y-1 text-sm">
+                    <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Dashboard</a>
+                    <a href="{{ route('admin.products.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Products</a>
+                    <a href="{{ route('admin.collections.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Collections</a>
+                    <a href="{{ route('admin.inventory.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Inventory</a>
+                    <a href="{{ route('admin.orders.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Orders</a>
+                    <a href="{{ route('admin.customers.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Customers</a>
+                    <a href="{{ route('admin.discounts.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Discounts</a>
+                    <a href="{{ route('admin.pages.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Pages</a>
+                    <a href="{{ route('admin.navigation.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Navigation</a>
+                    <a href="{{ route('admin.themes.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Themes</a>
+                    <a href="{{ route('admin.settings') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Settings</a>
+                    <a href="{{ route('admin.analytics.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Analytics</a>
+                    <a href="{{ route('admin.apps.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Apps</a>
+                    <a href="{{ route('admin.developers.index') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Developers</a>
+                    <a href="{{ route('admin.search.settings') }}" class="block rounded-lg px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Search</a>
+                </nav>
+                <form class="mt-10" method="post" action="{{ route('admin.logout') }}">@csrf<button class="text-sm text-zinc-500 hover:text-red-600">Sign out</button></form>
+            </aside>
+            <div class="min-w-0 flex-1">
+                <header class="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 lg:px-8">
+                        <button class="rounded-lg border px-3 py-2 lg:hidden" x-on:click="sidebarOpen = true" aria-label="Open navigation">☰</button>
+                        <div class="flex items-center gap-4"><span class="font-semibold">Store Admin</span><span class="hidden text-sm text-zinc-500 sm:inline">{{ $currentStore?->name }}</span></div>
+                        <div class="flex items-center gap-3">
+                            <button type="button" class="rounded-lg border px-3 py-2 text-sm" aria-label="Notifications">Notifications</button>
+                            <button type="button" class="rounded-lg border px-3 py-2 text-sm" x-on:click="dark = !dark; document.documentElement.classList.toggle('dark', dark); localStorage.setItem('shop-admin-dark', dark ? '1' : '0')" x-text="dark ? 'Light' : 'Dark'"></button>
+                            <div class="relative" x-data><button type="button" class="hidden rounded-lg border px-3 py-2 text-sm sm:inline-flex" x-on:click="profileOpen = !profileOpen" aria-haspopup="menu" :aria-expanded="profileOpen.toString()">{{ auth()->user()?->email }}</button><div x-show="profileOpen" x-cloak x-transition class="absolute right-0 top-11 z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 shadow-xl dark:border-zinc-700 dark:bg-zinc-900" role="menu"><a href="{{ route('admin.settings') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800" wire:navigate>Store settings</a><form method="post" action="{{ route('admin.logout') }}">@csrf<button class="mt-1 block w-full rounded-lg px-3 py-2 text-left text-sm text-red-600 hover:bg-zinc-100 dark:hover:bg-zinc-800">Sign out</button></form></div></div>
+                        </div>
+                    </div>
+                </header>
+                <main class="mx-auto max-w-7xl p-4 lg:p-8">{{ $slot }}</main>
+            </div>
+        </div>
+        @fluxScripts
+        @livewireScripts
+    </body>
+</html>
