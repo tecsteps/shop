@@ -22,8 +22,23 @@ class StoreDomainFactory extends Factory
             'store_id' => Store::factory(),
             'hostname' => fake()->unique()->domainName(),
             'type' => StoreDomainType::Storefront,
-            'is_primary' => false,
+            'is_primary' => true,
             'tls_mode' => 'managed',
         ];
+    }
+
+    public function admin(): static
+    {
+        return $this->state(['type' => StoreDomainType::Admin]);
+    }
+
+    public function api(): static
+    {
+        return $this->state(['type' => StoreDomainType::Api]);
+    }
+
+    public function secondary(): static
+    {
+        return $this->state(['is_primary' => false]);
     }
 }

@@ -13,15 +13,20 @@ class Show extends Component
 
     public int $selectedVariantId;
 
+    /** @var array<int, int> */
+    public array $selectedOptions = [];
+
     public int $quantity = 1;
 
     public string $message = '';
 
     public function mount(string $handle): void
     {
-        $this->product = Product::query()->with(['variants.inventory', 'media', 'options.values'])->where('handle', $handle)->firstOrFail();
+        $this->product = Product::query()->with(['variants.inventory', 'variants.optionValues', 'media', 'options.values'])->where('handle', $handle)->firstOrFail();
         abort_unless($this->product->status->value === 'active', 404);
         $this->selectedVariantId = $this->product->defaultVariant()?->getKey() ?? 0;
+        $default = $this->product->defaultVariant();
+        $this->selectedOptions = $default?->optionValues->mapWithKeys(fn ($value): array => [$value->product_option_id => $value->getKey()])->all() ?? [];
     }
 
     public function addToCart(CartService $carts): void
@@ -45,9 +50,26 @@ class Show extends Component
         $this->selectedVariantId = $variantId;
     }
 
+    public function selectOption(int $optionId, int $valueId): void
+    {
+        abort_unless($this->product->options->firstWhere('id', $optionId)?->values->contains('id', $valueId), 404);
+        $this->selectedOptions[$optionId] = $valueId;
+        $selectedValueIds = array_values($this->selectedOptions);
+        $variant = $this->product->variants->first(function ($candidate) use ($selectedValueIds): bool {
+            $candidateValueIds = $candidate->optionValues->modelKeys();
+
+            return count($selectedValueIds) === count($candidateValueIds)
+                && count(array_intersect($selectedValueIds, $candidateValueIds)) === count($selectedValueIds);
+        });
+
+        if ($variant !== null) {
+            $this->selectedVariantId = $variant->getKey();
+        }
+    }
+
     public function render(): mixed
     {
-        $this->product->loadMissing(['variants.inventory', 'media', 'options.values']);
+        $this->product->loadMissing(['variants.inventory', 'variants.optionValues', 'media', 'options.values']);
 
         return view('livewire.storefront.products.show')->layout('layouts.storefront');
     }

@@ -84,14 +84,14 @@ class StorefrontCartController extends Controller
 
     private function cart(int $cartId): Cart
     {
-        $cart = Cart::query()->with(['lines.variant.product.media', 'lines.variant.inventory'])->findOrFail($cartId);
+        $cart = Cart::query()
+            ->where('store_id', app('current_store')->getKey())
+            ->with(['lines.variant.product.media', 'lines.variant.inventory'])
+            ->findOrFail($cartId);
         $customerId = request()->user('customer')?->getKey();
 
         if ($customerId !== null) {
             abort_unless((int) $cart->customer_id === (int) $customerId, 404);
-        } else {
-            $sessionCartIds = array_filter([request()->session()->get('cart_id'), request()->session()->get('cart_id_'.app('current_store')->getKey())]);
-            abort_unless(in_array($cart->getKey(), $sessionCartIds, true), 404);
         }
 
         return $cart;

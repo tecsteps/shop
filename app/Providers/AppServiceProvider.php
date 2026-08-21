@@ -3,10 +3,13 @@
 namespace App\Providers;
 
 use App\Auth\CustomerUserProvider;
+use App\Auth\StoreScopedPasswordBrokerManager;
 use App\Contracts\PaymentProvider as PaymentProviderContract;
+use App\Contracts\TaxProvider;
 use App\Models\Product;
 use App\Observers\ProductObserver;
 use App\Services\MockPaymentProvider;
+use App\Services\Tax\ManualTaxProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +32,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentProviderContract::class, MockPaymentProvider::class);
+        $this->app->bind(TaxProvider::class, ManualTaxProvider::class);
         Auth::provider('customer', fn ($app, array $config): CustomerUserProvider => new CustomerUserProvider($app['hash'], $config['model']));
+        $this->app->extend('auth.password', fn ($manager, $app): StoreScopedPasswordBrokerManager => new StoreScopedPasswordBrokerManager($app));
     }
 
     /**
@@ -49,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api.storefront', fn (Request $request): Limit => Limit::perMinute(120)->by($request->ip()));
         RateLimiter::for('api.admin', fn (Request $request): Limit => Limit::perMinute(60)->by($request->user()?->getAuthIdentifier() ?? $request->ip()));
         RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by($request->hasSession() ? $request->session()->getId() : $request->ip()));
+        RateLimiter::for('search', fn (Request $request): Limit => Limit::perMinute(30)->by($request->ip()));
+        RateLimiter::for('analytics', fn (Request $request): Limit => Limit::perMinute(60)->by($request->ip()));
+        RateLimiter::for('webhooks', fn (Request $request): Limit => Limit::perMinute(100)->by($request->ip()));
     }
 
     /**

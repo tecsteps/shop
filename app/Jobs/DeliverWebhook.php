@@ -30,15 +30,24 @@ class DeliverWebhook implements ShouldQueue
         $this->delivery->load('subscription');
         $payload = json_encode($this->delivery->payload, JSON_THROW_ON_ERROR);
         $subscription = $this->delivery->subscription;
+        $timestamp = (string) now()->timestamp;
         $response = Http::withHeaders([
-            'X-Platform-Signature' => $webhooks->sign($payload, $subscription->secret_encrypted),
+            'Content-Type' => 'application/json',
+            'X-Platform-Signature' => $webhooks->sign($timestamp.'.'.$payload, $subscription->signing_secret_encrypted),
             'X-Platform-Event' => $this->delivery->event,
             'X-Platform-Delivery-Id' => (string) $this->delivery->getKey(),
-            'X-Platform-Timestamp' => (string) now()->timestamp,
+            'X-Platform-Timestamp' => $timestamp,
         ])->timeout(10)->post($subscription->target_url, $this->delivery->payload);
 
         $this->delivery->increment('attempts');
-        $this->delivery->update(['response_status' => $response->status(), 'response_body' => mb_substr($response->body(), 0, 10000)]);
+        $this->delivery->increment('attempt_count');
+        $this->delivery->update([
+            'response_status' => $response->status(),
+            'response_code' => $response->status(),
+            'response_body' => mb_substr($response->body(), 0, 10000),
+            'response_body_snippet' => mb_substr($response->body(), 0, 1000),
+            'last_attempt_at' => now(),
+        ]);
 
         if ($response->successful()) {
             $subscription->update(['consecutive_failures' => 0]);

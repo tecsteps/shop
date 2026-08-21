@@ -11,7 +11,7 @@ class Collection extends Model
 {
     use BelongsToStore;
 
-    protected $fillable = ['store_id', 'title', 'handle', 'description', 'status', 'image_url'];
+    protected $fillable = ['store_id', 'title', 'handle', 'description', 'description_html', 'type', 'status', 'image_url'];
 
     protected function casts(): array
     {

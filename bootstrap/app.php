@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'store.resolve' => App\Http\Middleware\ResolveStore::class,
             'role.check' => App\Http\Middleware\EnsureStoreRole::class,
+            'api.ability' => App\Http\Middleware\EnsureApiAbility::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

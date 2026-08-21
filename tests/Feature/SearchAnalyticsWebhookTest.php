@@ -64,7 +64,7 @@ test('analytics events aggregate idempotently into daily metrics', function (): 
 
 test('webhooks are signed and delivered with platform headers', function (): void {
     Http::fake(['https://hooks.test/*' => Http::response(['ok' => true], 200)]);
-    $subscription = WebhookSubscription::create(['event' => 'order.created', 'target_url' => 'https://hooks.test/orders', 'secret_encrypted' => 'test-secret', 'status' => 'active']);
+    $subscription = WebhookSubscription::create(['event' => 'order.created', 'target_url' => 'https://hooks.test/orders', 'signing_secret_encrypted' => 'test-secret', 'status' => 'active']);
 
     (new WebhookService)->dispatch($this->store, 'order.created', ['order_id' => 1001]);
 

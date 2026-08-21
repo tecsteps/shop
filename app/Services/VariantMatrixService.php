@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\InventoryItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 
@@ -35,6 +36,7 @@ class VariantMatrixService
                     'is_default' => $position === 0,
                     'position' => $position,
                 ]);
+                InventoryItem::withoutGlobalScopes()->create(['store_id' => $product->store_id, 'variant_id' => $variant->getKey(), 'quantity_on_hand' => 0, 'policy' => 'deny']);
             }
 
             $variant->optionValues()->sync(collect($combination)->pluck('id')->all());
@@ -43,6 +45,8 @@ class VariantMatrixService
 
         foreach ($existing as $orphan) {
             if ($orphan->orders()->exists()) {
+                $orphan->update(['status' => 'archived', 'is_default' => false]);
+
                 continue;
             }
 

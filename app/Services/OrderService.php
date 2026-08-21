@@ -14,11 +14,12 @@ use App\Models\Discount;
 use App\Models\Order;
 use App\Models\Store;
 use App\ValueObjects\PaymentResult;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function __construct(private readonly InventoryService $inventory) {}
+    public function __construct(private readonly InventoryService $inventory, private readonly AuditLogger $audit) {}
 
     public function createFromCheckout(Checkout $checkout, ?PaymentResult $paymentResult = null): Order
     {
@@ -33,6 +34,7 @@ class OrderService
             $totals = $checkout->totals_json ?? ['subtotal' => 0, 'discount' => 0, 'shipping' => 0, 'tax' => 0, 'total' => 0, 'currency' => $checkout->cart->currency];
             $discount = $checkout->discount_code === null ? null : Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->whereRaw('lower(code) = ?', [strtolower($checkout->discount_code)])->first();
             $status = $paymentResult?->status === PaymentStatus::Captured ? FinancialStatus::Paid : FinancialStatus::Pending;
+            $taxByLine = $this->allocateTaxLines($checkout->cart->lines, $totals['tax_lines'] ?? []);
             $order = Order::withoutGlobalScopes()->create([
                 'store_id' => $checkout->store_id,
                 'customer_id' => $checkout->customer_id,
@@ -68,7 +70,7 @@ class OrderService
                     'line_subtotal_amount' => $line->line_subtotal_amount,
                     'line_discount_amount' => $line->line_discount_amount,
                     'line_total_amount' => $line->line_total_amount,
-                    'tax_lines_json' => $totals['tax_lines'] ?? [],
+                    'tax_lines_json' => $taxByLine[$line->getKey()] ?? [],
                     'discount_allocations_json' => $discount === null || $line->line_discount_amount < 1 ? [] : [['discount_id' => $discount->getKey(), 'amount' => $line->line_discount_amount]],
                 ]);
 
@@ -80,10 +82,12 @@ class OrderService
             $checkout->update(['status' => 'completed']);
             $checkout->cart->update(['status' => 'converted']);
             OrderCreated::dispatch($order);
+            $this->audit->record('order.created', $order, ['store_id' => $order->store_id, 'order_number' => $order->order_number]);
             $order->load(['lines', 'payments']);
 
             if ($status === FinancialStatus::Paid) {
                 OrderPaid::dispatch($order);
+                $this->audit->record('order.paid', $order, ['store_id' => $order->store_id, 'order_number' => $order->order_number]);
 
                 if ($checkout->cart->lines->every(fn ($line): bool => ! $line->variant->requires_shipping)) {
                     $fulfillment = $order->fulfillments()->create(['status' => 'delivered', 'fulfilled_at' => now(), 'delivered_at' => now()]);
@@ -104,7 +108,7 @@ class OrderService
     {
         $lastNumber = Order::withoutGlobalScopes()->where('store_id', $store->getKey())->selectRaw("max(cast(replace(order_number, '#', '') as integer)) as value")->value('value');
 
-        return '#'.(max(1000, (int) $lastNumber) + 1);
+        return (string) config('shop.order_prefix', '#').(max(1000, (int) $lastNumber) + 1);
     }
 
     public function cancel(Order $order, string $reason): void
@@ -114,15 +118,19 @@ class OrderService
         }
 
         DB::transaction(function () use ($order, $reason): void {
-            $order->load('lines.variant.inventory')->update(['status' => OrderStatus::Cancelled, 'metadata' => array_merge($order->metadata ?? [], ['cancellation_reason' => $reason])]);
+            $wasPending = $order->financial_status === FinancialStatus::Pending;
+            $order->load('lines.variant.inventory')->update(['status' => OrderStatus::Cancelled, 'financial_status' => $order->financial_status === FinancialStatus::Pending ? FinancialStatus::Voided : $order->financial_status, 'metadata' => array_merge($order->metadata ?? [], ['cancellation_reason' => $reason])]);
 
             foreach ($order->lines as $line) {
-                if ($line->variant?->inventory !== null && $order->financial_status === FinancialStatus::Pending) {
+                if ($line->variant?->inventory !== null && $wasPending) {
                     $this->inventory->release($line->variant->inventory, $line->quantity);
                 }
             }
 
+            $order->payments()->whereIn('status', [PaymentStatus::Pending, PaymentStatus::Authorized])->update(['status' => PaymentStatus::Failed]);
+
             OrderCancelled::dispatch($order->refresh());
+            $this->audit->record('order.cancelled', $order, ['store_id' => $order->store_id, 'order_number' => $order->order_number, 'reason' => $reason]);
         });
     }
 
@@ -143,6 +151,53 @@ class OrderService
 
             $order->payments()->where('status', PaymentStatus::Pending)->update(['status' => PaymentStatus::Captured]);
             OrderPaid::dispatch($order->refresh());
+            $this->audit->record('order.paid', $order, ['store_id' => $order->store_id, 'order_number' => $order->order_number]);
+
+            if ($order->lines->every(fn ($line): bool => ! $line->variant?->requires_shipping)) {
+                $this->autoFulfillDigitalOrder($order->refresh());
+            }
         });
+    }
+
+    private function autoFulfillDigitalOrder(Order $order): void
+    {
+        if ($order->fulfillments()->exists()) {
+            return;
+        }
+
+        $fulfillment = $order->fulfillments()->create(['status' => 'delivered', 'fulfilled_at' => now(), 'delivered_at' => now()]);
+        foreach ($order->lines as $line) {
+            $fulfillment->lines()->create(['order_line_id' => $line->getKey(), 'quantity' => $line->quantity]);
+        }
+        $order->update(['status' => OrderStatus::Fulfilled, 'fulfillment_status' => FulfillmentStatus::Fulfilled]);
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, \App\Models\CartLine>  $lines
+     * @param  array<int, array{title?: string, rate?: int, amount?: int}>  $taxLines
+     * @return array<int, array<int, array<string, mixed>>>
+     */
+    private function allocateTaxLines(Collection $lines, array $taxLines): array
+    {
+        $base = max(1, (int) $lines->sum('line_total_amount'));
+        $allocations = $lines->mapWithKeys(fn ($line): array => [$line->getKey() => []])->all();
+
+        foreach ($taxLines as $taxLine) {
+            $remaining = (int) ($taxLine['amount'] ?? 0);
+            $lineCount = $lines->count();
+
+            foreach ($lines->values() as $index => $line) {
+                $amount = $index === $lineCount - 1
+                    ? $remaining
+                    : intdiv((int) ($taxLine['amount'] ?? 0) * (int) $line->line_total_amount, $base);
+                $remaining -= $amount;
+
+                if ($amount > 0) {
+                    $allocations[$line->getKey()][] = [...$taxLine, 'amount' => $amount];
+                }
+            }
+        }
+
+        return $allocations;
     }
 }

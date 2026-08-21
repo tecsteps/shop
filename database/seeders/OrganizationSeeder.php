@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Organization;
 use Illuminate\Database\Seeder;
 
 class OrganizationSeeder extends Seeder
@@ -11,6 +12,9 @@ class OrganizationSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Organization::query()->updateOrCreate(
+            ['slug' => 'acme-corp'],
+            ['name' => 'Acme Corp', 'billing_email' => 'billing@acme.test', 'status' => 'active'],
+        );
     }
 }

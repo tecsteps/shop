@@ -1,3 +1,1 @@
-<div>
-    {{-- The whole future lies in uncertainty: live immediately. - Seneca --}}
-</div>
+<livewire:admin.pages.form />

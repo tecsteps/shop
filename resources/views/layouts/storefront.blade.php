@@ -1,3 +1,4 @@
+@php($currentStore = $currentStore ?? null)
 <!doctype html>
 <html lang="en" class="bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
     <head>
@@ -8,9 +9,9 @@
         @livewireStyles
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-950">
-        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-zinc-900 focus:px-4 focus:py-3 focus:text-white">Skip to content</a>
-        <div class="border-b border-zinc-200 bg-zinc-900 px-4 py-2 text-center text-sm text-white dark:border-zinc-800">
-            Free shipping on orders over €50
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-zinc-900 focus:px-4 focus:py-3 focus:text-white">Skip to main content</a>
+        <div class="border-b border-zinc-200 bg-zinc-900 px-4 py-2 text-center text-sm text-white dark:border-zinc-800" role="status">
+            {{ data_get($currentStore?->settings?->settings_json, 'announcement', 'Free shipping on orders over €50') }}
         </div>
         <header class="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
             <nav class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 lg:px-8" aria-label="Main navigation">
@@ -23,7 +24,7 @@
                 </div>
                 <div class="flex items-center gap-4 text-sm">
                     <a href="{{ auth('customer')->check() ? route('account.dashboard') : route('account.login') }}" aria-label="Account" wire:navigate>Account</a>
-                    <a href="{{ route('cart.show') }}" class="rounded-full bg-zinc-900 px-3 py-2 text-white dark:bg-white dark:text-zinc-900" wire:navigate>Cart</a>
+                    <button type="button" x-data x-on:click="$dispatch('open-cart-drawer')" class="rounded-full bg-zinc-900 px-3 py-2 text-white dark:bg-white dark:text-zinc-900" aria-label="Open cart">Cart</button>
                 </div>
             </nav>
         </header>
@@ -37,6 +38,11 @@
             </div>
             <div class="border-t border-zinc-200 px-4 py-5 text-center text-xs text-zinc-500 dark:border-zinc-800">© {{ now()->year }} {{ $currentStore?->name ?? 'Shop' }}. All rights reserved.</div>
         </footer>
+        @if ($currentStore)
+            <livewire:storefront.cart-drawer />
+        @endif
+        <livewire:storefront.search.modal />
+        @fluxScripts
         @livewireScripts
     </body>
 </html>

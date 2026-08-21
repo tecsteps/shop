@@ -6,6 +6,8 @@ use App\Enums\PaymentMethod;
 use App\Exceptions\InsufficientInventoryException;
 use App\Exceptions\InvalidDiscountException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApplyDiscountRequest;
+use App\Http\Requests\SetCheckoutAddressRequest;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Services\CheckoutService;
@@ -24,6 +26,13 @@ class StorefrontCheckoutController extends Controller
     {
         $data = $request->validate(['cart_id' => ['required', 'integer'], 'email' => ['required', 'email']]);
         $cart = Cart::query()->with('lines')->findOrFail($data['cart_id']);
+        $customerId = $request->user('customer')?->getKey();
+        if ($customerId !== null) {
+            abort_unless((int) $cart->customer_id === (int) $customerId, 404);
+        } else {
+            $sessionCartIds = array_filter([$request->session()->get('cart_id'), $request->session()->get('cart_id_'.app('current_store')->getKey())]);
+            abort_unless(in_array($cart->getKey(), $sessionCartIds, true), 404);
+        }
         $checkout = $this->checkouts->create($cart, $data['email'], $request->user('customer'));
         $this->pricing->calculate($checkout);
 
@@ -41,11 +50,13 @@ class StorefrontCheckoutController extends Controller
         return response()->json($this->payload($checkout));
     }
 
-    public function address(Request $request, int $checkoutId): JsonResponse
+    public function address(SetCheckoutAddressRequest $request, int $checkoutId): JsonResponse
     {
-        $data = $request->validate(['shipping_address' => ['required', 'array'], 'billing_address' => ['nullable', 'array'], 'use_shipping_as_billing' => ['nullable', 'boolean']]);
+        $checkout = $this->checkout($checkoutId);
+        $useShippingAsBilling = $request->boolean('use_shipping_as_billing', true);
+        $data = $request->validated();
         try {
-            $checkout = $this->checkouts->setAddress($this->checkout($checkoutId), $data['shipping_address'], $data['billing_address'] ?? null, $data['use_shipping_as_billing'] ?? true);
+            $checkout = $this->checkouts->setAddress($checkout, $data['shipping_address'] ?? [], $data['billing_address'] ?? null, $useShippingAsBilling);
         } catch (\LogicException $exception) {
             return response()->json(['message' => $exception->getMessage(), 'code' => 'checkout_state_invalid'], 422);
         }
@@ -65,9 +76,9 @@ class StorefrontCheckoutController extends Controller
         return response()->json($this->payload($checkout));
     }
 
-    public function applyDiscount(Request $request, int $checkoutId): JsonResponse
+    public function applyDiscount(ApplyDiscountRequest $request, int $checkoutId): JsonResponse
     {
-        $data = $request->validate(['code' => ['required', 'string', 'max:64']]);
+        $data = $request->validated();
         $checkout = $this->checkout($checkoutId);
         try {
             $discount = $this->discounts->validate($data['code'], app('current_store'), $checkout->cart);
@@ -80,9 +91,24 @@ class StorefrontCheckoutController extends Controller
         return response()->json($this->payload($checkout->refresh()));
     }
 
+    public function removeDiscount(int $checkoutId): JsonResponse
+    {
+        $checkout = $this->checkout($checkoutId);
+        $checkout->update(['discount_code' => null]);
+        $this->pricing->calculate($checkout->refresh());
+
+        return response()->json($this->payload($checkout->refresh()));
+    }
+
     public function pay(Request $request, int $checkoutId): JsonResponse
     {
-        $data = $request->validate(['payment_method' => ['required', 'in:credit_card,paypal,bank_transfer'], 'card_number' => ['nullable', 'string'], 'card_expiry' => ['nullable', 'string'], 'card_cvc' => ['nullable', 'string']]);
+        $data = $request->validate([
+            'payment_method' => ['required', 'string', 'in:credit_card,paypal,bank_transfer'],
+            'card_number' => ['exclude_unless:payment_method,credit_card', 'required', 'string', 'regex:/^(?=.*\d)[0-9 ]+$/'],
+            'card_expiry' => ['exclude_unless:payment_method,credit_card', 'required', 'string', 'regex:/^(0[1-9]|1[0-2])\/\d{2}$/'],
+            'card_cvc' => ['exclude_unless:payment_method,credit_card', 'required', 'string', 'regex:/^\d{3,4}$/'],
+            'card_holder' => ['exclude_unless:payment_method,credit_card', 'required', 'string', 'max:255'],
+        ]);
         try {
             $checkout = $this->checkouts->selectPaymentMethod($this->checkout($checkoutId), $data['payment_method']);
             $order = $this->payments->pay($checkout, PaymentMethod::from($data['payment_method']), $data);

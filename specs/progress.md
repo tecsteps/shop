@@ -1,29 +1,30 @@
 # Implementation Progress
 
-The core self-contained shop implementation is in place and verified with Pest and Playwright.
+The self-contained multi-tenant shop is implemented across the database, commerce domain, storefront, admin, API, authentication, seed data, and delivery integrations described in specs 01–09.
 
 ## Completed
 
-- [x] Foundation: SQLite configuration, tenant schema/models, store resolution, global tenant scope, roles, and policies.
-- [x] Catalog: products, variants, options, inventory, collections, media, product status transitions, and seeded demo data.
-- [x] Storefront: home, collections, product detail, variant selection, cart, search, static pages, responsive layouts, and theme scaffolding.
-- [x] Cart and checkout: session/customer carts, optimistic cart versions, discount codes, addresses, shipping rates, tax calculation, and checkout expiry.
-- [x] Payments and orders: mock card/PayPal/bank-transfer PSP, idempotent payment handling, inventory reservations, order snapshots, confirmation, cancellation, refunds, and fulfillment guards.
-- [x] Authentication: Fortify admin authentication plus separate tenant-scoped customer authentication, registration, password reset, email verification, and 2FA support.
-- [x] Admin: dashboard, product/order/customer/discount/settings screens, role middleware, resource-aware inventory/collection/theme/page/navigation/app/developer/analytics/search sections, and versioned session-authenticated catalog/collection/order/customer/discount API endpoints.
-- [x] Search, analytics, apps, and webhooks: SQLite FTS5 indexing, query logging, analytics aggregation, signed webhook delivery, retries, and subscription pausing.
-- [x] Automated coverage: unit and feature tests for pricing, tenancy, authentication, commerce flows, search, analytics, webhooks, and customer sessions.
-- [x] Browser acceptance: storefront browsing, product add-to-cart, discount application, address/shipping/payment checkout, order confirmation, customer account, admin login, and admin section smoke checks.
+- [x] Foundation: SQLite configuration, tenant schema/models, store resolution, global tenant scope, roles, policies, and Fortify authentication.
+- [x] Catalog: products, variants, options, inventory, collections, media, status transitions, search indexing, and deterministic tenant fixtures.
+- [x] Storefront: home, collections, product detail, variant selection, responsive layouts, cart, cart drawer, search, static pages, customer accounts, and order history.
+- [x] Checkout: session/customer carts, optimistic versions, addresses, shipping rates, taxes, discounts, payment methods, expiry, order snapshots, confirmation, and saved addresses.
+- [x] Commerce operations: payment idempotency, inventory reservations, cancellation, refunds with line allocations/restocking, fulfillment guards, and webhook delivery with signatures/retries.
+- [x] Admin: dashboard metrics, product and collection CRUD, inventory, orders, customers, discounts, pages, navigation, themes, settings, analytics, apps, search settings, and developer tokens/webhooks.
+- [x] API/security: session and Sanctum authentication, token abilities, tenant ownership checks, rate limiting, CORS, scoped customer password reset tokens, audit logging, and error pages.
+- [x] Test data: canonical `DatabaseSeeder` plus isolated `ShopSeeder` compatibility fixtures, factories, and idempotency assertions.
 
 ## Verification
 
-- `php artisan test`: 67 passing tests, 175 assertions.
+- `php artisan test --compact`: 87 passing tests, 296 assertions.
+- `vendor/bin/pint --dirty --format agent`: passing.
+- PHP lint across application, database, routes, configuration, bootstrap, and tests: passing.
+- `php artisan migrate:status --no-interaction`: all migrations applied, including tenant-scoped password reset tokens, webhook contract alignment, normalized theme settings, and store invitations.
+- `php artisan view:cache --no-interaction`: passing.
 - `npm run build`: passing.
-- `vendor/bin/pint --dirty --format agent`: run after the final PHP changes.
-- Playwright MCP browser checks: no storefront/admin page errors in the completed smoke paths.
+- Playwright MCP browser smoke checks: storefront home, product detail, cart drawer, collections, search, cart, responsive mobile layout, admin login/dashboard/products/orders/developers/settings, Flux domain modal, and mobile admin navigation; no application console errors observed.
+- The Pest browser plugin is not installed and dependencies were intentionally left unchanged; the browser coverage above was executed manually through Playwright MCP.
 
-## Remaining hardening
+## Final audit
 
-- Expand the resource-aware admin sections into full CRUD editors and add token-authenticated admin API coverage when the API authentication dependency is approved for production use.
-- Add stronger opaque guest checkout tokens and broader resource-level API ownership tests.
-- Add broader browser coverage for refund/fulfillment actions, customer registration/reset flows, and mobile interaction states.
+- Independent read-only audit found and closed platform API, nested product persistence, media processing, webhook contract, and domain settings gaps.
+- Follow-up read-only verification confirmed the residual media lifecycle and nested product response findings are resolved.

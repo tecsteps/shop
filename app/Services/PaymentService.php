@@ -51,7 +51,7 @@ class PaymentService
             Payment::create(['order_id' => $order->getKey(), 'provider' => 'mock', 'provider_payment_id' => $result->reference, 'method' => $method, 'status' => $result->status, 'amount' => $order->total_amount, 'currency' => $order->currency, 'raw_json_encrypted' => json_encode(['reference' => $result->reference, 'message' => $result->message])]);
 
             if ($checkout->discount_code !== null) {
-                Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->where('code', $checkout->discount_code)->increment('usage_count');
+                Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->whereRaw('lower(code) = ?', [strtolower($checkout->discount_code)])->increment('usage_count');
             }
 
             return $order->refresh()->load(['lines', 'payments']);

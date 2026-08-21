@@ -5,6 +5,7 @@ namespace App\Livewire\Storefront\Account\Auth;
 use App\Models\Cart;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class Login extends Component
@@ -18,13 +19,23 @@ class Login extends Component
     public function login(CartService $carts): void
     {
         $credentials = $this->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
+        $key = 'customer-login|'.request()->ip();
 
-        if (! Auth::guard('customer')->attempt($credentials, $this->remember)) {
-            $this->addError('email', 'These credentials do not match our records.');
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $this->addError('email', 'Too many attempts. Try again later.');
 
             return;
         }
 
+        RateLimiter::hit($key, 60);
+
+        if (! Auth::guard('customer')->attempt([...$credentials, 'status' => 'active'], $this->remember)) {
+            $this->addError('email', 'Invalid credentials');
+
+            return;
+        }
+
+        RateLimiter::clear($key);
         session()->regenerate();
         $customer = Auth::guard('customer')->user();
         $store = app('current_store');

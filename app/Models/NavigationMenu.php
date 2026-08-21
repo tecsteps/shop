@@ -10,7 +10,7 @@ class NavigationMenu extends Model
 {
     use BelongsToStore;
 
-    protected $fillable = ['store_id', 'name', 'handle'];
+    protected $fillable = ['store_id', 'name', 'title', 'handle'];
 
     public function items(): HasMany
     {

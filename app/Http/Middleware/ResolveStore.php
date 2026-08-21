@@ -25,6 +25,11 @@ class ResolveStore
         if ($this->isPublicAdminAuthRequest($request)) {
             return $next($request);
         }
+
+        if ($this->isAdminApiRequest($request) && $request->user('sanctum') === null) {
+            return $next($request);
+        }
+
         $context = $context === 'storefront' && $this->isAdminRequest($request)
             ? 'admin'
             : $context;
@@ -33,7 +38,7 @@ class ResolveStore
             ? $this->resolveAdminStore($request)
             : $this->resolveStorefrontStore($request);
 
-        if ($store === null && $context === 'storefront' && $this->isPublicCustomerAuthRequest($request)) {
+        if ($store === null && $context === 'storefront' && $this->isPublicCustomerAuthRequest($request) && Store::query()->doesntExist()) {
             return $next($request);
         }
 
@@ -75,8 +80,13 @@ class ResolveStore
 
     private function resolveAdminStore(Request $request): ?Store
     {
-        $storeId = $request->session()->get(config('tenancy.admin_session_key', 'current_store_id'));
-        $user = $request->user('web') ?? $request->user();
+        $isApiRequest = $this->isAdminApiRequest($request);
+        $storeId = $isApiRequest
+            ? $request->route('storeId')
+            : $request->session()->get(config('tenancy.admin_session_key', 'current_store_id'));
+        $user = $isApiRequest
+            ? $request->user('sanctum')
+            : ($request->user('web') ?? $request->user());
 
         if ($storeId === null || $user === null) {
             return null;
@@ -87,6 +97,10 @@ class ResolveStore
 
     private function isAdminRequest(Request $request): bool
     {
+        if ($this->isAdminApiRequest($request)) {
+            return true;
+        }
+
         $prefix = trim((string) config('tenancy.admin_path_prefix', 'admin'), '/');
 
         if ($request->is($prefix, $prefix.'/*') || $request->routeIs($prefix.'.*')) {
@@ -96,13 +110,20 @@ class ResolveStore
         return $request->is('livewire/update') && str_contains((string) $request->headers->get('referer'), '/admin');
     }
 
-    private function isPublicAdminAuthRequest(Request $request): bool
+    private function isAdminApiRequest(Request $request): bool
     {
-        return $request->is('admin/login', 'admin/forgot-password', 'admin/reset-password/*');
+        $prefix = trim((string) config('tenancy.admin_path_prefix', 'admin'), '/');
+
+        return $request->is('api/'.$prefix, 'api/'.$prefix.'/*');
     }
 
     private function isPublicCustomerAuthRequest(Request $request): bool
     {
         return $request->is('forgot-password', 'reset-password/*');
+    }
+
+    private function isPublicAdminAuthRequest(Request $request): bool
+    {
+        return $request->is('admin/login', 'admin/forgot-password', 'admin/reset-password/*');
     }
 }

@@ -79,7 +79,7 @@ test('line refunds restock only the refunded quantity', function (): void {
 
     $refund = app(RefundService::class)->create($order, $payment, [$line->getKey() => 1], 'Damaged item', true);
 
-    expect($refund->amount)->toBe($line->line_total_amount)
+    expect($refund->amount)->toBe(intdiv($line->line_total_amount, $line->quantity))
         ->and($inventory->refresh()->quantity_on_hand)->toBe($before + 1)
         ->and($order->refresh()->financial_status->value)->toBe('partially_refunded');
 });

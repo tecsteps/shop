@@ -4,23 +4,25 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
-class Customer extends Model implements Authenticatable
+class Customer extends Model implements Authenticatable, CanResetPasswordContract
 {
-    use AuthenticatableTrait, BelongsToStore, HasFactory, Notifiable;
+    use AuthenticatableTrait, BelongsToStore, CanResetPassword, HasFactory, Notifiable;
 
-    protected $fillable = ['store_id', 'first_name', 'last_name', 'email', 'password_hash', 'status', 'email_verified_at', 'metadata'];
+    protected $fillable = ['store_id', 'first_name', 'last_name', 'name', 'email', 'password_hash', 'status', 'marketing_opt_in', 'email_verified_at', 'metadata'];
 
     protected $hidden = ['password_hash', 'remember_token'];
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'metadata' => 'array', 'password_hash' => 'hashed'];
+        return ['email_verified_at' => 'datetime', 'marketing_opt_in' => 'boolean', 'metadata' => 'array', 'password_hash' => 'hashed'];
     }
 
     public function getAuthPasswordName(): string

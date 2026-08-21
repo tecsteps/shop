@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\StoreStatus;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,12 +22,17 @@ class StoreFactory extends Factory
             'organization_id' => Organization::factory(),
             'name' => fake()->company().' Store',
             'handle' => fake()->unique()->slug(2),
-            'status' => 'active',
-            'default_currency' => 'USD',
+            'status' => StoreStatus::Active,
+            'default_currency' => 'EUR',
             'default_locale' => 'en',
-            'timezone' => 'UTC',
+            'timezone' => 'Europe/Berlin',
             'primary_domain' => null,
             'metadata' => [],
         ];
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(['status' => StoreStatus::Suspended]);
     }
 }

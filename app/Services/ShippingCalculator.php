@@ -14,15 +14,25 @@ class ShippingCalculator
         $country = strtoupper((string) ($address['country_code'] ?? ''));
         $region = strtoupper((string) ($address['province_code'] ?? ''));
 
-        return ShippingRate::query()->where('is_active', true)->whereHas('zone', function ($query) use ($store, $country, $region): void {
-            $query->where('store_id', $store->getKey())->where(function ($zone) use ($country, $region): void {
-                $zone->whereJsonContains('countries_json', $country)->orWhereNull('countries_json');
+        $rates = ShippingRate::query()->where('is_active', true)->whereHas('zone', fn ($query) => $query->where('store_id', $store->getKey()))->with('zone')->get();
 
-                if ($region !== '') {
-                    $zone->orWhereJsonContains('regions_json', $region);
-                }
-            });
-        })->with('zone')->get();
+        $matching = $rates->filter(function (ShippingRate $rate) use ($country, $region): bool {
+            $countries = array_map('strtoupper', $rate->zone->countries_json ?? []);
+            $regions = array_map('strtoupper', $rate->zone->regions_json ?? []);
+
+            return ($region !== '' && in_array($region, $regions, true))
+                || ($country !== '' && in_array($country, $countries, true))
+                || ($countries === [] && $regions === []);
+        });
+
+        $specificity = $matching->groupBy(function (ShippingRate $rate) use ($country, $region): int {
+            $countries = array_map('strtoupper', $rate->zone->countries_json ?? []);
+            $regions = array_map('strtoupper', $rate->zone->regions_json ?? []);
+
+            return ($region !== '' && in_array($region, $regions, true)) ? 2 : (($country !== '' && in_array($country, $countries, true)) ? 1 : 0);
+        });
+
+        return $specificity->sortKeysDesc()->first() ?? collect();
     }
 
     public function calculate(ShippingRate $rate, Cart $cart): int
@@ -48,6 +58,6 @@ class ShippingCalculator
             }
         }
 
-        return $fallback;
+        return 0;
     }
 }

@@ -56,6 +56,7 @@ class FulfillmentService
 
         $fulfillment->update(array_merge($tracking ?? [], ['status' => 'shipped', 'shipped_at' => now(), 'fulfilled_at' => now()]));
         FulfillmentShipped::dispatch($fulfillment->refresh());
+        $this->refreshOrderStatus($fulfillment->load('order')->order);
     }
 
     public function markAsDelivered(Fulfillment $fulfillment): void
@@ -69,7 +70,7 @@ class FulfillmentService
         FulfillmentDelivered::dispatch($fulfillment);
 
         if ($fulfillment->order !== null) {
-            $fulfillment->order->update(['status' => 'fulfilled']);
+            $this->refreshOrderStatus($fulfillment->order);
         }
     }
 
@@ -78,7 +79,7 @@ class FulfillmentService
         $order->load(['lines', 'fulfillments.lines']);
         $fulfilledQuantities = [];
 
-        foreach ($order->fulfillments as $fulfillment) {
+        foreach ($order->fulfillments->whereIn('status', ['shipped', 'delivered']) as $fulfillment) {
             foreach ($fulfillment->lines as $line) {
                 $fulfilledQuantities[$line->order_line_id] = ($fulfilledQuantities[$line->order_line_id] ?? 0) + $line->quantity;
             }
@@ -91,6 +92,8 @@ class FulfillmentService
         if ($fulfilled) {
             $order->update(['status' => OrderStatus::Fulfilled]);
             OrderFulfilled::dispatch($order->refresh());
+        } elseif ($order->status === OrderStatus::Fulfilled) {
+            $order->update(['status' => OrderStatus::Paid]);
         }
     }
 }

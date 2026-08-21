@@ -2,4 +2,5 @@
 
 return [
     'bank_transfer_expiry_days' => (int) env('BANK_TRANSFER_EXPIRY_DAYS', 7),
+    'order_prefix' => env('ORDER_PREFIX', '#'),
 ];

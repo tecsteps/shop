@@ -15,14 +15,17 @@ beforeEach(function (): void {
 });
 
 test('store members can use the versioned admin catalog API', function (): void {
-    $this->actingAs($this->admin)
+    $token = $this->admin->createToken('catalog-manager', ['read-products', 'write-collections'])->plainTextToken;
+
+    $this->withToken($token)
         ->getJson("http://shop.test/api/admin/v1/stores/{$this->store->getKey()}/products")
         ->assertOk()
-        ->assertJsonPath('meta.total', 5);
+        ->assertJsonPath('meta.total', 20);
 
-    $this->actingAs($this->admin)
+    $this->withToken($token)
         ->postJson("http://shop.test/api/admin/v1/stores/{$this->store->getKey()}/collections", [
             'title' => 'API Collection',
+            'type' => 'manual',
             'product_ids' => [],
         ])
         ->assertCreated()
@@ -31,8 +34,9 @@ test('store members can use the versioned admin catalog API', function (): void 
 
 test('admin API rejects a store id outside the current tenant', function (): void {
     $otherStore = Store::factory()->create();
+    $token = $this->admin->createToken('catalog-reader', ['read-products'])->plainTextToken;
 
-    $this->actingAs($this->admin)
+    $this->withToken($token)
         ->getJson("http://shop.test/api/admin/v1/stores/{$otherStore->getKey()}/products")
-        ->assertNotFound();
+        ->assertForbidden();
 });

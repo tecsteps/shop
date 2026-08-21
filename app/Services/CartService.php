@@ -152,7 +152,7 @@ class CartService
             }
 
             $guest->update(['status' => 'abandoned']);
-            session()->forget('cart_id_'.$guest->store_id);
+            session()->forget(['cart_id_'.$guest->store_id, 'cart_id']);
         });
 
         return $customer->refresh()->load('lines');

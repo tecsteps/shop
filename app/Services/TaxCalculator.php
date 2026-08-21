@@ -2,19 +2,18 @@
 
 namespace App\Services;
 
+use App\Contracts\TaxProvider;
 use App\Models\TaxSettings;
-use App\ValueObjects\TaxLine;
+use App\ValueObjects\TaxCalculationRequest;
 use App\ValueObjects\TaxResult;
 
 class TaxCalculator
 {
+    public function __construct(private readonly ?TaxProvider $provider = null) {}
+
     public function calculate(int $amount, TaxSettings $settings, array $address): TaxResult
     {
-        $rates = $settings->rates_json ?? [];
-        $rate = (int) ($rates[strtoupper((string) ($address['country_code'] ?? ''))] ?? $settings->default_rate_basis_points);
-        $tax = $settings->prices_include_tax || $settings->mode === 'inclusive' ? $this->extractInclusive($amount, $rate) : $this->addExclusive($amount, $rate);
-
-        return new TaxResult($tax, $tax > 0 ? [new TaxLine('Sales tax', $rate, $tax)] : []);
+        return ($this->provider ?? new \App\Services\Tax\ManualTaxProvider)->calculate(new TaxCalculationRequest([['amount' => $amount]], 0, $address, $settings));
     }
 
     public function extractInclusive(int $grossAmount, int $rateBasisPoints): int

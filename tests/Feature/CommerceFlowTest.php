@@ -42,6 +42,7 @@ test('guest cart and card checkout create a paid order', function (): void {
             'last_name' => 'Tester',
             'address1' => '1 Test Street',
             'city' => 'Berlin',
+            'country' => 'Germany',
             'country_code' => 'DE',
             'postal_code' => '10115',
         ],
@@ -55,6 +56,9 @@ test('guest cart and card checkout create a paid order', function (): void {
     $this->postJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/pay", [
         'payment_method' => 'credit_card',
         'card_number' => '4242424242424242',
+        'card_expiry' => '12/28',
+        'card_cvc' => '123',
+        'card_holder' => 'Flow Tester',
     ])->assertOk()->assertJsonPath('order.financial_status', 'paid');
 
     $order = Order::query()->latest('id')->firstOrFail();
@@ -72,11 +76,11 @@ test('declined payments release the reservation and do not create an order', fun
     $cart = $this->postJson('http://shop.test/api/storefront/v1/carts')->json();
     $this->postJson("http://shop.test/api/storefront/v1/carts/{$cart['id']}/lines", ['variant_id' => $variant->getKey(), 'quantity' => 1, 'cart_version' => 1]);
     $checkout = $this->postJson('http://shop.test/api/storefront/v1/checkouts', ['cart_id' => $cart['id'], 'email' => 'declined@example.test'])->json();
-    $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/address", ['shipping_address' => ['first_name' => 'Declined', 'last_name' => 'Tester', 'address1' => '1 Test Street', 'city' => 'Berlin', 'country_code' => 'DE', 'postal_code' => '10115']]);
+    $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/address", ['shipping_address' => ['first_name' => 'Declined', 'last_name' => 'Tester', 'address1' => '1 Test Street', 'city' => 'Berlin', 'country' => 'Germany', 'country_code' => 'DE', 'postal_code' => '10115']]);
     $rate = ShippingRate::query()->firstOrFail();
     $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/shipping-method", ['shipping_method_id' => $rate->getKey()]);
 
-    $this->postJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/pay", ['payment_method' => 'credit_card', 'card_number' => '4000000000000002'])->assertUnprocessable();
+    $this->postJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/pay", ['payment_method' => 'credit_card', 'card_number' => '4000000000000002', 'card_expiry' => '12/28', 'card_cvc' => '123', 'card_holder' => 'Declined Tester'])->assertUnprocessable();
 
     expect(InventoryItem::query()->where('variant_id', $variant->getKey())->firstOrFail()->quantity_reserved)->toBe($inventoryBefore)
         ->and(Order::query()->where('email', 'declined@example.test')->exists())->toBeFalse();
@@ -90,12 +94,29 @@ test('stale cart versions return a conflict response', function (): void {
     $this->postJson("http://shop.test/api/storefront/v1/carts/{$cart['id']}/lines", ['variant_id' => $variant->getKey(), 'quantity' => 1, 'cart_version' => 1])->assertConflict();
 });
 
-test('guest cart API resources are bound to the current session', function (): void {
-    $firstCart = $this->postJson('http://shop.test/api/storefront/v1/carts')->assertCreated()->json();
-    $secondCart = $this->postJson('http://shop.test/api/storefront/v1/carts')->assertCreated()->json();
+test('guest cart ids authorize stateless access within the current tenant', function (): void {
+    $cart = $this->postJson('http://shop.test/api/storefront/v1/carts')->assertCreated()->json();
 
-    $this->getJson("http://shop.test/api/storefront/v1/carts/{$firstCart['id']}")->assertNotFound();
-    $this->getJson("http://shop.test/api/storefront/v1/carts/{$secondCart['id']}")->assertOk();
+    $this->flushSession();
+
+    $this->getJson("http://shop.test/api/storefront/v1/carts/{$cart['id']}")
+        ->assertOk()
+        ->assertJsonPath('id', $cart['id']);
+});
+
+test('guest cart ids cannot cross tenant boundaries', function (): void {
+    $otherStore = Store::factory()->create();
+    $otherCart = \App\Models\Cart::withoutEvents(fn (): \App\Models\Cart => \App\Models\Cart::withoutGlobalScopes()->create([
+        'store_id' => $otherStore->getKey(),
+        'currency' => 'USD',
+        'cart_version' => 1,
+        'status' => 'active',
+    ]));
+
+    $this->flushSession();
+
+    $this->getJson("http://shop.test/api/storefront/v1/carts/{$otherCart->getKey()}")
+        ->assertNotFound();
 });
 
 test('cart and checkout APIs return domain errors as unprocessable responses', function (): void {
@@ -122,7 +143,7 @@ test('bank transfer keeps inventory reserved until admin confirmation', function
     $cart = $this->postJson('http://shop.test/api/storefront/v1/carts')->json();
     $this->postJson("http://shop.test/api/storefront/v1/carts/{$cart['id']}/lines", ['variant_id' => $variant->getKey(), 'quantity' => 1, 'cart_version' => 1]);
     $checkout = $this->postJson('http://shop.test/api/storefront/v1/checkouts', ['cart_id' => $cart['id'], 'email' => 'bank@example.test'])->json();
-    $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/address", ['shipping_address' => ['first_name' => 'Bank', 'last_name' => 'Tester', 'address1' => '1 Test Street', 'city' => 'Berlin', 'country_code' => 'DE', 'postal_code' => '10115']]);
+    $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/address", ['shipping_address' => ['first_name' => 'Bank', 'last_name' => 'Tester', 'address1' => '1 Test Street', 'city' => 'Berlin', 'country' => 'Germany', 'country_code' => 'DE', 'postal_code' => '10115']]);
     $rate = ShippingRate::query()->firstOrFail();
     $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/shipping-method", ['shipping_method_id' => $rate->getKey()]);
 

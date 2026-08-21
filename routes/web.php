@@ -99,6 +99,9 @@ Route::post('/admin/logout', function (): \Illuminate\Http\RedirectResponse {
     return redirect()->route('admin.login');
 })->name('admin.logout');
 
+Route::get('/oauth/authorize', fn (): \Illuminate\Http\JsonResponse => response()->json(['message' => 'OAuth is not enabled in this deployment.'], 501))->middleware('auth')->name('oauth.authorize');
+Route::post('/oauth/token', fn (): \Illuminate\Http\JsonResponse => response()->json(['message' => 'OAuth is not enabled in this deployment.'], 501))->name('oauth.token');
+
 Route::prefix('admin')->middleware(['auth', 'verified', 'store.resolve', 'role.check:owner,admin,staff,support'])->group(function (): void {
     Route::livewire('/', AdminDashboard::class)->name('admin.dashboard');
     Route::livewire('/products', AdminProductsIndex::class)->name('admin.products.index');
@@ -112,21 +115,22 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'store.resolve', 'role.c
     Route::livewire('/discounts/create', AdminDiscountForm::class)->middleware('role.check:owner,admin,staff')->name('admin.discounts.create');
     Route::livewire('/discounts/{discount}/edit', AdminDiscountForm::class)->middleware('role.check:owner,admin,staff')->name('admin.discounts.edit');
     Route::livewire('/settings', AdminSettingsGeneral::class)->middleware('role.check:owner,admin')->name('admin.settings');
+    Route::livewire('/settings/domains', \App\Livewire\Admin\Settings\Domains::class)->middleware('role.check:owner,admin')->name('admin.settings.domains');
     Route::livewire('/settings/shipping', AdminSettingsShipping::class)->middleware('role.check:owner,admin')->name('admin.settings.shipping');
     Route::livewire('/settings/taxes', AdminSettingsTaxes::class)->middleware('role.check:owner,admin')->name('admin.settings.taxes');
-    Route::livewire('/inventory', AdminInventoryIndex::class)->name('admin.inventory');
-    Route::livewire('/collections', AdminCollectionsIndex::class)->name('admin.collections');
+    Route::livewire('/inventory', AdminInventoryIndex::class)->name('admin.inventory.index');
+    Route::livewire('/collections', AdminCollectionsIndex::class)->name('admin.collections.index');
     Route::livewire('/collections/create', AdminCollectionsCreate::class)->middleware('role.check:owner,admin,staff')->name('admin.collections.create');
     Route::livewire('/collections/{collection}/edit', AdminCollectionsEdit::class)->middleware('role.check:owner,admin,staff')->name('admin.collections.edit');
-    Route::livewire('/themes', AdminThemesIndex::class)->name('admin.themes');
+    Route::livewire('/themes', AdminThemesIndex::class)->name('admin.themes.index');
     Route::livewire('/themes/{theme}/editor', AdminThemesEditor::class)->name('admin.themes.editor');
-    Route::livewire('/pages', AdminPagesIndex::class)->name('admin.pages');
+    Route::livewire('/pages', AdminPagesIndex::class)->name('admin.pages.index');
     Route::livewire('/pages/create', AdminPagesCreate::class)->middleware('role.check:owner,admin')->name('admin.pages.create');
     Route::livewire('/pages/{page}/edit', AdminPagesEdit::class)->middleware('role.check:owner,admin')->name('admin.pages.edit');
-    Route::livewire('/navigation', AdminNavigationIndex::class)->name('admin.navigation');
-    Route::livewire('/apps', AdminAppsIndex::class)->name('admin.apps');
+    Route::livewire('/navigation', AdminNavigationIndex::class)->name('admin.navigation.index');
+    Route::livewire('/apps', AdminAppsIndex::class)->name('admin.apps.index');
     Route::livewire('/apps/{installation}', AdminAppsShow::class)->name('admin.apps.show');
-    Route::livewire('/developers', AdminDevelopersIndex::class)->name('admin.developers');
-    Route::livewire('/analytics', AdminAnalyticsIndex::class)->name('admin.analytics');
+    Route::livewire('/developers', AdminDevelopersIndex::class)->middleware('role.check:owner,admin')->name('admin.developers.index');
+    Route::livewire('/analytics', AdminAnalyticsIndex::class)->name('admin.analytics.index');
     Route::livewire('/search/settings', AdminSearchSettings::class)->name('admin.search.settings');
 });
