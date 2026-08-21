@@ -13,6 +13,8 @@ class Show extends Component
 
     public int $selectedVariantId;
 
+    public ?int $selectedMediaId = null;
+
     /** @var array<int, int> */
     public array $selectedOptions = [];
 
@@ -25,6 +27,7 @@ class Show extends Component
         $this->product = Product::query()->with(['variants.inventory', 'variants.optionValues', 'media', 'options.values'])->where('handle', $handle)->firstOrFail();
         abort_unless($this->product->status->value === 'active', 404);
         $this->selectedVariantId = $this->product->defaultVariant()?->getKey() ?? 0;
+        $this->selectedMediaId = $this->product->media->first()?->getKey();
         $default = $this->product->defaultVariant();
         $this->selectedOptions = $default?->optionValues->mapWithKeys(fn ($value): array => [$value->product_option_id => $value->getKey()])->all() ?? [];
     }
@@ -48,6 +51,13 @@ class Show extends Component
         abort_unless($this->product->variants->contains('id', $variantId), 404);
 
         $this->selectedVariantId = $variantId;
+    }
+
+    public function selectMedia(int $mediaId): void
+    {
+        abort_unless($this->product->media->contains('id', $mediaId), 404);
+
+        $this->selectedMediaId = $mediaId;
     }
 
     public function selectOption(int $optionId, int $valueId): void

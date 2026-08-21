@@ -6,7 +6,7 @@ use App\Enums\PaymentStatus;
 
 readonly class PaymentResult
 {
-    public function __construct(public PaymentStatus $status, public string $reference, public string $message = '') {}
+    public function __construct(public PaymentStatus $status, public string $reference, public string $message = '', public ?string $errorCode = null) {}
 
     public function isSuccessful(): bool
     {

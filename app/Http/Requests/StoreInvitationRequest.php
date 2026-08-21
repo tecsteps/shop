@@ -23,7 +23,7 @@ class StoreInvitationRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'max:255'],
-            'role' => ['required', 'in:owner,admin,staff,support'],
+            'role' => ['required', 'in:admin,staff,support'],
         ];
     }
 }

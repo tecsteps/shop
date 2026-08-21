@@ -22,6 +22,6 @@ class StoreThemeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['name' => ['required', 'string', 'max:255'], 'version' => ['nullable', 'string', 'max:30'], 'settings' => ['nullable', 'array']];
+        return ['file' => ['required', 'file', 'mimes:zip', 'max:51200'], 'name' => ['nullable', 'string', 'max:255']];
     }
 }

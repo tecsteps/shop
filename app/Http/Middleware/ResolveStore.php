@@ -26,6 +26,10 @@ class ResolveStore
             return $next($request);
         }
 
+        if ($this->isAdminRequest($request) && $request->user('web') === null && $request->user('sanctum') === null) {
+            return $next($request);
+        }
+
         if ($this->isAdminApiRequest($request) && $request->user('sanctum') === null) {
             return $next($request);
         }
@@ -107,7 +111,7 @@ class ResolveStore
             return true;
         }
 
-        return $request->is('livewire/update') && str_contains((string) $request->headers->get('referer'), '/admin');
+        return $request->is('livewire/update', 'livewire-*/update') && str_contains((string) $request->headers->get('referer'), '/admin');
     }
 
     private function isAdminApiRequest(Request $request): bool
@@ -124,6 +128,10 @@ class ResolveStore
 
     private function isPublicAdminAuthRequest(Request $request): bool
     {
-        return $request->is('admin/login', 'admin/forgot-password', 'admin/reset-password/*');
+        $path = $request->is('livewire/update', 'livewire-*/update')
+            ? trim((string) parse_url((string) $request->headers->get('referer'), PHP_URL_PATH), '/')
+            : trim($request->path(), '/');
+
+        return Str::is(['admin/login', 'admin/forgot-password', 'admin/reset-password/*'], $path);
     }
 }

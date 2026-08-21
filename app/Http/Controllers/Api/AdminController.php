@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\ProductStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFulfillmentRequest;
+use App\Http\Requests\CreateOrderExportRequest;
 use App\Http\Requests\CreateRefundRequest;
 use App\Http\Requests\StoreCollectionRequest;
 use App\Http\Requests\StoreDiscountRequest;
@@ -20,10 +21,12 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Requests\UpdateShippingZoneRequest;
 use App\Http\Requests\UpdateTaxSettingsRequest;
 use App\Http\Requests\UpdateThemeSettingsRequest;
+use App\Jobs\GenerateOrderExport;
 use App\Models\Collection;
 use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Order;
+use App\Models\OrderExport;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\ShippingRate;
@@ -34,9 +37,12 @@ use App\Services\FulfillmentService;
 use App\Services\ProductService;
 use App\Services\RefundService;
 use App\Services\SearchService;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -241,7 +247,11 @@ class AdminController extends Controller
         ShippingZone::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($zoneId);
         $data = $request->validated();
 
-        return response()->json(['data' => ShippingRate::create([...$data, 'shipping_zone_id' => $zoneId, 'is_active' => $data['is_active'] ?? true])], 201);
+        $config = $data['config_json'];
+        $price = (int) ($data['price_amount'] ?? $config['price_amount'] ?? 0);
+        $currency = $data['currency'] ?? $config['currency'] ?? app('current_store')->default_currency;
+
+        return response()->json(['data' => ShippingRate::create([...$data, 'shipping_zone_id' => $zoneId, 'price_amount' => $price, 'currency' => $currency, 'config_json' => $config, 'is_active' => $data['is_active'] ?? true])], 201);
     }
 
     public function taxSettings(int $storeId): JsonResponse
@@ -255,7 +265,7 @@ class AdminController extends Controller
     {
         $this->assertStore($storeId);
         $data = $request->validated();
-        $settings = TaxSettings::withoutGlobalScopes()->updateOrCreate(['store_id' => $storeId], $data);
+        $settings = TaxSettings::withoutGlobalScopes()->updateOrCreate(['store_id' => $storeId], [...$data, 'provider_config_json' => $data['config_json']]);
 
         return response()->json(['data' => $settings]);
     }
@@ -301,8 +311,33 @@ class AdminController extends Controller
     {
         $this->assertStore($storeId);
         $data = $request->validated();
-        $theme = Theme::withoutGlobalScopes()->create(['store_id' => $storeId, 'name' => $data['name'], 'version' => $data['version'] ?? null, 'status' => 'draft']);
-        $theme->settings()->create(['settings_json' => $data['settings'] ?? []]);
+        /** @var UploadedFile $file */
+        $file = $request->file('file');
+        $archive = new \ZipArchive;
+        abort_unless($archive->open($file->getRealPath()) === true, 422, 'The theme archive is invalid.');
+        $manifest = [];
+        $paths = [];
+
+        for ($index = 0; $index < $archive->numFiles; $index++) {
+            $path = $archive->getNameIndex($index);
+            abort_if($path === false || str_contains($path, '..') || str_starts_with($path, '/'), 422, 'The theme archive contains an invalid path.');
+            if (! str_ends_with($path, '/')) {
+                $paths[] = $path;
+            }
+            if ($path === 'theme.json') {
+                $manifest = json_decode((string) $archive->getFromIndex($index), true) ?: [];
+            }
+        }
+        abort_if($paths === [], 422, 'The theme archive is empty.');
+        abort_if($manifest === [] || ! is_string($manifest['name'] ?? null) || ! is_string($manifest['version'] ?? null), 422, 'The theme archive has an invalid manifest.');
+        abort_if(! collect($paths)->contains(fn (string $path): bool => str_starts_with($path, 'templates/') || str_ends_with($path, '.blade.php')), 422, 'The theme archive is missing storefront templates.');
+        $theme = Theme::withoutGlobalScopes()->create(['store_id' => $storeId, 'name' => $data['name'] ?? ($manifest['name'] ?? 'Uploaded theme'), 'version' => $manifest['version'] ?? '1.0.0', 'status' => 'draft']);
+        foreach ($paths as $path) {
+            $contents = $archive->getFromName($path);
+            $theme->files()->create(['path' => $path, 'storage_key' => 'themes/'.$theme->getKey().'/'.$path, 'sha256' => hash('sha256', (string) $contents), 'byte_size' => strlen((string) $contents), 'content' => $contents]);
+        }
+        $archive->close();
+        $theme->settings()->create(['settings_json' => []]);
 
         return response()->json(['data' => $theme->load('settings')], 201);
     }
@@ -312,7 +347,7 @@ class AdminController extends Controller
         $this->assertStore($storeId);
         $theme = Theme::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($themeId);
         Theme::withoutGlobalScopes()->where('store_id', $storeId)->update(['status' => 'draft']);
-        $theme->update(['status' => 'published']);
+        $theme->update(['status' => 'published', 'published_at' => now()]);
 
         return response()->json(['data' => $theme->refresh()]);
     }
@@ -321,7 +356,7 @@ class AdminController extends Controller
     {
         $this->assertStore($storeId);
         $theme = Theme::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($themeId);
-        $theme->settings()->updateOrCreate(['theme_id' => $theme->getKey()], ['settings_json' => $request->validated()['settings']]);
+        $theme->settings()->updateOrCreate(['theme_id' => $theme->getKey()], ['settings_json' => $request->validated()['settings_json']]);
 
         return response()->json(['data' => $theme->refresh()->load('settings')]);
     }
@@ -344,9 +379,35 @@ class AdminController extends Controller
     public function analyticsSummary(Request $request, int $storeId): JsonResponse
     {
         $this->assertStore($storeId);
-        $days = \App\Models\AnalyticsDaily::withoutGlobalScopes()->where('store_id', $storeId)->whereBetween('date', [$request->input('from', now()->subDays(29)->toDateString()), $request->input('to', now()->toDateString())])->get();
+        $data = $request->validate(['from' => ['required', 'date_format:Y-m-d'], 'to' => ['required', 'date_format:Y-m-d', 'after_or_equal:from'], 'granularity' => ['sometimes', 'in:day,week,month']]);
+        $from = CarbonImmutable::createFromFormat('Y-m-d', $data['from'])->startOfDay();
+        $to = CarbonImmutable::createFromFormat('Y-m-d', $data['to'])->endOfDay();
+        abort_if($from->diffInDays($to) > 365, 422, 'The analytics range may not exceed 365 days.');
+        $days = \App\Models\AnalyticsDaily::withoutGlobalScopes()->where('store_id', $storeId)->whereBetween('date', [$from->toDateString(), $to->toDateString()])->orderBy('date')->get();
+        $orders = (int) $days->sum('orders_count');
+        $revenue = (int) $days->sum('revenue_amount');
+        $visits = (int) $days->sum('visits_count');
+        $topProducts = DB::table('order_lines')->join('orders', 'orders.id', '=', 'order_lines.order_id')->where('orders.store_id', $storeId)->whereBetween('orders.placed_at', [$from, $to])->whereIn('orders.financial_status', ['paid', 'partially_refunded'])->select('order_lines.product_id', 'order_lines.product_title as title')->selectRaw('sum(order_lines.quantity) as units_sold')->selectRaw('sum(order_lines.line_total_amount) as revenue_amount')->groupBy('order_lines.product_id', 'order_lines.product_title')->orderByDesc('units_sold')->limit(10)->get();
 
-        return response()->json(['data' => ['visits' => (int) $days->sum('visits_count'), 'orders' => (int) $days->sum('orders_count'), 'revenue_amount' => (int) $days->sum('revenue_amount'), 'checkout_completed' => (int) $days->sum('checkout_completed_count'), 'days' => $days]]);
+        return response()->json(['data' => ['period' => ['from' => $from->toDateString(), 'to' => $to->toDateString()], 'summary' => ['orders_count' => $orders, 'revenue_amount' => $revenue, 'aov_amount' => $orders > 0 ? intdiv($revenue, $orders) : 0, 'visits_count' => $visits, 'add_to_cart_count' => (int) $days->sum('add_to_cart_count'), 'checkout_started_count' => (int) $days->sum('checkout_started_count'), 'conversion_rate' => $visits > 0 ? round($orders / $visits, 4) : 0, 'currency' => app('current_store')->default_currency], 'daily' => $days, 'top_products' => $topProducts]]);
+    }
+
+    public function createOrderExport(CreateOrderExportRequest $request, int $storeId): JsonResponse
+    {
+        $this->assertStore($storeId);
+        $data = $request->validated();
+        $export = OrderExport::withoutGlobalScopes()->create(['store_id' => $storeId, 'format' => $data['format'] ?? 'csv', 'filters_json' => $data['filters'] ?? [], 'status' => 'queued']);
+        GenerateOrderExport::dispatch($export);
+
+        return response()->json(['export_id' => $export->getKey(), 'status' => 'queued', 'created_at' => $export->created_at], 202);
+    }
+
+    public function showOrderExport(int $storeId, int $exportId): JsonResponse
+    {
+        $this->assertStore($storeId);
+        $export = OrderExport::withoutGlobalScopes()->where('store_id', $storeId)->findOrFail($exportId);
+
+        return response()->json(['data' => ['id' => $export->getKey(), 'status' => $export->status, 'format' => $export->format, 'row_count' => $export->row_count, 'download_url' => $export->download_url, 'download_expires_at' => $export->download_expires_at, 'created_at' => $export->created_at, 'completed_at' => $export->completed_at, 'error_message' => $export->error_message]]);
     }
 
     private function assertStore(int $storeId): void

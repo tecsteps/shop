@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\PaymentMethod;
 use App\Exceptions\InsufficientInventoryException;
 use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\PaymentDeclinedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplyDiscountRequest;
 use App\Http\Requests\SetCheckoutAddressRequest;
@@ -25,7 +26,7 @@ class StorefrontCheckoutController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate(['cart_id' => ['required', 'integer'], 'email' => ['required', 'email']]);
-        $cart = Cart::query()->with('lines')->findOrFail($data['cart_id']);
+        $cart = Cart::query()->where('status', 'active')->with('lines')->findOrFail($data['cart_id']);
         $customerId = $request->user('customer')?->getKey();
         if ($customerId !== null) {
             abort_unless((int) $cart->customer_id === (int) $customerId, 404);
@@ -58,7 +59,9 @@ class StorefrontCheckoutController extends Controller
         try {
             $checkout = $this->checkouts->setAddress($checkout, $data['shipping_address'] ?? [], $data['billing_address'] ?? null, $useShippingAsBilling);
         } catch (\LogicException $exception) {
-            return response()->json(['message' => $exception->getMessage(), 'code' => 'checkout_state_invalid'], 422);
+            return response()->json(['message' => $exception->getMessage(), 'code' => 'checkout_state_invalid'], 409);
+        } catch (PaymentDeclinedException $exception) {
+            return response()->json(['message' => $exception->getMessage(), 'error_code' => $exception->errorCode], 422);
         }
 
         return response()->json($this->payload($checkout));
@@ -114,15 +117,20 @@ class StorefrontCheckoutController extends Controller
             $order = $this->payments->pay($checkout, PaymentMethod::from($data['payment_method']), $data);
         } catch (InsufficientInventoryException $exception) {
             return response()->json(['message' => $exception->getMessage(), 'code' => 'insufficient_inventory'], 422);
+        } catch (PaymentDeclinedException $exception) {
+            return response()->json(['message' => $exception->getMessage(), 'error_code' => $exception->errorCode], 422);
         } catch (\LogicException $exception) {
             return response()->json(['message' => $exception->getMessage(), 'code' => 'checkout_state_invalid'], 422);
         }
 
-        if ($order === null) {
-            return response()->json(['message' => 'Payment failed.', 'code' => 'payment_failed'], 422);
+        $order = $order->load('checkout');
+        $payload = ['checkout_id' => $order->checkout_id, 'status' => 'completed', 'order' => ['id' => $order->id, 'order_number' => $order->order_number, 'status' => $order->status, 'financial_status' => $order->financial_status, 'payment_method' => $order->payment_method, 'total_amount' => $order->total_amount, 'currency' => $order->currency]];
+
+        if ($order->financial_status->value === 'pending') {
+            $payload['bank_transfer_instructions'] = ['bank_name' => 'Mock Bank AG', 'iban' => 'DE89 3704 0044 0532 0130 00', 'bic' => 'COBADEFFXXX', 'reference' => $order->order_number, 'amount_formatted' => number_format($order->total_amount / 100, 2, '.', '').' '.$order->currency];
         }
 
-        return response()->json(['order' => ['id' => $order->id, 'order_number' => $order->order_number, 'status' => $order->status, 'financial_status' => $order->financial_status, 'total_amount' => $order->total_amount], 'message' => $order->financial_status->value === 'pending' ? 'Bank transfer instructions generated.' : 'Order confirmed.']);
+        return response()->json($payload);
     }
 
     public function paymentMethod(Request $request, int $checkoutId): JsonResponse

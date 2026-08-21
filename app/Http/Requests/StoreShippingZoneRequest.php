@@ -22,6 +22,6 @@ class StoreShippingZoneRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['name' => ['required', 'string', 'max:255'], 'countries_json' => ['nullable', 'array'], 'regions_json' => ['nullable', 'array']];
+        return ['name' => ['required', 'string', 'max:255'], 'countries_json' => ['required', 'array', 'min:1'], 'countries_json.*' => ['required', 'string', 'size:2', 'uppercase'], 'regions_json' => ['nullable', 'array'], 'regions_json.*' => ['string', 'max:20']];
     }
 }

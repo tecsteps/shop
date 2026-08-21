@@ -12,6 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo(function (\Illuminate\Http\Request $request): string {
+            if ($request->is('admin/*') || $request->is('admin')) {
+                return route('admin.login');
+            }
+
+            if ($request->is('account/*') || $request->is('account')) {
+                return route('account.login');
+            }
+
+            return url('/login');
+        });
+
         $middleware->prependToPriorityList(
             before: \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
             prepend: App\Http\Middleware\ResolveStore::class,

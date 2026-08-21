@@ -101,3 +101,13 @@ test('admin requests reject a session store without membership', function () {
         ->get('/admin/tenant-resolution-test')
         ->assertForbidden();
 });
+
+test('admin auth livewire updates do not require a resolved store', function () {
+    $request = \Illuminate\Http\Request::create('/livewire-test123/update', 'POST', [], [], [], [
+        'HTTP_REFERER' => 'http://admin.example.test/admin/login',
+    ]);
+
+    expect(app(\App\Http\Middleware\ResolveStore::class)->handle($request, fn (): \Symfony\Component\HttpFoundation\Response => response('ok')))
+        ->getContent()
+        ->toBe('ok');
+});

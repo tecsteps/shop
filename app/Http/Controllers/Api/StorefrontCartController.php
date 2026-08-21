@@ -86,6 +86,7 @@ class StorefrontCartController extends Controller
     {
         $cart = Cart::query()
             ->where('store_id', app('current_store')->getKey())
+            ->where('status', 'active')
             ->with(['lines.variant.product.media', 'lines.variant.inventory'])
             ->findOrFail($cartId);
         $customerId = request()->user('customer')?->getKey();

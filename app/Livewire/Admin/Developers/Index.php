@@ -45,7 +45,11 @@ class Index extends Component
             'tokenExpiresAt' => ['nullable', 'date', 'after:today'],
             'tokenAbilities' => ['required', 'string', 'max:1000'],
         ]);
-        $allowed = ['manage-platform', 'read-products', 'write-products', 'read-orders', 'write-orders', 'read-customers', 'write-customers', 'read-collections', 'write-collections', 'read-discounts', 'write-discounts', 'read-analytics', 'read-settings', 'write-settings', 'read-themes', 'write-themes', 'read-content', 'write-content'];
+        $allowed = ['read-products', 'write-products', 'read-orders', 'write-orders', 'read-customers', 'write-customers', 'read-collections', 'write-collections', 'read-discounts', 'write-discounts', 'read-analytics', 'read-settings', 'write-settings', 'read-themes', 'write-themes', 'read-content', 'write-content'];
+
+        if (auth()->user()?->isPlatformAdmin()) {
+            $allowed[] = 'manage-platform';
+        }
         $abilities = array_values(array_intersect($allowed, array_filter(array_map('trim', explode(',', $data['tokenAbilities'])))));
         abort_if($abilities === [], 422, 'Select at least one token ability.');
         $expiresAt = empty($data['tokenExpiresAt']) ? null : CarbonImmutable::parse($data['tokenExpiresAt']);

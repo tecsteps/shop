@@ -34,6 +34,19 @@ test('search is tenant scoped, paginated, and logs the query', function (): void
         ->and(SearchQuery::query()->where('query', 'classic')->count())->toBe(1);
 });
 
+test('storefront search exposes the documented result and pagination contract', function (): void {
+    $this->getJson('http://shop.test/api/storefront/v1/search?q=classic')
+        ->assertOk()
+        ->assertJsonPath('query', 'classic')
+        ->assertJsonPath('results.0.handle', 'classic-cotton-t-shirt')
+        ->assertJsonStructure(['results', 'facets', 'pagination' => ['current_page', 'total']]);
+
+    $this->getJson('http://shop.test/api/storefront/v1/search/suggest?q=c')
+        ->assertOk()
+        ->assertJsonPath('query', 'c')
+        ->assertJsonStructure(['suggestions']);
+});
+
 test('product changes are synchronized to the FTS index and autocomplete', function (): void {
     $product = Product::query()->where('handle', 'classic-cotton-t-shirt')->firstOrFail();
     $product->update(['title' => 'Classic Cotton Tee']);
@@ -47,7 +60,7 @@ test('analytics events aggregate idempotently into daily metrics', function (): 
     $analytics = new AnalyticsService;
 
     foreach (['page_view', 'page_view', 'add_to_cart', 'checkout_started'] as $type) {
-        $event = $analytics->track($this->store, $type, ['source' => 'test'], 'session-1');
+        $event = $analytics->track($this->store, $type, ['source' => 'test'], 'session-1', null, null, $date);
         $event->forceFill(['created_at' => $date])->save();
     }
 
@@ -59,7 +72,7 @@ test('analytics events aggregate idempotently into daily metrics', function (): 
     expect($daily->visits_count)->toBe(2)
         ->and($daily->add_to_cart_count)->toBe(1)
         ->and($daily->checkout_started_count)->toBe(1)
-        ->and(AnalyticsEvent::query()->where('store_id', $this->store->getKey())->count())->toBe(4);
+        ->and(AnalyticsEvent::query()->where('store_id', $this->store->getKey())->count())->toBe(5);
 });
 
 test('webhooks are signed and delivered with platform headers', function (): void {

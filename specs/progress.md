@@ -15,16 +15,16 @@ The self-contained multi-tenant shop is implemented across the database, commerc
 
 ## Verification
 
-- `php artisan test --compact`: 87 passing tests, 296 assertions.
+- `php artisan test --compact`: 95 passing tests, 326 assertions.
 - `vendor/bin/pint --dirty --format agent`: passing.
 - PHP lint across application, database, routes, configuration, bootstrap, and tests: passing.
-- `php artisan migrate:status --no-interaction`: all migrations applied, including tenant-scoped password reset tokens, webhook contract alignment, normalized theme settings, and store invitations.
+- `php artisan migrate:status --no-interaction`: all migrations applied, including tenant-scoped password reset tokens, webhook contract alignment, normalized theme settings, store invitations, order exports, platform-admin flags, and encrypted payment payload storage.
 - `php artisan view:cache --no-interaction`: passing.
 - `npm run build`: passing.
-- Playwright MCP browser smoke checks: storefront home, product detail, cart drawer, collections, search, cart, responsive mobile layout, admin login/dashboard/products/orders/developers/settings, Flux domain modal, and mobile admin navigation; no application console errors observed.
+- Playwright MCP browser smoke checks: storefront home, product detail, cart drawer quantity updates and checkout navigation, collections, search suggestions, responsive mobile navigation, dark mode, admin login/dashboard/products/orders/settings, and tenant-correct storefront/admin hosts; no application console errors observed.
 - The Pest browser plugin is not installed and dependencies were intentionally left unchanged; the browser coverage above was executed manually through Playwright MCP.
 
 ## Final audit
 
-- Independent read-only audit found and closed platform API, nested product persistence, media processing, webhook contract, and domain settings gaps.
-- Follow-up read-only verification confirmed the residual media lifecycle and nested product response findings are resolved.
+- Independent read-only audits found and closed platform API, nested product persistence, media processing, webhook contract, domain settings, authentication, checkout, analytics, and storefront interaction gaps.
+- Final browser verification also corrected Livewire admin-auth tenant resolution and confirmed the corrected flow end to end.

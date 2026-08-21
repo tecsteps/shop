@@ -29,7 +29,7 @@ class PaymentFactory extends Factory
             'status' => PaymentStatus::Captured,
             'amount' => fake()->numberBetween(999, 99999),
             'currency' => 'EUR',
-            'raw_json_encrypted' => null,
+            'raw_json' => [],
         ];
     }
 

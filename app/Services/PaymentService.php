@@ -6,6 +6,7 @@ use App\Contracts\PaymentProvider;
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
+use App\Exceptions\PaymentDeclinedException;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\Order;
@@ -18,7 +19,8 @@ class PaymentService
 
     public function pay(Checkout $checkout, PaymentMethod $method, array $details = []): ?Order
     {
-        return DB::transaction(function () use ($checkout, $method, $details): ?Order {
+        $declined = null;
+        $order = DB::transaction(function () use ($checkout, $method, $details, &$declined): ?Order {
             $existing = Order::withoutGlobalScopes()->where('checkout_id', $checkout->getKey())->first();
 
             if ($existing !== null) {
@@ -43,18 +45,31 @@ class PaymentService
                 }
 
                 $checkout->update(['status' => CheckoutStatus::ShippingSelected]);
+                $declined = $result;
 
                 return null;
             }
 
             $order = $this->orders->createFromCheckout($checkout, $result);
-            Payment::create(['order_id' => $order->getKey(), 'provider' => 'mock', 'provider_payment_id' => $result->reference, 'method' => $method, 'status' => $result->status, 'amount' => $order->total_amount, 'currency' => $order->currency, 'raw_json_encrypted' => json_encode(['reference' => $result->reference, 'message' => $result->message])]);
+            Payment::create(['order_id' => $order->getKey(), 'provider' => 'mock', 'provider_payment_id' => $result->reference, 'method' => $method, 'status' => $result->status, 'amount' => $order->total_amount, 'currency' => $order->currency, 'raw_json' => ['reference' => $result->reference, 'message' => $result->message]]);
 
-            if ($checkout->discount_code !== null) {
-                Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->whereRaw('lower(code) = ?', [strtolower($checkout->discount_code)])->increment('usage_count');
+            $discountIds = collect($checkout->totals_json['discount_allocations'] ?? [])
+                ->flatMap(fn (array $allocations): array => $allocations)
+                ->pluck('discount_id')
+                ->filter()
+                ->unique();
+
+            if ($discountIds->isNotEmpty()) {
+                Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->whereIn('id', $discountIds)->increment('usage_count');
             }
 
             return $order->refresh()->load(['lines', 'payments']);
         });
+
+        if ($declined !== null) {
+            throw new PaymentDeclinedException($declined->errorCode ?? 'payment_failed', $declined->message ?: 'Payment failed.');
+        }
+
+        return $order;
     }
 }

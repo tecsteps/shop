@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\Schema;
 
 class SearchService
 {
-    public function search(Store $store, string $query, array $filters = [], int $perPage = 12): LengthAwarePaginator
+    public function search(Store $store, string $query, array $filters = [], int $perPage = 24, int $page = 1, string $sort = 'relevance'): LengthAwarePaginator
     {
+        $minimumPrice = $filters['price_min'] ?? $filters['min_price'] ?? null;
+        $maximumPrice = $filters['price_max'] ?? $filters['max_price'] ?? null;
         $products = Product::withoutGlobalScopes()
             ->published()
             ->where('store_id', $store->getKey())
@@ -27,11 +29,21 @@ class SearchService
                 }
             })
             ->when($filters['vendor'] ?? null, fn (Builder $builder, string $vendor): Builder => $builder->where('vendor', $vendor))
-            ->when(isset($filters['min_price']), fn (Builder $builder): Builder => $builder->whereHas('variants', fn (Builder $variants): Builder => $variants->where('price_amount', '>=', (int) $filters['min_price'])))
-            ->when(isset($filters['max_price']), fn (Builder $builder): Builder => $builder->whereHas('variants', fn (Builder $variants): Builder => $variants->where('price_amount', '<=', (int) $filters['max_price'])))
+            ->when(isset($filters['collection_id']), fn (Builder $builder): Builder => $builder->whereHas('collections', fn (Builder $collections): Builder => $collections->whereKey((int) $filters['collection_id'])))
+            ->when($minimumPrice !== null, fn (Builder $builder): Builder => $builder->whereHas('variants', fn (Builder $variants): Builder => $variants->where('price_amount', '>=', (int) $minimumPrice)))
+            ->when($maximumPrice !== null, fn (Builder $builder): Builder => $builder->whereHas('variants', fn (Builder $variants): Builder => $variants->where('price_amount', '<=', (int) $maximumPrice)))
+            ->when($filters['in_stock'] ?? false, fn (Builder $builder): Builder => $builder->whereHas('variants', fn (Builder $variants): Builder => $variants->whereHas('inventory', fn (Builder $inventory): Builder => $inventory->whereColumn('quantity_on_hand', '>', 'quantity_reserved')->orWhere('policy', 'continue'))))
+            ->when($filters['tags'] ?? [], fn (Builder $builder, array $tags): Builder => $builder->where(function (Builder $products) use ($tags): void {
+                foreach ($tags as $tag) {
+                    $products->whereJsonContains('tags', $tag);
+                }
+            }))
             ->with(['variants.inventory', 'media'])
-            ->latest('published_at')
-            ->paginate($perPage);
+            ->when($sort === 'price_asc', fn (Builder $builder): Builder => $builder->withMin('variants', 'price_amount')->orderBy('variants_min_price_amount'))
+            ->when($sort === 'price_desc', fn (Builder $builder): Builder => $builder->withMin('variants', 'price_amount')->orderByDesc('variants_min_price_amount'))
+            ->when($sort === 'best_selling', fn (Builder $builder): Builder => $builder->orderByDesc('sales_count'))
+            ->when(! in_array($sort, ['price_asc', 'price_desc', 'best_selling'], true), fn (Builder $builder): Builder => $builder->latest('published_at'))
+            ->paginate($perPage, ['*'], 'page', $page);
 
         if (Schema::hasTable('search_queries')) {
             SearchQuery::withoutGlobalScopes()->create(['store_id' => $store->getKey(), 'query' => $query, 'results_count' => $products->total(), 'customer_id' => auth('customer')->id()]);
@@ -49,10 +61,11 @@ class SearchService
         return Product::withoutGlobalScopes()
             ->published()
             ->where('store_id', $store->getKey())
-            ->where('title', 'like', trim($prefix).'%')
+            ->where('title', 'like', '%'.trim($prefix).'%')
             ->orderBy('title')
             ->limit($limit)
-            ->get(['id', 'title', 'handle']);
+            ->with(['media', 'variants'])
+            ->get();
     }
 
     public function syncProduct(Product $product): void

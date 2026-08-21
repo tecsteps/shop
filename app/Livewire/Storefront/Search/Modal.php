@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Search;
 
 use App\Services\SearchService;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Modal extends Component
@@ -22,6 +23,12 @@ class Modal extends Component
 
     /** @var array<int, array{id: int, title: string, handle: string}> */
     public array $suggestions = [];
+
+    #[On('open-search-modal')]
+    public function open(): void
+    {
+        $this->open = true;
+    }
 
     public function render(): mixed
     {

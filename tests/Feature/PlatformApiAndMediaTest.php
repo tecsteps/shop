@@ -110,7 +110,7 @@ test('media processing records metadata, dimensions, derivatives, and failure st
     expect($media->refresh()->status)->toBe('ready')
         ->and($media->width)->toBe(640)
         ->and($media->height)->toBe(400)
-        ->and($media->metadata['variants'])->toHaveKeys(['original', 'thumbnail', 'medium', 'large'])
+        ->and($media->metadata['variants'])->toHaveKeys(['original', 'thumbnail', 'small', 'medium', 'large'])
         ->and($media->checksum)->toBe(hash('sha256', $contents));
 
     $failed = ProductMedia::create(['product_id' => $product->getKey(), 'type' => 'image', 'path' => 'missing.jpg', 'status' => 'processing']);

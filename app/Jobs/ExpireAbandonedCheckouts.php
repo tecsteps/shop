@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\CheckoutStatus;
+use App\Events\CheckoutExpired;
 use App\Models\Checkout;
 use App\Services\InventoryService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,6 +25,7 @@ class ExpireAbandonedCheckouts implements ShouldQueue
             }
 
             $checkout->update(['status' => CheckoutStatus::Expired]);
+            CheckoutExpired::dispatch($checkout->refresh());
         });
     }
 }

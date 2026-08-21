@@ -13,7 +13,11 @@ class CreateFulfillmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::allows('viewAny', Order::class);
+        $order = Order::withoutGlobalScopes()
+            ->where('store_id', app('current_store')->getKey())
+            ->find($this->route('orderId'));
+
+        return $order instanceof Order && Gate::allows('createFulfillment', $order);
     }
 
     /**

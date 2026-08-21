@@ -49,3 +49,23 @@ test('admin bearer tokens cannot access stores where the user is not a member', 
         ->getJson("http://shop.test/api/admin/v1/stores/{$otherStore->getKey()}/products")
         ->assertForbidden();
 });
+
+test('platform management is restricted to platform administrators', function (): void {
+    $member = User::factory()->create();
+    $member->stores()->attach($this->store, ['role' => 'admin']);
+    $platformToken = $this->admin->createToken('platform-manager', ['manage-platform'])->plainTextToken;
+
+    $this->withToken($platformToken)
+        ->postJson('http://shop.test/api/admin/v1/platform/organizations', ['name' => 'Allowed Platform Org', 'billing_email' => 'allowed@example.test'])
+        ->assertCreated();
+});
+
+test('non-platform admins cannot use platform management even with the ability', function (): void {
+    $member = User::factory()->create();
+    $member->stores()->attach($this->store, ['role' => 'admin']);
+    $token = $member->createToken('platform-attempt', ['manage-platform'])->plainTextToken;
+
+    $this->withToken($token)
+        ->postJson('http://shop.test/api/admin/v1/platform/organizations', ['name' => 'Blocked Platform Org', 'billing_email' => 'blocked@example.test'])
+        ->assertForbidden();
+});

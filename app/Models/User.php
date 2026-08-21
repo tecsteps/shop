@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password_hash',
         'status',
         'last_login_at',
+        'is_platform_admin',
     ];
 
     /**
@@ -55,6 +56,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'last_login_at' => 'datetime',
+            'is_platform_admin' => 'boolean',
         ];
     }
 
@@ -72,6 +74,21 @@ class User extends Authenticatable
     public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'store_users')->using(StoreUser::class)->withPivot('role')->withTimestamps();
+    }
+
+    public function getAuthPasswordName(): string
+    {
+        return 'password_hash';
+    }
+
+    public function getAuthPassword(): ?string
+    {
+        return $this->password_hash;
+    }
+
+    public function isPlatformAdmin(): bool
+    {
+        return (bool) $this->is_platform_admin;
     }
 
     public function roleForStore(Store $store): ?StoreUserRole

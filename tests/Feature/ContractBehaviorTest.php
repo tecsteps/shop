@@ -105,12 +105,11 @@ test('webhook secrets are encrypted under the contract name and sign the exact J
     (new WebhookService)->dispatch($store, 'order.created', ['order_id' => 1001]);
 
     Http::assertSent(function ($request): bool {
-        $timestamp = $request->header('X-Platform-Timestamp')[0];
         $body = $request->body();
 
         return $request->header('Content-Type')[0] === 'application/json'
             && $request->header('X-Platform-Event')[0] === 'order.created'
-            && $request->header('X-Platform-Signature')[0] === hash_hmac('sha256', $timestamp.'.'.$body, 'test-secret');
+            && $request->header('X-Platform-Signature')[0] === hash_hmac('sha256', $body, 'test-secret');
     });
 
     expect(WebhookDelivery::query()->where('webhook_subscription_id', $subscription->getKey())->firstOrFail()->status)->toBe('delivered');

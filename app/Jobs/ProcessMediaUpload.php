@@ -80,23 +80,33 @@ class ProcessMediaUpload implements ShouldQueue
         $directory = trim(pathinfo($sourceKey, PATHINFO_DIRNAME), '.');
         $extension = strtolower(pathinfo($sourceKey, PATHINFO_EXTENSION));
 
-        foreach (['thumbnail' => 320, 'medium' => 800, 'large' => 1600] as $name => $maximum) {
+        $basename = pathinfo($sourceKey, PATHINFO_FILENAME);
+
+        foreach (['thumbnail' => 150, 'small' => 300, 'medium' => 600, 'large' => 1200] as $name => $maximum) {
+            $variantContents = $contents;
             if ($width <= $maximum && $height <= $maximum) {
                 $variants[$name] = $sourceKey;
+            } else {
+                $variantContents = $this->resize($contents, $mimeType, $width, $height, $maximum);
+                if ($variantContents === null) {
+                    $variants[$name] = $sourceKey;
 
-                continue;
+                    continue;
+                }
             }
 
-            $resized = $this->resize($contents, $mimeType, $width, $height, $maximum);
-            if ($resized === null) {
-                $variants[$name] = $sourceKey;
-
-                continue;
-            }
-
-            $key = $directory.'/'.$name.'.'.$extension;
-            $disk->put($key, $resized);
+            $key = $directory.'/'.$basename.'/'.$name.'.'.$extension;
+            $disk->put($key, $variantContents);
             $variants[$name] = $key;
+
+            if (function_exists('imagewebp')) {
+                $webp = $this->resizeToWebp($contents, $width, $height, $maximum);
+                if ($webp !== null) {
+                    $webpKey = $directory.'/'.$basename.'/'.$name.'.webp';
+                    $disk->put($webpKey, $webp);
+                    $variants[$name.'_webp'] = $webpKey;
+                }
+            }
         }
 
         return $variants;
@@ -124,6 +134,29 @@ class ProcessMediaUpload implements ShouldQueue
             default => imagejpeg($target, null, 85),
         };
 
+        $result = $written ? ob_get_clean() : false;
+        imagedestroy($source);
+        imagedestroy($target);
+
+        return is_string($result) ? $result : null;
+    }
+
+    private function resizeToWebp(string $contents, int $width, int $height, int $maximum): ?string
+    {
+        $source = @imagecreatefromstring($contents);
+        if ($source === false) {
+            return null;
+        }
+
+        $scale = min(1, $maximum / $width, $maximum / $height);
+        $targetWidth = max(1, (int) round($width * $scale));
+        $targetHeight = max(1, (int) round($height * $scale));
+        $target = imagecreatetruecolor($targetWidth, $targetHeight);
+        imagealphablending($target, false);
+        imagesavealpha($target, true);
+        imagecopyresampled($target, $source, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
+        ob_start();
+        $written = imagewebp($target, null, 85);
         $result = $written ? ob_get_clean() : false;
         imagedestroy($source);
         imagedestroy($target);

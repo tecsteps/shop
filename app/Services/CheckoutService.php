@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Enums\CheckoutStatus;
+use App\Events\CheckoutAddressed;
+use App\Events\CheckoutExpired;
+use App\Events\CheckoutShippingSelected;
 use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Customer;
@@ -28,13 +31,14 @@ class CheckoutService
 
     public function setAddress(Checkout $checkout, array $address, ?array $billing = null, bool $useShippingAsBilling = true): Checkout
     {
-        if (in_array($checkout->status, [CheckoutStatus::Completed, CheckoutStatus::Expired], true)) {
+        if (in_array($checkout->status, [CheckoutStatus::PaymentSelected, CheckoutStatus::PaymentPending, CheckoutStatus::Completed, CheckoutStatus::Expired], true)) {
             throw new \LogicException('This checkout can no longer be changed.');
         }
 
         Validator::make($address, ['first_name' => ['required', 'string', 'max:255'], 'last_name' => ['required', 'string', 'max:255'], 'address1' => ['required', 'string', 'max:500'], 'city' => ['required', 'string', 'max:255'], 'country_code' => ['required', 'string', 'size:2'], 'postal_code' => ['required', 'string', 'max:20']])->validate();
         $checkout->update(['shipping_address_json' => $address, 'billing_address_json' => $useShippingAsBilling ? $address : $billing, 'status' => CheckoutStatus::Addressed]);
         $this->pricing->calculate($checkout->refresh());
+        CheckoutAddressed::dispatch($checkout);
 
         return $checkout->refresh();
     }
@@ -43,9 +47,14 @@ class CheckoutService
     {
         $checkout->loadMissing('cart.lines.variant');
 
+        if (! in_array($checkout->status, [CheckoutStatus::Addressed, CheckoutStatus::ShippingSelected], true)) {
+            throw new \LogicException('Checkout must have an address before selecting shipping.');
+        }
+
         if (! $this->requiresShipping($checkout)) {
             $checkout->update(['shipping_rate_id' => null, 'shipping_method_id' => null, 'status' => CheckoutStatus::ShippingSelected]);
             $this->pricing->calculate($checkout->refresh());
+            CheckoutShippingSelected::dispatch($checkout);
 
             return $checkout->refresh();
         }
@@ -62,6 +71,7 @@ class CheckoutService
 
         $checkout->update(['shipping_rate_id' => $rate->getKey(), 'shipping_method_id' => $rate->getKey(), 'status' => CheckoutStatus::ShippingSelected]);
         $this->pricing->calculate($checkout->refresh());
+        CheckoutShippingSelected::dispatch($checkout);
 
         return $checkout->refresh();
     }
@@ -80,8 +90,8 @@ class CheckoutService
             throw new \LogicException('A shipping method is required before selecting payment.');
         }
 
-        if ($checkout->status === CheckoutStatus::PaymentSelected) {
-            return $checkout->refresh();
+        if ($checkout->status !== CheckoutStatus::ShippingSelected) {
+            throw new \LogicException('Checkout must have a selected shipping method before selecting payment.');
         }
 
         $checkout->load('cart.lines.variant.inventory');
@@ -117,6 +127,7 @@ class CheckoutService
             }
 
             $checkout->update(['status' => CheckoutStatus::Expired]);
+            CheckoutExpired::dispatch($checkout->refresh());
         });
     }
 

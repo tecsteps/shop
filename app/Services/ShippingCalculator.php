@@ -20,22 +20,21 @@ class ShippingCalculator
             $countries = array_map('strtoupper', $rate->zone->countries_json ?? []);
             $regions = array_map('strtoupper', $rate->zone->regions_json ?? []);
 
-            return ($region !== '' && in_array($region, $regions, true))
-                || ($country !== '' && in_array($country, $countries, true))
-                || ($countries === [] && $regions === []);
+            return $country !== '' && in_array($country, $countries, true)
+                && ($region === '' || $regions === [] || in_array($region, $regions, true));
         });
 
-        $specificity = $matching->groupBy(function (ShippingRate $rate) use ($country, $region): int {
+        $specificity = $matching->groupBy(function (ShippingRate $rate) use ($region): int {
             $countries = array_map('strtoupper', $rate->zone->countries_json ?? []);
             $regions = array_map('strtoupper', $rate->zone->regions_json ?? []);
 
-            return ($region !== '' && in_array($region, $regions, true)) ? 2 : (($country !== '' && in_array($country, $countries, true)) ? 1 : 0);
+            return $region !== '' && in_array($region, $regions, true) ? 2 : 1;
         });
 
-        return $specificity->sortKeysDesc()->first() ?? collect();
+        return $specificity->sortKeysDesc()->first()?->sortBy('id')->values() ?? collect();
     }
 
-    public function calculate(ShippingRate $rate, Cart $cart): int
+    public function calculate(ShippingRate $rate, Cart $cart): ?int
     {
         $lines = $cart->load('lines.variant')->lines;
         $lines = $lines->filter(fn ($line): bool => (bool) $line->variant->requires_shipping);
@@ -46,18 +45,19 @@ class ShippingCalculator
         return match ($rate->type) {
             'weight' => $this->rangeAmount($config['ranges'] ?? [], $weight, $rate->price_amount),
             'price' => $this->rangeAmount($config['ranges'] ?? [], $subtotal, $rate->price_amount),
-            default => $rate->price_amount,
+            'carrier' => (int) ($config['amount'] ?? $rate->price_amount ?? 0),
+            default => (int) ($config['amount'] ?? $rate->price_amount ?? 0),
         };
     }
 
-    private function rangeAmount(array $ranges, int $value, int $fallback): int
+    private function rangeAmount(array $ranges, int $value, ?int $fallback): ?int
     {
         foreach ($ranges as $range) {
             if ($value >= (int) ($range['min_g'] ?? $range['min_amount'] ?? 0) && $value <= (int) ($range['max_g'] ?? $range['max_amount'] ?? PHP_INT_MAX)) {
-                return (int) ($range['amount'] ?? $fallback);
+                return (int) ($range['amount'] ?? $fallback ?? 0);
             }
         }
 
-        return 0;
+        return null;
     }
 }

@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
 
             User::query()->updateOrCreate(
                 ['email' => $user['email']],
-                ['name' => $user['name'], 'password' => $password, 'password_hash' => $password, 'status' => 'active', 'email_verified_at' => now(), 'last_login_at' => $user['last_login_at']],
+                ['name' => $user['name'], 'password' => $password, 'password_hash' => $password, 'status' => 'active', 'is_platform_admin' => $user['email'] === 'admin@acme.test', 'email_verified_at' => now(), 'last_login_at' => $user['last_login_at']],
             );
         }
     }

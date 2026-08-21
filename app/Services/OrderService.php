@@ -6,11 +6,12 @@ use App\Enums\FinancialStatus;
 use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Events\CheckoutCompleted;
 use App\Events\OrderCancelled;
 use App\Events\OrderCreated;
 use App\Events\OrderPaid;
 use App\Models\Checkout;
-use App\Models\Discount;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Store;
 use App\ValueObjects\PaymentResult;
@@ -32,7 +33,14 @@ class OrderService
             }
 
             $totals = $checkout->totals_json ?? ['subtotal' => 0, 'discount' => 0, 'shipping' => 0, 'tax' => 0, 'total' => 0, 'currency' => $checkout->cart->currency];
-            $discount = $checkout->discount_code === null ? null : Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->whereRaw('lower(code) = ?', [strtolower($checkout->discount_code)])->first();
+            if ($checkout->customer_id === null) {
+                $customer = Customer::withoutGlobalScopes()->firstOrCreate(
+                    ['store_id' => $checkout->store_id, 'email' => strtolower($checkout->email)],
+                    ['first_name' => 'Guest', 'last_name' => 'Customer', 'status' => 'active', 'metadata' => ['guest_checkout' => true]],
+                );
+                $checkout->update(['customer_id' => $customer->getKey()]);
+            }
+
             $status = $paymentResult?->status === PaymentStatus::Captured ? FinancialStatus::Paid : FinancialStatus::Pending;
             $taxByLine = $this->allocateTaxLines($checkout->cart->lines, $totals['tax_lines'] ?? []);
             $order = Order::withoutGlobalScopes()->create([
@@ -71,7 +79,7 @@ class OrderService
                     'line_discount_amount' => $line->line_discount_amount,
                     'line_total_amount' => $line->line_total_amount,
                     'tax_lines_json' => $taxByLine[$line->getKey()] ?? [],
-                    'discount_allocations_json' => $discount === null || $line->line_discount_amount < 1 ? [] : [['discount_id' => $discount->getKey(), 'amount' => $line->line_discount_amount]],
+                    'discount_allocations_json' => $totals['discount_allocations'][$line->getKey()] ?? [],
                 ]);
 
                 if ($paymentResult?->status === PaymentStatus::Captured && $line->variant->inventory !== null) {
@@ -81,6 +89,7 @@ class OrderService
 
             $checkout->update(['status' => 'completed']);
             $checkout->cart->update(['status' => 'converted']);
+            CheckoutCompleted::dispatch($checkout->refresh(), $order);
             OrderCreated::dispatch($order);
             $this->audit->record('order.created', $order, ['store_id' => $order->store_id, 'order_number' => $order->order_number]);
             $order->load(['lines', 'payments']);

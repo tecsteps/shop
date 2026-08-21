@@ -23,8 +23,8 @@ class MockPaymentProvider implements PaymentProvider
             $number = preg_replace('/\D+/', '', (string) ($details['card_number'] ?? ''));
 
             return match ($number) {
-                '4000000000000002' => new PaymentResult(PaymentStatus::Failed, 'mock_'.Str::lower(Str::random(16)), 'Your card was declined.'),
-                '4000000000009995' => new PaymentResult(PaymentStatus::Failed, 'mock_'.Str::lower(Str::random(16)), 'Your card has insufficient funds.'),
+                '4000000000000002' => new PaymentResult(PaymentStatus::Failed, 'mock_'.Str::lower(Str::random(16)), 'Your card was declined.', 'card_declined'),
+                '4000000000009995' => new PaymentResult(PaymentStatus::Failed, 'mock_'.Str::lower(Str::random(16)), 'Your card has insufficient funds.', 'insufficient_funds'),
                 default => new PaymentResult(PaymentStatus::Captured, 'mock_'.Str::lower(Str::random(16)), 'Payment captured.'),
             };
         }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\FinancialStatus;
 use App\Enums\FulfillmentStatus;
 use App\Enums\OrderStatus;
+use App\Events\FulfillmentCreated;
 use App\Events\FulfillmentDelivered;
 use App\Events\FulfillmentShipped;
 use App\Events\OrderFulfilled;
@@ -43,6 +44,7 @@ class FulfillmentService
             }
 
             $this->refreshOrderStatus($order->refresh());
+            FulfillmentCreated::dispatch($fulfillment->refresh());
 
             return $fulfillment->load('lines.orderLine');
         });

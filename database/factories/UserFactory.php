@@ -32,6 +32,7 @@ class UserFactory extends Factory
             'password' => $password,
             'password_hash' => $password,
             'status' => 'active',
+            'is_platform_admin' => false,
             'last_login_at' => now()->subDays(fake()->numberBetween(0, 30)),
             'remember_token' => Str::random(10),
             'two_factor_secret' => null,

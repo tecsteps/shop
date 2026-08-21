@@ -13,7 +13,15 @@ class TaxCalculator
 
     public function calculate(int $amount, TaxSettings $settings, array $address): TaxResult
     {
-        return ($this->provider ?? new \App\Services\Tax\ManualTaxProvider)->calculate(new TaxCalculationRequest([['amount' => $amount]], 0, $address, $settings));
+        $provider = $this->provider;
+
+        if ($provider === null) {
+            $provider = $settings->mode === 'provider' && $settings->provider === 'stripe_tax'
+                ? new \App\Services\Tax\StripeTaxProvider(new \App\Services\Tax\ManualTaxProvider)
+                : new \App\Services\Tax\ManualTaxProvider;
+        }
+
+        return $provider->calculate(new TaxCalculationRequest([['amount' => $amount]], 0, $address, $settings));
     }
 
     public function extractInclusive(int $grossAmount, int $rateBasisPoints): int

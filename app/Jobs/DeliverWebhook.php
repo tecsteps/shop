@@ -33,7 +33,7 @@ class DeliverWebhook implements ShouldQueue
         $timestamp = (string) now()->timestamp;
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'X-Platform-Signature' => $webhooks->sign($timestamp.'.'.$payload, $subscription->signing_secret_encrypted),
+            'X-Platform-Signature' => $webhooks->sign($payload, $subscription->signing_secret_encrypted),
             'X-Platform-Event' => $this->delivery->event,
             'X-Platform-Delivery-Id' => (string) $this->delivery->getKey(),
             'X-Platform-Timestamp' => $timestamp,

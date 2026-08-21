@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\PaymentStatus;
+use App\Models\Cart;
+use App\Models\Discount;
 use App\Models\InventoryItem;
 use App\Models\Order;
 use App\Models\Product;
@@ -80,10 +82,25 @@ test('declined payments release the reservation and do not create an order', fun
     $rate = ShippingRate::query()->firstOrFail();
     $this->putJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/shipping-method", ['shipping_method_id' => $rate->getKey()]);
 
-    $this->postJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/pay", ['payment_method' => 'credit_card', 'card_number' => '4000000000000002', 'card_expiry' => '12/28', 'card_cvc' => '123', 'card_holder' => 'Declined Tester'])->assertUnprocessable();
+    $this->postJson("http://shop.test/api/storefront/v1/checkouts/{$checkout['id']}/pay", ['payment_method' => 'credit_card', 'card_number' => '4000000000000002', 'card_expiry' => '12/28', 'card_cvc' => '123', 'card_holder' => 'Declined Tester'])->assertUnprocessable()->assertJsonPath('error_code', 'card_declined');
 
     expect(InventoryItem::query()->where('variant_id', $variant->getKey())->firstOrFail()->quantity_reserved)->toBe($inventoryBefore)
         ->and(Order::query()->where('email', 'declined@example.test')->exists())->toBeFalse();
+});
+
+test('automatic discounts stack sequentially during checkout pricing', function (): void {
+    $variant = Product::query()->where('handle', 'classic-cotton-t-shirt')->firstOrFail()->variants()->firstOrFail();
+    Discount::withoutGlobalScopes()->create(['store_id' => $this->store->getKey(), 'code' => null, 'type' => 'automatic', 'value_type' => 'percent', 'value_amount' => 10, 'status' => 'active', 'starts_at' => now()->subMinute(), 'ends_at' => now()->addDay(), 'rules_json' => []]);
+    Discount::withoutGlobalScopes()->create(['store_id' => $this->store->getKey(), 'code' => null, 'type' => 'automatic', 'value_type' => 'fixed', 'value_amount' => 100, 'status' => 'active', 'starts_at' => now()->subMinute(), 'ends_at' => now()->addDay(), 'rules_json' => []]);
+
+    $cart = $this->postJson('http://shop.test/api/storefront/v1/carts')->json();
+    $this->postJson("http://shop.test/api/storefront/v1/carts/{$cart['id']}/lines", ['variant_id' => $variant->getKey(), 'quantity' => 1, 'cart_version' => 1]);
+    $checkout = $this->postJson('http://shop.test/api/storefront/v1/checkouts', ['cart_id' => $cart['id'], 'email' => 'automatic@example.test'])
+        ->assertCreated()
+        ->json();
+
+    expect($checkout['totals']['discount'])->toBeGreaterThan(100)
+        ->and($checkout['totals']['discount_allocations'])->not->toBeEmpty();
 });
 
 test('stale cart versions return a conflict response', function (): void {
@@ -116,6 +133,14 @@ test('guest cart ids cannot cross tenant boundaries', function (): void {
     $this->flushSession();
 
     $this->getJson("http://shop.test/api/storefront/v1/carts/{$otherCart->getKey()}")
+        ->assertNotFound();
+});
+
+test('guest cart endpoints only expose active carts', function (): void {
+    $cart = $this->postJson('http://shop.test/api/storefront/v1/carts')->assertCreated()->json();
+    Cart::withoutGlobalScopes()->whereKey($cart['id'])->update(['status' => 'converted']);
+
+    $this->getJson("http://shop.test/api/storefront/v1/carts/{$cart['id']}")
         ->assertNotFound();
 });
 

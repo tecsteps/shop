@@ -23,6 +23,7 @@ class PlatformController extends Controller
 {
     public function storeOrganization(CreateOrganizationRequest $request): JsonResponse
     {
+        $this->assertPlatformAdministrator();
         $data = $request->validated();
         $slug = Str::slug($data['name']);
         $suffix = 1;
@@ -35,6 +36,7 @@ class PlatformController extends Controller
 
     public function storeStore(CreatePlatformStoreRequest $request): JsonResponse
     {
+        $this->assertPlatformAdministrator();
         $data = $request->validated();
         $store = Store::create([...$data, 'status' => 'active']);
         $store->users()->syncWithoutDetaching([
@@ -132,6 +134,11 @@ class PlatformController extends Controller
     private function store(int $storeId): Store
     {
         return Store::query()->findOrFail($storeId);
+    }
+
+    private function assertPlatformAdministrator(): void
+    {
+        abort_unless(request()->user('sanctum')?->isPlatformAdmin(), 403, 'Platform administrator access is required.');
     }
 
     /** @return array<int, string> */

@@ -22,6 +22,6 @@ class UpdateThemeSettingsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['settings' => ['required', 'array']];
+        return ['settings_json' => ['required', 'array']];
     }
 }

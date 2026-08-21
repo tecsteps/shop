@@ -22,6 +22,6 @@ class StoreShippingRateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['name' => ['required', 'string', 'max:255'], 'type' => ['required', 'in:flat,weight,price,carrier'], 'price_amount' => ['required', 'integer', 'min:0'], 'currency' => ['required', 'size:3'], 'config_json' => ['nullable', 'array'], 'is_active' => ['nullable', 'boolean'], 'estimated_days_min' => ['nullable', 'integer', 'min:0'], 'estimated_days_max' => ['nullable', 'integer', 'min:0']];
+        return ['name' => ['required', 'string', 'max:255'], 'type' => ['required', 'in:flat,weight,price,carrier'], 'price_amount' => ['nullable', 'integer', 'min:0'], 'currency' => ['nullable', 'size:3', 'uppercase'], 'config_json' => ['required', 'array'], 'is_active' => ['nullable', 'boolean'], 'estimated_days_min' => ['nullable', 'integer', 'min:0'], 'estimated_days_max' => ['nullable', 'integer', 'min:0']];
     }
 }

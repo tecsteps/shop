@@ -22,6 +22,6 @@ class UpdateTaxSettingsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['mode' => ['sometimes', 'string'], 'provider' => ['sometimes', 'nullable', 'string'], 'prices_include_tax' => ['sometimes', 'boolean'], 'default_rate_basis_points' => ['sometimes', 'integer', 'min:0', 'max:10000'], 'rates_json' => ['sometimes', 'array'], 'provider_config_json' => ['sometimes', 'array']];
+        return ['mode' => ['required', 'in:manual,provider'], 'provider' => ['required_if:mode,provider', 'nullable', 'in:none,stripe_tax'], 'prices_include_tax' => ['required', 'boolean'], 'config_json' => ['required', 'array'], 'default_rate_basis_points' => ['sometimes', 'integer', 'min:0', 'max:10000'], 'rates_json' => ['sometimes', 'array'], 'provider_config_json' => ['sometimes', 'array']];
     }
 }

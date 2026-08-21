@@ -2,9 +2,9 @@
 <section class="relative overflow-hidden bg-zinc-900 text-white">
     <div class="mx-auto flex min-h-[520px] max-w-7xl items-center px-4 py-20 lg:px-8">
         <div class="max-w-2xl">
-            <p class="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Acme Fashion</p>
-            <h1 class="text-5xl font-bold tracking-tight sm:text-7xl">Everyday pieces, thoughtfully made.</h1>
-            <p class="mt-6 max-w-xl text-lg text-zinc-300">Timeless wardrobe essentials with an easy, modern fit.</p>
+            <p class="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">{{ data_get($store->settings?->general_json, 'store_name', $store->name) }}</p>
+            <h1 class="text-5xl font-bold tracking-tight sm:text-7xl">{{ data_get($store->settings?->settings_json, 'hero_title', 'Everyday pieces, thoughtfully made.') }}</h1>
+            <p class="mt-6 max-w-xl text-lg text-zinc-300">{{ data_get($store->settings?->settings_json, 'hero_subtitle', 'Timeless wardrobe essentials with an easy, modern fit.') }}</p>
             <a href="{{ route('collection.show', 'new-arrivals') }}" class="mt-8 inline-flex rounded-full bg-white px-6 py-3 font-semibold text-zinc-900 hover:bg-blue-100" wire:navigate>Shop new arrivals</a>
         </div>
     </div>
