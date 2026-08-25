@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'store.resolve' => \App\Http\Middleware\ResolveStore::class,
             'role.check' => \App\Http\Middleware\CheckStoreRole::class,
             'auth.customer' => \App\Http\Middleware\CustomerAuthenticate::class,
+            'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('admin.login'));

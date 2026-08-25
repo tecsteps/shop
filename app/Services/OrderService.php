@@ -11,6 +11,7 @@ use App\Models\Store;
 use App\ValueObjects\PaymentResult;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class OrderService
 {
@@ -114,6 +115,34 @@ class OrderService
         $next = $last ? ((int) preg_replace('/[^0-9]/', '', $last->order_number) + 1) : 1001;
 
         return $prefix.$next;
+    }
+
+    public function confirmPayment(Order $order): void
+    {
+        DB::transaction(function () use ($order) {
+            if ($order->payment_method !== 'bank_transfer') {
+                throw new InvalidArgumentException('Only bank transfer orders can be confirmed.');
+            }
+
+            if ($order->financial_status !== 'pending') {
+                throw new InvalidArgumentException('This order has already been confirmed.');
+            }
+
+            $order->update(['financial_status' => 'paid', 'status' => 'paid']);
+            $order->payments()->update(['status' => 'captured']);
+
+            foreach ($order->lines()->with('variant.inventoryItem')->get() as $line) {
+                $inventory = $line->variant?->inventoryItem;
+
+                if ($inventory) {
+                    $this->inventoryService->commit($inventory, $line->quantity);
+                }
+            }
+
+            app(FulfillmentService::class)->autoFulfillDigital($order);
+
+            \App\Events\OrderPaid::dispatch($order);
+        });
     }
 
     public function cancel(Order $order, string $reason): void

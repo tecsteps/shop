@@ -14,7 +14,7 @@ class CollectionController extends Controller
         $this->authorize('viewAny', Collection::class);
 
         $collections = Collection::query()
-            ->when($request->status, fn ($q) => $q->where('status', $request->status))
+            ->when($request->input('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->paginate($request->per_page ?? 25);
 
         return response()->json([

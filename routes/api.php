@@ -42,34 +42,34 @@ Route::middleware(['store.resolve'])->prefix('storefront/v1')->group(function ()
 // Admin API
 Route::middleware(['auth:sanctum', 'store.resolve'])->prefix('admin/v1')->group(function () {
     Route::middleware('throttle:api.admin')->group(function () {
-        Route::get('/stores/{storeId}/products', [AdminProductController::class, 'index'])->middleware('ability:read-products');
-        Route::post('/stores/{storeId}/products', [AdminProductController::class, 'store'])->middleware('ability:write-products');
-        Route::get('/stores/{storeId}/products/{productId}', [AdminProductController::class, 'show'])->middleware('ability:read-products');
-        Route::put('/stores/{storeId}/products/{productId}', [AdminProductController::class, 'update'])->middleware('ability:write-products');
-        Route::delete('/stores/{storeId}/products/{productId}', [AdminProductController::class, 'destroy'])->middleware('ability:write-products');
+        Route::get('/stores/{storeId}/products', [AdminProductController::class, 'index'])->middleware('abilities:read-products');
+        Route::post('/stores/{storeId}/products', [AdminProductController::class, 'store'])->middleware('abilities:write-products');
+        Route::get('/stores/{storeId}/products/{productId}', [AdminProductController::class, 'show'])->middleware('abilities:read-products');
+        Route::put('/stores/{storeId}/products/{productId}', [AdminProductController::class, 'update'])->middleware('abilities:write-products');
+        Route::delete('/stores/{storeId}/products/{productId}', [AdminProductController::class, 'destroy'])->middleware('abilities:write-products');
 
-        Route::get('/stores/{storeId}/orders', [AdminOrderController::class, 'index'])->middleware('ability:read-orders');
-        Route::get('/stores/{storeId}/orders/{orderId}', [AdminOrderController::class, 'show'])->middleware('ability:read-orders');
-        Route::post('/stores/{storeId}/orders/{orderId}/fulfillments', [AdminOrderController::class, 'fulfill'])->middleware('ability:write-orders');
-        Route::post('/stores/{storeId}/orders/{orderId}/refunds', [AdminOrderController::class, 'refund'])->middleware('ability:write-orders');
+        Route::get('/stores/{storeId}/orders', [AdminOrderController::class, 'index'])->middleware('abilities:read-orders');
+        Route::get('/stores/{storeId}/orders/{orderId}', [AdminOrderController::class, 'show'])->middleware('abilities:read-orders');
+        Route::post('/stores/{storeId}/orders/{orderId}/fulfillments', [AdminOrderController::class, 'fulfill'])->middleware('abilities:write-orders');
+        Route::post('/stores/{storeId}/orders/{orderId}/refunds', [AdminOrderController::class, 'refund'])->middleware('abilities:write-orders');
 
-        Route::get('/stores/{storeId}/collections', [AdminCollectionController::class, 'index'])->middleware('ability:read-collections');
-        Route::post('/stores/{storeId}/collections', [AdminCollectionController::class, 'store'])->middleware('ability:write-collections');
-        Route::put('/stores/{storeId}/collections/{collectionId}', [AdminCollectionController::class, 'update'])->middleware('ability:write-collections');
-        Route::delete('/stores/{storeId}/collections/{collectionId}', [AdminCollectionController::class, 'destroy'])->middleware('ability:write-collections');
+        Route::get('/stores/{storeId}/collections', [AdminCollectionController::class, 'index'])->middleware('abilities:read-collections');
+        Route::post('/stores/{storeId}/collections', [AdminCollectionController::class, 'store'])->middleware('abilities:write-collections');
+        Route::put('/stores/{storeId}/collections/{collectionId}', [AdminCollectionController::class, 'update'])->middleware('abilities:write-collections');
+        Route::delete('/stores/{storeId}/collections/{collectionId}', [AdminCollectionController::class, 'destroy'])->middleware('abilities:write-collections');
 
-        Route::get('/stores/{storeId}/discounts', [AdminDiscountController::class, 'index'])->middleware('ability:read-discounts');
-        Route::post('/stores/{storeId}/discounts', [AdminDiscountController::class, 'store'])->middleware('ability:write-discounts');
-        Route::put('/stores/{storeId}/discounts/{discountId}', [AdminDiscountController::class, 'update'])->middleware('ability:write-discounts');
-        Route::delete('/stores/{storeId}/discounts/{discountId}', [AdminDiscountController::class, 'destroy'])->middleware('ability:write-discounts');
+        Route::get('/stores/{storeId}/discounts', [AdminDiscountController::class, 'index'])->middleware('abilities:read-discounts');
+        Route::post('/stores/{storeId}/discounts', [AdminDiscountController::class, 'store'])->middleware('abilities:write-discounts');
+        Route::put('/stores/{storeId}/discounts/{discountId}', [AdminDiscountController::class, 'update'])->middleware('abilities:write-discounts');
+        Route::delete('/stores/{storeId}/discounts/{discountId}', [AdminDiscountController::class, 'destroy'])->middleware('abilities:write-discounts');
 
-        Route::get('/stores/{storeId}/shipping/zones', [AdminShippingController::class, 'index'])->middleware('ability:read-settings');
-        Route::post('/stores/{storeId}/shipping/zones', [AdminShippingController::class, 'store'])->middleware('ability:write-settings');
+        Route::get('/stores/{storeId}/shipping/zones', [AdminShippingController::class, 'index'])->middleware('abilities:read-settings');
+        Route::post('/stores/{storeId}/shipping/zones', [AdminShippingController::class, 'store'])->middleware('abilities:write-settings');
 
-        Route::get('/stores/{storeId}/tax/settings', [AdminTaxController::class, 'show'])->middleware('ability:read-settings');
-        Route::put('/stores/{storeId}/tax/settings', [AdminTaxController::class, 'update'])->middleware('ability:write-settings');
+        Route::get('/stores/{storeId}/tax/settings', [AdminTaxController::class, 'show'])->middleware('abilities:read-settings');
+        Route::put('/stores/{storeId}/tax/settings', [AdminTaxController::class, 'update'])->middleware('abilities:write-settings');
 
-        Route::get('/stores/{storeId}/pages', [AdminPageController::class, 'index'])->middleware('ability:read-content');
-        Route::post('/stores/{storeId}/pages', [AdminPageController::class, 'store'])->middleware('ability:write-content');
+        Route::get('/stores/{storeId}/pages', [AdminPageController::class, 'index'])->middleware('abilities:read-content');
+        Route::post('/stores/{storeId}/pages', [AdminPageController::class, 'store'])->middleware('abilities:write-content');
     });
 });

@@ -16,11 +16,11 @@ class ProductController extends Controller
         $this->authorize('viewAny', Product::class);
 
         $products = Product::query()
-            ->when($request->status, fn ($q) => $q->where('status', $request->status))
-            ->when($request->query, fn ($q) => $q->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%'.$request->query.'%')
-                    ->orWhere('vendor', 'like', '%'.$request->query.'%')
-                    ->orWhereHas('variants', fn ($v) => $v->where('sku', 'like', '%'.$request->query.'%'));
+            ->when($request->input('status'), fn ($q) => $q->where('status', $request->input('status')))
+            ->when($request->input('query'), fn ($q) => $q->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%'.$request->input('query').'%')
+                    ->orWhere('vendor', 'like', '%'.$request->input('query').'%')
+                    ->orWhereHas('variants', fn ($v) => $v->where('sku', 'like', '%'.$request->input('query').'%'));
             }))
             ->paginate($request->per_page ?? 25);
 

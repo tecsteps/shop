@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Concerns;
 
+use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
 
 trait SeedsDemoData
@@ -59,13 +60,13 @@ trait SeedsDemoData
      * Resolve a seed date. Supports "now", null, Carbon instances and
      * relative strings such as "3 months ago".
      */
-    protected function resolveDate(mixed $value): ?Carbon
+    protected function resolveDate(mixed $value): ?CarbonInterface
     {
         if ($value === null) {
             return null;
         }
 
-        if ($value instanceof Carbon) {
+        if ($value instanceof CarbonInterface) {
             return $value;
         }
 

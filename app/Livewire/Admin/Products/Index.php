@@ -64,6 +64,15 @@ class Index extends Component
         $this->syncSelectAll();
     }
 
+    public function updatedSelectAll(bool $value): void
+    {
+        $ids = collect($this->products->items())->pluck('id')->map(fn ($id) => (int) $id)->all();
+
+        $this->selectedIds = $value
+            ? array_values(array_unique(array_merge($this->selectedIds, $ids)))
+            : array_values(array_diff($this->selectedIds, $ids));
+    }
+
     #[Computed]
     public function products(): LengthAwarePaginator
     {
@@ -133,13 +142,9 @@ class Index extends Component
 
     public function toggleSelectAll(): void
     {
-        $ids = collect($this->products->items())->pluck('id')->map(fn ($id) => (int) $id)->all();
-
         $this->selectAll = ! $this->selectAll;
 
-        $this->selectedIds = $this->selectAll
-            ? array_values(array_unique(array_merge($this->selectedIds, $ids)))
-            : array_values(array_diff($this->selectedIds, $ids));
+        $this->updatedSelectAll($this->selectAll);
     }
 
     public function bulkSetActive(): void

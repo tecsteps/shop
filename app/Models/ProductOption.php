@@ -11,6 +11,8 @@ class ProductOption extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = ['product_id', 'name', 'position'];
 
     public function product(): BelongsTo

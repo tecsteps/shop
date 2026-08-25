@@ -11,6 +11,8 @@ class ProductOptionValue extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = ['product_option_id', 'value', 'position'];
 
     public function option(): BelongsTo

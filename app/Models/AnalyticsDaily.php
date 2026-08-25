@@ -11,6 +11,8 @@ class AnalyticsDaily extends Model
 {
     use BelongsToStore, HasFactory;
 
+    protected $table = 'analytics_daily';
+
     public $incrementing = false;
 
     public $timestamps = false;

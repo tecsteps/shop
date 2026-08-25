@@ -45,7 +45,7 @@ class CustomerSeeder extends Seeder
                 DB::table('customer_addresses')->updateOrInsert(
                     ['customer_id' => $customer->id, 'label' => $address['label']],
                     [
-                        'address_json' => $address['address'],
+                        'address_json' => json_encode($address['address'], JSON_THROW_ON_ERROR),
                         'is_default' => $address['is_default'],
                     ],
                 );

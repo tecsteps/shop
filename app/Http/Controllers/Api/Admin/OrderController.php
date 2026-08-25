@@ -20,12 +20,12 @@ class OrderController extends Controller
         $this->authorize('viewAny', Order::class);
 
         $orders = Order::query()
-            ->when($request->status, fn ($q) => $q->where('status', $request->status))
+            ->when($request->input('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->financial_status, fn ($q) => $q->where('financial_status', $request->financial_status))
             ->when($request->fulfillment_status, fn ($q) => $q->where('fulfillment_status', $request->fulfillment_status))
-            ->when($request->query, fn ($q) => $q->where(function ($q) use ($request) {
-                $q->where('order_number', 'like', '%'.$request->query.'%')
-                    ->orWhere('email', 'like', '%'.$request->query.'%');
+            ->when($request->input('query'), fn ($q) => $q->where(function ($q) use ($request) {
+                $q->where('order_number', 'like', '%'.$request->input('query').'%')
+                    ->orWhere('email', 'like', '%'.$request->input('query').'%');
             }))
             ->paginate($request->per_page ?? 25);
 
