@@ -1,12 +1,8 @@
 <?php
 
 use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\InventoryItem;
 use App\Services\CartService;
 use App\Services\ProductService;
-use App\Services\VariantMatrixService;
-use App\Services\InventoryService;
 
 it('builds the core stack end to end', function () {
     $ctx = createStoreContext();

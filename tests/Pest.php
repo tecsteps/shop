@@ -74,4 +74,3 @@ function makeCompletedOrder(): \App\Models\Order
 
     return app(\App\Services\CheckoutService::class)->completeCheckout($checkout, ['card_number' => '4242424242424242']);
 }
-

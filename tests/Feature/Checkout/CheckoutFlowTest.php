@@ -1,9 +1,6 @@
 <?php
 
-use App\Models\Cart;
-use App\Models\Checkout;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Services\CartService;

@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class InsufficientInventoryException extends RuntimeException
-{
-}
+class InsufficientInventoryException extends RuntimeException {}

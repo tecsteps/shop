@@ -83,7 +83,7 @@ class CartController extends Controller
     private function assertVersion(Cart $cart, int $expectedVersion): void
     {
         if ($cart->cart_version !== $expectedVersion) {
-            throw new CartVersionMismatchException();
+            throw new CartVersionMismatchException;
         }
     }
 

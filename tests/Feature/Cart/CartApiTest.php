@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Cart;
-use App\Models\Product;
 use App\Services\ProductService;
 
 it('creates a cart via API', function () {

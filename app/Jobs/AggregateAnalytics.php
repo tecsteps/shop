@@ -6,7 +6,6 @@ use App\Models\AnalyticsDaily;
 use App\Models\AnalyticsEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\DB;
 
 class AggregateAnalytics implements ShouldQueue
 {

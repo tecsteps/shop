@@ -2,12 +2,7 @@
 
 use App\Events\OrderCreated;
 use App\Models\Order;
-use App\Models\ShippingRate;
-use App\Models\ShippingZone;
-use App\Services\CartService;
-use App\Services\CheckoutService;
 use App\Services\OrderService;
-use App\Services\ProductService;
 use Illuminate\Support\Facades\Event;
 
 it('generates sequential order numbers per store', function () {

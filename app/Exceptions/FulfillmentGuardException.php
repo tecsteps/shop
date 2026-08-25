@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class FulfillmentGuardException extends RuntimeException
-{
-}
+class FulfillmentGuardException extends RuntimeException {}

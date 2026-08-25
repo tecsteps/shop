@@ -1,9 +1,6 @@
 <?php
 
 use App\Exceptions\InsufficientInventoryException;
-use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\InventoryItem;
 use App\Services\CartService;
 use App\Services\ProductService;
 

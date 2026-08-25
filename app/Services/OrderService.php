@@ -147,7 +147,7 @@ class OrderService
 
     public function cancel(Order $order, string $reason): void
     {
-        DB::transaction(function () use ($order, $reason) {
+        DB::transaction(function () use ($order) {
             if (in_array($order->status, ['cancelled', 'fulfilled', 'refunded'], true)) {
                 return;
             }

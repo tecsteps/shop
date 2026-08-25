@@ -9,7 +9,5 @@ class CheckoutExpired
 {
     use Dispatchable, SerializesModels;
 
-    public function __construct(public $model)
-    {
-    }
+    public function __construct(public $model) {}
 }

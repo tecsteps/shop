@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
-use App\Models\Store;
 use Illuminate\Support\Facades\Cache;
 
 class NavigationService

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Order;
 use App\Services\RefundService;
 
 it('creates a full refund', function () {

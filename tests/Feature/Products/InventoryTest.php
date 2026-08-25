@@ -2,7 +2,6 @@
 
 use App\Exceptions\InsufficientInventoryException;
 use App\Models\InventoryItem;
-use App\Models\Product;
 use App\Services\InventoryService;
 
 it('checks availability correctly', function () {

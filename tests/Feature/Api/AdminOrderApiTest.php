@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Order;
-use App\Models\Store;
 use App\Models\User;
 
 it('lists orders with authentication', function () {

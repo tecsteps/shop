@@ -3,7 +3,6 @@
 use App\Contracts\PaymentProvider;
 use App\Enums\PaymentMethod;
 use App\Models\Checkout;
-use App\Services\Payments\MockPaymentProvider;
 
 it('charges credit card with success card number', function () {
     $provider = app(PaymentProvider::class);

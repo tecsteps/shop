@@ -75,7 +75,7 @@ class CheckoutController extends Controller
 
         try {
             $checkout = $this->checkoutService->setShippingMethod($checkout, $validated['shipping_method_id']);
-        } catch (InvalidArgumentException | InvalidCheckoutTransitionException $e) {
+        } catch (InvalidArgumentException|InvalidCheckoutTransitionException $e) {
             throw ValidationException::withMessages(['shipping_method_id' => [$e->getMessage()]]);
         }
 

@@ -21,7 +21,6 @@ function discountError(Closure $fn): string
     \PHPUnit\Framework\Assert::fail('Expected InvalidDiscountException to be thrown.');
 }
 
-
 it('validates an active discount code', function () {
     $store = Store::factory()->create();
     $cart = app(CartService::class)->create($store);

@@ -1,7 +1,6 @@
 <?php
 
 use App\Exceptions\CartVersionMismatchException;
-use App\Models\Product;
 use App\Services\CartService;
 use App\Services\ProductService;
 
