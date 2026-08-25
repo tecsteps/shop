@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\StoreUserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +24,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password_hash',
+        'status',
+        'last_login_at',
     ];
 
     /**
@@ -31,7 +35,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
@@ -46,12 +50,41 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'last_login_at' => 'datetime',
+            'password_hash' => 'hashed',
         ];
     }
 
     /**
-     * Get the user's initials
+     * The stores this user belongs to with their role.
+     */
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'store_users')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
+     * Determine the user's role within the given store.
+     */
+    public function roleForStore(Store $store): ?StoreUserRole
+    {
+        $pivot = $this->stores()->whereKey($store->id)->first()?->pivot;
+
+        return $pivot?->role ? StoreUserRole::tryFrom($pivot->role) : null;
+    }
+
+    /**
+     * Get the password for the user (custom column name).
+     */
+    public function getAuthPassword(): string
+    {
+        return $this->password_hash;
+    }
+
+    /**
+     * Get the user's initials.
      */
     public function initials(): string
     {
