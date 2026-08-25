@@ -1,5 +1,5 @@
 <div
-    class="fixed inset-0 z-50"
+    class="pointer-events-none fixed inset-0 z-50"
     wire:key="cart-drawer"
     x-data="{ opened: false }"
     x-effect="if ($wire.open) { opened = true; document.body.classList.add('overflow-hidden'); } else { opened = false; document.body.classList.remove('overflow-hidden'); }"
@@ -14,7 +14,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+        class="pointer-events-auto absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
         @click="opened = false; $wire.closeDrawer()"
         aria-hidden="true"
     ></div>
@@ -28,7 +28,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-x-0"
         x-transition:leave-end="translate-x-full"
-        class="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl dark:bg-zinc-950 sm:w-[384px]"
+        class="pointer-events-auto absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl dark:bg-zinc-950 sm:w-[384px]"
         role="dialog"
         aria-modal="true"
         aria-label="Shopping cart"

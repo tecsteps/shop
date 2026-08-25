@@ -23,7 +23,7 @@ class ResolveStore
         app()->instance('current_store', $store);
         View::share('currentStore', $store);
 
-        if ($store->status === 'suspended' && $this->isStorefront($request)) {
+        if ($store->status === 'suspended' && ! $this->isAdmin($request)) {
             abort(503, 'This store is currently unavailable.');
         }
 
@@ -43,12 +43,11 @@ class ResolveStore
     {
         $path = trim($request->path(), '/');
 
-        return str_starts_with($path, 'admin') || str_starts_with($path, 'api/admin');
-    }
+        if (str_starts_with($path, 'api/admin')) {
+            return true;
+        }
 
-    private function isStorefront(Request $request): bool
-    {
-        return ! $this->isAdmin($request);
+        return $request->user() !== null && $request->session()->has('current_store_id');
     }
 
     private function resolveForAdmin(Request $request): ?Store

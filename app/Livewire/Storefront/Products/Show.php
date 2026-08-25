@@ -252,7 +252,14 @@ class Show extends Component
 
         foreach ($this->product->options as $option) {
             foreach ($option->values as $value) {
-                $required = array_values($this->selectedOptions);
+                $required = [];
+
+                foreach ($this->selectedOptions as $selectedOptionId => $selectedValueId) {
+                    if ($selectedOptionId !== $option->id) {
+                        $required[] = $selectedValueId;
+                    }
+                }
+
                 $required[] = $value->id;
 
                 $result[$value->id] = $this->product->variants

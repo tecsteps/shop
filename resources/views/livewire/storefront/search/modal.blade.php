@@ -1,5 +1,5 @@
 <div
-    class="fixed inset-0 z-[60]"
+    class="pointer-events-none fixed inset-0 z-[60]"
     wire:key="search-modal"
     x-data="{
         highlight: 0,
@@ -32,7 +32,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+        class="pointer-events-auto absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
         @click="$wire.closeModal()"
         aria-hidden="true"
     ></div>
@@ -46,7 +46,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        class="absolute inset-x-0 top-0 mx-auto mt-20 w-[calc(100%-2rem)] max-w-xl rounded-2xl bg-white shadow-2xl dark:bg-zinc-950 sm:mt-24"
+        class="pointer-events-auto absolute inset-x-0 top-0 mx-auto mt-20 w-[calc(100%-2rem)] max-w-xl rounded-2xl bg-white shadow-2xl dark:bg-zinc-950 sm:mt-24"
         role="dialog"
         aria-modal="true"
         aria-label="Search"

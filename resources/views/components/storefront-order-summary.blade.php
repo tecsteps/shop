@@ -1,6 +1,8 @@
 @props([
     'checkout' => null,
     'showDiscountInput' => true,
+    'discountError' => null,
+    'discountCode' => null,
 ])
 
 @php
