@@ -19,5 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\App\Exceptions\CartVersionMismatchException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'The cart has been modified. Please refresh and try again.',
+                    'error_code' => 'version_conflict',
+                ], 409);
+            }
+        });
     })->create();

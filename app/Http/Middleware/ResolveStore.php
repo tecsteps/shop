@@ -14,7 +14,7 @@ class ResolveStore
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $store = $this->resolve($request);
+        $store = app()->bound('current_store') ? app('current_store') : $this->resolve($request);
 
         if ($store === null) {
             abort(404, 'Store not found.');
