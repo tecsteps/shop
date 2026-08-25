@@ -57,6 +57,14 @@ class Index extends Component
         $this->page = max(1, $page);
     }
 
+    /**
+     * Re-run the search with the current query (deferred wire:model syncs first).
+     */
+    public function setQuery(): void
+    {
+        $this->page = 1;
+    }
+
     public function quickAdd(int $variantId): void
     {
         try {
