@@ -18,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(\App\Contracts\PaymentProvider::class, \App\Services\Payments\MockPaymentProvider::class);
+        $this->app->bind(\App\Contracts\TaxProvider::class, \App\Services\Tax\ManualTaxProvider::class);
     }
 
     /**
