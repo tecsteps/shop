@@ -29,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureRateLimiters();
+
+        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
     }
 
     /**

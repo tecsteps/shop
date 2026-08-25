@@ -1,29 +1,22 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\InteractsWithStore;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
 |--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
-|
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class, InteractsWithStore::class)
     ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
 | Expectations
 |--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
 */
 
 expect()->extend('toBeOne', function () {
@@ -34,14 +27,26 @@ expect()->extend('toBeOne', function () {
 |--------------------------------------------------------------------------
 | Functions
 |--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
 */
 
-function something()
+/**
+ * @return array{store: \App\Models\Store, user: \App\Models\User, organization: \App\Models\Organization, domain: \App\Models\StoreDomain}
+ */
+function createStoreContext(): array
 {
-    // ..
+    $organization = \App\Models\Organization::factory()->create();
+    $store = \App\Models\Store::factory()->create(['organization_id' => $organization->id]);
+    $domain = \App\Models\StoreDomain::factory()->create(['store_id' => $store->id]);
+    $user = \App\Models\User::factory()->create();
+    $user->stores()->attach($store->id, ['role' => 'owner']);
+    app()->instance('current_store', $store);
+
+    return ['store' => $store, 'user' => $user, 'organization' => $organization, 'domain' => $domain];
+}
+
+function bindCurrentStore(\App\Models\Store $store): \App\Models\Store
+{
+    app()->instance('current_store', $store);
+
+    return $store;
 }

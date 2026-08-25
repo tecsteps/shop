@@ -61,8 +61,7 @@ class User extends Authenticatable
     public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'store_users')
-            ->withPivot('role')
-            ->withTimestamps();
+            ->withPivot('role');
     }
 
     /**

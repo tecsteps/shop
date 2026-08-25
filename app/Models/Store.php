@@ -36,8 +36,7 @@ class Store extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'store_users')
-            ->withPivot('role')
-            ->withTimestamps();
+            ->withPivot('role');
     }
 
     public function settings(): HasOne
