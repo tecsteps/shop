@@ -46,12 +46,6 @@ class Show extends Component
      */
     public array $refundLines = [];
 
-    public function __construct(
-        private readonly InventoryService $inventoryService,
-        private readonly FulfillmentService $fulfillmentService,
-        private readonly RefundService $refundService,
-    ) {}
-
     public function mount(Order $order): void
     {
         $this->authorize('view', $order);
@@ -144,12 +138,12 @@ class Show extends Component
 
                 foreach ($this->order->lines()->with('variant.inventoryItem')->get() as $line) {
                     if ($line->variant?->inventoryItem) {
-                        $this->inventoryService->commit($line->variant->inventoryItem, $line->quantity);
+                        app(InventoryService::class)->commit($line->variant->inventoryItem, $line->quantity);
                     }
                 }
 
                 OrderPaid::dispatch($this->order);
-                $this->fulfillmentService->autoFulfillDigital($this->order);
+                app(FulfillmentService::class)->autoFulfillDigital($this->order);
             });
 
             $this->reloadOrder();
@@ -194,7 +188,7 @@ class Show extends Component
         ], fn ($value) => $value !== null && $value !== '');
 
         try {
-            $this->fulfillmentService->create($this->order, $lines, $tracking !== [] ? $tracking : null);
+            app(FulfillmentService::class)->create($this->order, $lines, $tracking !== [] ? $tracking : null);
 
             $this->showFulfillmentModal = false;
             $this->reloadOrder();
@@ -215,7 +209,7 @@ class Show extends Component
         $this->authorize('update', $fulfillment);
 
         try {
-            $this->fulfillmentService->markAsShipped($fulfillment);
+            app(FulfillmentService::class)->markAsShipped($fulfillment);
             $this->reloadOrder();
             $this->toast('Fulfillment marked as shipped');
         } catch (\Throwable $e) {
@@ -234,7 +228,7 @@ class Show extends Component
         $this->authorize('update', $fulfillment);
 
         try {
-            $this->fulfillmentService->markAsDelivered($fulfillment);
+            app(FulfillmentService::class)->markAsDelivered($fulfillment);
             $this->markFulfilledWhenComplete();
             $this->reloadOrder();
             $this->toast('Fulfillment marked as delivered');
@@ -296,7 +290,7 @@ class Show extends Component
         }
 
         try {
-            $this->refundService->create(
+            app(RefundService::class)->create(
                 $this->order,
                 $payment,
                 $amount,

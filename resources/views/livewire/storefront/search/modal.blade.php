@@ -133,7 +133,7 @@
                                         @php
                                             $price = $product->variants->where('status', 'active')->min('price_amount') ?? 0;
                                         @endphp
-                                        <x-storefront-price :amount="$price" :currency="$product->variants->first()?->currency ?? ($currentStore?->default_currency ?? 'EUR')" class="text-sm" />
+                                        <x-storefront-price :amount="$price" :currency="$product->variants->first()?->currency ?? (app()->bound('current_store') ? app('current_store')->default_currency : 'EUR')" class="text-sm" />
                                     </a>
                                 </li>
                             @endforeach

@@ -14,7 +14,8 @@
     $price = $defaultVariant?->price_amount ?? $activeVariants->min('price_amount') ?? 0;
     $compareAt = $defaultVariant?->compare_at_amount ?? null;
     $hasSale = $compareAt !== null && (int) $compareAt > (int) $price;
-    $currency = $defaultVariant?->currency ?? ($currentStore?->default_currency ?? 'EUR');
+    $storeCurrency = app()->bound('current_store') ? app('current_store')->default_currency : 'EUR';
+    $currency = $defaultVariant?->currency ?? $storeCurrency;
 
     $soldOut = $activeVariants->isEmpty()
         || $activeVariants->every(function ($variant) {

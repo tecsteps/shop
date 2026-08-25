@@ -32,7 +32,7 @@ class Form extends Component
 
     public function mount(?Page $page = null): void
     {
-        if ($page) {
+        if ($page && $page->exists) {
             $this->authorize('update', $page);
 
             $this->page = $page;

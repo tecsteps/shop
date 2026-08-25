@@ -14,7 +14,7 @@
     ])->first();
 
     $totals = $checkout->totals_json ?? [];
-    $currency = $totals['currency'] ?? $cart?->currency ?? ($currentStore?->default_currency ?? 'EUR');
+    $currency = $totals['currency'] ?? $cart?->currency ?? (app()->bound('current_store') ? app('current_store')->default_currency : 'EUR');
     $subtotal = (int) ($totals['subtotal'] ?? 0);
     $discount = (int) ($totals['discount'] ?? 0);
     $shipping = (int) ($totals['shipping'] ?? 0);

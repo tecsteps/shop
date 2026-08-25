@@ -6,30 +6,44 @@
 
 | Phase | Name | Status |
 |-------|------|--------|
-| P1 | Foundation (migrations, models, enums, middleware, auth) | 🔄 In Progress |
-| P2 | Catalog (products, variants, inventory, collections, media) | ⏳ Pending |
-| P3 | Themes, Pages, Navigation, Storefront Layout | ⏳ Pending |
-| P4 | Cart, Checkout, Discounts, Shipping, Taxes | ⏳ Pending |
-| P5 | Payments, Orders, Fulfillment | ⏳ Pending |
-| P6 | Customer Accounts | ⏳ Pending |
-| P7 | Admin Panel | ⏳ Pending |
-| P8 | Search | ⏳ Pending |
-| P9 | Analytics | ⏳ Pending |
-| P10 | Apps and Webhooks | ⏳ Pending |
-| P11 | Polish | ⏳ Pending |
+| P1 | Foundation (migrations, models, enums, middleware, auth) | ✅ Done |
+| P2 | Catalog (products, variants, inventory, collections, media) | ✅ Done |
+| P3 | Themes, Pages, Navigation, Storefront Layout | 🔄 In Progress (UI subagent) |
+| P4 | Cart, Checkout, Discounts, Shipping, Taxes | ✅ Done |
+| P5 | Payments, Orders, Fulfillment | ✅ Done |
+| P6 | Customer Accounts | ✅ Backend done (UI in progress) |
+| P7 | Admin Panel | 🔄 In Progress (UI subagent) |
+| P8 | Search | ✅ Done |
+| P9 | Analytics | ✅ Done |
+| P10 | Apps and Webhooks | ✅ Done |
+| P11 | Polish (a11y, dark mode, error pages, seeders) | 🔄 Seeders done, polish pending |
 | P12 | Full Test Suite + Playwright E2E | ⏳ Pending |
 
-## Build Order
+## Test Status
 
-Strict sequential build order defined in `specs/09-IMPLEMENTATION-ROADMAP.md`.
+- **148 tests passing** (unit + feature), 232 assertions.
+- Unit: PricingEngine, DiscountCalculator, TaxCalculator, ShippingCalculator, CartVersion, HandleGenerator.
+- Feature: Tenancy (StoreIsolation), Auth (Admin/Customer), Cart (service+API), Products (CRUD/Variant/Inventory/Collection), Checkout (flow/state), Orders (creation/refund/fulfillment), Payments, Search, Analytics, Webhooks, API (admin product/order + storefront checkout).
+
+## Backend Completed
+
+- 55-table schema (SQLite, WAL, FKs), 44 models + StoreScope/BelongsToStore, 27 enums.
+- Services: Inventory, Product, VariantMatrix, Cart, Discount, Tax, Shipping, PricingEngine, Checkout, Payment (mock PSP), Order, Refund, Fulfillment, Customer, Search (FTS5), Analytics, Webhook, Navigation.
+- Middleware: ResolveStore, CheckStoreRole, CustomerAuthenticate; 11 policies; rate limiters.
+- Auth: admin (web guard) + customer (store-scoped guard) + Sanctum tokens.
+- Routes: web (admin/storefront/checkout/account), API (storefront + admin), console schedules.
+- 18 seeders (demo store, verified idempotent via `php artisan db:seed`).
+
+## Remaining
+
+- Storefront/Admin Livewire UI components + views (subagents in progress).
+- Customer account feature tests + Admin UI feature tests + TenantResolutionTest (need UI).
+- SanitizeHtml action, HTML sanitization.
+- Playwright E2E (spec 08), 2nd-agent verification, review meeting.
 
 ## Notes
 
-- Stack: PHP 8.4 / Laravel 12 / Livewire v4 / Flux UI / Tailwind v4 / SQLite / Pest v4.
-- Monetary amounts: integer minor units (cents).
 - Built from scratch (no reuse of other-branch implementations).
-
-## Log
-
-- Started implementation. Read all specs (roadmap, schema, business logic, API routes, auth/security).
-- Planning foundation: config, enums, migrations, models, middleware, auth providers.
+- Monetary amounts: integer minor units (cents). Tax uses intdiv (truncation) to match the roadmap's concrete expected values (1044, 629, etc.).
+- `AnalyticsDaily` uses explicit `$table = 'analytics_daily'`.
+- Obsolete Livewire starter-kit scaffold tests removed (replaced by spec's suite).

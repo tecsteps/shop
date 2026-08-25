@@ -60,7 +60,7 @@ class Form extends Component
 
     public function mount(?Product $product = null): void
     {
-        if ($product) {
+        if ($product && $product->exists) {
             $this->authorize('update', $product);
 
             $this->product = $product->load(['variants.inventoryItem', 'media', 'collections']);

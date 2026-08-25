@@ -36,7 +36,7 @@
             <div>
                 <label for="price-min" class="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">Min</label>
                 <div class="relative">
-                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-zinc-400 dark:text-zinc-500" aria-hidden="true">{{ $currentStore?->default_currency ?? 'EUR' }}</span>
+                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-zinc-400 dark:text-zinc-500" aria-hidden="true">{{ app()->bound('current_store') ? app('current_store')->default_currency : 'EUR' }}</span>
                     <input
                         id="price-min"
                         type="number"
@@ -51,7 +51,7 @@
             <div>
                 <label for="price-max" class="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">Max</label>
                 <div class="relative">
-                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-zinc-400 dark:text-zinc-500" aria-hidden="true">{{ $currentStore?->default_currency ?? 'EUR' }}</span>
+                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-zinc-400 dark:text-zinc-500" aria-hidden="true">{{ app()->bound('current_store') ? app('current_store')->default_currency : 'EUR' }}</span>
                     <input
                         id="price-max"
                         type="number"

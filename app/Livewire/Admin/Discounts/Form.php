@@ -52,7 +52,7 @@ class Form extends Component
 
     public function mount(?Discount $discount = null): void
     {
-        if ($discount) {
+        if ($discount && $discount->exists) {
             $this->authorize('update', $discount);
 
             $this->discount = $discount;

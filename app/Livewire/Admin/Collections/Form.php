@@ -34,7 +34,7 @@ class Form extends Component
 
     public function mount(?Collection $collection = null): void
     {
-        if ($collection) {
+        if ($collection && $collection->exists) {
             $this->authorize('update', $collection);
 
             $this->collection = $collection->load('products');

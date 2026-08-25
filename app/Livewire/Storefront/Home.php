@@ -47,7 +47,7 @@ class Home extends Component
         $sections = $this->settings['home_sections'] ?? [];
 
         return array_values(array_filter(
-            $sections,
+            array_map(fn (string $section) => str_replace('_', '-', $section), $sections),
             fn (string $section) => $section !== 'newsletter' || ($this->settings['newsletter_enabled'] ?? true),
         ));
     }

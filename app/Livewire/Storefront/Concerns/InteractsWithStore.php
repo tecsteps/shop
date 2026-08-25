@@ -76,6 +76,20 @@ trait InteractsWithStore
     }
 
     /**
+     * Map an order status to a storefront badge variant.
+     */
+    public function statusBadgeVariant(string $status): string
+    {
+        return match ($status) {
+            'pending' => 'pending',
+            'paid' => 'success',
+            'fulfilled' => 'info',
+            'refunded' => 'danger',
+            default => 'muted',
+        };
+    }
+
+    /**
      * @return array<string, mixed>
      */
     protected function defaultThemeSettings(): array
@@ -109,7 +123,7 @@ trait InteractsWithStore
             'featured_collection_handles' => [],
             'featured_products_count' => 8,
             'featured_products_collection' => null,
-            'home_sections' => ['hero', 'featured_collections', 'featured_products', 'newsletter', 'rich_text'],
+            'home_sections' => ['hero', 'featured-collections', 'featured-products', 'newsletter', 'rich-text'],
             'rich_text_html' => null,
             'newsletter_enabled' => true,
             'products_per_page' => 12,

@@ -29,7 +29,7 @@ class ProductService
                 'title' => $data['title'],
                 'handle' => $data['handle'] ?? $this->handleGenerator->generate($data['title'], 'products', $store->id),
                 'status' => $data['status'] ?? 'draft',
-                'description_html' => $data['description_html'] ?? null,
+                'description_html' => isset($data['description_html']) ? app(\App\Actions\SanitizeHtml::class)->sanitize($data['description_html']) : null,
                 'vendor' => $data['vendor'] ?? null,
                 'product_type' => $data['product_type'] ?? null,
                 'tags' => $data['tags'] ?? [],
@@ -49,6 +49,10 @@ class ProductService
         DB::transaction(function () use ($product, $data) {
             if (array_key_exists('title', $data) && ! array_key_exists('handle', $data)) {
                 $data['handle'] = $this->handleGenerator->generate($data['title'], 'products', $product->store_id, $product->id);
+            }
+
+            if (array_key_exists('description_html', $data) && $data['description_html'] !== null) {
+                $data['description_html'] = app(\App\Actions\SanitizeHtml::class)->sanitize($data['description_html']);
             }
 
             $product->update($data);

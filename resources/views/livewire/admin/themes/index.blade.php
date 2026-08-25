@@ -4,10 +4,7 @@
     <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         @forelse ($this->themes as $theme)
             <flux:card
-                :class="[
-                    'overflow-hidden',
-                    $theme->status === 'published' ? 'ring-2 ring-blue-500' : '',
-                ]"
+                :class="$theme->status === 'published' ? 'overflow-hidden ring-2 ring-blue-500' : 'overflow-hidden'"
             >
                 {{-- Thumbnail --}}
                 <div class="flex aspect-video items-center justify-center bg-zinc-100 dark:bg-zinc-800">

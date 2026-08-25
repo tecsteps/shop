@@ -212,7 +212,7 @@
                     <flux:input wire:model="rateConfig.price" type="number" step="0.01" min="0" placeholder="5.00" />
                 </flux:field>
             @else
-                <flux:callout variant="info" icon="information-circle">
+                <flux:callout color="blue" icon="information-circle">
                     Carrier-calculated rates require a carrier integration to be configured.
                 </flux:callout>
             @endif

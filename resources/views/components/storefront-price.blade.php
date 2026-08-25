@@ -5,7 +5,8 @@
 ])
 
 @php
-    $currency = $currency ?? ($currentStore?->default_currency ?? 'EUR');
+    $storeCurrency = app()->bound('current_store') ? app('current_store')->default_currency : 'EUR';
+    $currency = $currency ?? $storeCurrency;
     $amount = (int) $amount;
     $formatted = number_format($amount / 100, 2, '.', ',').' '.$currency;
     $hasCompare = $compareAtAmount !== null && (int) $compareAtAmount > $amount;
