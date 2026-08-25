@@ -81,15 +81,14 @@
         </div>
 
         @if ($store)
-            <script type="application/ld+json">
-                {!! json_encode([
-                    '@context' => 'https://schema.org',
-                    '@type' => 'Organization',
-                    'name' => $storeName,
-                    'url' => url('/'),
-                    ...($contactEmail ? ['email' => 'mailto:'.$contactEmail] : []),
-                ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-            </script>
+            @php($organizationJson = json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'Organization',
+                'name' => $storeName,
+                'url' => url('/'),
+                ...($contactEmail ? ['email' => 'mailto:'.$contactEmail] : []),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))
+            <script type="application/ld+json">{!! $organizationJson !!}</script>
         @endif
     </div>
 </footer>

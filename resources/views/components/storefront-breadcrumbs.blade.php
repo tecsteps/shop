@@ -37,11 +37,10 @@
         @endforeach
     </ol>
 
-    <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'BreadcrumbList',
-            'itemListElement' => $schemaItems,
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
+    @php($breadcrumbJson = json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => $schemaItems,
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))
+    <script type="application/ld+json">{!! $breadcrumbJson !!}</script>
 </nav>
