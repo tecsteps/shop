@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role.check' => \App\Http\Middleware\CheckStoreRole::class,
             'auth.customer' => \App\Http\Middleware\CustomerAuthenticate::class,
         ]);
+
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\App\Exceptions\CartVersionMismatchException $e, $request) {

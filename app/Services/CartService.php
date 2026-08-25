@@ -139,6 +139,13 @@ class CartService
         return $cart;
     }
 
+    public function assertVersion(Cart $cart, int $expectedVersion): void
+    {
+        if ($cart->cart_version !== $expectedVersion) {
+            throw new \App\Exceptions\CartVersionMismatchException('The cart has been modified.');
+        }
+    }
+
     public function mergeOnLogin(Cart $guestCart, Cart $customerCart): Cart
     {
         return DB::transaction(function () use ($guestCart, $customerCart) {

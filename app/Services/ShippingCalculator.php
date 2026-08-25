@@ -71,6 +71,12 @@ class ShippingCalculator
 
     public function calculate(ShippingRate $rate, Cart $cart): int
     {
+        $cart->loadMissing('lines.variant');
+
+        if (! $cart->lines->contains(fn ($line) => $line->variant?->requires_shipping)) {
+            return 0;
+        }
+
         $config = $rate->config_json ?? [];
 
         return match ($rate->type) {

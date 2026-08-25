@@ -11,7 +11,7 @@ use Tests\Concerns\InteractsWithStore;
 
 pest()->extend(Tests\TestCase::class)
     ->use(RefreshDatabase::class, InteractsWithStore::class)
-    ->in('Feature');
+    ->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------
