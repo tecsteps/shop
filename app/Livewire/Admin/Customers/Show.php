@@ -127,19 +127,23 @@ class Show extends Component
             'is_default' => $this->addressDefault,
         ];
 
+        $newAddressId = null;
+
         if ($this->editingAddressId) {
             DB::table('customer_addresses')
                 ->where('id', $this->editingAddressId)
                 ->where('customer_id', $this->customer->id)
                 ->update($payload);
+
+            $newAddressId = $this->editingAddressId;
         } else {
-            DB::table('customer_addresses')->insert(['customer_id' => $this->customer->id] + $payload);
+            $newAddressId = DB::table('customer_addresses')->insertGetId(['customer_id' => $this->customer->id] + $payload);
         }
 
         if ($this->addressDefault) {
             DB::table('customer_addresses')
                 ->where('customer_id', $this->customer->id)
-                ->where('id', '!=', $this->editingAddressId ?? -1)
+                ->where('id', '!=', $newAddressId)
                 ->update(['is_default' => false]);
         }
 

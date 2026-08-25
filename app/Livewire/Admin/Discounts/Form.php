@@ -186,9 +186,11 @@ class Form extends Component
             'type' => $this->type,
             'code' => $this->type === 'code' ? Str::upper($this->code) : null,
             'value_type' => $this->valueType,
-            'value_amount' => $this->valueType === 'free_shipping'
-                ? null
-                : (int) round(((float) ($this->valueAmount ?? 0)) * 100),
+            'value_amount' => match ($this->valueType) {
+                'percent' => $this->valueAmount !== null ? (int) $this->valueAmount : null,
+                'free_shipping' => null,
+                default => (int) round(((float) ($this->valueAmount ?? 0)) * 100),
+            },
             'starts_at' => $this->startsAt ? Carbon::parse($this->startsAt) : null,
             'ends_at' => $this->endsAt ? Carbon::parse($this->endsAt) : null,
             'usage_limit' => $this->usageLimit,

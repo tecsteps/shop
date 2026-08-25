@@ -20,12 +20,12 @@ class ResolveStore
             abort(404, 'Store not found.');
         }
 
+        app()->instance('current_store', $store);
+        View::share('currentStore', $store);
+
         if ($store->status === 'suspended' && $this->isStorefront($request)) {
             abort(503, 'This store is currently unavailable.');
         }
-
-        app()->instance('current_store', $store);
-        View::share('currentStore', $store);
 
         return $next($request);
     }

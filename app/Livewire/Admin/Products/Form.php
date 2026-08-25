@@ -130,6 +130,8 @@ class Form extends Component
         $store = app('current_store');
         $service = app(ProductService::class);
 
+        $wasCreating = $this->product === null;
+
         $data = [
             'title' => $this->title,
             'status' => $this->status,
@@ -170,7 +172,7 @@ class Form extends Component
 
         $this->toast('Product saved');
 
-        if ($this->product === null) {
+        if ($wasCreating) {
             $this->redirect(route('admin.products.edit', $product), navigate: true);
         }
     }
@@ -270,6 +272,10 @@ class Form extends Component
 
     private function syncVariants(Product $product, string $currency): void
     {
+        // ProductService::create() auto-creates a default variant; reuse it for
+        // the first form row so we don't end up with a redundant empty variant.
+        $unassignedDefault = $product->variants()->where('is_default', true)->first();
+
         foreach ($this->variants as $row) {
             $price = (int) round(((float) ($row['price'] ?? 0)) * 100);
             $compareAt = ($row['compareAtPrice'] ?? null) !== null && (float) $row['compareAtPrice'] > 0
@@ -279,9 +285,13 @@ class Form extends Component
 
             $variant = isset($row['id']) && $row['id'] !== null
                 ? $product->variants()->find($row['id'])
-                : null;
+                : $unassignedDefault;
 
             if ($variant) {
+                if ($unassignedDefault !== null && (! isset($row['id']) || $row['id'] === null)) {
+                    $unassignedDefault = null;
+                }
+
                 $variant->update([
                     'sku' => ($row['sku'] ?? null) !== '' ? ($row['sku'] ?? null) : null,
                     'price_amount' => $price,

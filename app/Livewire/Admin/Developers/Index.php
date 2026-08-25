@@ -114,11 +114,11 @@ class Index extends Component
         ];
 
         if ($this->editingWebhookId) {
-            WebhookSubscription::where('id', $this->editingWebhookId)
+            WebhookSubscription::withoutTimestamps(fn () => WebhookSubscription::where('id', $this->editingWebhookId)
                 ->where('store_id', app('current_store')->id)
-                ->update($data);
+                ->update($data));
         } else {
-            WebhookSubscription::create($data + ['signing_secret_encrypted' => Str::random(32)]);
+            WebhookSubscription::withoutTimestamps(fn () => WebhookSubscription::create($data + ['signing_secret_encrypted' => Str::random(32)]));
         }
 
         $this->showWebhookModal = false;
