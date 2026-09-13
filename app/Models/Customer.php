@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
-    use HasFactory;
+    use BelongsToStore, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -31,6 +33,7 @@ class Customer extends Model
      */
     protected $hidden = [
         'password_hash',
+        'remember_token',
     ];
 
     /**
@@ -46,6 +49,15 @@ class Customer extends Model
             'password_hash' => 'hashed',
             'marketing_opt_in' => 'boolean',
         ];
+    }
+
+    /**
+     * The database column uses `password_hash` instead of Laravel's
+     * default `password`, so Auth::attempt() needs this override.
+     */
+    public function getAuthPassword(): string
+    {
+        return $this->password_hash ?? '';
     }
 
     public function customerAddresses(): HasMany

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
+use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Checkout extends Model
 {
-    use HasFactory;
+    use BelongsToStore, HasFactory;
 
     /**
      * The attributes that are mass assignable.

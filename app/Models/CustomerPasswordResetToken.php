@@ -33,6 +33,7 @@ class CustomerPasswordResetToken extends Model
         'store_id',
         'email',
         'token',
+        'created_at',
     ];
 
     /**

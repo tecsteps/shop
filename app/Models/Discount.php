@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Enums\DiscountStatus;
 use App\Enums\DiscountType;
 use App\Enums\DiscountValueType;
+use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Discount extends Model
 {
-    use HasFactory;
+    use BelongsToStore, HasFactory;
 
     /**
      * The attributes that are mass assignable.
