@@ -1,17 +1,48 @@
 <?php
 
+use App\Http\Middleware\CheckStoreRole;
+use App\Http\Middleware\CustomerAuthenticate;
+use App\Http\Middleware\RedirectCustomerToAccount;
+use App\Http\Middleware\ResolveStore;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'store.resolve' => ResolveStore::class,
+            'role.check' => CheckStoreRole::class,
+            'customer.auth' => CustomerAuthenticate::class,
+            'customer.redirect' => RedirectCustomerToAccount::class,
+            'abilities' => CheckAbilities::class,
+            'ability' => CheckForAnyAbility::class,
+        ]);
+
+        $middleware->redirectGuestsTo(function (Request $request): string {
+            if ($request->is('admin') || $request->is('admin/*')) {
+                return route('admin.login');
+            }
+
+            return route('login');
+        });
+
+        $middleware->redirectUsersTo(function (Request $request): string {
+            if ($request->user('customer') !== null) {
+                return route('customer.account');
+            }
+
+            return '/dashboard';
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -45,3 +45,8 @@ function something()
 {
     // ..
 }
+
+function storefrontUrl(string $hostname, string $path): string
+{
+    return "http://{$hostname}{$path}";
+}
