@@ -1,3 +1,0 @@
-[      70ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/products/1/edit:56
-[    7518ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://shop.test/livewire-893c4da5/update:0
-[    7530ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ :7

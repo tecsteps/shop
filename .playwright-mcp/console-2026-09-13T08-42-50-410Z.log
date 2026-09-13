@@ -1,5 +1,0 @@
-[      49ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/admin/discounts/create:54
-[    5862ms] [ERROR] Failed to load resource: the server responded with a status of 419 (unknown status) @ http://acme-fashion.test/admin/logout:0
-[    5897ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/admin:54
-[  107677ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/admin/login:14
-[  107678ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://acme-fashion.test/admin/login:0

@@ -1,4 +1,0 @@
-[      74ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/:46
-[   30770ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/collections/t-shirts:46
-[   41126ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/:46
-[   41212ms] [INFO] Autofocus processing was blocked because a document already has a focused element. @ http://acme-fashion.test/:0

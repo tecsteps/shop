@@ -1,4 +1,0 @@
-[      49ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/products/classic-cotton-t-shirt:46
-[    8683ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://acme-fashion.test/livewire-893c4da5/update:0
-[    8689ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ :7
-[    8701ms] Object
