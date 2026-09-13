@@ -1,0 +1,187 @@
+created:
+    - database/factories/OrganizationFactory.php
+    - database/factories/AppFactory.php
+    - database/factories/StoreFactory.php
+    - database/factories/StoreDomainFactory.php
+    - database/factories/StoreUserFactory.php
+    - database/factories/StoreSettingFactory.php
+    - database/factories/CustomerFactory.php
+    - database/factories/ThemeFactory.php
+    - database/factories/PageFactory.php
+    - database/factories/NavigationMenuFactory.php
+    - database/factories/SearchSettingFactory.php
+    - database/factories/ShippingZoneFactory.php
+    - database/factories/TaxSettingFactory.php
+    - database/factories/DiscountFactory.php
+    - database/factories/ProductFactory.php
+    - database/factories/CollectionFactory.php
+    - database/factories/AppInstallationFactory.php
+    - database/factories/OauthClientFactory.php
+    - database/factories/CustomerPasswordResetTokenFactory.php
+    - database/factories/ProductOptionFactory.php
+    - database/factories/ProductVariantFactory.php
+    - database/factories/ProductMediaFactory.php
+    - database/factories/CollectionProductFactory.php
+    - database/factories/CustomerAddressFactory.php
+    - database/factories/CartFactory.php
+    - database/factories/NavigationItemFactory.php
+    - database/factories/ThemeFileFactory.php
+    - database/factories/ThemeSettingFactory.php
+    - database/factories/SearchQueryFactory.php
+    - database/factories/ShippingRateFactory.php
+    - database/factories/OauthTokenFactory.php
+    - database/factories/WebhookSubscriptionFactory.php
+    - database/factories/ProductOptionValueFactory.php
+    - database/factories/InventoryItemFactory.php
+    - database/factories/CartLineFactory.php
+    - database/factories/CheckoutFactory.php
+    - database/factories/OrderFactory.php
+    - database/factories/AnalyticsEventFactory.php
+    - database/factories/AnalyticsDailyFactory.php
+    - database/factories/WebhookDeliveryFactory.php
+    - database/factories/VariantOptionValueFactory.php
+    - database/factories/OrderLineFactory.php
+    - database/factories/PaymentFactory.php
+    - database/factories/FulfillmentFactory.php
+    - database/factories/RefundFactory.php
+    - database/factories/FulfillmentLineFactory.php
+    - database/migrations/2026_09_13_065919_create_organizations_table.php
+    - database/migrations/2026_09_13_065920_create_apps_table.php
+    - database/migrations/2026_09_13_065921_create_stores_table.php
+    - database/migrations/2026_09_13_065922_create_store_domains_table.php
+    - database/migrations/2026_09_13_065923_create_store_users_table.php
+    - database/migrations/2026_09_13_065924_create_store_settings_table.php
+    - database/migrations/2026_09_13_065925_create_customers_table.php
+    - database/migrations/2026_09_13_065926_create_themes_table.php
+    - database/migrations/2026_09_13_065927_create_pages_table.php
+    - database/migrations/2026_09_13_065928_create_navigation_menus_table.php
+    - database/migrations/2026_09_13_065929_create_search_settings_table.php
+    - database/migrations/2026_09_13_065930_create_shipping_zones_table.php
+    - database/migrations/2026_09_13_065931_create_tax_settings_table.php
+    - database/migrations/2026_09_13_065932_create_discounts_table.php
+    - database/migrations/2026_09_13_065933_create_products_table.php
+    - database/migrations/2026_09_13_065934_create_collections_table.php
+    - database/migrations/2026_09_13_065935_create_app_installations_table.php
+    - database/migrations/2026_09_13_065936_create_oauth_clients_table.php
+    - database/migrations/2026_09_13_065937_create_customer_password_reset_tokens_table.php
+    - database/migrations/2026_09_13_065938_create_product_options_table.php
+    - database/migrations/2026_09_13_065939_create_product_variants_table.php
+    - database/migrations/2026_09_13_065940_create_product_media_table.php
+    - database/migrations/2026_09_13_065941_create_collection_products_table.php
+    - database/migrations/2026_09_13_065942_create_customer_addresses_table.php
+    - database/migrations/2026_09_13_065943_create_carts_table.php
+    - database/migrations/2026_09_13_065944_create_navigation_items_table.php
+    - database/migrations/2026_09_13_065945_create_theme_files_table.php
+    - database/migrations/2026_09_13_065946_create_theme_settings_table.php
+    - database/migrations/2026_09_13_065947_create_search_queries_table.php
+    - database/migrations/2026_09_13_065948_create_shipping_rates_table.php
+    - database/migrations/2026_09_13_065949_create_oauth_tokens_table.php
+    - database/migrations/2026_09_13_065950_create_webhook_subscriptions_table.php
+    - database/migrations/2026_09_13_065951_create_product_option_values_table.php
+    - database/migrations/2026_09_13_065952_create_inventory_items_table.php
+    - database/migrations/2026_09_13_065953_create_cart_lines_table.php
+    - database/migrations/2026_09_13_065954_create_checkouts_table.php
+    - database/migrations/2026_09_13_065955_create_orders_table.php
+    - database/migrations/2026_09_13_065956_create_analytics_events_table.php
+    - database/migrations/2026_09_13_065957_create_analytics_daily_table.php
+    - database/migrations/2026_09_13_065958_create_webhook_deliveries_table.php
+    - database/migrations/2026_09_13_065959_create_variant_option_values_table.php
+    - database/migrations/2026_09_13_070000_create_order_lines_table.php
+    - database/migrations/2026_09_13_070001_create_payments_table.php
+    - database/migrations/2026_09_13_070002_create_fulfillments_table.php
+    - database/migrations/2026_09_13_070003_create_refunds_table.php
+    - database/migrations/2026_09_13_070004_create_fulfillment_lines_table.php
+    - app/Models/Organization.php
+    - app/Models/App.php
+    - app/Models/Store.php
+    - app/Models/StoreDomain.php
+    - app/Models/StoreUser.php
+    - app/Models/StoreSetting.php
+    - app/Models/Customer.php
+    - app/Models/Theme.php
+    - app/Models/Page.php
+    - app/Models/NavigationMenu.php
+    - app/Models/SearchSetting.php
+    - app/Models/ShippingZone.php
+    - app/Models/TaxSetting.php
+    - app/Models/Discount.php
+    - app/Models/Product.php
+    - app/Models/Collection.php
+    - app/Models/AppInstallation.php
+    - app/Models/OauthClient.php
+    - app/Models/CustomerPasswordResetToken.php
+    - app/Models/ProductOption.php
+    - app/Models/ProductVariant.php
+    - app/Models/ProductMedia.php
+    - app/Models/CollectionProduct.php
+    - app/Models/CustomerAddress.php
+    - app/Models/Cart.php
+    - app/Models/NavigationItem.php
+    - app/Models/ThemeFile.php
+    - app/Models/ThemeSetting.php
+    - app/Models/SearchQuery.php
+    - app/Models/ShippingRate.php
+    - app/Models/OauthToken.php
+    - app/Models/WebhookSubscription.php
+    - app/Models/ProductOptionValue.php
+    - app/Models/InventoryItem.php
+    - app/Models/CartLine.php
+    - app/Models/Checkout.php
+    - app/Models/Order.php
+    - app/Models/AnalyticsEvent.php
+    - app/Models/AnalyticsDaily.php
+    - app/Models/WebhookDelivery.php
+    - app/Models/VariantOptionValue.php
+    - app/Models/OrderLine.php
+    - app/Models/Payment.php
+    - app/Models/Fulfillment.php
+    - app/Models/Refund.php
+    - app/Models/FulfillmentLine.php
+models:
+    User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable', two_factor_secret: 'text nullable', two_factor_recovery_codes: 'text nullable', two_factor_confirmed_at: 'datetime nullable', status: "string default:'active'", last_login_at: 'datetime nullable' }
+    Organization: { name: string, billing_email: string, relationships: { hasMany: Store }, indexes: [{ index: billing_email }] }
+    App: { timestamps: false, name: string, status: 'string default:active', created_at: 'timestamp nullable', relationships: { hasMany: 'AppInstallation, OauthClient' }, indexes: [{ index: status }] }
+    Store: { organization_id: 'id foreign:organizations onDelete:cascade', name: string, handle: string, status: 'string default:active', default_currency: 'string default:USD', default_locale: 'string default:en', timezone: 'string default:UTC', relationships: { hasOne: 'StoreSetting, SearchSetting, TaxSetting', hasMany: 'StoreDomain, Customer, Theme, Page, NavigationMenu, Cart, Checkout, Order, Discount, ShippingZone, Product, Collection, SearchQuery, AnalyticsEvent, WebhookSubscription, InventoryItem, AppInstallation' }, indexes: [{ unique: handle }, { index: organization_id }, { index: status }] }
+    StoreDomain: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', hostname: string, type: 'string default:storefront', is_primary: 'integer default:0', tls_mode: 'string default:managed', created_at: 'timestamp nullable', indexes: [{ unique: hostname }, { index: store_id }, { index: 'store_id, is_primary' }] }
+    StoreUser: { meta: { pivot: true }, id: false, timestamps: false, store_id: 'id foreign:stores onDelete:cascade', user_id: 'id foreign:users onDelete:cascade', role: 'string default:staff', created_at: 'timestamp nullable', indexes: [{ unique: 'store_id, user_id' }, { index: user_id }, { index: 'store_id, role' }] }
+    StoreSetting: { id: false, timestamps: false, store_id: 'id foreign:stores onDelete:cascade primary', settings_json: "json default:'{}'", updated_at: 'timestamp nullable' }
+    Customer: { store_id: 'id foreign:stores onDelete:cascade', email: string, password_hash: 'string nullable', name: 'string nullable', marketing_opt_in: 'integer default:0', relationships: { hasMany: 'CustomerAddress, Order, Cart, Checkout, AnalyticsEvent' }, indexes: [{ unique: 'store_id, email' }, { index: store_id }] }
+    Theme: { store_id: 'id foreign:stores onDelete:cascade', name: string, version: 'string nullable', status: 'string default:draft', published_at: 'timestamp nullable', relationships: { hasOne: ThemeSetting, hasMany: ThemeFile }, indexes: [{ index: store_id }, { index: 'store_id, status' }] }
+    Page: { store_id: 'id foreign:stores onDelete:cascade', title: string, handle: string, body_html: 'text nullable', status: 'string default:draft', published_at: 'timestamp nullable', indexes: [{ unique: 'store_id, handle' }, { index: store_id }, { index: 'store_id, status' }] }
+    NavigationMenu: { store_id: 'id foreign:stores onDelete:cascade', handle: string, title: string, relationships: { hasMany: NavigationItem }, indexes: [{ unique: 'store_id, handle' }, { index: store_id }] }
+    SearchSetting: { id: false, timestamps: false, store_id: 'id foreign:stores onDelete:cascade primary', synonyms_json: "json default:'[]'", stop_words_json: "json default:'[]'", updated_at: 'timestamp nullable' }
+    ShippingZone: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', name: string, countries_json: "json default:'[]'", regions_json: "json default:'[]'", relationships: { hasMany: ShippingRate }, indexes: [{ index: store_id }] }
+    TaxSetting: { id: false, timestamps: false, store_id: 'id foreign:stores onDelete:cascade primary', mode: 'string default:manual', provider: 'string default:none', prices_include_tax: 'integer default:0', config_json: "json default:'{}'" }
+    Discount: { store_id: 'id foreign:stores onDelete:cascade', type: 'string default:code', code: 'string nullable', value_type: string, value_amount: 'integer default:0', starts_at: timestamp, ends_at: 'timestamp nullable', usage_limit: 'integer nullable', usage_count: 'integer default:0', rules_json: "json default:'{}'", status: 'string default:active', indexes: [{ unique: 'store_id, code' }, { index: store_id }, { index: 'store_id, status' }, { index: 'store_id, type' }] }
+    Product: { store_id: 'id foreign:stores onDelete:cascade', title: string, handle: string, status: 'string default:draft', description_html: 'text nullable', vendor: 'string nullable', product_type: 'string nullable', tags: "json default:'[]'", published_at: 'timestamp nullable', relationships: { hasMany: 'ProductOption, ProductVariant, ProductMedia' }, indexes: [{ unique: 'store_id, handle' }, { index: store_id }, { index: 'store_id, status' }, { index: 'store_id, published_at' }, { index: 'store_id, vendor' }, { index: 'store_id, product_type' }] }
+    Collection: { store_id: 'id foreign:stores onDelete:cascade', title: string, handle: string, description_html: 'text nullable', type: 'string default:manual', status: 'string default:active', indexes: [{ unique: 'store_id, handle' }, { index: store_id }, { index: 'store_id, status' }] }
+    AppInstallation: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', app_id: 'id foreign:apps onDelete:cascade', scopes_json: "json default:'[]'", status: 'string default:active', installed_at: 'timestamp nullable', relationships: { hasMany: 'OauthToken, WebhookSubscription' }, indexes: [{ unique: 'store_id, app_id' }, { index: store_id }, { index: app_id }] }
+    OauthClient: { timestamps: false, app_id: 'id foreign:apps onDelete:cascade', client_id: string, client_secret_encrypted: text, redirect_uris_json: "json default:'[]'", indexes: [{ unique: client_id }, { index: app_id }] }
+    CustomerPasswordResetToken: { id: false, timestamps: false, store_id: 'id foreign:stores onDelete:cascade', email: string, token: string, created_at: 'timestamp nullable', indexes: [{ unique: 'store_id, email' }] }
+    ProductOption: { timestamps: false, product_id: 'id foreign:products onDelete:cascade', name: string, position: 'integer default:0', relationships: { hasMany: ProductOptionValue }, indexes: [{ index: product_id }, { unique: 'product_id, position' }] }
+    ProductVariant: { product_id: 'id foreign:products onDelete:cascade', sku: 'string nullable', barcode: 'string nullable', price_amount: 'integer default:0', compare_at_amount: 'integer nullable', currency: 'string default:USD', weight_g: 'integer nullable', requires_shipping: 'integer default:1', is_default: 'integer default:0', position: 'integer default:0', status: 'string default:active', relationships: { hasOne: InventoryItem }, indexes: [{ index: product_id }, { index: sku }, { index: barcode }, { index: 'product_id, position' }, { index: 'product_id, is_default' }] }
+    ProductMedia: { timestamps: false, product_id: 'id foreign:products onDelete:cascade', type: 'string default:image', storage_key: string, alt_text: 'string nullable', width: 'integer nullable', height: 'integer nullable', mime_type: 'string nullable', byte_size: 'integer nullable', position: 'integer default:0', status: 'string default:processing', created_at: 'timestamp nullable', indexes: [{ index: product_id }, { index: 'product_id, position' }, { index: status }] }
+    CollectionProduct: { id: false, timestamps: false, collection_id: 'id foreign:collections onDelete:cascade', product_id: 'id foreign:products onDelete:cascade', position: 'integer default:0', indexes: [{ unique: 'collection_id, product_id' }, { index: product_id }, { index: 'collection_id, position' }] }
+    CustomerAddress: { timestamps: false, customer_id: 'id foreign:customers onDelete:cascade', label: 'string nullable', address_json: "json default:'{}'", is_default: 'integer default:0', indexes: [{ index: customer_id }, { index: 'customer_id, is_default' }] }
+    Cart: { store_id: 'id foreign:stores onDelete:cascade', customer_id: 'id foreign:customers nullable onDelete:null', currency: 'string default:USD', cart_version: 'integer default:1', status: 'string default:active', relationships: { hasMany: 'CartLine, Checkout' }, indexes: [{ index: store_id }, { index: customer_id }, { index: 'store_id, status' }] }
+    NavigationItem: { timestamps: false, menu_id: 'id foreign:navigation_menus onDelete:cascade', type: 'string default:link', label: string, url: 'string nullable', resource_id: 'integer nullable', position: 'integer default:0', indexes: [{ index: menu_id }, { index: 'menu_id, position' }] }
+    ThemeFile: { timestamps: false, theme_id: 'id foreign:themes onDelete:cascade', path: string, storage_key: string, sha256: string, byte_size: 'integer default:0', indexes: [{ unique: 'theme_id, path' }, { index: theme_id }] }
+    ThemeSetting: { id: false, timestamps: false, theme_id: 'id foreign:themes onDelete:cascade primary', settings_json: "json default:'{}'", updated_at: 'timestamp nullable' }
+    SearchQuery: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', query: string, filters_json: 'json nullable', results_count: 'integer default:0', created_at: 'timestamp nullable', indexes: [{ index: store_id }, { index: 'store_id, created_at' }, { index: 'store_id, query' }] }
+    ShippingRate: { timestamps: false, zone_id: 'id foreign:shipping_zones onDelete:cascade', name: string, type: 'string default:flat', config_json: "json default:'{}'", is_active: 'integer default:1', indexes: [{ index: zone_id }, { index: 'zone_id, is_active' }] }
+    OauthToken: { timestamps: false, installation_id: 'id foreign:app_installations onDelete:cascade', access_token_hash: string, refresh_token_hash: 'string nullable', expires_at: timestamp, indexes: [{ index: installation_id }, { unique: access_token_hash }, { index: expires_at }] }
+    WebhookSubscription: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', app_installation_id: 'id foreign:app_installations nullable onDelete:cascade', event_type: string, target_url: string, signing_secret_encrypted: text, status: 'string default:active', relationships: { hasMany: WebhookDelivery }, indexes: [{ index: store_id }, { index: 'store_id, event_type' }, { index: app_installation_id }] }
+    ProductOptionValue: { timestamps: false, product_option_id: 'id foreign:product_options onDelete:cascade', value: string, position: 'integer default:0', indexes: [{ index: product_option_id }, { unique: 'product_option_id, position' }] }
+    InventoryItem: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', variant_id: 'id foreign:product_variants onDelete:cascade', quantity_on_hand: 'integer default:0', quantity_reserved: 'integer default:0', policy: 'string default:deny', indexes: [{ unique: variant_id }, { index: store_id }] }
+    CartLine: { timestamps: false, cart_id: 'id foreign:carts onDelete:cascade', variant_id: 'id foreign:product_variants onDelete:cascade', quantity: 'integer default:1', unit_price_amount: 'integer default:0', line_subtotal_amount: 'integer default:0', line_discount_amount: 'integer default:0', line_total_amount: 'integer default:0', indexes: [{ index: cart_id }, { unique: 'cart_id, variant_id' }] }
+    Checkout: { store_id: 'id foreign:stores onDelete:cascade', cart_id: 'id foreign:carts onDelete:cascade', customer_id: 'id foreign:customers nullable onDelete:null', status: 'string default:started', payment_method: 'string nullable', email: 'string nullable', shipping_address_json: 'json nullable', billing_address_json: 'json nullable', shipping_method_id: 'integer nullable', discount_code: 'string nullable', tax_provider_snapshot_json: 'json nullable', totals_json: 'json nullable', expires_at: 'timestamp nullable', indexes: [{ index: store_id }, { index: cart_id }, { index: customer_id }, { index: 'store_id, status' }, { index: expires_at }] }
+    Order: { store_id: 'id foreign:stores onDelete:cascade', customer_id: 'id foreign:customers nullable onDelete:null', order_number: string, payment_method: string, status: 'string default:pending', financial_status: 'string default:pending', fulfillment_status: 'string default:unfulfilled', currency: 'string default:USD', subtotal_amount: 'integer default:0', discount_amount: 'integer default:0', shipping_amount: 'integer default:0', tax_amount: 'integer default:0', total_amount: 'integer default:0', email: 'string nullable', billing_address_json: 'json nullable', shipping_address_json: 'json nullable', placed_at: 'timestamp nullable', relationships: { hasMany: 'OrderLine, Payment, Refund, Fulfillment' }, indexes: [{ unique: 'store_id, order_number' }, { index: store_id }, { index: customer_id }, { index: 'store_id, status' }, { index: 'store_id, financial_status' }, { index: 'store_id, fulfillment_status' }, { index: 'store_id, placed_at' }] }
+    AnalyticsEvent: { timestamps: false, store_id: 'id foreign:stores onDelete:cascade', type: string, session_id: 'string nullable', customer_id: 'id foreign:customers nullable onDelete:null', properties_json: "json default:'{}'", client_event_id: 'string nullable', occurred_at: 'timestamp nullable', created_at: 'timestamp nullable', indexes: [{ index: store_id }, { index: 'store_id, type' }, { index: 'store_id, created_at' }, { index: session_id }, { index: customer_id }, { unique: 'store_id, client_event_id' }] }
+    AnalyticsDaily: { meta: { table: analytics_daily }, id: false, timestamps: false, store_id: 'id foreign:stores onDelete:cascade', date: string, orders_count: 'integer default:0', revenue_amount: 'integer default:0', aov_amount: 'integer default:0', visits_count: 'integer default:0', add_to_cart_count: 'integer default:0', checkout_started_count: 'integer default:0', checkout_completed_count: 'integer default:0', indexes: [{ unique: 'store_id, date' }] }
+    WebhookDelivery: { timestamps: false, subscription_id: 'id foreign:webhook_subscriptions onDelete:cascade', event_id: string, attempt_count: 'integer default:1', status: 'string default:pending', last_attempt_at: 'timestamp nullable', response_code: 'integer nullable', response_body_snippet: 'text nullable', indexes: [{ index: subscription_id }, { index: event_id }, { index: status }, { index: last_attempt_at }] }
+    VariantOptionValue: { id: false, timestamps: false, variant_id: 'id foreign:product_variants onDelete:cascade', product_option_value_id: 'id foreign:product_option_values onDelete:cascade', indexes: [{ unique: 'variant_id, product_option_value_id' }, { index: product_option_value_id }] }
+    OrderLine: { timestamps: false, order_id: 'id foreign:orders onDelete:cascade', product_id: 'id foreign:products nullable onDelete:null', variant_id: 'id foreign:product_variants nullable onDelete:null', title_snapshot: string, sku_snapshot: 'string nullable', quantity: 'integer default:1', unit_price_amount: 'integer default:0', total_amount: 'integer default:0', tax_lines_json: "json default:'[]'", discount_allocations_json: "json default:'[]'", relationships: { hasMany: FulfillmentLine }, indexes: [{ index: order_id }, { index: product_id }, { index: variant_id }] }
+    Payment: { timestamps: false, order_id: 'id foreign:orders onDelete:cascade', provider: 'string default:mock', method: string, provider_payment_id: 'string nullable', status: 'string default:pending', amount: 'integer default:0', currency: 'string default:USD', raw_json_encrypted: 'text nullable', created_at: 'timestamp nullable', relationships: { hasMany: Refund }, indexes: [{ index: order_id }, { index: 'provider, provider_payment_id' }, { index: method }, { index: status }] }
+    Fulfillment: { timestamps: false, order_id: 'id foreign:orders onDelete:cascade', status: 'string default:pending', tracking_company: 'string nullable', tracking_number: 'string nullable', tracking_url: 'string nullable', shipped_at: 'timestamp nullable', created_at: 'timestamp nullable', relationships: { hasMany: FulfillmentLine }, indexes: [{ index: order_id }, { index: status }, { index: 'tracking_company, tracking_number' }] }
+    Refund: { timestamps: false, order_id: 'id foreign:orders onDelete:cascade', payment_id: 'id foreign:payments onDelete:cascade', amount: 'integer default:0', reason: 'text nullable', status: 'string default:pending', provider_refund_id: 'string nullable', created_at: 'timestamp nullable', indexes: [{ index: order_id }, { index: payment_id }, { index: status }] }
+    FulfillmentLine: { timestamps: false, fulfillment_id: 'id foreign:fulfillments onDelete:cascade', order_line_id: 'id foreign:order_lines onDelete:cascade', quantity: 'integer default:1', indexes: [{ index: fulfillment_id }, { unique: 'fulfillment_id, order_line_id' }] }
