@@ -12,8 +12,8 @@ Schema: managed ONLY in `draft.yaml` via Laravel Blueprint (`php artisan bluepri
 - [x] Agent A: Full `draft.yaml` schema (spec 01) + models + enums + factories (55 tables, 47 models, 35 enums, 85 tests green)
 - [x] Agent B: Foundation - tenant resolution, middleware, BelongsToStore, admin/customer auth, RBAC (156 tests green)
 - [x] Agent C: Catalog - products, variants, inventory, collections, media, search FTS5 (248 tests green)
-- [~] Agent D: Cart, pricing engine, discounts, shipping, tax, checkout state machine, mock PSP payments, orders, refunds, fulfillment (specs 05.4-12, 09 Phase 4+5)
-- [ ] Agent E: Storefront UI - layout, themes, pages, navigation, cart/checkout UI, customer accounts (specs 04, 09 Phase 3+6)
+- [x] Agent D: Cart, pricing engine, discounts, shipping, tax, checkout state machine, mock PSP payments, orders, refunds, fulfillment (447 tests green)
+- [~] Agent E: Storefront UI - layout, themes, pages, navigation, cart/checkout UI, customer accounts (specs 04, 09 Phase 3+6)
 - [ ] Agent F: Admin panel (spec 03), analytics, webhooks/apps, seeders (specs 07, 09 Phase 7+9+10)
 - [ ] Agent G (independent 2nd agent): verify ALL acceptance criteria via Pest + Playwright MCP, file bugs
 - [ ] Bugfix + final review meeting (customer- + admin-side showcase)
