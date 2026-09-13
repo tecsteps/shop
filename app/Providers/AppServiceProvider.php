@@ -127,9 +127,7 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('api.storefront', fn (Request $request): Limit => Limit::perMinute(120)->by($request->ip()));
 
-        RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by(
-            $request->session()->getId() ?: $request->ip()
-        ));
+        RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by($request->ip()));
 
         RateLimiter::for('search', fn (Request $request): Limit => Limit::perMinute(30)->by($request->ip()));
 

@@ -71,24 +71,26 @@
             @if (count($topProducts) === 0)
                 <flux:text variant="subtle" class="mt-4">No sales data for this period.</flux:text>
             @else
-                <table class="mt-4 w-full text-sm">
+                <div class="mt-4 overflow-x-auto">
+                <table class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-zinc-200 text-left dark:border-zinc-700">
-                            <th class="pb-2 font-medium">Product Title</th>
-                            <th class="pb-2 font-medium">Units Sold</th>
+                            <th class="pb-2 pr-4 font-medium">Product Title</th>
+                            <th class="pb-2 pr-4 font-medium">Units Sold</th>
                             <th class="pb-2 font-medium">Revenue</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($topProducts as $product)
                             <tr class="border-b border-zinc-100 dark:border-zinc-800" wire:key="top-{{ $product['product_id'] }}">
-                                <td class="py-2">{{ $product['title'] }}</td>
-                                <td class="py-2">{{ $product['units_sold'] }}</td>
+                                <td class="py-2 pr-4">{{ $product['title'] }}</td>
+                                <td class="py-2 pr-4">{{ $product['units_sold'] }}</td>
                                 <td class="py-2">{{ $this->money($product['revenue_amount']) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             @endif
         </div>
 

@@ -73,6 +73,9 @@ trait ManagesCartLines
             'image_url' => $catalog->primaryImageUrl($line->variant->product),
             'max_quantity' => $catalog->availableQuantity($line->variant),
             'currency' => $line->variant->currency ?? $cart->currency,
+            'is_backorder' => $line->variant->inventoryItem !== null
+                && $line->variant->inventoryItem->policy === \App\Enums\InventoryPolicy::Continue
+                && ($line->variant->inventoryItem->quantity_on_hand - $line->variant->inventoryItem->quantity_reserved) <= 0,
         ])->all();
     }
 

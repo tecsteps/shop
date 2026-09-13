@@ -4,7 +4,7 @@
         <flux:breadcrumbs.item>Settings</flux:breadcrumbs.item>
     </flux:breadcrumbs>
 
-    <flux:heading size="xl" class="mb-6">Settings</flux:heading>
+    <flux:heading size="xl" class="mb-6">Store Settings</flux:heading>
 
     <div class="mb-6 flex flex-wrap gap-1 border-b border-zinc-200 dark:border-zinc-700" role="tablist" aria-label="Settings sections">
         <button type="button" wire:click="$set('tab', 'general')" role="tab" aria-selected="{{ $this->tab === 'general' ? 'true' : 'false' }}" class="px-3 py-2 text-sm {{ $this->tab === 'general' ? 'border-b-2 border-zinc-900 font-semibold dark:border-white' : 'text-zinc-500 dark:text-zinc-400' }}">General</button>

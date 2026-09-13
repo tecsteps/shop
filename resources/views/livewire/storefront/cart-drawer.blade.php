@@ -32,6 +32,9 @@
                                     @if ($line['variant'] !== '')
                                         <p class="truncate text-xs text-zinc-500 dark:text-zinc-400">{{ $line['variant'] }}</p>
                                     @endif
+                                    @if ($line['is_backorder'] ?? false)
+                                        <p class="text-xs text-blue-600 dark:text-blue-400">Available on backorder</p>
+                                    @endif
                                     <div class="mt-2 flex items-center justify-between gap-2">
                                         <div class="inline-flex items-center rounded border border-zinc-300 dark:border-zinc-700">
                                             <button type="button" wire:click="decrementLine({{ $line['id'] }})" wire:loading.attr="disabled" class="flex h-8 w-8 items-center justify-center" aria-label="Decrease quantity">-</button>

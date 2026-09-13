@@ -1,0 +1,73 @@
+- generic [active] [ref=f15e1]:
+  - link "Skip to main content" [ref=f15e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f15e3]:
+    - generic [ref=f15e4]:
+      - generic [ref=f15e5]:
+        - group [ref=f15e6]:
+          - generic "Open menu" [ref=f15e7]
+        - link "Acme Fashion" [ref=f15e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f15e11]:
+        - list [ref=f15e12]:
+          - listitem [ref=f15e13]:
+            - link "Home" [ref=f15e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f15e15]:
+            - link "New Arrivals" [ref=f15e16] [cursor=pointer]:
+              - /url: http://shop.test/collections/new-arrivals
+          - listitem [ref=f15e17]:
+            - link "T-Shirts" [ref=f15e18] [cursor=pointer]:
+              - /url: http://shop.test/collections/t-shirts
+          - listitem [ref=f15e19]:
+            - link "Pants & Jeans" [ref=f15e20] [cursor=pointer]:
+              - /url: http://shop.test/collections/pants-jeans
+          - listitem [ref=f15e21]:
+            - link "Sale" [ref=f15e22] [cursor=pointer]:
+              - /url: http://shop.test/collections/sale
+      - generic [ref=f15e23]:
+        - button "Search" [ref=f15e24]
+        - button "Open cart" [ref=f15e26]
+        - link "Account" [ref=f15e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+  - main [ref=f15e31]:
+    - generic [ref=f15e32]:
+      - navigation "Breadcrumb" [ref=f15e33]:
+        - list [ref=f15e34]:
+          - listitem [ref=f15e35]:
+            - link "Home" [ref=f15e36] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f15e37]: / About Us
+      - heading "About Us" [level=1] [ref=f15e38]
+      - generic [ref=f15e39]:
+        - heading "Our Story" [level=2] [ref=f15e40]
+        - paragraph [ref=f15e41]: "Acme Fashion started in Berlin with a simple mission: timeless essentials made to last. We design every piece in-house and work directly with family-owned factories."
+        - heading "Our Values" [level=2] [ref=f15e42]
+        - paragraph [ref=f15e43]: We believe in ethical sourcing, sustainable materials, and fair labor. Every supplier in our chain is audited annually.
+        - heading "Our Team" [level=2] [ref=f15e44]
+        - paragraph [ref=f15e45]: Our Berlin-based team of designers, tailors, and customer advocates is passionate about quality clothing that respects people and the planet.
+  - contentinfo [ref=f15e46]:
+    - generic [ref=f15e47]:
+      - generic [ref=f15e48]:
+        - navigation "Footer" [ref=f15e49]:
+          - heading "Links" [level=2] [ref=f15e50]
+          - list [ref=f15e51]:
+            - listitem [ref=f15e52]:
+              - link "About Us" [ref=f15e53] [cursor=pointer]:
+                - /url: http://shop.test/pages/about
+            - listitem [ref=f15e54]:
+              - link "FAQ" [ref=f15e55] [cursor=pointer]:
+                - /url: http://shop.test/pages/faq
+            - listitem [ref=f15e56]:
+              - link "Shipping & Returns" [ref=f15e57] [cursor=pointer]:
+                - /url: http://shop.test/pages/shipping-returns
+            - listitem [ref=f15e58]:
+              - link "Privacy Policy" [ref=f15e59] [cursor=pointer]:
+                - /url: http://shop.test/pages/privacy-policy
+            - listitem [ref=f15e60]:
+              - link "Terms of Service" [ref=f15e61] [cursor=pointer]:
+                - /url: http://shop.test/pages/terms
+        - generic [ref=f15e62]:
+          - heading "Store" [level=2] [ref=f15e63]
+          - paragraph [ref=f15e64]: Acme Fashion
+      - paragraph [ref=f15e65]: © 2026 Acme Fashion. All rights reserved.

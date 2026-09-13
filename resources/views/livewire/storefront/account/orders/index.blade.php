@@ -23,7 +23,7 @@
                             <td class="py-3">{{ $order->placed_at?->format('M d, Y') }}</td>
                             <td class="py-3"><x-storefront.badge :text="ucfirst($order->status->value)" /></td>
                             <td class="py-3 text-right">{{ \App\Support\Money::format($order->total_amount, $order->currency) }}</td>
-                            <td class="py-3 text-right"><a href="{{ route('customer.orders.show', ['orderNumber' => $order->order_number]) }}" class="text-blue-600 hover:underline dark:text-blue-400">View</a></td>
+                            <td class="py-3 text-right"><a href="{{ route('customer.orders.show', ['orderNumber' => urlencode($order->order_number)]) }}" class="text-blue-600 hover:underline dark:text-blue-400">View</a></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -31,7 +31,7 @@
         </div>
         <div class="mt-6 grid gap-3 md:hidden">
             @foreach ($orders as $order)
-                <a href="{{ route('customer.orders.show', ['orderNumber' => $order->order_number]) }}" wire:key="order-card-{{ $order->getKey() }}" class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+                <a href="{{ route('customer.orders.show', ['orderNumber' => urlencode($order->order_number)]) }}" wire:key="order-card-{{ $order->getKey() }}" class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
                     <p class="font-medium">{{ $order->order_number }}</p>
                     <p class="text-sm text-zinc-500">{{ $order->placed_at?->format('M d, Y') }}</p>
                     <p class="mt-1"><x-storefront.badge :text="ucfirst($order->status->value)" /></p>

@@ -5,7 +5,7 @@
         <flux:breadcrumbs.item>Taxes</flux:breadcrumbs.item>
     </flux:breadcrumbs>
 
-    <flux:heading size="xl" class="mb-6">Taxes</flux:heading>
+    <flux:heading size="xl" class="mb-6">Tax Settings</flux:heading>
 
     <div class="mx-auto flex w-full max-w-3xl flex-col gap-4">
         <div class="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">

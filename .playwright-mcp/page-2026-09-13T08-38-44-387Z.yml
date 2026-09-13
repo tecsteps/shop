@@ -1,0 +1,88 @@
+- generic [active] [ref=f33e1]:
+  - link "Skip to main content" [ref=f33e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f33e3]:
+    - generic [ref=f33e4]:
+      - generic [ref=f33e5]:
+        - group [ref=f33e6]:
+          - generic "Open menu" [ref=f33e7]
+        - link "Acme Fashion" [ref=f33e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f33e11]:
+        - list [ref=f33e12]:
+          - listitem [ref=f33e13]:
+            - link "Home" [ref=f33e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f33e15]:
+            - link "New Arrivals" [ref=f33e16] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+          - listitem [ref=f33e17]:
+            - link "T-Shirts" [ref=f33e18] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/t-shirts
+          - listitem [ref=f33e19]:
+            - link "Pants & Jeans" [ref=f33e20] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/pants-jeans
+          - listitem [ref=f33e21]:
+            - link "Sale" [ref=f33e22] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/sale
+      - generic [ref=f33e23]:
+        - button "Search" [ref=f33e24]
+        - button "Open cart" [ref=f33e26]
+        - link "Account" [ref=f33e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f33e31]:
+    - generic [ref=f33e32]:
+      - heading "Thank you for your order!" [level=1] [ref=f33e36]
+      - paragraph [ref=f33e37]: "Order #1016"
+      - paragraph [ref=f33e38]: We've sent a confirmation to verify-page@example.com
+      - generic [ref=f33e39]:
+        - heading "Order Summary" [level=2] [ref=f33e40]
+        - list [ref=f33e41]:
+          - listitem [ref=f33e42]: Classic Cotton T-Shirt (S / White) x1 24.99 EUR
+        - generic [ref=f33e43]:
+          - generic [ref=f33e44]:
+            - heading "Shipping Address" [level=3] [ref=f33e45]
+            - paragraph [ref=f33e46]: Verify Agent Teststr 1 Berlin 10115 Germany
+          - generic [ref=f33e47]:
+            - heading "Payment Method" [level=3] [ref=f33e48]
+            - paragraph [ref=f33e49]: Credit Card ending in 4242
+        - generic [ref=f33e50]:
+          - generic [ref=f33e51]:
+            - term [ref=f33e52]: Subtotal
+            - definition [ref=f33e53]: 24.99 EUR
+          - generic [ref=f33e54]:
+            - term [ref=f33e55]: Shipping
+            - definition [ref=f33e56]: 4.99 EUR
+          - generic [ref=f33e57]:
+            - term [ref=f33e58]: Tax
+            - definition [ref=f33e59]: 4.79 EUR
+          - generic [ref=f33e60]:
+            - term [ref=f33e61]: Total
+            - definition [ref=f33e62]: 29.98 EUR
+      - link "Continue shopping" [ref=f33e64] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+  - contentinfo [ref=f33e65]:
+    - generic [ref=f33e66]:
+      - generic [ref=f33e67]:
+        - navigation "Footer" [ref=f33e68]:
+          - heading "Links" [level=2] [ref=f33e69]
+          - list [ref=f33e70]:
+            - listitem [ref=f33e71]:
+              - link "About Us" [ref=f33e72] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/about
+            - listitem [ref=f33e73]:
+              - link "FAQ" [ref=f33e74] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/faq
+            - listitem [ref=f33e75]:
+              - link "Shipping & Returns" [ref=f33e76] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/shipping-returns
+            - listitem [ref=f33e77]:
+              - link "Privacy Policy" [ref=f33e78] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/privacy-policy
+            - listitem [ref=f33e79]:
+              - link "Terms of Service" [ref=f33e80] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/terms
+        - generic [ref=f33e81]:
+          - heading "Store" [level=2] [ref=f33e82]
+          - paragraph [ref=f33e83]: Acme Fashion
+      - paragraph [ref=f33e84]: © 2026 Acme Fashion. All rights reserved.

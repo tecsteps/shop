@@ -63,7 +63,7 @@
     <div class="mt-6 flex items-center justify-center gap-4">
         <a href="{{ route('home') }}" class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700">Continue shopping</a>
         @if ($ownsOrder)
-            <a href="{{ route('customer.orders.show', ['orderNumber' => $order->order_number]) }}" class="text-sm text-blue-600 hover:underline dark:text-blue-400">View order</a>
+            <a href="{{ route('customer.orders.show', ['orderNumber' => urlencode($order->order_number)]) }}" class="text-sm text-blue-600 hover:underline dark:text-blue-400">View order</a>
         @endif
     </div>
 </div>

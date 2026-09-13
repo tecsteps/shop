@@ -1,0 +1,14 @@
+- generic [ref=f31e1]:
+  - heading "Customer Login" [level=1] [ref=f31e2]
+  - generic [ref=f31e3]:
+    - generic [ref=f31e4]: Email
+    - textbox "Email" [active] [ref=f31e5]
+    - generic [ref=f31e6]: Password
+    - textbox "Password" [ref=f31e7]
+    - button "Login" [ref=f31e8]
+  - paragraph [ref=f31e9]:
+    - link "Create an account" [ref=f31e10] [cursor=pointer]:
+      - /url: http://acme-fashion.test/account/register
+  - paragraph [ref=f31e11]:
+    - link "Forgot your password?" [ref=f31e12] [cursor=pointer]:
+      - /url: http://acme-fashion.test/account/forgot-password

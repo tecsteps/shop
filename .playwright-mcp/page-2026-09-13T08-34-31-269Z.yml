@@ -1,0 +1,93 @@
+- generic [active] [ref=f18e1]:
+  - link "Skip to main content" [ref=f18e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f18e3]:
+    - generic [ref=f18e4]:
+      - generic [ref=f18e5]:
+        - group [ref=f18e6]:
+          - generic "Open menu" [ref=f18e7]
+        - link "Acme Fashion" [ref=f18e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f18e11]:
+        - list [ref=f18e12]:
+          - listitem [ref=f18e13]:
+            - link "Home" [ref=f18e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f18e15]:
+            - link "New Arrivals" [ref=f18e16] [cursor=pointer]:
+              - /url: http://shop.test/collections/new-arrivals
+          - listitem [ref=f18e17]:
+            - link "T-Shirts" [ref=f18e18] [cursor=pointer]:
+              - /url: http://shop.test/collections/t-shirts
+          - listitem [ref=f18e19]:
+            - link "Pants & Jeans" [ref=f18e20] [cursor=pointer]:
+              - /url: http://shop.test/collections/pants-jeans
+          - listitem [ref=f18e21]:
+            - link "Sale" [ref=f18e22] [cursor=pointer]:
+              - /url: http://shop.test/collections/sale
+      - generic [ref=f18e23]:
+        - button "Search" [ref=f18e24]
+        - button "Open cart" [ref=f18e26]
+        - link "Account" [ref=f18e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+  - main [ref=f18e31]:
+    - generic [ref=f18e32]:
+      - navigation "Breadcrumb" [ref=f18e33]:
+        - list [ref=f18e34]:
+          - listitem [ref=f18e35]:
+            - link "Home" [ref=f18e36] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f18e37]: / Backorder Denim Jacket
+      - generic [ref=f18e38]:
+        - region "Product images" [ref=f18e39]
+        - region "Product information" [ref=f18e43]:
+          - heading "Backorder Denim Jacket" [level=1] [ref=f18e44]
+          - generic [ref=f18e45]: 99.99 EUR
+          - group "Size" [ref=f18e47]:
+            - generic [ref=f18e49]:
+              - generic [ref=f18e50]:
+                - radio "S" [checked] [ref=f18e51]
+                - text: S
+              - generic [ref=f18e52]:
+                - radio "M" [ref=f18e53]
+                - text: M
+              - generic [ref=f18e54]:
+                - radio "L" [ref=f18e55]
+                - text: L
+              - generic [ref=f18e56]:
+                - radio "XL" [ref=f18e57]
+                - text: XL
+          - paragraph [ref=f18e59]: In stock
+          - generic [ref=f18e61]:
+            - button "Decrease quantity" [disabled] [ref=f18e62]: "-"
+            - spinbutton "Quantity" [ref=f18e63]: "1"
+            - button "Increase quantity" [ref=f18e64]: +
+          - button "Add to cart" [ref=f18e65]
+          - separator [ref=f18e71]
+          - paragraph [ref=f18e73]: Classic denim jacket. Currently on backorder - ships within 2-3 weeks.
+          - generic [ref=f18e74]: popular
+  - contentinfo [ref=f18e75]:
+    - generic [ref=f18e76]:
+      - generic [ref=f18e77]:
+        - navigation "Footer" [ref=f18e78]:
+          - heading "Links" [level=2] [ref=f18e79]
+          - list [ref=f18e80]:
+            - listitem [ref=f18e81]:
+              - link "About Us" [ref=f18e82] [cursor=pointer]:
+                - /url: http://shop.test/pages/about
+            - listitem [ref=f18e83]:
+              - link "FAQ" [ref=f18e84] [cursor=pointer]:
+                - /url: http://shop.test/pages/faq
+            - listitem [ref=f18e85]:
+              - link "Shipping & Returns" [ref=f18e86] [cursor=pointer]:
+                - /url: http://shop.test/pages/shipping-returns
+            - listitem [ref=f18e87]:
+              - link "Privacy Policy" [ref=f18e88] [cursor=pointer]:
+                - /url: http://shop.test/pages/privacy-policy
+            - listitem [ref=f18e89]:
+              - link "Terms of Service" [ref=f18e90] [cursor=pointer]:
+                - /url: http://shop.test/pages/terms
+        - generic [ref=f18e91]:
+          - heading "Store" [level=2] [ref=f18e92]
+          - paragraph [ref=f18e93]: Acme Fashion
+      - paragraph [ref=f18e94]: © 2026 Acme Fashion. All rights reserved.

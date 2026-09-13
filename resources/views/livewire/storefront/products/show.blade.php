@@ -71,6 +71,8 @@
             <div class="mt-4 text-sm" aria-live="polite">
                 @if ($variant === null)
                     <p class="text-zinc-500">Select all options to check availability.</p>
+                @elseif ($isBackorder)
+                    <p class="text-blue-600 dark:text-blue-400">Available on backorder</p>
                 @elseif ($available === null)
                     <p class="text-green-700 dark:text-green-400">In stock</p>
                 @elseif ($available > 10)

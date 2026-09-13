@@ -1,0 +1,147 @@
+- generic [active] [ref=f54e1]:
+  - link "Skip to main content" [ref=f54e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f54e3]:
+    - link "Acme Fashion" [ref=f54e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f54e7]:
+      - link "Dashboard" [ref=f54e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f54e12]: Products
+      - generic [ref=f54e13]:
+        - link "Products" [ref=f54e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f54e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f54e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f54e26]: Orders
+      - link "Orders" [ref=f54e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f54e32]: Customers
+      - link "Customers" [ref=f54e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f54e38]: Discounts
+      - link "Discounts" [ref=f54e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f54e45]: Content
+      - generic [ref=f54e46]:
+        - link "Pages" [ref=f54e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f54e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f54e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f54e59]:
+        - link "Analytics" [ref=f54e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f54e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f54e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f54e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f54e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f54e82]:
+    - banner [ref=f54e83]:
+      - button "Acme Fashion" [ref=f54e86]
+      - button "AU Admin User" [ref=f54e92]:
+        - generic [ref=f54e93]: AU
+        - generic [ref=f54e96]: Admin User
+    - main [ref=f54e100]:
+      - generic [ref=f54e101]:
+        - generic [ref=f54e102]:
+          - link "Home" [ref=f54e104] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin
+          - link "Products" [ref=f54e108] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/products
+          - generic [ref=f54e111]: Add product
+        - generic [ref=f54e113]: Add product
+        - generic [ref=f54e115]:
+          - generic [ref=f54e116]:
+            - generic [ref=f54e117]:
+              - generic [ref=f54e118]:
+                - generic [aria-hidden] [ref=f54e119]: Title
+                - textbox "Title" [ref=f54e121]:
+                  - /placeholder: Short Sleeve T-Shirt
+              - generic [ref=f54e122]:
+                - generic [aria-hidden] [ref=f54e123]: Description
+                - textbox "Description" [ref=f54e124]:
+                  - /placeholder: Describe your product...
+            - generic [ref=f54e125]:
+              - generic [ref=f54e126]: Media
+              - generic [ref=f54e127] [cursor=pointer]:
+                - generic [ref=f54e130]: Drag and drop images or click to upload
+                - button "Drag and drop images or click to upload" [ref=f54e131]
+            - generic [ref=f54e132]:
+              - generic [ref=f54e133]: Variants
+              - button "Add another option" [ref=f54e134]
+              - table [ref=f54e143]:
+                - rowgroup [ref=f54e144]:
+                  - row [ref=f54e145]:
+                    - columnheader "Variant" [ref=f54e146]
+                    - columnheader "SKU" [ref=f54e147]
+                    - columnheader "Price" [ref=f54e148]
+                    - columnheader "Compare at" [ref=f54e149]
+                    - columnheader "Qty" [ref=f54e150]
+                    - columnheader "Ships" [ref=f54e151]
+                - rowgroup [ref=f54e152]:
+                  - row [ref=f54e153]:
+                    - cell "Default" [ref=f54e154]
+                    - cell [ref=f54e155]:
+                      - textbox "SKU" [ref=f54e157]
+                    - cell [ref=f54e158]:
+                      - spinbutton "Price" [ref=f54e160]
+                    - cell [ref=f54e161]:
+                      - spinbutton "Compare at price" [ref=f54e163]
+                    - cell [ref=f54e164]:
+                      - spinbutton "Quantity" [ref=f54e166]: "0"
+                    - cell [ref=f54e167]:
+                      - checkbox "Requires shipping" [checked] [ref=f54e168]
+            - button "Search engine listing" [ref=f54e173]
+          - generic [ref=f54e177]:
+            - generic [ref=f54e178]:
+              - generic [ref=f54e179]:
+                - generic [aria-hidden] [ref=f54e180]: Status
+                - combobox "Status" [ref=f54e181]:
+                  - option "Draft" [selected]
+                  - option "Active"
+                  - option "Archived"
+              - generic [ref=f54e182]:
+                - generic [aria-hidden] [ref=f54e183]: Published at
+                - textbox "Published at" [ref=f54e185]
+            - generic [ref=f54e186]:
+              - generic [ref=f54e187]: Organization
+              - generic [ref=f54e188]:
+                - generic [aria-hidden] [ref=f54e189]: Vendor
+                - textbox "Vendor" [ref=f54e191]:
+                  - /placeholder: Nike
+              - generic [ref=f54e192]:
+                - generic [aria-hidden] [ref=f54e193]: Product type
+                - textbox "Product type" [ref=f54e195]:
+                  - /placeholder: T-Shirts
+              - generic [ref=f54e196]:
+                - generic [aria-hidden] [ref=f54e197]: Tags
+                - textbox "Tags" [ref=f54e199]:
+                  - /placeholder: summer, cotton, sale
+                - generic [aria-hidden] [ref=f54e200]: Separate tags with commas
+            - generic [ref=f54e201]:
+              - generic [ref=f54e202]: Collections
+              - generic [ref=f54e203]:
+                - generic [ref=f54e204]:
+                  - checkbox [ref=f54e205]
+                  - generic [ref=f54e207]: New Arrivals
+                - generic [ref=f54e208]:
+                  - checkbox [ref=f54e209]
+                  - generic [ref=f54e211]: Pants & Jeans
+                - generic [ref=f54e212]:
+                  - checkbox [ref=f54e213]
+                  - generic [ref=f54e215]: Sale
+                - generic [ref=f54e216]:
+                  - checkbox [ref=f54e217]
+                  - generic [ref=f54e219]: T-Shirts
+        - generic [ref=f54e220]:
+          - link "Discard" [ref=f54e221] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/products
+          - button "Save" [ref=f54e222]

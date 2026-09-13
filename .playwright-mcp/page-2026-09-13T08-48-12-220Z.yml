@@ -1,0 +1,267 @@
+- generic [active] [ref=f72e1]:
+  - link "Skip to main content" [ref=f72e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f72e3]:
+    - link "Acme Fashion" [ref=f72e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f72e7]:
+      - link "Dashboard" [ref=f72e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f72e12]: Products
+      - generic [ref=f72e13]:
+        - link "Products" [ref=f72e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f72e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f72e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f72e26]: Orders
+      - link "Orders" [ref=f72e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f72e32]: Customers
+      - link "Customers" [ref=f72e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f72e38]: Discounts
+      - link "Discounts" [ref=f72e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f72e45]: Content
+      - generic [ref=f72e46]:
+        - link "Pages" [ref=f72e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f72e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f72e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f72e59]:
+        - link "Analytics" [ref=f72e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f72e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f72e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f72e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f72e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f72e82]:
+    - banner [ref=f72e83]:
+      - button "Acme Fashion" [ref=f72e86]
+      - button "AU Admin User" [ref=f72e92]:
+        - generic [ref=f72e93]: AU
+        - generic [ref=f72e96]: Admin User
+    - main [ref=f72e100]:
+      - generic [ref=f72e101]:
+        - generic [ref=f72e102]:
+          - link "Back to themes" [ref=f72e103] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/themes
+          - generic [ref=f72e106]:
+            - button "Save" [ref=f72e107]
+            - button "Save and publish" [ref=f72e113]
+        - generic [ref=f72e119]:
+          - generic [ref=f72e120]:
+            - generic [ref=f72e121]: Sections
+            - generic [ref=f72e122]:
+              - button "Announcement bar" [ref=f72e123]
+              - button "Header" [ref=f72e124]
+              - button "Hero" [ref=f72e125]
+              - button "Homepage" [ref=f72e126]
+              - button "Footer" [ref=f72e127]
+              - button "Styling" [ref=f72e128]
+          - iframe [ref=f72e131]:
+            - generic:
+              - link "Skip to main content" [ref=f73e1] [cursor=pointer]:
+                - /url: "#main-content"
+              - banner:
+                - generic:
+                  - generic:
+                    - group:
+                      - generic "Open menu"
+                    - link "Acme Fashion" [ref=f73e3] [cursor=pointer]:
+                      - /url: http://acme-fashion.test
+                  - navigation "Main navigation":
+                    - list [ref=f73e4]:
+                      - listitem:
+                        - link "Home" [ref=f73e5] [cursor=pointer]:
+                          - /url: /
+                      - listitem:
+                        - link "New Arrivals" [ref=f73e6] [cursor=pointer]:
+                          - /url: http://acme-fashion.test/collections/new-arrivals
+                      - listitem:
+                        - link "T-Shirts" [ref=f73e7] [cursor=pointer]:
+                          - /url: http://acme-fashion.test/collections/t-shirts
+                      - listitem:
+                        - link "Pants & Jeans" [ref=f73e8] [cursor=pointer]:
+                          - /url: http://acme-fashion.test/collections/pants-jeans
+                      - listitem:
+                        - link "Sale" [ref=f73e9] [cursor=pointer]:
+                          - /url: http://acme-fashion.test/collections/sale
+                  - generic:
+                    - button "Search" [ref=f73e10]
+                    - button "Open cart" [ref=f73e12]
+                    - link "Account":
+                      - /url: http://acme-fashion.test/account/login
+                      - generic [ref=f73e14] [cursor=pointer]
+              - main:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Welcome to Acme Fashion" [level=1]
+                      - link "Shop now" [ref=f73e15] [cursor=pointer]:
+                        - /url: /collections
+                  - region "Featured collections":
+                    - heading "Featured Collections" [level=2]
+                    - generic:
+                      - link "New Arrivals Shop now":
+                        - /url: http://acme-fashion.test/collections/new-arrivals
+                        - generic:
+                          - generic:
+                            - paragraph: New Arrivals
+                            - paragraph: Shop now
+                      - link "Pants & Jeans Shop now":
+                        - /url: http://acme-fashion.test/collections/pants-jeans
+                        - generic:
+                          - generic:
+                            - paragraph: Pants & Jeans
+                            - paragraph: Shop now
+                      - link "Sale Shop now":
+                        - /url: http://acme-fashion.test/collections/sale
+                        - generic:
+                          - generic:
+                            - paragraph: Sale
+                            - paragraph: Shop now
+                      - link "T-Shirts Shop now":
+                        - /url: http://acme-fashion.test/collections/t-shirts
+                        - generic:
+                          - generic:
+                            - paragraph: T-Shirts
+                            - paragraph: Shop now
+                  - region "Featured products":
+                    - generic:
+                      - heading "Featured Products" [level=2]
+                      - generic:
+                        - generic:
+                          - link "Cashmere Overcoat":
+                            - /url: http://acme-fashion.test/products/cashmere-overcoat
+                            - generic [ref=f73e16] [cursor=pointer]
+                          - generic:
+                            - heading "Cashmere Overcoat" [level=3]:
+                              - link "Cashmere Overcoat" [ref=f73e17] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/cashmere-overcoat
+                            - generic [ref=f73e18]: 499.99 EUR
+                            - link "Choose options" [ref=f73e19] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/cashmere-overcoat
+                        - generic:
+                          - link "Gift Card":
+                            - /url: http://acme-fashion.test/products/gift-card
+                            - generic [ref=f73e20] [cursor=pointer]
+                          - generic:
+                            - heading "Gift Card" [level=3]:
+                              - link "Gift Card" [ref=f73e21] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/gift-card
+                            - generic [ref=f73e22]: 25.00 EUR
+                            - link "Choose options" [ref=f73e23] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/gift-card
+                        - generic:
+                          - link "Backorder Denim Jacket":
+                            - /url: http://acme-fashion.test/products/backorder-denim-jacket
+                            - generic [ref=f73e24] [cursor=pointer]
+                          - generic:
+                            - heading "Backorder Denim Jacket" [level=3]:
+                              - link "Backorder Denim Jacket" [ref=f73e25] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/backorder-denim-jacket
+                            - generic [ref=f73e26]: 99.99 EUR
+                            - link "Choose options" [ref=f73e27] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/backorder-denim-jacket
+                        - generic:
+                          - link "Limited Edition Sneakers":
+                            - /url: http://acme-fashion.test/products/limited-edition-sneakers
+                            - generic:
+                              - generic [ref=f73e28] [cursor=pointer]
+                              - generic: Sold out
+                          - generic:
+                            - heading "Limited Edition Sneakers" [level=3]:
+                              - link "Limited Edition Sneakers" [ref=f73e29] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/limited-edition-sneakers
+                            - generic [ref=f73e30]: 159.99 EUR
+                            - link "Choose options" [ref=f73e31] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/limited-edition-sneakers
+                        - generic:
+                          - link "Bucket Hat":
+                            - /url: http://acme-fashion.test/products/bucket-hat
+                            - generic [ref=f73e32] [cursor=pointer]
+                          - generic:
+                            - heading "Bucket Hat" [level=3]:
+                              - link "Bucket Hat" [ref=f73e33] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/bucket-hat
+                            - generic [ref=f73e34]: 24.99 EUR
+                            - link "Choose options" [ref=f73e35] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/bucket-hat
+                        - generic:
+                          - link "Canvas Tote Bag":
+                            - /url: http://acme-fashion.test/products/canvas-tote-bag
+                            - generic [ref=f73e36] [cursor=pointer]
+                          - generic:
+                            - heading "Canvas Tote Bag" [level=3]:
+                              - link "Canvas Tote Bag" [ref=f73e37] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/canvas-tote-bag
+                            - generic [ref=f73e38]: 19.99 EUR
+                            - link "Choose options" [ref=f73e39] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/canvas-tote-bag
+                        - generic:
+                          - link "Wool Scarf":
+                            - /url: http://acme-fashion.test/products/wool-scarf
+                            - generic [ref=f73e40] [cursor=pointer]
+                          - generic:
+                            - heading "Wool Scarf" [level=3]:
+                              - link "Wool Scarf" [ref=f73e41] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/wool-scarf
+                            - generic [ref=f73e42]: 29.99 EUR
+                            - link "Choose options" [ref=f73e43] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/wool-scarf
+                        - generic:
+                          - link "Wide Leg Trousers":
+                            - /url: http://acme-fashion.test/products/wide-leg-trousers
+                            - generic:
+                              - generic [ref=f73e44] [cursor=pointer]
+                              - generic: Sale
+                          - generic:
+                            - heading "Wide Leg Trousers" [level=3]:
+                              - link "Wide Leg Trousers" [ref=f73e45] [cursor=pointer]:
+                                - /url: http://acme-fashion.test/products/wide-leg-trousers
+                            - generic [ref=f73e46]: 49.99 EUR 69.99 EUR Sale
+                            - link "Choose options" [ref=f73e47] [cursor=pointer]:
+                              - /url: http://acme-fashion.test/products/wide-leg-trousers
+                  - generic:
+                    - generic:
+                      - heading "Stay in the loop" [level=2]
+                      - paragraph: Subscribe for exclusive offers and updates.
+                      - generic:
+                        - textbox "Email address" [ref=f73e48]:
+                          - /placeholder: Enter your email
+                        - button "Subscribe" [ref=f73e49]
+              - contentinfo:
+                - generic:
+                  - generic:
+                    - navigation "Footer":
+                      - heading "Links" [level=2]
+                      - list [ref=f73e55]:
+                        - listitem:
+                          - link "About Us" [ref=f73e56] [cursor=pointer]:
+                            - /url: http://acme-fashion.test/pages/about
+                        - listitem:
+                          - link "FAQ" [ref=f73e57] [cursor=pointer]:
+                            - /url: http://acme-fashion.test/pages/faq
+                        - listitem:
+                          - link "Shipping & Returns" [ref=f73e58] [cursor=pointer]:
+                            - /url: http://acme-fashion.test/pages/shipping-returns
+                        - listitem:
+                          - link "Privacy Policy" [ref=f73e59] [cursor=pointer]:
+                            - /url: http://acme-fashion.test/pages/privacy-policy
+                        - listitem:
+                          - link "Terms of Service" [ref=f73e60] [cursor=pointer]:
+                            - /url: http://acme-fashion.test/pages/terms
+                    - generic:
+                      - heading "Store" [level=2]
+                      - paragraph: Acme Fashion
+                  - paragraph: © 2026 Acme Fashion. All rights reserved.
+          - paragraph [ref=f72e133]: Select a section to edit its settings.

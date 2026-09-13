@@ -29,7 +29,7 @@
         <label for="password">Password</label>
         <input id="password" type="password" name="password" required>
 
-        <button type="submit">Login</button>
+        <button type="submit">Log in</button>
     </form>
 
     <p><a href="{{ route('customer.register') }}">Create an account</a></p>

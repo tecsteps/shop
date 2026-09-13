@@ -13,9 +13,47 @@ trait ResolvesAdminStore
 {
     protected function store(): Store
     {
-        $store = app(CurrentStore::class)->get();
+        $current = app(CurrentStore::class);
+        $store = $current->get();
 
-        abort_if($store === null, 404);
+        if ($store !== null) {
+            return $store;
+        }
+
+        $store = $this->resolveAdminStoreFromSession();
+
+        if ($store !== null) {
+            $current->set($store);
+
+            return $store;
+        }
+
+        abort(404);
+    }
+
+    protected function resolveAdminStoreFromSession(): ?Store
+    {
+        if (! app()->bound('session')) {
+            return null;
+        }
+
+        $storeId = session()->get('current_store_id');
+
+        if ($storeId === null) {
+            return null;
+        }
+
+        $store = Store::query()->find($storeId);
+
+        if ($store === null) {
+            return null;
+        }
+
+        $user = request()->user();
+
+        if ($user !== null && ! $user->stores()->where('stores.id', $store->getKey())->exists()) {
+            abort(403);
+        }
 
         return $store;
     }

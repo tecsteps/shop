@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
                 ShippingSeeder::class,
                 CollectionSeeder::class,
                 ProductSeeder::class,
+                ProductMediaSeeder::class,
                 DiscountSeeder::class,
                 CustomerSeeder::class,
                 OrderSeeder::class,
@@ -31,5 +32,11 @@ class DatabaseSeeder extends Seeder
                 SearchSettingsSeeder::class,
             ]);
         });
+
+        $search = app(\App\Services\SearchService::class);
+
+        foreach (\App\Models\Store::query()->get() as $store) {
+            $search->reindex($store);
+        }
     }
 }

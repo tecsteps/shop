@@ -7,7 +7,7 @@
     <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
         <flux:heading size="xl">Collections</flux:heading>
         @can('create', App\Models\Collection::class)
-            <flux:button variant="primary" href="{{ route('admin.collections.create') }}" wire:navigate>Add collection</flux:button>
+            <flux:button variant="primary" href="{{ route('admin.collections.create') }}" wire:navigate>Create collection</flux:button>
         @endcan
     </div>
 
@@ -27,7 +27,7 @@
             <flux:heading size="lg" class="mt-4">Create your first collection</flux:heading>
             <flux:text variant="subtle" class="mt-1">Group products into curated collections.</flux:text>
             @can('create', App\Models\Collection::class)
-                <flux:button variant="primary" href="{{ route('admin.collections.create') }}" wire:navigate class="mt-4">Add collection</flux:button>
+                <flux:button variant="primary" href="{{ route('admin.collections.create') }}" wire:navigate class="mt-4">Create collection</flux:button>
             @endcan
         </div>
     @else

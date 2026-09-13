@@ -42,7 +42,7 @@ class NavigationService
     public function buildTree(NavigationMenu $menu): array
     {
         return Cache::remember(
-            "navigation_tree:{$menu->store_id}:{$menu->getKey()}",
+            "navigation_tree_v2:{$menu->store_id}:{$menu->getKey()}",
             now()->addMinutes(5),
             function () use ($menu): array {
                 $items = $menu->relationLoaded('navigationItems')
@@ -78,7 +78,7 @@ class NavigationService
                 ->whereKey($item->resource_id)
                 ->first();
 
-            return $page !== null ? route('storefront.pages.show', ['handle' => $page->handle]) : '#';
+            return $page !== null ? route('storefront.pages.show', ['handle' => $page->handle], false) : '#';
         }
 
         if ($type === 'collection') {
@@ -87,7 +87,7 @@ class NavigationService
                 ->whereKey($item->resource_id)
                 ->first();
 
-            return $collection !== null ? route('storefront.collections.show', ['handle' => $collection->handle]) : '#';
+            return $collection !== null ? route('storefront.collections.show', ['handle' => $collection->handle], false) : '#';
         }
 
         if ($type === 'product') {
@@ -96,7 +96,7 @@ class NavigationService
                 ->whereKey($item->resource_id)
                 ->first();
 
-            return $product !== null ? route('storefront.products.show', ['handle' => $product->handle]) : '#';
+            return $product !== null ? route('storefront.products.show', ['handle' => $product->handle], false) : '#';
         }
 
         return '#';

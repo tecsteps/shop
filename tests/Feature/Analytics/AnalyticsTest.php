@@ -144,6 +144,11 @@ it('serves the analytics summary over the admin api', function () {
         'add_to_cart_count' => 12,
         'checkout_started_count' => 6,
     ]);
+    \App\Models\Order::factory()->count(3)->create([
+        'store_id' => $store->getKey(),
+        'total_amount' => 5000,
+        'placed_at' => now(),
+    ]);
 
     $response = $this->getJson(
         "/api/admin/v1/stores/{$store->getKey()}/analytics/summary?from=".today()->toDateString().'&to='.today()->toDateString(),

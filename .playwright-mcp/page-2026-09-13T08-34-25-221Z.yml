@@ -1,0 +1,90 @@
+- generic [active] [ref=f17e1]:
+  - link "Skip to main content" [ref=f17e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f17e3]:
+    - generic [ref=f17e4]:
+      - generic [ref=f17e5]:
+        - group [ref=f17e6]:
+          - generic "Open menu" [ref=f17e7]
+        - link "Acme Fashion" [ref=f17e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f17e11]:
+        - list [ref=f17e12]:
+          - listitem [ref=f17e13]:
+            - link "Home" [ref=f17e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f17e15]:
+            - link "New Arrivals" [ref=f17e16] [cursor=pointer]:
+              - /url: http://shop.test/collections/new-arrivals
+          - listitem [ref=f17e17]:
+            - link "T-Shirts" [ref=f17e18] [cursor=pointer]:
+              - /url: http://shop.test/collections/t-shirts
+          - listitem [ref=f17e19]:
+            - link "Pants & Jeans" [ref=f17e20] [cursor=pointer]:
+              - /url: http://shop.test/collections/pants-jeans
+          - listitem [ref=f17e21]:
+            - link "Sale" [ref=f17e22] [cursor=pointer]:
+              - /url: http://shop.test/collections/sale
+      - generic [ref=f17e23]:
+        - button "Search" [ref=f17e24]
+        - button "Open cart" [ref=f17e26]
+        - link "Account" [ref=f17e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+  - main [ref=f17e31]:
+    - generic [ref=f17e32]:
+      - navigation "Breadcrumb" [ref=f17e33]:
+        - list [ref=f17e34]:
+          - listitem [ref=f17e35]:
+            - link "Home" [ref=f17e36] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f17e37]: / Limited Edition Sneakers
+      - generic [ref=f17e38]:
+        - region "Product images" [ref=f17e39]
+        - region "Product information" [ref=f17e43]:
+          - heading "Limited Edition Sneakers" [level=1] [ref=f17e44]
+          - generic [ref=f17e45]: 159.99 EUR
+          - group "Size" [ref=f17e47]:
+            - generic [ref=f17e49]:
+              - generic [ref=f17e50]:
+                - radio "EU 40" [checked] [ref=f17e51]
+                - text: EU 40
+              - generic [ref=f17e52]:
+                - radio "EU 42" [ref=f17e53]
+                - text: EU 42
+              - generic [ref=f17e54]:
+                - radio "EU 44" [ref=f17e55]
+                - text: EU 44
+          - paragraph [ref=f17e57]: Out of stock
+          - generic [ref=f17e59]:
+            - button "Decrease quantity" [disabled] [ref=f17e60]: "-"
+            - spinbutton "Quantity" [ref=f17e61]: "1"
+            - button "Increase quantity" [disabled] [ref=f17e62]: +
+          - button "Sold out" [disabled] [ref=f17e63]
+          - separator [ref=f17e64]
+          - paragraph [ref=f17e66]: Limited edition collaboration sneakers. Once they are gone, they are gone.
+          - generic [ref=f17e67]: limited
+  - contentinfo [ref=f17e68]:
+    - generic [ref=f17e69]:
+      - generic [ref=f17e70]:
+        - navigation "Footer" [ref=f17e71]:
+          - heading "Links" [level=2] [ref=f17e72]
+          - list [ref=f17e73]:
+            - listitem [ref=f17e74]:
+              - link "About Us" [ref=f17e75] [cursor=pointer]:
+                - /url: http://shop.test/pages/about
+            - listitem [ref=f17e76]:
+              - link "FAQ" [ref=f17e77] [cursor=pointer]:
+                - /url: http://shop.test/pages/faq
+            - listitem [ref=f17e78]:
+              - link "Shipping & Returns" [ref=f17e79] [cursor=pointer]:
+                - /url: http://shop.test/pages/shipping-returns
+            - listitem [ref=f17e80]:
+              - link "Privacy Policy" [ref=f17e81] [cursor=pointer]:
+                - /url: http://shop.test/pages/privacy-policy
+            - listitem [ref=f17e82]:
+              - link "Terms of Service" [ref=f17e83] [cursor=pointer]:
+                - /url: http://shop.test/pages/terms
+        - generic [ref=f17e84]:
+          - heading "Store" [level=2] [ref=f17e85]
+          - paragraph [ref=f17e86]: Acme Fashion
+      - paragraph [ref=f17e87]: © 2026 Acme Fashion. All rights reserved.

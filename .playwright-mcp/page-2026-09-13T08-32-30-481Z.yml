@@ -1,0 +1,224 @@
+- generic [active] [ref=f6e1]:
+  - link "Skip to main content" [ref=f6e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f6e3]:
+    - link "Acme Fashion" [ref=f6e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f6e7]:
+      - link "Dashboard" [ref=f6e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f6e12]: Products
+      - generic [ref=f6e13]:
+        - link "Products" [ref=f6e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f6e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f6e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f6e26]: Orders
+      - link "Orders" [ref=f6e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f6e32]: Customers
+      - link "Customers" [ref=f6e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f6e38]: Discounts
+      - link "Discounts" [ref=f6e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f6e45]: Content
+      - generic [ref=f6e46]:
+        - link "Pages" [ref=f6e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f6e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f6e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f6e59]:
+        - link "Analytics" [ref=f6e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f6e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f6e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f6e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f6e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f6e82]:
+    - banner [ref=f6e83]:
+      - button "Acme Fashion" [ref=f6e86]
+      - button "AU Admin User" [ref=f6e92]:
+        - generic [ref=f6e93]: AU
+        - generic [ref=f6e96]: Admin User
+    - main [ref=f6e100]:
+      - generic [ref=f6e101]:
+        - generic [ref=f6e102]:
+          - generic [ref=f6e103]: Dashboard
+          - combobox "Date range" [ref=f6e105]:
+            - option "Today"
+            - option "Last 7 days"
+            - option "Last 30 days" [selected]
+            - option "Custom range"
+        - generic [ref=f6e106]:
+          - generic [ref=f6e107]:
+            - paragraph [ref=f6e108]: Total Sales
+            - generic [ref=f6e109]: €1,517.12
+            - generic [ref=f6e110]: +100%
+          - generic [ref=f6e114]:
+            - paragraph [ref=f6e115]: Orders
+            - generic [ref=f6e116]: "15"
+            - generic [ref=f6e117]: +100%
+          - generic [ref=f6e121]:
+            - paragraph [ref=f6e122]: Avg Order Value
+            - generic [ref=f6e123]: €101.14
+            - generic [ref=f6e124]: +100%
+          - generic [ref=f6e128]:
+            - paragraph [ref=f6e129]: Visitors
+            - generic [ref=f6e130]: 3,587
+            - generic [ref=f6e131]: +4881.9%
+        - generic [ref=f6e135]:
+          - generic [ref=f6e136]: Orders over time
+          - generic [ref=f6e137]:
+            - img "Daily order counts chart":
+              - 'generic "2026-08-19: 1 orders"'
+              - 'generic "2026-08-24: 1 orders"'
+              - 'generic "2026-08-29: 1 orders"'
+              - 'generic "2026-08-30: 1 orders"'
+              - 'generic "2026-09-01: 1 orders"'
+              - 'generic "2026-09-03: 1 orders"'
+              - 'generic "2026-09-08: 1 orders"'
+              - 'generic "2026-09-09: 1 orders"'
+              - 'generic "2026-09-10: 1 orders"'
+              - 'generic "2026-09-11: 1 orders"'
+              - 'generic "2026-09-12: 3 orders"'
+              - 'generic "2026-09-13: 2 orders"'
+            - generic [ref=f6e138]:
+              - paragraph [ref=f6e139]: 2026-08-15
+              - paragraph [ref=f6e140]: 2026-09-13
+        - generic [ref=f6e141]:
+          - generic [ref=f6e142]:
+            - generic [ref=f6e143]: Top products
+            - table [ref=f6e144]:
+              - rowgroup [ref=f6e145]:
+                - row [ref=f6e146]:
+                  - columnheader "Product Title" [ref=f6e147]
+                  - columnheader "Units Sold" [ref=f6e148]
+                  - columnheader "Revenue" [ref=f6e149]
+              - rowgroup [ref=f6e150]:
+                - row [ref=f6e151]:
+                  - cell "Cashmere Overcoat" [ref=f6e152]
+                  - cell "1" [ref=f6e153]
+                  - cell "€499.99" [ref=f6e154]
+                - row [ref=f6e155]:
+                  - cell "Classic Cotton T-Shirt" [ref=f6e156]
+                  - cell "5" [ref=f6e157]
+                  - cell "€124.95" [ref=f6e158]
+                - row [ref=f6e159]:
+                  - cell "Running Sneakers" [ref=f6e160]
+                  - cell "1" [ref=f6e161]
+                  - cell "€119.99" [ref=f6e162]
+                - row [ref=f6e163]:
+                  - cell "Premium Slim Fit Jeans" [ref=f6e164]
+                  - cell "1" [ref=f6e165]
+                  - cell "€79.99" [ref=f6e166]
+                - row [ref=f6e167]:
+                  - cell "Chino Shorts" [ref=f6e168]
+                  - cell "2" [ref=f6e169]
+                  - cell "€79.98" [ref=f6e170]
+          - generic [ref=f6e171]:
+            - generic [ref=f6e172]: Conversion funnel
+            - generic [ref=f6e173]:
+              - generic [ref=f6e174]:
+                - generic [ref=f6e175]: Visits
+                - generic [ref=f6e178]: 3,587
+              - generic [ref=f6e179]:
+                - generic [ref=f6e180]: Add to Cart
+                - generic [ref=f6e183]: "769"
+              - generic [ref=f6e184]:
+                - generic [ref=f6e185]: Checkout Started
+                - generic [ref=f6e188]: "373"
+              - generic [ref=f6e189]:
+                - generic [ref=f6e190]: Completed
+                - generic [ref=f6e193]: "170"
+        - generic [ref=f6e194]:
+          - generic [ref=f6e195]:
+            - generic [ref=f6e196]: Recent orders
+            - link "View all" [ref=f6e197] [cursor=pointer]:
+              - /url: http://acme-fashion.test/admin/orders
+          - table [ref=f6e199]:
+            - rowgroup [ref=f6e200]:
+              - row [ref=f6e201]:
+                - columnheader "Order" [ref=f6e202]
+                - columnheader "Customer" [ref=f6e203]
+                - columnheader "Status" [ref=f6e204]
+                - columnheader "Total" [ref=f6e205]
+            - rowgroup [ref=f6e206]:
+              - row [ref=f6e207]:
+                - cell [ref=f6e208]:
+                  - link "#1015" [ref=f6e209] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/15
+                - cell "John Doe" [ref=f6e210]
+                - cell "Paid" [ref=f6e211]
+                - cell "€54.47" [ref=f6e213]
+              - row [ref=f6e214]:
+                - cell [ref=f6e215]:
+                  - link "#1005" [ref=f6e216] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/5
+                - cell "Jane Smith" [ref=f6e217]
+                - cell "Pending" [ref=f6e218]
+                - cell "€39.98" [ref=f6e220]
+              - row [ref=f6e221]:
+                - cell [ref=f6e222]:
+                  - link "#1013" [ref=f6e223] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/13
+                - cell "Robert Martinez" [ref=f6e224]
+                - cell "Paid" [ref=f6e225]
+                - cell "€84.97" [ref=f6e227]
+              - row [ref=f6e228]:
+                - cell [ref=f6e229]:
+                  - link "#1010" [ref=f6e230] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/10
+                - cell "John Doe" [ref=f6e231]
+                - cell "Paid" [ref=f6e232]
+                - cell "€504.98" [ref=f6e234]
+              - row [ref=f6e235]:
+                - cell [ref=f6e236]:
+                  - link "#1006" [ref=f6e237] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/6
+                - cell "Michael Brown" [ref=f6e238]
+                - cell "Paid" [ref=f6e239]
+                - cell "€124.98" [ref=f6e241]
+              - row [ref=f6e242]:
+                - cell [ref=f6e243]:
+                  - link "#1001" [ref=f6e244] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/1
+                - cell "John Doe" [ref=f6e245]
+                - cell "Paid" [ref=f6e246]
+                - cell "€54.97" [ref=f6e248]
+              - row [ref=f6e249]:
+                - cell [ref=f6e250]:
+                  - link "#1009" [ref=f6e251] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/9
+                - cell "Emma Garcia" [ref=f6e252]
+                - cell "Paid" [ref=f6e253]
+                - cell "€49.97" [ref=f6e255]
+              - row [ref=f6e256]:
+                - cell [ref=f6e257]:
+                  - link "#1012" [ref=f6e258] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/12
+                - cell "Lisa Anderson" [ref=f6e259]
+                - cell "Paid" [ref=f6e260]
+                - cell "€84.97" [ref=f6e262]
+              - row [ref=f6e263]:
+                - cell [ref=f6e264]:
+                  - link "#1003" [ref=f6e265] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/3
+                - cell "Jane Smith" [ref=f6e266]
+                - cell "Paid" [ref=f6e267]
+                - cell "€119.97" [ref=f6e269]
+              - row [ref=f6e270]:
+                - cell [ref=f6e271]:
+                  - link "#1002" [ref=f6e272] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/admin/orders/2
+                - cell "John Doe" [ref=f6e273]
+                - cell "Paid" [ref=f6e274]
+                - cell "€89.97" [ref=f6e276]

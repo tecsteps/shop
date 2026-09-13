@@ -7,7 +7,7 @@
     <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
         <flux:heading size="xl">Pages</flux:heading>
         @can('create', App\Models\Page::class)
-            <flux:button variant="primary" href="{{ route('admin.pages.create') }}" wire:navigate>Add page</flux:button>
+            <flux:button variant="primary" href="{{ route('admin.pages.create') }}" wire:navigate>Create page</flux:button>
         @endcan
     </div>
 

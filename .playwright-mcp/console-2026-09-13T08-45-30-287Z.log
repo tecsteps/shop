@@ -1,0 +1,9 @@
+[      65ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-electronics.test/_boost/browser-logs @ http://acme-electronics.test/:46
+[     149ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://acme-electronics.test/favicon.ico:0
+[   12006ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-electronics.test/_boost/browser-logs @ http://acme-electronics.test/account/login:14
+[   12010ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://acme-electronics.test/account/login:0
+[   12315ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-electronics.test/_boost/browser-logs @ http://acme-electronics.test/account/login:14
+[   12316ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://acme-electronics.test/account/login:0
+[   20962ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-electronics.test/_boost/browser-logs @ http://acme-electronics.test/admin/login:14
+[   20963ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://acme-electronics.test/admin/login:0
+[   21288ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-electronics.test/_boost/browser-logs @ http://acme-electronics.test/admin:54

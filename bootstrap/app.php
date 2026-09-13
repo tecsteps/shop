@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckStoreRole;
 use App\Http\Middleware\CustomerAuthenticate;
+use App\Http\Middleware\RedirectCustomerToAccount;
 use App\Http\Middleware\ResolveStore;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'store.resolve' => ResolveStore::class,
             'role.check' => CheckStoreRole::class,
             'customer.auth' => CustomerAuthenticate::class,
+            'customer.redirect' => RedirectCustomerToAccount::class,
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
         ]);
@@ -32,6 +34,14 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             return route('login');
+        });
+
+        $middleware->redirectUsersTo(function (Request $request): string {
+            if ($request->user('customer') !== null) {
+                return route('customer.account');
+            }
+
+            return '/dashboard';
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {

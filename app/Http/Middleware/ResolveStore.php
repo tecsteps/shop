@@ -48,6 +48,9 @@ class ResolveStore
             $store = Store::query()->where('handle', $request->query('store'))->first();
         }
 
+        // Unknown hostname (e.g. the bare Herd project host shop.test with no
+        // store_domains row) intentionally 404s per spec 05 section 1.1 step 5.
+        // No default-store fallback: every storefront hostname must be registered.
         if ($store === null) {
             abort(404);
         }
@@ -57,6 +60,10 @@ class ResolveStore
         }
 
         $this->bind($store);
+
+        if ($request->hasSession()) {
+            $request->session()->put('storefront_store_id', $store->getKey());
+        }
 
         return $next($request);
     }

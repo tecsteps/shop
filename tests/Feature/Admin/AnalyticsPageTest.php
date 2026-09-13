@@ -28,6 +28,11 @@ it('shows summary tiles from daily metrics', function () {
         'add_to_cart_count' => 20,
         'checkout_started_count' => 10,
     ]);
+    \App\Models\Order::factory()->count(4)->create([
+        'store_id' => $this->store->getKey(),
+        'total_amount' => 5000,
+        'placed_at' => now(),
+    ]);
 
     Livewire::test(Index::class)
         ->assertViewHas('summary', fn ($summary) => $summary['orders_count'] === 4 && $summary['revenue_amount'] === 20000);

@@ -40,10 +40,10 @@
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" wire:loading.class="opacity-50">
         @php
             $tiles = [
-                ['label' => 'Total Sales', 'value' => $this->money($summary['revenue_amount'])],
+                ['label' => 'Revenue', 'value' => $this->money($summary['revenue_amount'])],
                 ['label' => 'Orders', 'value' => number_format($summary['orders_count'])],
                 ['label' => 'Avg Order Value', 'value' => $this->money($summary['aov_amount'])],
-                ['label' => 'Conversion Rate', 'value' => number_format($summary['conversion_rate'] * 100, 2).'%'],
+                ['label' => 'Visits', 'value' => number_format($summary['visits_count'])],
             ];
         @endphp
         @foreach ($tiles as $tile)
@@ -75,6 +75,30 @@
                 <flux:text variant="subtle" class="text-xs">{{ $to }}</flux:text>
             </div>
         @endif
+    </div>
+
+    <div class="mt-4 rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:heading size="lg">Conversion funnel</flux:heading>
+        @php
+            $steps = [
+                ['label' => 'Visits', 'value' => $funnelData['visits'], 'class' => 'bg-zinc-300 dark:bg-zinc-600'],
+                ['label' => 'Add to Cart', 'value' => $funnelData['add_to_cart'], 'class' => 'bg-zinc-500 dark:bg-zinc-400'],
+                ['label' => 'Checkout Started', 'value' => $funnelData['checkout_started'], 'class' => 'bg-zinc-700 dark:bg-zinc-200'],
+                ['label' => 'Completed', 'value' => $funnelData['checkout_completed'], 'class' => 'bg-zinc-900 dark:bg-white'],
+            ];
+            $funnelMax = max(1, $funnelData['visits']);
+        @endphp
+        <div class="mt-4 flex flex-col gap-3">
+            @foreach ($steps as $step)
+                <div class="flex items-center gap-3" wire:key="funnel-{{ $loop->index }}">
+                    <span class="w-32 shrink-0 text-sm">{{ $step['label'] }}</span>
+                    <div class="h-6 flex-1 rounded bg-zinc-100 dark:bg-zinc-800">
+                        <div class="h-6 rounded {{ $step['class'] }}" style="width: {{ max(0, (int) ($step['value'] / $funnelMax * 100)) }}%"></div>
+                    </div>
+                    <span class="w-16 shrink-0 text-right text-sm font-medium">{{ number_format($step['value']) }}</span>
+                </div>
+            @endforeach
+        </div>
     </div>
 
     <div class="mt-4 rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">

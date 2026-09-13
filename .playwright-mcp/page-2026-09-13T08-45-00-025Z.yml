@@ -1,0 +1,12 @@
+- generic [ref=f59e1]:
+  - heading "Admin Login" [level=1] [ref=f59e2]
+  - paragraph [ref=f59e3]: Login to manage your store.
+  - generic [ref=f59e4]:
+    - generic [ref=f59e5]: Email
+    - textbox "Email" [active] [ref=f59e6]
+    - generic [ref=f59e7]: Password
+    - textbox "Password" [ref=f59e8]
+    - generic [ref=f59e9]:
+      - checkbox "Remember me" [ref=f59e10]
+      - text: Remember me
+    - button "Login" [ref=f59e11]

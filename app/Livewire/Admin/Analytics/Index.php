@@ -88,6 +88,7 @@ class Index extends Component
             'topProducts' => $topProducts,
             'totalRevenue' => $totalRevenue,
             'topReferrers' => $analytics->topReferrers($store, $from, $to),
+            'funnelData' => $analytics->funnel($store, $from, $to),
         ])->layout('livewire.admin.layout.app', ['title' => 'Analytics']);
     }
 

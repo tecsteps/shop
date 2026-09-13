@@ -21,6 +21,7 @@ use App\Models\Organization;
 use App\Models\Page;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ProductMedia;
 use App\Models\ProductVariant;
 use App\Models\Refund;
 use App\Models\SearchSetting;
@@ -74,7 +75,8 @@ it('seeds the exact product catalog with variants and inventory', function () {
         ->and(Product::where('store_id', $fashion->id)->count())->toBe(20)
         ->and(Product::where('store_id', $electronics->id)->count())->toBe(5)
         ->and(ProductVariant::count())->toBe(127)
-        ->and(InventoryItem::count())->toBe(127);
+        ->and(InventoryItem::count())->toBe(127)
+        ->and(ProductMedia::count())->toBe(25);
 
     $tee = Product::where('store_id', $fashion->id)->where('handle', 'classic-cotton-t-shirt')->firstOrFail();
 
@@ -205,6 +207,7 @@ it('is idempotent when run twice', function () {
         ->and(Store::count())->toBe(2)
         ->and(Product::count())->toBe(25)
         ->and(ProductVariant::count())->toBe(127)
+        ->and(ProductMedia::count())->toBe(25)
         ->and(Order::count())->toBe(18)
         ->and(AnalyticsDaily::count())->toBe(31);
 });

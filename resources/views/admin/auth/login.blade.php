@@ -35,7 +35,9 @@
             Remember me
         </label>
 
-        <button type="submit">Login</button>
+        <button type="submit">Sign in</button>
     </form>
+
+    <p><a href="{{ route('admin.password.request') }}">Forgot your password?</a></p>
 </body>
 </html>

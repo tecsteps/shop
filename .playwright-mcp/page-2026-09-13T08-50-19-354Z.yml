@@ -1,0 +1,149 @@
+- generic [active] [ref=f92e1]:
+  - link "Skip to main content" [ref=f92e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f92e3]:
+    - generic [ref=f92e4]:
+      - generic [ref=f92e5]:
+        - group [ref=f92e6]:
+          - generic "Open menu" [ref=f92e7]
+        - link "Acme Fashion" [ref=f92e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f92e11]:
+        - list [ref=f92e12]:
+          - listitem [ref=f92e13]:
+            - link "Home" [ref=f92e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f92e15]:
+            - link "New Arrivals" [ref=f92e16] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+          - listitem [ref=f92e17]:
+            - link "T-Shirts" [ref=f92e18] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/t-shirts
+          - listitem [ref=f92e19]:
+            - link "Pants & Jeans" [ref=f92e20] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/pants-jeans
+          - listitem [ref=f92e21]:
+            - link "Sale" [ref=f92e22] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/sale
+      - generic [ref=f92e23]:
+        - button "Search" [ref=f92e24]
+        - button "Open cart" [ref=f92e26]
+        - link "Account" [ref=f92e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f92e31]:
+    - generic [ref=f92e32]:
+      - navigation "Breadcrumb" [ref=f92e33]:
+        - list [ref=f92e34]:
+          - listitem [ref=f92e35]:
+            - link "Home" [ref=f92e36] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f92e37]:
+            - text: /
+            - link "Collections" [ref=f92e38] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections
+          - listitem [ref=f92e39]: / T-Shirts
+      - heading "T-Shirts" [level=1] [ref=f92e40]
+      - paragraph [ref=f92e42]: Premium cotton tees for every occasion.
+      - generic [ref=f92e43]:
+        - generic [ref=f92e44]:
+          - button [ref=f92e45]
+          - paragraph [ref=f92e50]: 4 products
+        - generic [ref=f92e51]:
+          - text: Sort
+          - combobox "Sort" [ref=f92e52]:
+            - option "Featured" [selected]
+            - 'option "Price: Low to High"'
+            - 'option "Price: High to Low"'
+            - option "Newest"
+            - option "Best Selling"
+      - generic [ref=f92e53]:
+        - complementary "Product filters" [ref=f92e54]:
+          - generic [ref=f92e55]:
+            - group [ref=f92e56]:
+              - generic "Availability" [ref=f92e57]
+              - generic [ref=f92e58]:
+                - checkbox "In stock" [ref=f92e59]
+                - text: In stock
+            - group [ref=f92e60]:
+              - generic "Price Range" [ref=f92e61]
+              - generic [ref=f92e62]:
+                - spinbutton "Minimum price" [ref=f92e64]
+                - text: "-"
+                - spinbutton "Maximum price" [ref=f92e66]
+            - group [ref=f92e67]:
+              - generic "Product Type" [ref=f92e68]
+              - generic [ref=f92e70]:
+                - checkbox "T-Shirts" [ref=f92e71]
+                - text: T-Shirts
+            - group [ref=f92e72]:
+              - generic "Vendor" [ref=f92e73]
+              - generic [ref=f92e75]:
+                - checkbox "Acme Basics" [ref=f92e76]
+                - text: Acme Basics
+        - generic [ref=f92e78]:
+          - generic [ref=f92e79]:
+            - link "Classic Cotton T-Shirt" [ref=f92e80] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+            - generic [ref=f92e85]:
+              - heading [level=3] [ref=f92e86]:
+                - link "Classic Cotton T-Shirt" [ref=f92e87] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+              - generic [ref=f92e88]: 24.99 EUR
+              - link "Choose options" [ref=f92e89] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+          - generic [ref=f92e90]:
+            - link "Graphic Print Tee" [ref=f92e91] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/graphic-print-tee
+            - generic [ref=f92e96]:
+              - heading [level=3] [ref=f92e97]:
+                - link "Graphic Print Tee" [ref=f92e98] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/graphic-print-tee
+              - generic [ref=f92e99]: 29.99 EUR
+              - link "Choose options" [ref=f92e100] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/graphic-print-tee
+          - generic [ref=f92e101]:
+            - link "V-Neck Linen Tee" [ref=f92e102] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/v-neck-linen-tee
+            - generic [ref=f92e107]:
+              - heading [level=3] [ref=f92e108]:
+                - link "V-Neck Linen Tee" [ref=f92e109] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/v-neck-linen-tee
+              - generic [ref=f92e110]: 34.99 EUR
+              - link "Choose options" [ref=f92e111] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/v-neck-linen-tee
+          - generic [ref=f92e112]:
+            - link "Striped Polo Shirt" [ref=f92e113] [cursor=pointer]:
+              - /url: http://acme-fashion.test/products/striped-polo-shirt
+              - generic [ref=f92e114]: Sale
+            - generic [ref=f92e119]:
+              - heading [level=3] [ref=f92e120]:
+                - link "Striped Polo Shirt" [ref=f92e121] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/striped-polo-shirt
+              - generic [ref=f92e122]: 27.99 EUR 39.99 EUR Sale
+              - link "Choose options" [ref=f92e123] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/striped-polo-shirt
+  - contentinfo [ref=f92e124]:
+    - generic [ref=f92e125]:
+      - generic [ref=f92e126]:
+        - navigation "Footer" [ref=f92e127]:
+          - heading "Links" [level=2] [ref=f92e128]
+          - list [ref=f92e129]:
+            - listitem [ref=f92e130]:
+              - link "About Us" [ref=f92e131] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/about
+            - listitem [ref=f92e132]:
+              - link "FAQ" [ref=f92e133] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/faq
+            - listitem [ref=f92e134]:
+              - link "Shipping & Returns" [ref=f92e135] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/shipping-returns
+            - listitem [ref=f92e136]:
+              - link "Privacy Policy" [ref=f92e137] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/privacy-policy
+            - listitem [ref=f92e138]:
+              - link "Terms of Service" [ref=f92e139] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/terms
+        - generic [ref=f92e140]:
+          - heading "Store" [level=2] [ref=f92e141]
+          - paragraph [ref=f92e142]: Acme Fashion
+      - paragraph [ref=f92e143]: © 2026 Acme Fashion. All rights reserved.

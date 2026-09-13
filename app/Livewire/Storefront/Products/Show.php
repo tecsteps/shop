@@ -168,6 +168,11 @@ class Show extends Component
         $variant = $this->selectedVariant();
         $currency = $variant?->currency ?? $store->default_currency;
         $collection = $product->collections->first();
+        $available = $variant !== null ? $catalog->availableQuantity($variant) : null;
+        $inventoryItem = $variant?->inventoryItem;
+        $isBackorder = $inventoryItem !== null
+            && $inventoryItem->policy === \App\Enums\InventoryPolicy::Continue
+            && ($inventoryItem->quantity_on_hand - $inventoryItem->quantity_reserved) <= 0;
 
         return view('livewire.storefront.products.show', [
             'store' => $store,
@@ -175,7 +180,8 @@ class Show extends Component
             'collection' => $collection,
             'variant' => $variant,
             'currency' => $currency,
-            'available' => $variant !== null ? $catalog->availableQuantity($variant) : null,
+            'available' => $available,
+            'isBackorder' => $isBackorder,
             'price' => $catalog,
         ])->layout('storefront.layouts.app', [
             'title' => $product->title.' - '.$store->name,

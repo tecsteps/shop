@@ -1,0 +1,310 @@
+- generic [active] [ref=f55e1]:
+  - link "Skip to main content" [ref=f55e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f55e3]:
+    - link "Acme Fashion" [ref=f55e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f55e7]:
+      - link "Dashboard" [ref=f55e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f55e12]: Products
+      - generic [ref=f55e13]:
+        - link "Products" [ref=f55e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f55e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f55e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f55e26]: Orders
+      - link "Orders" [ref=f55e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f55e32]: Customers
+      - link "Customers" [ref=f55e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f55e38]: Discounts
+      - link "Discounts" [ref=f55e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f55e45]: Content
+      - generic [ref=f55e46]:
+        - link "Pages" [ref=f55e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f55e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f55e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f55e59]:
+        - link "Analytics" [ref=f55e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f55e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f55e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f55e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f55e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f55e82]:
+    - banner [ref=f55e83]:
+      - button "Acme Fashion" [ref=f55e86]
+      - button "AU Admin User" [ref=f55e92]:
+        - generic [ref=f55e93]: AU
+        - generic [ref=f55e96]: Admin User
+    - main [ref=f55e100]:
+      - generic [ref=f55e101]:
+        - generic [ref=f55e102]:
+          - link "Home" [ref=f55e104] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin
+          - link "Products" [ref=f55e108] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/products
+          - generic [ref=f55e111]: Classic Cotton T-Shirt
+        - generic [ref=f55e113]:
+          - generic [ref=f55e114]: Classic Cotton T-Shirt
+          - button "Delete" [ref=f55e115]
+        - generic [ref=f55e121]:
+          - generic [ref=f55e122]:
+            - generic [ref=f55e123]:
+              - generic [ref=f55e124]:
+                - generic [aria-hidden] [ref=f55e125]: Title
+                - textbox "Title" [ref=f55e127]:
+                  - /placeholder: Short Sleeve T-Shirt
+                  - text: Classic Cotton T-Shirt
+              - generic [ref=f55e128]:
+                - generic [aria-hidden] [ref=f55e129]: Description
+                - textbox "Description" [ref=f55e130]:
+                  - /placeholder: Describe your product...
+                  - text: <p>A timeless classic cotton t-shirt. Comfortable, breathable, and perfect for everyday wear.</p>
+            - generic [ref=f55e131]:
+              - generic [ref=f55e132]: Media
+              - generic [ref=f55e133] [cursor=pointer]:
+                - generic [ref=f55e136]: Drag and drop images or click to upload
+                - button "Drag and drop images or click to upload" [ref=f55e137]
+            - generic [ref=f55e138]:
+              - generic [ref=f55e139]: Variants
+              - generic [ref=f55e140]:
+                - generic [ref=f55e141]:
+                  - generic [aria-hidden] [ref=f55e142]: Option name
+                  - textbox "Option name" [ref=f55e144]:
+                    - /placeholder: Size
+                    - text: Size
+                - generic [ref=f55e146]:
+                  - generic [aria-hidden] [ref=f55e147]: Values
+                  - textbox "Values" [ref=f55e149]:
+                    - /placeholder: S, M, L, XL
+                    - text: S, M, L, XL
+                - button "Remove option" [ref=f55e151]
+              - generic [ref=f55e159]:
+                - generic [ref=f55e160]:
+                  - generic [aria-hidden] [ref=f55e161]: Option name
+                  - textbox "Option name" [ref=f55e163]:
+                    - /placeholder: Size
+                    - text: Color
+                - generic [ref=f55e165]:
+                  - generic [aria-hidden] [ref=f55e166]: Values
+                  - textbox "Values" [ref=f55e168]:
+                    - /placeholder: S, M, L, XL
+                    - text: White, Black, Navy
+                - button "Remove option" [ref=f55e170]
+              - button "Add another option" [ref=f55e178]
+              - table [ref=f55e187]:
+                - rowgroup [ref=f55e188]:
+                  - row [ref=f55e189]:
+                    - columnheader "Variant" [ref=f55e190]
+                    - columnheader "SKU" [ref=f55e191]
+                    - columnheader "Price" [ref=f55e192]
+                    - columnheader "Compare at" [ref=f55e193]
+                    - columnheader "Qty" [ref=f55e194]
+                    - columnheader "Ships" [ref=f55e195]
+                - rowgroup [ref=f55e196]:
+                  - row [ref=f55e197]:
+                    - cell "S / White" [ref=f55e198]
+                    - cell [ref=f55e199]:
+                      - textbox "SKU" [ref=f55e201]: ACME-CTSH-S-WHT
+                    - cell [ref=f55e202]:
+                      - spinbutton "Price" [ref=f55e204]: "24.99"
+                    - cell [ref=f55e205]:
+                      - spinbutton "Compare at price" [ref=f55e207]
+                    - cell [ref=f55e208]:
+                      - spinbutton "Quantity" [ref=f55e210]: "14"
+                    - cell [ref=f55e211]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e212]
+                  - row [ref=f55e216]:
+                    - cell "S / Black" [ref=f55e217]
+                    - cell [ref=f55e218]:
+                      - textbox "SKU" [ref=f55e220]: ACME-CTSH-S-BLK
+                    - cell [ref=f55e221]:
+                      - spinbutton "Price" [ref=f55e223]: "24.99"
+                    - cell [ref=f55e224]:
+                      - spinbutton "Compare at price" [ref=f55e226]
+                    - cell [ref=f55e227]:
+                      - spinbutton "Quantity" [ref=f55e229]: "15"
+                    - cell [ref=f55e230]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e231]
+                  - row [ref=f55e235]:
+                    - cell "S / Navy" [ref=f55e236]
+                    - cell [ref=f55e237]:
+                      - textbox "SKU" [ref=f55e239]: ACME-CTSH-S-NVY
+                    - cell [ref=f55e240]:
+                      - spinbutton "Price" [ref=f55e242]: "24.99"
+                    - cell [ref=f55e243]:
+                      - spinbutton "Compare at price" [ref=f55e245]
+                    - cell [ref=f55e246]:
+                      - spinbutton "Quantity" [ref=f55e248]: "15"
+                    - cell [ref=f55e249]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e250]
+                  - row [ref=f55e254]:
+                    - cell "M / White" [ref=f55e255]
+                    - cell [ref=f55e256]:
+                      - textbox "SKU" [ref=f55e258]: ACME-CTSH-M-WHT
+                    - cell [ref=f55e259]:
+                      - spinbutton "Price" [ref=f55e261]: "24.99"
+                    - cell [ref=f55e262]:
+                      - spinbutton "Compare at price" [ref=f55e264]
+                    - cell [ref=f55e265]:
+                      - spinbutton "Quantity" [ref=f55e267]: "15"
+                    - cell [ref=f55e268]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e269]
+                  - row [ref=f55e273]:
+                    - cell "M / Black" [ref=f55e274]
+                    - cell [ref=f55e275]:
+                      - textbox "SKU" [ref=f55e277]: ACME-CTSH-M-BLK
+                    - cell [ref=f55e278]:
+                      - spinbutton "Price" [ref=f55e280]: "24.99"
+                    - cell [ref=f55e281]:
+                      - spinbutton "Compare at price" [ref=f55e283]
+                    - cell [ref=f55e284]:
+                      - spinbutton "Quantity" [ref=f55e286]: "15"
+                    - cell [ref=f55e287]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e288]
+                  - row [ref=f55e292]:
+                    - cell "M / Navy" [ref=f55e293]
+                    - cell [ref=f55e294]:
+                      - textbox "SKU" [ref=f55e296]: ACME-CTSH-M-NVY
+                    - cell [ref=f55e297]:
+                      - spinbutton "Price" [ref=f55e299]: "24.99"
+                    - cell [ref=f55e300]:
+                      - spinbutton "Compare at price" [ref=f55e302]
+                    - cell [ref=f55e303]:
+                      - spinbutton "Quantity" [ref=f55e305]: "15"
+                    - cell [ref=f55e306]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e307]
+                  - row [ref=f55e311]:
+                    - cell "L / White" [ref=f55e312]
+                    - cell [ref=f55e313]:
+                      - textbox "SKU" [ref=f55e315]: ACME-CTSH-L-WHT
+                    - cell [ref=f55e316]:
+                      - spinbutton "Price" [ref=f55e318]: "24.99"
+                    - cell [ref=f55e319]:
+                      - spinbutton "Compare at price" [ref=f55e321]
+                    - cell [ref=f55e322]:
+                      - spinbutton "Quantity" [ref=f55e324]: "15"
+                    - cell [ref=f55e325]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e326]
+                  - row [ref=f55e330]:
+                    - cell "L / Black" [ref=f55e331]
+                    - cell [ref=f55e332]:
+                      - textbox "SKU" [ref=f55e334]: ACME-CTSH-L-BLK
+                    - cell [ref=f55e335]:
+                      - spinbutton "Price" [ref=f55e337]: "24.99"
+                    - cell [ref=f55e338]:
+                      - spinbutton "Compare at price" [ref=f55e340]
+                    - cell [ref=f55e341]:
+                      - spinbutton "Quantity" [ref=f55e343]: "15"
+                    - cell [ref=f55e344]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e345]
+                  - row [ref=f55e349]:
+                    - cell "L / Navy" [ref=f55e350]
+                    - cell [ref=f55e351]:
+                      - textbox "SKU" [ref=f55e353]: ACME-CTSH-L-NVY
+                    - cell [ref=f55e354]:
+                      - spinbutton "Price" [ref=f55e356]: "24.99"
+                    - cell [ref=f55e357]:
+                      - spinbutton "Compare at price" [ref=f55e359]
+                    - cell [ref=f55e360]:
+                      - spinbutton "Quantity" [ref=f55e362]: "15"
+                    - cell [ref=f55e363]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e364]
+                  - row [ref=f55e368]:
+                    - cell "XL / White" [ref=f55e369]
+                    - cell [ref=f55e370]:
+                      - textbox "SKU" [ref=f55e372]: ACME-CTSH-XL-WHT
+                    - cell [ref=f55e373]:
+                      - spinbutton "Price" [ref=f55e375]: "24.99"
+                    - cell [ref=f55e376]:
+                      - spinbutton "Compare at price" [ref=f55e378]
+                    - cell [ref=f55e379]:
+                      - spinbutton "Quantity" [ref=f55e381]: "15"
+                    - cell [ref=f55e382]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e383]
+                  - row [ref=f55e387]:
+                    - cell "XL / Black" [ref=f55e388]
+                    - cell [ref=f55e389]:
+                      - textbox "SKU" [ref=f55e391]: ACME-CTSH-XL-BLK
+                    - cell [ref=f55e392]:
+                      - spinbutton "Price" [ref=f55e394]: "24.99"
+                    - cell [ref=f55e395]:
+                      - spinbutton "Compare at price" [ref=f55e397]
+                    - cell [ref=f55e398]:
+                      - spinbutton "Quantity" [ref=f55e400]: "15"
+                    - cell [ref=f55e401]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e402]
+                  - row [ref=f55e406]:
+                    - cell "XL / Navy" [ref=f55e407]
+                    - cell [ref=f55e408]:
+                      - textbox "SKU" [ref=f55e410]: ACME-CTSH-XL-NVY
+                    - cell [ref=f55e411]:
+                      - spinbutton "Price" [ref=f55e413]: "24.99"
+                    - cell [ref=f55e414]:
+                      - spinbutton "Compare at price" [ref=f55e416]
+                    - cell [ref=f55e417]:
+                      - spinbutton "Quantity" [ref=f55e419]: "15"
+                    - cell [ref=f55e420]:
+                      - checkbox "Requires shipping" [checked] [ref=f55e421]
+            - button "Search engine listing" [ref=f55e426]
+          - generic [ref=f55e430]:
+            - generic [ref=f55e431]:
+              - generic [ref=f55e432]:
+                - generic [aria-hidden] [ref=f55e433]: Status
+                - combobox "Status" [ref=f55e434]:
+                  - option "Draft"
+                  - option "Active" [selected]
+                  - option "Archived"
+              - generic [ref=f55e435]:
+                - generic [aria-hidden] [ref=f55e436]: Published at
+                - textbox "Published at" [ref=f55e438]: 2026-09-13T08:28
+            - generic [ref=f55e439]:
+              - generic [ref=f55e440]: Organization
+              - generic [ref=f55e441]:
+                - generic [aria-hidden] [ref=f55e442]: Vendor
+                - textbox "Vendor" [ref=f55e444]:
+                  - /placeholder: Nike
+                  - text: Acme Basics
+              - generic [ref=f55e445]:
+                - generic [aria-hidden] [ref=f55e446]: Product type
+                - textbox "Product type" [ref=f55e448]:
+                  - /placeholder: T-Shirts
+                  - text: T-Shirts
+              - generic [ref=f55e449]:
+                - generic [aria-hidden] [ref=f55e450]: Tags
+                - textbox "Tags" [ref=f55e452]:
+                  - /placeholder: summer, cotton, sale
+                  - text: new, popular
+                - generic [aria-hidden] [ref=f55e453]: Separate tags with commas
+            - generic [ref=f55e454]:
+              - generic [ref=f55e455]: Collections
+              - generic [ref=f55e456]:
+                - generic [ref=f55e457]:
+                  - checkbox [checked] [ref=f55e458]
+                  - generic [ref=f55e462]: New Arrivals
+                - generic [ref=f55e463]:
+                  - checkbox [ref=f55e464]
+                  - generic [ref=f55e466]: Pants & Jeans
+                - generic [ref=f55e467]:
+                  - checkbox [ref=f55e468]
+                  - generic [ref=f55e470]: Sale
+                - generic [ref=f55e471]:
+                  - checkbox [checked] [ref=f55e472]
+                  - generic [ref=f55e476]: T-Shirts
+        - generic [ref=f55e477]:
+          - link "Discard" [ref=f55e478] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/products
+          - button "Save" [ref=f55e479]

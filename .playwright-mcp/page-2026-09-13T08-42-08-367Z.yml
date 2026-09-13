@@ -1,0 +1,88 @@
+- generic [active] [ref=f51e1]:
+  - link "Skip to main content" [ref=f51e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f51e3]:
+    - link "Acme Fashion" [ref=f51e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f51e7]:
+      - link "Dashboard" [ref=f51e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f51e12]: Products
+      - generic [ref=f51e13]:
+        - link "Products" [ref=f51e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f51e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f51e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f51e26]: Orders
+      - link "Orders" [ref=f51e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f51e32]: Customers
+      - link "Customers" [ref=f51e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f51e38]: Discounts
+      - link "Discounts" [ref=f51e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f51e45]: Content
+      - generic [ref=f51e46]:
+        - link "Pages" [ref=f51e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f51e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f51e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f51e59]:
+        - link "Analytics" [ref=f51e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f51e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f51e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f51e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f51e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f51e82]:
+    - banner [ref=f51e83]:
+      - button "Acme Fashion" [ref=f51e86]
+      - button "AU Admin User" [ref=f51e92]:
+        - generic [ref=f51e93]: AU
+        - generic [ref=f51e96]: Admin User
+    - main [ref=f51e100]:
+      - generic [ref=f51e101]:
+        - generic [ref=f51e102]:
+          - link "Home" [ref=f51e104] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin
+          - generic [ref=f51e107]: Developers
+        - generic [ref=f51e109]: Developers
+        - generic [ref=f51e110]:
+          - generic [ref=f51e111]: API tokens
+          - paragraph [ref=f51e112]: Manage personal access tokens for the Admin API.
+          - table [ref=f51e114]:
+            - rowgroup [ref=f51e115]:
+              - row [ref=f51e116]:
+                - columnheader "Name" [ref=f51e117]
+                - columnheader "Last used" [ref=f51e118]
+                - columnheader "Created" [ref=f51e119]
+                - columnheader "Actions" [ref=f51e120]
+            - rowgroup [ref=f51e122]:
+              - row [ref=f51e123]:
+                - cell [ref=f51e124]:
+                  - paragraph [ref=f51e125]: No API tokens yet.
+          - button "Generate new token" [ref=f51e126]
+        - generic [ref=f51e132]:
+          - generic [ref=f51e133]: Webhooks
+          - paragraph [ref=f51e134]: Manage webhook subscriptions for real-time event notifications.
+          - table [ref=f51e136]:
+            - rowgroup [ref=f51e137]:
+              - row [ref=f51e138]:
+                - columnheader "Event type" [ref=f51e139]
+                - columnheader "URL" [ref=f51e140]
+                - columnheader "Status" [ref=f51e141]
+                - columnheader "Actions" [ref=f51e142]
+            - rowgroup [ref=f51e144]:
+              - row [ref=f51e145]:
+                - cell [ref=f51e146]:
+                  - paragraph [ref=f51e147]: No webhook subscriptions yet.
+          - button "Add webhook" [ref=f51e148]

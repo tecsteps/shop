@@ -36,6 +36,9 @@
                                         @if ($line['variant'] !== '')
                                             <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $line['variant'] }}</p>
                                         @endif
+                                        @if ($line['is_backorder'] ?? false)
+                                            <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">Available on backorder</p>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -66,6 +69,9 @@
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-sm font-semibold">{{ $line['title'] }}</p>
                         <p class="text-sm font-semibold">{{ \App\Support\Money::format($line['total'], $line['currency']) }}</p>
+                        @if ($line['is_backorder'] ?? false)
+                            <p class="text-xs text-blue-600 dark:text-blue-400">Available on backorder</p>
+                        @endif
                         <div class="mt-2 flex items-center justify-between">
                             <div class="inline-flex items-center rounded border border-zinc-300 dark:border-zinc-700">
                                 <button type="button" wire:click="decrementLine({{ $line['id'] }})" wire:loading.attr="disabled" class="flex h-8 w-8 items-center justify-center" aria-label="Decrease quantity">-</button>

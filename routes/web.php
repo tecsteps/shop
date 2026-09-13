@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\ForgotPasswordController as AdminForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\Auth\ResetPasswordController as AdminResetPasswordController;
 use App\Http\Controllers\Admin\StoreSelectorController;
 use App\Http\Controllers\Api\OauthStubController;
 use App\Http\Controllers\Storefront\Auth\ForgotPasswordController as CustomerForgotPasswordController;
@@ -51,7 +53,7 @@ use Illuminate\Support\Facades\Route;
 Route::livewire('/', StorefrontHome::class)->name('home')->middleware('store.resolve');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
+    ->middleware(['customer.redirect', 'auth', 'verified'])
     ->name('dashboard');
 
 Route::prefix('admin')->name('admin.')->group(function (): void {
@@ -60,6 +62,10 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::post('login', [AdminLoginController::class, 'store'])
             ->middleware('throttle:login')
             ->name('login.store');
+        Route::get('forgot-password', [AdminForgotPasswordController::class, 'create'])->name('password.request');
+        Route::post('forgot-password', [AdminForgotPasswordController::class, 'store'])->name('password.email');
+        Route::get('reset-password/{token}', [AdminResetPasswordController::class, 'create'])->name('password.reset');
+        Route::post('reset-password', [AdminResetPasswordController::class, 'store'])->name('password.update');
     });
 
     Route::post('logout', [AdminLoginController::class, 'destroy'])

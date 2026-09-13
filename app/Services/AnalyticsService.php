@@ -113,8 +113,9 @@ class AnalyticsService
     {
         $daily = $this->getDailyMetrics($store, $from, $to);
 
-        $ordersCount = (int) $daily->sum('orders_count');
-        $revenueAmount = (int) $daily->sum('revenue_amount');
+        $real = $this->realOrderMetrics($store, $from, $to);
+        $ordersCount = $real['count'];
+        $revenueAmount = $real['revenue'];
         $visitsCount = (int) $daily->sum('visits_count');
 
         $summary = [
@@ -131,7 +132,7 @@ class AnalyticsService
         return [
             'period' => ['from' => $from, 'to' => $to],
             'summary' => $summary,
-            'daily' => $this->bucketize($daily, $granularity),
+            'daily' => $this->bucketizeWithRealOrders($store, $daily, $granularity, $from, $to),
             'top_products' => $this->topProducts($store, $from, $to),
         ];
     }
@@ -290,5 +291,63 @@ class AnalyticsService
             ->where('store_id', $store->getKey())
             ->whereBetween('placed_at', [$from.' 00:00:00', $to.' 23:59:59'])
             ->count();
+    }
+
+    /**
+     * @return array{count: int, revenue: int}
+     */
+    protected function realOrderMetrics(Store $store, string $from, string $to): array
+    {
+        $row = Order::query()
+            ->where('store_id', $store->getKey())
+            ->whereBetween('placed_at', [$from.' 00:00:00', $to.' 23:59:59'])
+            ->selectRaw('COUNT(*) AS cnt, COALESCE(SUM(total_amount), 0) AS rev')
+            ->first();
+
+        return [
+            'count' => (int) ($row?->cnt ?? 0),
+            'revenue' => (int) ($row?->rev ?? 0),
+        ];
+    }
+
+    /**
+     * @param  Collection<int, AnalyticsDaily>  $daily
+     * @return array<int, array<string, mixed>>
+     */
+    protected function bucketizeWithRealOrders(Store $store, Collection $daily, string $granularity, string $from, string $to): array
+    {
+        $buckets = $this->bucketize($daily, $granularity);
+
+        $orders = Order::query()
+            ->where('store_id', $store->getKey())
+            ->whereBetween('placed_at', [$from.' 00:00:00', $to.' 23:59:59'])
+            ->get(['placed_at', 'total_amount']);
+
+        $byBucket = [];
+
+        foreach ($orders as $order) {
+            $date = CarbonImmutable::parse($order->placed_at);
+            $key = $granularity === 'day'
+                ? $date->toDateString()
+                : ($granularity === 'week'
+                    ? $date->startOfWeek()->toDateString()
+                    : $date->startOfMonth()->toDateString());
+
+            if (! isset($byBucket[$key])) {
+                $byBucket[$key] = ['count' => 0, 'revenue' => 0];
+            }
+
+            $byBucket[$key]['count']++;
+            $byBucket[$key]['revenue'] += (int) $order->total_amount;
+        }
+
+        foreach ($buckets as $index => $bucket) {
+            $real = $byBucket[$bucket['date']] ?? ['count' => 0, 'revenue' => 0];
+            $buckets[$index]['orders_count'] = $real['count'];
+            $buckets[$index]['revenue_amount'] = $real['revenue'];
+            $buckets[$index]['aov_amount'] = $real['count'] > 0 ? intdiv($real['revenue'], $real['count']) : 0;
+        }
+
+        return $buckets;
     }
 }

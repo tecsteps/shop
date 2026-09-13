@@ -1,0 +1,112 @@
+- generic [active] [ref=f87e1]:
+  - link "Skip to main content" [ref=f87e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f87e3]:
+    - link "Acme Fashion" [ref=f87e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f87e7]:
+      - link "Dashboard" [ref=f87e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f87e12]: Products
+      - generic [ref=f87e13]:
+        - link "Products" [ref=f87e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f87e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f87e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f87e26]: Orders
+      - link "Orders" [ref=f87e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f87e32]: Customers
+      - link "Customers" [ref=f87e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f87e38]: Discounts
+      - link "Discounts" [ref=f87e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f87e45]: Content
+      - generic [ref=f87e46]:
+        - link "Pages" [ref=f87e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f87e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f87e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f87e59]:
+        - link "Analytics" [ref=f87e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f87e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f87e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f87e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f87e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f87e82]:
+    - banner [ref=f87e83]:
+      - button "Acme Fashion" [ref=f87e86]
+      - button "AU Admin User" [ref=f87e92]:
+        - generic [ref=f87e93]: AU
+        - generic [ref=f87e96]: Admin User
+    - main [ref=f87e100]:
+      - generic [ref=f87e101]:
+        - generic [ref=f87e102]:
+          - link "Home" [ref=f87e104] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin
+          - link "Collections" [ref=f87e108] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/collections
+          - generic [ref=f87e111]: T-Shirts
+        - generic [ref=f87e113]: T-Shirts
+        - generic [ref=f87e114]:
+          - generic [ref=f87e115]:
+            - generic [ref=f87e116]:
+              - generic [ref=f87e117]:
+                - generic [aria-hidden] [ref=f87e118]: Title
+                - textbox "Title" [ref=f87e120]:
+                  - /placeholder: Summer Collection
+                  - text: T-Shirts
+              - generic [ref=f87e121]:
+                - generic [aria-hidden] [ref=f87e122]: Handle
+                - textbox "Handle" [ref=f87e124]:
+                  - /placeholder: summer-collection
+                  - text: t-shirts
+              - generic [ref=f87e125]:
+                - generic [aria-hidden] [ref=f87e126]: Description
+                - textbox "Description" [ref=f87e127]: <p>Premium cotton tees for every occasion.</p>
+            - generic [ref=f87e128]:
+              - generic [ref=f87e129]: Products
+              - textbox "Search products" [ref=f87e131]:
+                - /placeholder: Search products...
+              - paragraph [ref=f87e133]: Assigned products
+              - generic [ref=f87e134]:
+                - generic [ref=f87e135]:
+                  - generic [ref=f87e139]: Classic Cotton T-Shirt
+                  - button "Move up" [ref=f87e140]
+                  - button "Move down" [ref=f87e148]
+                  - button "Remove" [ref=f87e156]
+                - generic [ref=f87e164]:
+                  - generic [ref=f87e168]: Graphic Print Tee
+                  - button "Move up" [ref=f87e169]
+                  - button "Move down" [ref=f87e177]
+                  - button "Remove" [ref=f87e185]
+                - generic [ref=f87e193]:
+                  - generic [ref=f87e197]: V-Neck Linen Tee
+                  - button "Move up" [ref=f87e198]
+                  - button "Move down" [ref=f87e206]
+                  - button "Remove" [ref=f87e214]
+                - generic [ref=f87e222]:
+                  - generic [ref=f87e226]: Striped Polo Shirt
+                  - button "Move up" [ref=f87e227]
+                  - button "Move down" [ref=f87e235]
+                  - button "Remove" [ref=f87e243]
+          - generic [ref=f87e253]:
+            - generic [aria-hidden] [ref=f87e254]: Status
+            - combobox "Status" [ref=f87e255]:
+              - option "Active" [selected]
+              - option "Draft"
+              - option "Archived"
+        - generic [ref=f87e256]:
+          - link "Discard" [ref=f87e257] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/collections
+          - button "Save" [ref=f87e258]

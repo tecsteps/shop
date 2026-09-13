@@ -29,7 +29,7 @@ class FeaturedProducts extends Component
             $query->whereHas('collections', fn ($query) => $query->where('collections.id', $this->collectionId));
         }
 
-        $products = $catalog->withStorefrontRelations($query)->latest('id')->take($this->count)->get();
+        $products = $catalog->withStorefrontRelations($query)->orderBy('id')->take($this->count)->get();
 
         return view('livewire.storefront.featured-products', ['products' => $products]);
     }

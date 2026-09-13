@@ -1,0 +1,138 @@
+- generic [active] [ref=f38e1]:
+  - link "Skip to main content" [ref=f38e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f38e3]:
+    - link "Acme Fashion" [ref=f38e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f38e7]:
+      - link "Dashboard" [ref=f38e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f38e12]: Products
+      - generic [ref=f38e13]:
+        - link "Products" [ref=f38e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f38e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f38e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f38e26]: Orders
+      - link "Orders" [ref=f38e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f38e32]: Customers
+      - link "Customers" [ref=f38e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f38e38]: Discounts
+      - link "Discounts" [ref=f38e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f38e45]: Content
+      - generic [ref=f38e46]:
+        - link "Pages" [ref=f38e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f38e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f38e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f38e59]:
+        - link "Analytics" [ref=f38e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f38e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f38e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f38e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f38e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f38e82]:
+    - banner [ref=f38e83]:
+      - button "Acme Fashion" [ref=f38e86]
+      - button "AU Admin User" [ref=f38e92]:
+        - generic [ref=f38e93]: AU
+        - generic [ref=f38e96]: Admin User
+    - main [ref=f38e100]:
+      - generic [ref=f38e101]:
+        - generic [ref=f38e102]:
+          - link "Home" [ref=f38e104] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin
+          - link "Orders" [ref=f38e108] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/orders
+          - generic [ref=f38e111]: "#1005"
+        - generic [ref=f38e113]:
+          - generic [ref=f38e114]:
+            - generic [ref=f38e115]:
+              - generic [ref=f38e116]:
+                - generic [ref=f38e117]: "#1005"
+                - generic [ref=f38e118]: Pending
+                - generic [ref=f38e119]: Unfulfilled
+              - paragraph [ref=f38e120]: Sep 13, 2026 6:28 AM
+              - generic [ref=f38e121]:
+                - button "Confirm payment" [ref=f38e122]
+                - button "Create fulfillment" [disabled]
+              - generic [ref=f38e133]:
+                - generic [ref=f38e134]: Cannot create fulfillment.
+                - text: "Payment must be confirmed before items can be fulfilled. Current financial status: pending."
+            - generic [ref=f38e135]:
+              - generic [ref=f38e136]: Timeline
+              - list [ref=f38e137]:
+                - listitem [ref=f38e138]:
+                  - paragraph [ref=f38e140]: Order placed
+                  - paragraph [ref=f38e141]: Sep 13, 2026 6:28 AM
+            - generic [ref=f38e142]:
+              - generic [ref=f38e143]: Order lines
+              - table [ref=f38e145]:
+                - rowgroup [ref=f38e146]:
+                  - row [ref=f38e147]:
+                    - columnheader "Image" [ref=f38e148]
+                    - columnheader "Product" [ref=f38e150]
+                    - columnheader "Qty" [ref=f38e151]
+                    - columnheader "Unit Price" [ref=f38e152]
+                    - columnheader "Total" [ref=f38e153]
+                - rowgroup [ref=f38e154]:
+                  - row [ref=f38e155]:
+                    - cell [ref=f38e156]
+                    - cell "Leather Belt ACME-BELT-SM-BLK" [ref=f38e160]: Leather BeltACME-BELT-SM-BLK
+                    - cell "1" [ref=f38e161]
+                    - cell "€34.99" [ref=f38e162]
+                    - cell "€34.99" [ref=f38e163]
+              - generic [ref=f38e164]:
+                - generic [ref=f38e165]:
+                  - generic [ref=f38e166]: Subtotal
+                  - generic [ref=f38e167]: €34.99
+                - generic [ref=f38e168]:
+                  - generic [ref=f38e169]: Discount
+                  - generic [ref=f38e170]: "-€0.00"
+                - generic [ref=f38e171]:
+                  - generic [ref=f38e172]: Shipping
+                  - generic [ref=f38e173]: €4.99
+                - generic [ref=f38e174]:
+                  - generic [ref=f38e175]: Tax
+                  - generic [ref=f38e176]: €5.59
+                - generic [ref=f38e177]:
+                  - generic [ref=f38e178]: Total
+                  - generic [ref=f38e179]: €39.98
+            - generic [ref=f38e180]:
+              - generic [ref=f38e181]: Payment details
+              - generic [ref=f38e182]:
+                - generic [ref=f38e183]:
+                  - generic [ref=f38e184]: Bank Transfer
+                  - generic [ref=f38e185]: Pending
+                - paragraph [ref=f38e186]: "Amount: €39.98"
+                - paragraph [ref=f38e187]: "Ref: mock_test_order1005"
+                - button "Confirm payment" [ref=f38e189]
+          - generic [ref=f38e195]:
+            - generic [ref=f38e196]:
+              - generic [ref=f38e197]: Customer
+              - paragraph [ref=f38e198]: Jane Smith
+              - paragraph [ref=f38e199]: jane@example.com
+              - link "View customer" [ref=f38e200] [cursor=pointer]:
+                - /url: http://acme-fashion.test/admin/customers/2
+            - generic [ref=f38e201]:
+              - generic [ref=f38e202]: Shipping address
+              - paragraph [ref=f38e203]: Schillerstrasse 45
+              - paragraph [ref=f38e204]: Munich, Bavaria 80336
+              - paragraph [ref=f38e205]: Germany
+            - generic [ref=f38e206]:
+              - generic [ref=f38e207]: Billing address
+              - paragraph [ref=f38e208]: Schillerstrasse 45
+              - paragraph [ref=f38e209]: Munich, Bavaria 80336
+              - paragraph [ref=f38e210]: Germany

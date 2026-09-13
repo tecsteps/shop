@@ -36,7 +36,8 @@ class LoginController extends Controller
     {
         Auth::guard('customer')->logout();
 
-        $request->session()->invalidate();
+        $request->session()->forget(['cart_id', 'storefront.discount_code']);
+        $request->session()->regenerate();
         $request->session()->regenerateToken();
 
         return redirect()->route('customer.login');

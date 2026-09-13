@@ -1,0 +1,158 @@
+- generic [active] [ref=f32e1]:
+  - link "Skip to main content" [ref=f32e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f32e3]:
+    - generic [ref=f32e4]:
+      - generic [ref=f32e5]:
+        - group [ref=f32e6]:
+          - generic "Open menu" [ref=f32e7]
+        - link "Acme Fashion" [ref=f32e10] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f32e11]:
+        - list [ref=f32e12]:
+          - listitem [ref=f32e13]:
+            - link "Home" [ref=f32e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f32e15]:
+            - link "New Arrivals" [ref=f32e16] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+          - listitem [ref=f32e17]:
+            - link "T-Shirts" [ref=f32e18] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/t-shirts
+          - listitem [ref=f32e19]:
+            - link "Pants & Jeans" [ref=f32e20] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/pants-jeans
+          - listitem [ref=f32e21]:
+            - link "Sale" [ref=f32e22] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/sale
+      - generic [ref=f32e23]:
+        - button "Search" [ref=f32e24]
+        - button "Open cart" [ref=f32e26]
+        - link "Account" [ref=f32e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f32e31]:
+    - generic [ref=f32e32]:
+      - heading "Checkout" [level=1] [ref=f32e33]
+      - generic [ref=f32e34]:
+        - generic [ref=f32e35]:
+          - region "Contact information" [ref=f32e36]:
+            - heading "1. Contact information" [level=2] [ref=f32e37]
+            - generic [ref=f32e38]:
+              - generic [ref=f32e39]:
+                - generic [aria-hidden] [ref=f32e40]: Email
+                - textbox "Email" [ref=f32e42]: verify-page@example.com
+                - alert
+              - paragraph [ref=f32e43]:
+                - link "Already have an account? Log in" [ref=f32e44] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/account/login
+              - button [ref=f32e45]
+          - region "Shipping address" [ref=f32e50]:
+            - heading "2. Shipping address" [level=2] [ref=f32e51]
+            - generic [ref=f32e52]:
+              - generic [ref=f32e53]:
+                - generic [ref=f32e55]:
+                  - generic [aria-hidden] [ref=f32e56]: First name
+                  - textbox "First name" [ref=f32e58]
+                  - alert
+                - generic [ref=f32e60]:
+                  - generic [aria-hidden] [ref=f32e61]: Last name
+                  - textbox "Last name" [ref=f32e63]
+                  - alert
+                - generic [ref=f32e65]:
+                  - generic [aria-hidden] [ref=f32e66]: Address line 1
+                  - textbox "Address line 1" [ref=f32e68]
+                  - alert
+                - generic [ref=f32e70]:
+                  - generic [aria-hidden] [ref=f32e71]: Address line 2
+                  - textbox "Address line 2" [ref=f32e73]
+                  - alert
+                - generic [ref=f32e75]:
+                  - generic [aria-hidden] [ref=f32e76]: City
+                  - textbox "City" [ref=f32e78]
+                  - alert
+                - generic [ref=f32e80]:
+                  - generic [aria-hidden] [ref=f32e81]: State / Province
+                  - textbox "State / Province" [ref=f32e83]
+                  - alert
+                - generic [ref=f32e85]:
+                  - generic [aria-hidden] [ref=f32e86]: Postal code
+                  - textbox "Postal code" [ref=f32e88]
+                  - alert
+                - generic [ref=f32e89]:
+                  - text: Country *
+                  - combobox "Country *" [ref=f32e90]:
+                    - option "Select a country..." [selected]
+                    - option "Germany"
+                    - option "Austria"
+                    - option "France"
+                    - option "Netherlands"
+                    - option "Belgium"
+                    - option "Italy"
+                    - option "Spain"
+                    - option "United States"
+                    - option "United Kingdom"
+                    - option "Switzerland"
+                - generic [ref=f32e92]:
+                  - generic [aria-hidden] [ref=f32e93]: Phone
+                  - textbox "Phone" [ref=f32e95]
+                  - alert
+              - generic [ref=f32e96]:
+                - checkbox "Billing address same as shipping" [checked] [ref=f32e97]
+                - text: Billing address same as shipping
+              - button [ref=f32e98]
+          - region "Shipping method" [ref=f32e103]:
+            - heading "3. Shipping method" [level=2] [ref=f32e104]
+            - paragraph [ref=f32e105]: Complete the previous steps first.
+          - region "Payment method" [ref=f32e106]:
+            - heading "4. Payment method" [level=2] [ref=f32e107]
+            - paragraph [ref=f32e108]: Complete the previous steps first.
+        - generic [ref=f32e111]:
+          - heading "Order Summary" [level=2] [ref=f32e112]
+          - list [ref=f32e113]:
+            - listitem [ref=f32e114]:
+              - generic [ref=f32e115]:
+                - paragraph [ref=f32e116]: Classic Cotton T-Shirt
+                - paragraph [ref=f32e117]: S / White
+                - paragraph [ref=f32e118]: "Qty: 1"
+              - paragraph [ref=f32e119]: 24.99 EUR
+          - generic [ref=f32e121]:
+            - textbox "Discount code" [ref=f32e123]
+            - button [ref=f32e124]
+          - generic [ref=f32e129]:
+            - generic [ref=f32e130]:
+              - term [ref=f32e131]: Subtotal
+              - definition [ref=f32e132]: 24.99 EUR
+            - generic [ref=f32e133]:
+              - term [ref=f32e134]: Shipping
+              - definition [ref=f32e135]: 0.00 EUR
+            - generic [ref=f32e136]:
+              - term [ref=f32e137]: Tax
+              - definition [ref=f32e138]: 3.99 EUR
+            - generic [ref=f32e139]:
+              - term [ref=f32e140]: Total
+              - definition [ref=f32e141]: 24.99 EUR
+  - contentinfo [ref=f32e142]:
+    - generic [ref=f32e143]:
+      - generic [ref=f32e144]:
+        - navigation "Footer" [ref=f32e145]:
+          - heading "Links" [level=2] [ref=f32e146]
+          - list [ref=f32e147]:
+            - listitem [ref=f32e148]:
+              - link "About Us" [ref=f32e149] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/about
+            - listitem [ref=f32e150]:
+              - link "FAQ" [ref=f32e151] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/faq
+            - listitem [ref=f32e152]:
+              - link "Shipping & Returns" [ref=f32e153] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/shipping-returns
+            - listitem [ref=f32e154]:
+              - link "Privacy Policy" [ref=f32e155] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/privacy-policy
+            - listitem [ref=f32e156]:
+              - link "Terms of Service" [ref=f32e157] [cursor=pointer]:
+                - /url: http://acme-fashion.test/pages/terms
+        - generic [ref=f32e158]:
+          - heading "Store" [level=2] [ref=f32e159]
+          - paragraph [ref=f32e160]: Acme Fashion
+      - paragraph [ref=f32e161]: © 2026 Acme Fashion. All rights reserved.

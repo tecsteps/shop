@@ -54,9 +54,12 @@
                         <td class="px-4 py-3">{{ $discount->usage_count }} / {{ $discount->usage_limit ?? 'unlimited' }}</td>
                         <td class="px-4 py-3">
                             @php
-                                $derived = $discount->starts_at && $discount->starts_at->isFuture() ? 'scheduled' : $discount->status->value;
+                                $exhausted = $discount->usage_limit !== null && $discount->usage_count >= $discount->usage_limit;
+                                $derived = $exhausted
+                                    ? 'exhausted'
+                                    : ($discount->starts_at && $discount->starts_at->isFuture() ? 'scheduled' : $discount->status->value);
                             @endphp
-                            <flux:badge :color="match ($derived) { 'active' => 'green', 'expired' => 'red', 'scheduled' => 'yellow', default => 'zinc' }">{{ ucfirst($derived) }}</flux:badge>
+                            <flux:badge :color="match ($derived) { 'active' => 'green', 'expired' => 'red', 'scheduled' => 'yellow', 'exhausted' => 'red', default => 'zinc' }">{{ ucfirst($derived) }}</flux:badge>
                         </td>
                         <td class="px-4 py-3">{{ $discount->starts_at?->format('M j, Y') }} - {{ $discount->ends_at?->format('M j, Y') ?? 'No end' }}</td>
                         <td class="px-4 py-3 text-right">

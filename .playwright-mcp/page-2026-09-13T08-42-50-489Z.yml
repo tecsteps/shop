@@ -1,0 +1,131 @@
+- generic [active] [ref=f56e1]:
+  - link "Skip to main content" [ref=f56e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f56e3]:
+    - link "Acme Fashion" [ref=f56e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f56e7]:
+      - link "Dashboard" [ref=f56e8] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin
+      - paragraph [ref=f56e12]: Products
+      - generic [ref=f56e13]:
+        - link "Products" [ref=f56e14] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/products
+        - link "Collections" [ref=f56e18] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/collections
+        - link "Inventory" [ref=f56e22] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/inventory
+      - paragraph [ref=f56e26]: Orders
+      - link "Orders" [ref=f56e28] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/orders
+      - paragraph [ref=f56e32]: Customers
+      - link "Customers" [ref=f56e34] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/customers
+      - paragraph [ref=f56e38]: Discounts
+      - link "Discounts" [ref=f56e40] [cursor=pointer]:
+        - /url: http://acme-fashion.test/admin/discounts
+      - paragraph [ref=f56e45]: Content
+      - generic [ref=f56e46]:
+        - link "Pages" [ref=f56e47] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/pages
+        - link "Navigation" [ref=f56e51] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/navigation
+        - link "Themes" [ref=f56e55] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/themes
+      - generic [ref=f56e59]:
+        - link "Analytics" [ref=f56e60] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/analytics
+        - link "Settings" [ref=f56e65] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/settings
+        - link "Apps" [ref=f56e70] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/apps
+        - link "Developers" [ref=f56e74] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/developers
+        - link "Search" [ref=f56e78] [cursor=pointer]:
+          - /url: http://acme-fashion.test/admin/search/settings
+  - generic [ref=f56e82]:
+    - banner [ref=f56e83]:
+      - button "Acme Fashion" [ref=f56e86]
+      - button "AU Admin User" [ref=f56e92]:
+        - generic [ref=f56e93]: AU
+        - generic [ref=f56e96]: Admin User
+    - main [ref=f56e100]:
+      - generic [ref=f56e101]:
+        - generic [ref=f56e102]:
+          - link "Home" [ref=f56e104] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin
+          - link "Discounts" [ref=f56e108] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/discounts
+          - generic [ref=f56e111]: Create discount
+        - generic [ref=f56e113]: Create discount
+        - generic [ref=f56e114]:
+          - generic [ref=f56e116]:
+            - generic [aria-hidden] [ref=f56e117]: Type
+            - radiogroup "Type" [ref=f56e118]:
+              - generic [ref=f56e119]:
+                - radio "Discount code" [checked] [ref=f56e120]
+                - generic [aria-hidden] [ref=f56e123]: Discount code
+                - generic [aria-hidden] [ref=f56e124]: Customers enter a code at checkout
+              - generic [ref=f56e125]:
+                - radio "Automatic discount" [ref=f56e126]
+                - generic [aria-hidden] [ref=f56e128]: Automatic discount
+                - generic [aria-hidden] [ref=f56e129]: Applied automatically at checkout
+          - generic [ref=f56e131]:
+            - generic [aria-hidden] [ref=f56e132]: Discount code
+            - generic [ref=f56e133]:
+              - textbox "Discount code" [ref=f56e135]:
+                - /placeholder: SUMMER20
+              - button "Generate" [ref=f56e136]
+          - generic [ref=f56e142]:
+            - generic [ref=f56e143]:
+              - generic [aria-hidden] [ref=f56e144]: Value
+              - radiogroup "Value" [ref=f56e145]:
+                - generic [ref=f56e146]:
+                  - radio "Percentage" [checked] [ref=f56e147]
+                  - generic [aria-hidden] [ref=f56e150]: Percentage
+                - generic [ref=f56e151]:
+                  - radio "Fixed amount" [ref=f56e152]
+                  - generic [aria-hidden] [ref=f56e154]: Fixed amount
+                - generic [ref=f56e155]:
+                  - radio "Free shipping" [ref=f56e156]
+                  - generic [aria-hidden] [ref=f56e158]: Free shipping
+            - generic [ref=f56e159]:
+              - generic [aria-hidden] [ref=f56e160]: Percentage
+              - spinbutton "Percentage" [ref=f56e162]
+          - generic [ref=f56e163]:
+            - generic [ref=f56e164]: Conditions
+            - generic [ref=f56e165]:
+              - generic [aria-hidden] [ref=f56e166]: Minimum purchase amount
+              - spinbutton "Minimum purchase amount" [ref=f56e168]
+              - generic [aria-hidden] [ref=f56e169]: Leave empty for no minimum
+            - paragraph [ref=f56e170]: Specific products
+            - textbox "Search products" [ref=f56e172]:
+              - /placeholder: Search products...
+            - paragraph [ref=f56e174]: Specific collections
+            - textbox "Search collections" [ref=f56e176]:
+              - /placeholder: Search collections...
+          - generic [ref=f56e178]:
+            - generic [ref=f56e179]: Usage limits
+            - generic [ref=f56e180]:
+              - generic [aria-hidden] [ref=f56e181]: Total usage limit
+              - spinbutton "Total usage limit" [ref=f56e183]
+            - generic [ref=f56e184]:
+              - checkbox [ref=f56e185]
+              - generic [ref=f56e187]: Limit to one use per customer
+          - generic [ref=f56e188]:
+            - generic [ref=f56e189]: Active dates
+            - generic [ref=f56e190]:
+              - generic [ref=f56e191]:
+                - generic [aria-hidden] [ref=f56e192]: Start date
+                - textbox "Start date" [ref=f56e194]: 2026-09-13T08:42
+              - generic [ref=f56e195]:
+                - generic [aria-hidden] [ref=f56e196]: End date
+                - textbox "End date" [ref=f56e198]
+                - generic [aria-hidden] [ref=f56e199]: Leave empty for no end date
+          - generic [ref=f56e201]:
+            - generic [aria-hidden] [ref=f56e202]: Active
+            - switch "Active" [checked] [ref=f56e203]
+        - generic [ref=f56e205]:
+          - link "Discard" [ref=f56e206] [cursor=pointer]:
+            - /url: http://acme-fashion.test/admin/discounts
+          - button "Save" [ref=f56e207]
