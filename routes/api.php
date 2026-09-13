@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\V1\AnalyticsController;
 use App\Http\Controllers\Api\Admin\V1\CollectionController;
 use App\Http\Controllers\Api\Admin\V1\DiscountController;
 use App\Http\Controllers\Api\Admin\V1\FulfillmentController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\Api\Admin\V1\StoreInviteController;
 use App\Http\Controllers\Api\Admin\V1\TaxSettingController;
 use App\Http\Controllers\Api\Admin\V1\TokenController;
 use App\Http\Controllers\Api\Admin\V1\VariantInventoryController;
+use App\Http\Controllers\Api\OauthStubController;
+use App\Http\Controllers\Api\Storefront\V1\AnalyticsEventController;
 use App\Http\Controllers\Api\Storefront\V1\CartController;
 use App\Http\Controllers\Api\Storefront\V1\CheckoutController;
 use App\Http\Controllers\Api\Storefront\V1\OrderController as StorefrontOrderController;
@@ -190,6 +193,10 @@ Route::prefix('admin/v1')->name('api.admin.')->group(function (): void {
         Route::get('stores/{storeId}/search/status', [SearchAdminController::class, 'status'])
             ->middleware('abilities:read-settings')
             ->name('stores.search.status');
+
+        Route::get('stores/{storeId}/analytics/summary', [AnalyticsController::class, 'summary'])
+            ->middleware('abilities:read-analytics')
+            ->name('stores.analytics.summary');
     });
 
     Route::middleware(['web', 'auth', 'throttle:api.admin'])->group(function (): void {
@@ -201,6 +208,10 @@ Route::prefix('admin/v1')->name('api.admin.')->group(function (): void {
 Route::prefix('storefront/v1')->name('api.storefront.')->middleware(['store.resolve', 'throttle:search'])->group(function (): void {
     Route::get('search', [SearchController::class, 'index'])->name('search.index');
     Route::get('search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
+});
+
+Route::prefix('storefront/v1')->name('api.storefront.')->middleware(['store.resolve', 'throttle:analytics'])->group(function (): void {
+    Route::post('analytics/events', [AnalyticsEventController::class, 'store'])->name('analytics.events.store');
 });
 
 Route::prefix('storefront/v1')->name('api.storefront.')->middleware(['store.resolve', 'throttle:api.storefront'])->group(function (): void {
@@ -222,4 +233,10 @@ Route::prefix('storefront/v1')->name('api.storefront.')->middleware(['store.reso
     Route::post('checkouts/{checkoutId}/apply-discount', [CheckoutController::class, 'applyDiscount'])->name('checkouts.apply-discount');
     Route::delete('checkouts/{checkoutId}/discount', [CheckoutController::class, 'removeDiscount'])->name('checkouts.remove-discount');
     Route::post('checkouts/{checkoutId}/pay', [CheckoutController::class, 'pay'])->name('checkouts.pay');
+});
+
+Route::prefix('apps/v1')->name('api.apps.')->group(function (): void {
+    Route::get('stores/{storeId}/products', [OauthStubController::class, 'appResource'])->name('stores.products.index');
+    Route::get('stores/{storeId}/orders', [OauthStubController::class, 'appResource'])->name('stores.orders.index');
+    Route::get('stores/{storeId}/customers', [OauthStubController::class, 'appResource'])->name('stores.customers.index');
 });

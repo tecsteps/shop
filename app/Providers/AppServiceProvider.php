@@ -48,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureGates();
         $this->configureRateLimiting();
         $this->configureAuditListeners();
+        $this->configureWebhookListeners();
     }
 
     /**
@@ -173,5 +174,10 @@ class AppServiceProvider extends ServiceProvider
                 app(AuditLogger::class)->log('auth.logout', userId: $event->user->getKey());
             }
         });
+    }
+
+    protected function configureWebhookListeners(): void
+    {
+        Event::subscribe(\App\Listeners\DispatchWebhooks::class);
     }
 }
