@@ -41,4 +41,9 @@ class OrderPolicy
     {
         return $this->isOwnerOrAdmin($user, $order->store_id);
     }
+
+    public function confirmPayment(User $user, Order $order): bool
+    {
+        return $this->isOwnerOrAdmin($user, $order->store_id);
+    }
 }

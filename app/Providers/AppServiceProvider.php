@@ -32,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(CurrentStore::class);
+        $this->app->bind(
+            \App\Contracts\PaymentProvider::class,
+            \App\Services\Payment\MockPaymentProvider::class
+        );
     }
 
     /**
