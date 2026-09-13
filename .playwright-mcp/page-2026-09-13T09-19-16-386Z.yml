@@ -1,0 +1,137 @@
+- generic [active] [ref=f149e1]:
+  - link "Skip to main content" [ref=f149e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f149e3]:
+    - link "Acme Fashion" [ref=f149e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f149e7]:
+      - link "Dashboard" [ref=f149e8] [cursor=pointer]:
+        - /url: http://shop.test/admin
+      - paragraph [ref=f149e12]: Products
+      - generic [ref=f149e13]:
+        - link "Products" [ref=f149e14] [cursor=pointer]:
+          - /url: http://shop.test/admin/products
+        - link "Collections" [ref=f149e18] [cursor=pointer]:
+          - /url: http://shop.test/admin/collections
+        - link "Inventory" [ref=f149e22] [cursor=pointer]:
+          - /url: http://shop.test/admin/inventory
+      - paragraph [ref=f149e26]: Orders
+      - link "Orders" [ref=f149e28] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+      - paragraph [ref=f149e32]: Customers
+      - link "Customers" [ref=f149e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+      - paragraph [ref=f149e38]: Discounts
+      - link "Discounts" [ref=f149e40] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+      - paragraph [ref=f149e45]: Content
+      - generic [ref=f149e46]:
+        - link "Pages" [ref=f149e47] [cursor=pointer]:
+          - /url: http://shop.test/admin/pages
+        - link "Navigation" [ref=f149e51] [cursor=pointer]:
+          - /url: http://shop.test/admin/navigation
+        - link "Themes" [ref=f149e55] [cursor=pointer]:
+          - /url: http://shop.test/admin/themes
+      - generic [ref=f149e59]:
+        - link "Analytics" [ref=f149e60] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+        - link "Settings" [ref=f149e65] [cursor=pointer]:
+          - /url: http://shop.test/admin/settings
+        - link "Apps" [ref=f149e70] [cursor=pointer]:
+          - /url: http://shop.test/admin/apps
+        - link "Developers" [ref=f149e74] [cursor=pointer]:
+          - /url: http://shop.test/admin/developers
+        - link "Search" [ref=f149e78] [cursor=pointer]:
+          - /url: http://shop.test/admin/search/settings
+  - generic [ref=f149e82]:
+    - banner [ref=f149e83]:
+      - button "Acme Fashion" [ref=f149e86]
+      - button "AU Admin User" [ref=f149e92]:
+        - generic [ref=f149e93]: AU
+        - generic [ref=f149e96]: Admin User
+    - main [ref=f149e100]:
+      - generic [ref=f149e101]:
+        - generic [ref=f149e102]:
+          - link "Home" [ref=f149e104] [cursor=pointer]:
+            - /url: http://shop.test/admin
+          - link "Orders" [ref=f149e108] [cursor=pointer]:
+            - /url: http://shop.test/admin/orders
+          - generic [ref=f149e111]: "#1001"
+        - generic [ref=f149e113]:
+          - generic [ref=f149e114]:
+            - generic [ref=f149e115]:
+              - generic [ref=f149e116]:
+                - generic [ref=f149e117]: "#1001"
+                - generic [ref=f149e118]: Paid
+                - generic [ref=f149e119]: Unfulfilled
+              - paragraph [ref=f149e120]: Sep 11, 2026 9:05 AM
+              - generic [ref=f149e121]:
+                - button "Create fulfillment" [ref=f149e122]
+                - button "Refund" [ref=f149e128]
+            - generic [ref=f149e134]:
+              - generic [ref=f149e135]: Timeline
+              - list [ref=f149e136]:
+                - listitem [ref=f149e137]:
+                  - paragraph [ref=f149e139]: Order placed
+                  - paragraph [ref=f149e140]: Sep 11, 2026 9:05 AM
+                - listitem [ref=f149e141]:
+                  - paragraph [ref=f149e143]: Payment received
+                  - paragraph [ref=f149e144]: €54.97 via credit card
+            - generic [ref=f149e145]:
+              - generic [ref=f149e146]: Order lines
+              - table [ref=f149e148]:
+                - rowgroup [ref=f149e149]:
+                  - row [ref=f149e150]:
+                    - columnheader "Image" [ref=f149e151]
+                    - columnheader "Product" [ref=f149e153]
+                    - columnheader "Qty" [ref=f149e154]
+                    - columnheader "Unit Price" [ref=f149e155]
+                    - columnheader "Total" [ref=f149e156]
+                - rowgroup [ref=f149e157]:
+                  - row [ref=f149e158]:
+                    - cell [ref=f149e159]
+                    - cell "Classic Cotton T-Shirt ACME-CTSH-S-WHT" [ref=f149e160]: Classic Cotton T-ShirtACME-CTSH-S-WHT
+                    - cell "2" [ref=f149e161]
+                    - cell "€24.99" [ref=f149e162]
+                    - cell "€49.98" [ref=f149e163]
+              - generic [ref=f149e164]:
+                - generic [ref=f149e165]:
+                  - generic [ref=f149e166]: Subtotal
+                  - generic [ref=f149e167]: €49.98
+                - generic [ref=f149e168]:
+                  - generic [ref=f149e169]: Discount
+                  - generic [ref=f149e170]: "-€0.00"
+                - generic [ref=f149e171]:
+                  - generic [ref=f149e172]: Shipping
+                  - generic [ref=f149e173]: €4.99
+                - generic [ref=f149e174]:
+                  - generic [ref=f149e175]: Tax
+                  - generic [ref=f149e176]: €7.98
+                - generic [ref=f149e177]:
+                  - generic [ref=f149e178]: Total
+                  - generic [ref=f149e179]: €54.97
+            - generic [ref=f149e180]:
+              - generic [ref=f149e181]: Payment details
+              - generic [ref=f149e182]:
+                - generic [ref=f149e183]:
+                  - generic [ref=f149e184]: Credit Card
+                  - generic [ref=f149e185]: Captured
+                - paragraph [ref=f149e186]: "Amount: €54.97"
+                - paragraph [ref=f149e187]: "Ref: mock_test_order1001"
+          - generic [ref=f149e188]:
+            - generic [ref=f149e189]:
+              - generic [ref=f149e190]: Customer
+              - paragraph [ref=f149e191]: John Doe
+              - paragraph [ref=f149e192]: customer@acme.test
+              - link "View customer" [ref=f149e193] [cursor=pointer]:
+                - /url: http://shop.test/admin/customers/1
+            - generic [ref=f149e194]:
+              - generic [ref=f149e195]: Shipping address
+              - paragraph [ref=f149e196]: Hauptstrasse 1
+              - paragraph [ref=f149e197]: Berlin 10115
+              - paragraph [ref=f149e198]: Germany
+            - generic [ref=f149e199]:
+              - generic [ref=f149e200]: Billing address
+              - paragraph [ref=f149e201]: Hauptstrasse 1
+              - paragraph [ref=f149e202]: Berlin 10115
+              - paragraph [ref=f149e203]: Germany

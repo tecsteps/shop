@@ -1,0 +1,277 @@
+- generic [active] [ref=f126e1]:
+  - link "Skip to main content" [ref=f126e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f126e3]:
+    - link "Acme Fashion" [ref=f126e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f126e7]:
+      - link "Dashboard" [ref=f126e8] [cursor=pointer]:
+        - /url: http://shop.test/admin
+      - paragraph [ref=f126e12]: Products
+      - generic [ref=f126e13]:
+        - link "Products" [ref=f126e14] [cursor=pointer]:
+          - /url: http://shop.test/admin/products
+        - link "Collections" [ref=f126e18] [cursor=pointer]:
+          - /url: http://shop.test/admin/collections
+        - link "Inventory" [ref=f126e22] [cursor=pointer]:
+          - /url: http://shop.test/admin/inventory
+      - paragraph [ref=f126e26]: Orders
+      - link "Orders" [ref=f126e28] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+      - paragraph [ref=f126e32]: Customers
+      - link "Customers" [ref=f126e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+      - paragraph [ref=f126e38]: Discounts
+      - link "Discounts" [ref=f126e40] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+      - paragraph [ref=f126e45]: Content
+      - generic [ref=f126e46]:
+        - link "Pages" [ref=f126e47] [cursor=pointer]:
+          - /url: http://shop.test/admin/pages
+        - link "Navigation" [ref=f126e51] [cursor=pointer]:
+          - /url: http://shop.test/admin/navigation
+        - link "Themes" [ref=f126e55] [cursor=pointer]:
+          - /url: http://shop.test/admin/themes
+      - generic [ref=f126e59]:
+        - link "Analytics" [ref=f126e60] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+        - link "Settings" [ref=f126e65] [cursor=pointer]:
+          - /url: http://shop.test/admin/settings
+        - link "Apps" [ref=f126e70] [cursor=pointer]:
+          - /url: http://shop.test/admin/apps
+        - link "Developers" [ref=f126e74] [cursor=pointer]:
+          - /url: http://shop.test/admin/developers
+        - link "Search" [ref=f126e78] [cursor=pointer]:
+          - /url: http://shop.test/admin/search/settings
+  - generic [ref=f126e82]:
+    - banner [ref=f126e83]:
+      - button "Acme Fashion" [ref=f126e86]
+      - button "AU Admin User" [ref=f126e92]:
+        - generic [ref=f126e93]: AU
+        - generic [ref=f126e96]: Admin User
+    - main [ref=f126e100]:
+      - generic [ref=f126e101]:
+        - generic [ref=f126e102]:
+          - link "Home" [ref=f126e104] [cursor=pointer]:
+            - /url: http://shop.test/admin
+          - generic [ref=f126e107]: Analytics
+        - generic [ref=f126e109]: Analytics
+        - generic [ref=f126e110]:
+          - combobox "Date range" [ref=f126e111]:
+            - option "Today"
+            - option "Last 7 days"
+            - option "Last 30 days" [selected]
+            - option "Custom range"
+          - combobox "Channel filter" [ref=f126e112]:
+            - option "All channels" [selected]
+            - option "Storefront"
+            - option "API"
+          - combobox "Device filter" [ref=f126e113]:
+            - option "All devices" [selected]
+            - option "Desktop"
+            - option "Mobile"
+            - option "Tablet"
+          - button "Export CSV" [ref=f126e114]
+        - generic [ref=f126e122]:
+          - generic [ref=f126e123]:
+            - paragraph [ref=f126e124]: Revenue
+            - generic [ref=f126e125]: €1,602.07
+          - generic [ref=f126e126]:
+            - paragraph [ref=f126e127]: Orders
+            - generic [ref=f126e128]: "17"
+          - generic [ref=f126e129]:
+            - paragraph [ref=f126e130]: Avg Order Value
+            - generic [ref=f126e131]: €94.23
+          - generic [ref=f126e132]:
+            - paragraph [ref=f126e133]: Visits
+            - generic [ref=f126e134]: 3,513
+        - generic [ref=f126e135]:
+          - generic [ref=f126e136]: Sales over time
+          - img "Daily revenue chart" [ref=f126e137]:
+            - 'generic "2026-08-15: €0.00" [ref=f126e138]'
+            - 'generic "2026-08-16: €0.00" [ref=f126e139]'
+            - 'generic "2026-08-17: €0.00" [ref=f126e140]'
+            - 'generic "2026-08-18: €0.00" [ref=f126e141]'
+            - 'generic "2026-08-19: €32.98" [ref=f126e142]'
+            - 'generic "2026-08-20: €0.00" [ref=f126e143]'
+            - 'generic "2026-08-21: €0.00" [ref=f126e144]'
+            - 'generic "2026-08-22: €0.00" [ref=f126e145]'
+            - 'generic "2026-08-23: €0.00" [ref=f126e146]'
+            - 'generic "2026-08-24: €104.96" [ref=f126e147]'
+            - 'generic "2026-08-25: €0.00" [ref=f126e148]'
+            - 'generic "2026-08-26: €0.00" [ref=f126e149]'
+            - 'generic "2026-08-27: €0.00" [ref=f126e150]'
+            - 'generic "2026-08-28: €0.00" [ref=f126e151]'
+            - 'generic "2026-08-29: €29.98" [ref=f126e152]'
+            - 'generic "2026-08-30: €50.00" [ref=f126e153]'
+            - 'generic "2026-08-31: €0.00" [ref=f126e154]'
+            - 'generic "2026-09-01: €89.97" [ref=f126e155]'
+            - 'generic "2026-09-02: €0.00" [ref=f126e156]'
+            - 'generic "2026-09-03: €89.97" [ref=f126e157]'
+            - 'generic "2026-09-04: €0.00" [ref=f126e158]'
+            - 'generic "2026-09-05: €0.00" [ref=f126e159]'
+            - 'generic "2026-09-06: €0.00" [ref=f126e160]'
+            - 'generic "2026-09-07: €0.00" [ref=f126e161]'
+            - 'generic "2026-09-08: €119.97" [ref=f126e162]'
+            - 'generic "2026-09-09: €84.97" [ref=f126e163]'
+            - 'generic "2026-09-10: €49.97" [ref=f126e164]'
+            - 'generic "2026-09-11: €54.97" [ref=f126e165]'
+            - 'generic "2026-09-12: €714.93" [ref=f126e166]'
+            - 'generic "2026-09-13: €179.40" [ref=f126e167]'
+          - generic [ref=f126e168]:
+            - paragraph [ref=f126e169]: 2026-08-15
+            - paragraph [ref=f126e170]: 2026-09-13
+        - generic [ref=f126e171]:
+          - generic [ref=f126e172]: Conversion funnel
+          - generic [ref=f126e173]:
+            - generic [ref=f126e174]:
+              - generic [ref=f126e175]: Visits
+              - generic [ref=f126e178]: 3,513
+            - generic [ref=f126e179]:
+              - generic [ref=f126e180]: Add to Cart
+              - generic [ref=f126e183]: "746"
+            - generic [ref=f126e184]:
+              - generic [ref=f126e185]: Checkout Started
+              - generic [ref=f126e188]: "345"
+            - generic [ref=f126e189]:
+              - generic [ref=f126e190]: Completed
+              - generic [ref=f126e193]: "157"
+        - generic [ref=f126e194]:
+          - generic [ref=f126e195]: Top products
+          - table [ref=f126e197]:
+            - rowgroup [ref=f126e198]:
+              - row [ref=f126e199]:
+                - columnheader "Rank" [ref=f126e200]
+                - columnheader "Product" [ref=f126e201]
+                - columnheader "Units Sold" [ref=f126e202]
+                - columnheader "Revenue" [ref=f126e203]
+                - columnheader "% of Total" [ref=f126e204]
+            - rowgroup [ref=f126e205]:
+              - row [ref=f126e206]:
+                - cell "1" [ref=f126e207]
+                - cell "Cashmere Overcoat" [ref=f126e208]
+                - cell "1" [ref=f126e209]
+                - cell "€499.99" [ref=f126e210]
+                - cell "32.7%" [ref=f126e211]
+              - row [ref=f126e212]:
+                - cell "2" [ref=f126e213]
+                - cell "Classic Cotton T-Shirt" [ref=f126e214]
+                - cell "5" [ref=f126e215]
+                - cell "€124.95" [ref=f126e216]
+                - cell "8.2%" [ref=f126e217]
+              - row [ref=f126e218]:
+                - cell "3" [ref=f126e219]
+                - cell "Running Sneakers" [ref=f126e220]
+                - cell "1" [ref=f126e221]
+                - cell "€119.99" [ref=f126e222]
+                - cell "7.9%" [ref=f126e223]
+              - row [ref=f126e224]:
+                - cell "4" [ref=f126e225]
+                - cell "Premium Slim Fit Jeans" [ref=f126e226]
+                - cell "1" [ref=f126e227]
+                - cell "€79.99" [ref=f126e228]
+                - cell "5.2%" [ref=f126e229]
+              - row [ref=f126e230]:
+                - cell "5" [ref=f126e231]
+                - cell "Chino Shorts" [ref=f126e232]
+                - cell "2" [ref=f126e233]
+                - cell "€79.98" [ref=f126e234]
+                - cell "5.2%" [ref=f126e235]
+              - row [ref=f126e236]:
+                - cell "6" [ref=f126e237]
+                - cell "Leather Belt" [ref=f126e238]
+                - cell "2" [ref=f126e239]
+                - cell "€69.98" [ref=f126e240]
+                - cell "4.6%" [ref=f126e241]
+              - row [ref=f126e242]:
+                - cell "7" [ref=f126e243]
+                - cell "V-Neck Linen Tee" [ref=f126e244]
+                - cell "2" [ref=f126e245]
+                - cell "€69.98" [ref=f126e246]
+                - cell "4.6%" [ref=f126e247]
+              - row [ref=f126e248]:
+                - cell "8" [ref=f126e249]
+                - cell "Organic Hoodie" [ref=f126e250]
+                - cell "1" [ref=f126e251]
+                - cell "€59.99" [ref=f126e252]
+                - cell "3.9%" [ref=f126e253]
+              - row [ref=f126e254]:
+                - cell "9" [ref=f126e255]
+                - cell "Graphic Print Tee" [ref=f126e256]
+                - cell "2" [ref=f126e257]
+                - cell "€59.98" [ref=f126e258]
+                - cell "3.9%" [ref=f126e259]
+              - row [ref=f126e260]:
+                - cell "10" [ref=f126e261]
+                - cell "Wool Scarf" [ref=f126e262]
+                - cell "2" [ref=f126e263]
+                - cell "€59.98" [ref=f126e264]
+                - cell "3.9%" [ref=f126e265]
+              - row [ref=f126e266]:
+                - cell "11" [ref=f126e267]
+                - cell "Cargo Pants" [ref=f126e268]
+                - cell "1" [ref=f126e269]
+                - cell "€54.99" [ref=f126e270]
+                - cell "3.6%" [ref=f126e271]
+              - row [ref=f126e272]:
+                - cell "12" [ref=f126e273]
+                - cell "Gift Card" [ref=f126e274]
+                - cell "1" [ref=f126e275]
+                - cell "€50.00" [ref=f126e276]
+                - cell "3.3%" [ref=f126e277]
+              - row [ref=f126e278]:
+                - cell "13" [ref=f126e279]
+                - cell "Wide Leg Trousers" [ref=f126e280]
+                - cell "1" [ref=f126e281]
+                - cell "€49.99" [ref=f126e282]
+                - cell "3.3%" [ref=f126e283]
+              - row [ref=f126e284]:
+                - cell "14" [ref=f126e285]
+                - cell "Classic Cotton T-Shirt (M / White)" [ref=f126e286]
+                - cell "2" [ref=f126e287]
+                - cell "€49.98" [ref=f126e288]
+                - cell "3.3%" [ref=f126e289]
+              - row [ref=f126e290]:
+                - cell "15" [ref=f126e291]
+                - cell "Striped Polo Shirt" [ref=f126e292]
+                - cell "1" [ref=f126e293]
+                - cell "€27.99" [ref=f126e294]
+                - cell "1.8%" [ref=f126e295]
+              - row [ref=f126e296]:
+                - cell "16" [ref=f126e297]
+                - cell "Classic Cotton T-Shirt (S / Black)" [ref=f126e298]
+                - cell "1" [ref=f126e299]
+                - cell "€24.99" [ref=f126e300]
+                - cell "1.6%" [ref=f126e301]
+              - row [ref=f126e302]:
+                - cell "17" [ref=f126e303]
+                - cell "Bucket Hat" [ref=f126e304]
+                - cell "1" [ref=f126e305]
+                - cell "€24.99" [ref=f126e306]
+                - cell "1.6%" [ref=f126e307]
+              - row [ref=f126e308]:
+                - cell "18" [ref=f126e309]
+                - cell "Canvas Tote Bag" [ref=f126e310]
+                - cell "1" [ref=f126e311]
+                - cell "€19.99" [ref=f126e312]
+                - cell "1.3%" [ref=f126e313]
+        - generic [ref=f126e314]:
+          - generic [ref=f126e315]: Top referrers
+          - table [ref=f126e317]:
+            - rowgroup [ref=f126e318]:
+              - row [ref=f126e319]:
+                - columnheader "Source" [ref=f126e320]
+                - columnheader "Sessions" [ref=f126e321]
+                - columnheader "Orders" [ref=f126e322]
+                - columnheader "Conversion Rate" [ref=f126e323]
+            - rowgroup [ref=f126e324]:
+              - row [ref=f126e325]:
+                - cell "www.google.com" [ref=f126e326]
+                - cell "28" [ref=f126e327]
+                - cell "0" [ref=f126e328]
+                - cell "0.00%" [ref=f126e329]
+              - row [ref=f126e330]:
+                - cell "Direct" [ref=f126e331]
+                - cell "27" [ref=f126e332]
+                - cell "0" [ref=f126e333]
+                - cell "0.00%" [ref=f126e334]

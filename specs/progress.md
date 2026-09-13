@@ -16,8 +16,8 @@ Schema: managed ONLY in `draft.yaml` via Laravel Blueprint (`php artisan bluepri
 - [x] Agent E: Storefront UI - layout, themes, pages, navigation, cart/checkout UI, customer accounts (507 tests green)
 - [x] Agent F: Admin panel (spec 03), analytics, webhooks/apps, seeders (624 tests green)
 - [x] Agent G (independent 2nd agent): verified via Pest (624 green) + Playwright MCP - found 3 P0, 7 P1, 8 P2 (see log)
-- [~] Agent H: fix ALL P0/P1/P2 bugs + regression tests
-- [ ] Agent I: re-verify via Pest + Playwright, confirm all green
+- [x] Agent H: fix ALL P0/P1/P2 bugs + regression tests (644 tests green)
+- [~] Agent I: re-verify via Pest + Playwright, confirm all green
 - [ ] Bugfix + final review meeting (customer- + admin-side showcase)
 
 ## Log

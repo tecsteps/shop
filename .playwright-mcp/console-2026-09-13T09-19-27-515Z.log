@@ -1,0 +1,7 @@
+[      53ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/orders/19:56
+[   59453ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/search?q=cotton:48
+[   61517ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/products/backorder-denim-jacket:48
+[   63579ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/analytics:56
+[   65651ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/collections:56
+[   67734ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/settings:56
+[   69815ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/discounts:56

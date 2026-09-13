@@ -1,0 +1,9 @@
+[      68ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/search/settings:56
+[    5609ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/:0
+[    5611ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/:24
+[    7671ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/:48
+[   13983ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://shop.test/:0
+[   13986ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/:24
+[   22534ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-electronics.test/_boost/browser-logs @ http://acme-electronics.test/:48
+[   30464ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/:48
+[   32068ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://acme-fashion.test/_boost/browser-logs @ http://acme-fashion.test/collections/t-shirts:48

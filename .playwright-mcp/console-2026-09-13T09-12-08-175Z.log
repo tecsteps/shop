@@ -1,0 +1,3 @@
+[      65ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin/login:14
+[     160ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://shop.test/admin/login:0
+[    4169ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://shop.test/_boost/browser-logs @ http://shop.test/admin:56

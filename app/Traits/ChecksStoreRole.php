@@ -44,6 +44,8 @@ trait ChecksStoreRole
 
     protected function currentStoreId(): ?int
     {
-        return app(CurrentStore::class)->id();
+        $current = app(CurrentStore::class);
+
+        return $current->id() ?? $current->adminIdFromSession();
     }
 }

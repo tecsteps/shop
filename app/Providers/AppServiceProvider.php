@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
         $this->configureAuditListeners();
         $this->configureWebhookListeners();
+        $this->configureLivewireHooks();
     }
 
     /**
@@ -84,7 +86,8 @@ class AppServiceProvider extends ServiceProvider
     protected function configureGates(): void
     {
         $hasStoreRole = function (User $user, array $roles): bool {
-            $storeId = app(CurrentStore::class)->id();
+            $current = app(CurrentStore::class);
+            $storeId = $current->id() ?? $current->adminIdFromSession();
 
             if ($storeId === null) {
                 return false;
@@ -177,5 +180,10 @@ class AppServiceProvider extends ServiceProvider
     protected function configureWebhookListeners(): void
     {
         Event::subscribe(\App\Listeners\DispatchWebhooks::class);
+    }
+
+    protected function configureLivewireHooks(): void
+    {
+        Livewire::componentHook(\App\Livewire\Hooks\ResolveStoreContext::class);
     }
 }

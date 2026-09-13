@@ -262,16 +262,21 @@ class AnalyticsService
      */
     protected function topProducts(Store $store, string $from, string $to, int $limit = 5): array
     {
+        // Group by product (not title_snapshot): new orders suffix the variant
+        // labels onto title_snapshot ("Shirt (M / White)") while older rows
+        // hold the bare product title, which would split one product into
+        // several rows. The current product title is the consistent label.
         $rows = DB::table('order_lines')
             ->join('orders', 'orders.id', '=', 'order_lines.order_id')
+            ->join('products', 'products.id', '=', 'order_lines.product_id')
             ->where('orders.store_id', $store->getKey())
             ->whereBetween('orders.placed_at', [$from.' 00:00:00', $to.' 23:59:59'])
-            ->groupBy('order_lines.product_id', 'order_lines.title_snapshot')
+            ->groupBy('order_lines.product_id', 'products.title')
             ->orderByDesc(DB::raw('SUM(order_lines.total_amount)'))
             ->limit($limit)
             ->get([
                 'order_lines.product_id',
-                'order_lines.title_snapshot',
+                'products.title as title_snapshot',
                 DB::raw('SUM(order_lines.quantity) as units_sold'),
                 DB::raw('SUM(order_lines.total_amount) as revenue_amount'),
             ]);

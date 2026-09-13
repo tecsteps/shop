@@ -278,12 +278,19 @@ class ProductService
 
         $product->productOptions()->whereNotIn('name', $names)->delete();
 
-        foreach ($options as $optionData) {
+        // Two-phase position update: park existing rows at unique negative
+        // positions first so re-positioning never collides mid-update with the
+        // UNIQUE(product_id, position) constraint (e.g. seeded options are
+        // 0-based while form/API payloads are 1-based, so naive in-place
+        // updates clash with rows that have not been moved yet).
+        $product->productOptions()->update(['position' => DB::raw('-id - 1000000')]);
+
+        foreach ($options as $index => $optionData) {
             $name = trim((string) $optionData['name']);
 
             $option = $product->productOptions()->updateOrCreate(
                 ['name' => $name],
-                ['position' => $optionData['position']]
+                ['position' => $optionData['position'] ?? $index + 1]
             );
 
             $values = collect($optionData['values'] ?? [])->map(fn ($value) => trim((string) $value))->all();
@@ -300,8 +307,13 @@ class ProductService
 
             $option->productOptionValues()->whereNotIn('value', $values)->delete();
 
+            // Park value positions as well: prepending/reordering values while
+            // adding new ones can otherwise collide mid-update with the
+            // UNIQUE(product_option_id, position) constraint.
+            $option->productOptionValues()->update(['position' => DB::raw('-id - 1000000')]);
+
             foreach ($values as $position => $value) {
-                $option->productOptionValues()->firstOrCreate(
+                $option->productOptionValues()->updateOrCreate(
                     ['value' => $value],
                     ['position' => $position + 1]
                 );

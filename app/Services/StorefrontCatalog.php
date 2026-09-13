@@ -99,7 +99,11 @@ class StorefrontCatalog
             return null;
         }
 
-        return Storage::disk('public')->url($media->storage_key);
+        // Relative URL: storefronts run on per-store hostnames while the
+        // storage URL is built from APP_URL, so absolute URLs leak a
+        // cross-host address into same-origin <img> tags.
+        return parse_url(Storage::disk('public')->url($media->storage_key), PHP_URL_PATH)
+            ?: Storage::disk('public')->url($media->storage_key);
     }
 
     public function primaryImageAlt(Product $product): string

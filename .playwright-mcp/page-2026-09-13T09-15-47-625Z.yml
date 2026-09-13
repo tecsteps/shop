@@ -1,0 +1,16 @@
+- generic [ref=f120e2]:
+  - link "Laravel Starter Kit" [ref=f120e4] [cursor=pointer]:
+    - /url: http://shop.test/dashboard
+  - navigation [ref=f120e9]:
+    - generic [ref=f120e10]:
+      - generic [ref=f120e11]: Platform
+      - link "Dashboard" [ref=f120e15] [cursor=pointer]:
+        - /url: http://shop.test/dashboard
+  - navigation [ref=f120e21]:
+    - link "Repository" [ref=f120e23] [cursor=pointer]:
+      - /url: https://github.com/laravel/livewire-starter-kit
+    - link "Documentation" [ref=f120e32] [cursor=pointer]:
+      - /url: https://laravel.com/docs/starter-kits#livewire
+  - button "AU Admin User" [ref=f120e38]:
+    - generic [ref=f120e39]: AU
+    - generic [ref=f120e42]: Admin User

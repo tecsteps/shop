@@ -6,13 +6,13 @@
             @if ($product->productMedia->isNotEmpty())
                 @php $main = $product->productMedia->get($selectedImage) ?? $product->productMedia->first(); @endphp
                 <div class="aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($main->storage_key) }}" alt="{{ $main->alt_text ?? $product->title }}" class="h-full w-full object-cover" />
+                    <img src="{{ parse_url(\Illuminate\Support\Facades\Storage::disk('public')->url($main->storage_key), PHP_URL_PATH) }}" alt="{{ $main->alt_text ?? $product->title }}" class="h-full w-full object-cover" />
                 </div>
                 @if ($product->productMedia->count() > 1)
                     <div class="mt-3 flex gap-2 overflow-x-auto">
                         @foreach ($product->productMedia as $index => $media)
                             <button type="button" wire:key="thumb-{{ $media->getKey() }}" wire:click="selectImage({{ $index }})" aria-label="View image {{ $index + 1 }} of {{ $product->productMedia->count() }}" aria-current="{{ $index === $selectedImage ? 'true' : 'false' }}" class="h-16 w-16 shrink-0 overflow-hidden rounded border-2 {{ $index === $selectedImage ? 'border-blue-600' : 'border-transparent' }}">
-                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($media->storage_key) }}" alt="" class="h-full w-full object-cover" loading="lazy" />
+                                <img src="{{ parse_url(\Illuminate\Support\Facades\Storage::disk('public')->url($media->storage_key), PHP_URL_PATH) }}" alt="" class="h-full w-full object-cover" loading="lazy" />
                             </button>
                         @endforeach
                     </div>

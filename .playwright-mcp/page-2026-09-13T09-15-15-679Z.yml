@@ -1,0 +1,114 @@
+- generic [active] [ref=f114e1]:
+  - link "Skip to main content" [ref=f114e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f114e3]:
+    - generic [ref=f114e4]:
+      - link "Acme Fashion" [ref=f114e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f114e8]:
+        - list [ref=f114e9]:
+          - listitem [ref=f114e10]:
+            - link "Home" [ref=f114e11] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f114e12]:
+            - link "New Arrivals" [ref=f114e13] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=f114e14]:
+            - link "T-Shirts" [ref=f114e15] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=f114e16]:
+            - link "Pants & Jeans" [ref=f114e17] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=f114e18]:
+            - link "Sale" [ref=f114e19] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=f114e20]:
+        - button "Search" [ref=f114e21]
+        - button "Open cart" [ref=f114e24]
+        - link "Account" [ref=f114e27] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account
+  - main [ref=f114e30]:
+    - generic [ref=f114e31]:
+      - navigation "Breadcrumb" [ref=f114e32]:
+        - list [ref=f114e33]:
+          - listitem [ref=f114e34]:
+            - link "Account" [ref=f114e35] [cursor=pointer]:
+              - /url: http://acme-fashion.test/account
+          - listitem [ref=f114e36]:
+            - generic [aria-hidden] [ref=f114e37]: /
+            - generic [ref=f114e38]: Orders
+      - heading "Order History" [level=1] [ref=f114e39]
+      - table [ref=f114e41]:
+        - rowgroup [ref=f114e42]:
+          - row [ref=f114e43]:
+            - columnheader "Order" [ref=f114e44]
+            - columnheader "Date" [ref=f114e45]
+            - columnheader "Status" [ref=f114e46]
+            - columnheader "Total" [ref=f114e47]
+            - columnheader "Action" [ref=f114e48]
+        - rowgroup [ref=f114e49]:
+          - row [ref=f114e50]:
+            - cell "#1015" [ref=f114e51]
+            - cell "Sep 13, 2026" [ref=f114e52]
+            - cell "Paid" [ref=f114e53]
+            - cell "54.47 EUR" [ref=f114e55]
+            - cell [ref=f114e56]:
+              - link "View" [ref=f114e57] [cursor=pointer]:
+                - /url: http://acme-fashion.test/account/orders/%231015
+          - row [ref=f114e58]:
+            - cell "#1010" [ref=f114e59]
+            - cell "Sep 12, 2026" [ref=f114e60]
+            - cell "Paid" [ref=f114e61]
+            - cell "504.98 EUR" [ref=f114e63]
+            - cell [ref=f114e64]:
+              - link "View" [ref=f114e65] [cursor=pointer]:
+                - /url: http://acme-fashion.test/account/orders/%231010
+          - row [ref=f114e66]:
+            - cell "#1001" [ref=f114e67]
+            - cell "Sep 11, 2026" [ref=f114e68]
+            - cell "Paid" [ref=f114e69]
+            - cell "54.97 EUR" [ref=f114e71]
+            - cell [ref=f114e72]:
+              - link "View" [ref=f114e73] [cursor=pointer]:
+                - /url: http://acme-fashion.test/account/orders/%231001
+          - row [ref=f114e74]:
+            - cell "#1002" [ref=f114e75]
+            - cell "Sep 03, 2026" [ref=f114e76]
+            - cell "Fulfilled" [ref=f114e77]
+            - cell "89.97 EUR" [ref=f114e79]
+            - cell [ref=f114e80]:
+              - link "View" [ref=f114e81] [cursor=pointer]:
+                - /url: http://acme-fashion.test/account/orders/%231002
+          - row [ref=f114e82]:
+            - cell "#1004" [ref=f114e83]
+            - cell "Aug 29, 2026" [ref=f114e84]
+            - cell "Cancelled" [ref=f114e85]
+            - cell "29.98 EUR" [ref=f114e87]
+            - cell [ref=f114e88]:
+              - link "View" [ref=f114e89] [cursor=pointer]:
+                - /url: http://acme-fashion.test/account/orders/%231004
+  - contentinfo [ref=f114e90]:
+    - generic [ref=f114e91]:
+      - generic [ref=f114e92]:
+        - navigation "Footer" [ref=f114e93]:
+          - heading "Links" [level=2] [ref=f114e94]
+          - list [ref=f114e95]:
+            - listitem [ref=f114e96]:
+              - link "About Us" [ref=f114e97] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f114e98]:
+              - link "FAQ" [ref=f114e99] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f114e100]:
+              - link "Shipping & Returns" [ref=f114e101] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f114e102]:
+              - link "Privacy Policy" [ref=f114e103] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f114e104]:
+              - link "Terms of Service" [ref=f114e105] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f114e106]:
+          - heading "Store" [level=2] [ref=f114e107]
+          - paragraph [ref=f114e108]: Acme Fashion
+      - paragraph [ref=f114e109]: © 2026 Acme Fashion. All rights reserved.

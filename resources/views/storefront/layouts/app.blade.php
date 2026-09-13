@@ -6,7 +6,6 @@
     <meta name="description" content="{{ $metaDescription ?? '' }}" />
     <title>{{ $title ?? config('app.name') }}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate icon" href="/favicon.ico" />
     @stack('meta')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles

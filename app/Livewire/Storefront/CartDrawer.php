@@ -34,8 +34,13 @@ class CartDrawer extends Component
     #[On('cart-updated')]
     public function onCartUpdated(): void
     {
-        $this->open = true;
         $this->syncCartVersion();
+
+        if ($this->open || $this->isCartPageRequest()) {
+            return;
+        }
+
+        $this->open = true;
     }
 
     public function render()
@@ -52,5 +57,20 @@ class CartDrawer extends Component
             'totals' => $this->cartTotals($cart),
             'appliedCode' => $this->sessionDiscountCode(),
         ]);
+    }
+
+    /**
+     * The drawer must not auto-open over the dedicated cart page: its overlay
+     * would intercept the page's own quantity and checkout controls.
+     */
+    protected function isCartPageRequest(): bool
+    {
+        $refererPath = parse_url((string) request()->headers->get('referer'), PHP_URL_PATH);
+
+        if (! is_string($refererPath) || $refererPath === '') {
+            return false;
+        }
+
+        return $refererPath === parse_url(route('storefront.cart'), PHP_URL_PATH);
     }
 }
