@@ -50,6 +50,6 @@ class ProductOptionValue extends Model
 
     public function variants(): BelongsToMany
     {
-        return $this->belongsToMany(ProductVariant::class, 'variant_option_values');
+        return $this->belongsToMany(ProductVariant::class, 'variant_option_values', 'product_option_value_id', 'variant_id');
     }
 }
