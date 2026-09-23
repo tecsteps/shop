@@ -1,23 +1,31 @@
 <?php
 
+use App\Models\Customer;
+use Illuminate\Support\Facades\Hash;
+use Livewire\Livewire;
+
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-test('registration screen can be rendered', function () {
-    $response = $this->get(route('register'));
+test('global administrator self-registration remains disabled', function () {
+    $response = $this->get('/register');
 
-    $response->assertOk();
+    $response->assertNotFound();
 });
 
-test('new users can register', function () {
-    $response = $this->post(route('register.store'), [
-        'name' => 'John Doe',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
-    ]);
+test('customers register through the current store account flow', function () {
+    $store = shopStore();
+    app()->instance('current_store', $store);
 
-    $response->assertSessionHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+    Livewire::test(\App\Livewire\Storefront\Account\Auth\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'test@example.com')
+        ->set('password', 'password')
+        ->set('password_confirmation', 'password')
+        ->call('register')
+        ->assertRedirect(route('storefront.account.dashboard'));
 
-    $this->assertAuthenticated();
+    $customer = Customer::withoutGlobalScopes()->where('email', 'test@example.com')->firstOrFail();
+    $this->assertAuthenticatedAs($customer, 'customer');
+    expect($customer->store_id)->toBe($store->id)
+        ->and(Hash::check('password', $customer->password))->toBeTrue();
 });

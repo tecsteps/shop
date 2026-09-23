@@ -3,59 +3,46 @@
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Password;
+use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-test('reset password link screen can be rendered', function () {
-    $response = $this->get(route('password.request'));
+test('admin reset password link screen can be rendered', function () {
+    $response = $this->get(route('admin.password.request'));
 
     $response->assertOk();
 });
 
-test('reset password link can be requested', function () {
+test('admin reset password link can be requested without exposing account existence', function () {
     Notification::fake();
 
     $user = User::factory()->create();
 
-    $this->post(route('password.request'), ['email' => $user->email]);
+    Livewire::test(\App\Livewire\Admin\Auth\ForgotPassword::class)
+        ->set('email', $user->email)
+        ->call('sendResetLink')
+        ->assertSet('statusMessage', 'If an account with that email exists, we sent a password reset link.');
 
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-test('reset password screen can be rendered', function () {
-    Notification::fake();
+test('admin reset password form can be rendered', function () {
+    $response = $this->get(route('admin.password.reset', ['token' => 'test-reset-token']));
 
-    $user = User::factory()->create();
-
-    $this->post(route('password.request'), ['email' => $user->email]);
-
-    Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-        $response = $this->get(route('password.reset', $notification->token));
-        $response->assertOk();
-
-        return true;
-    });
+    $response->assertOk();
 });
 
-test('password can be reset with valid token', function () {
-    Notification::fake();
-
+test('admin password can be reset with a valid broker token', function () {
     $user = User::factory()->create();
+    $token = Password::broker('users')->createToken($user);
 
-    $this->post(route('password.request'), ['email' => $user->email]);
+    Livewire::withQueryParams(['email' => $user->email])
+        ->test(\App\Livewire\Admin\Auth\ResetPassword::class, ['token' => $token])
+        ->set('password', 'new-password-123')
+        ->set('password_confirmation', 'new-password-123')
+        ->call('resetPassword')
+        ->assertRedirect(route('admin.login'));
 
-    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
-        $response = $this->post(route('password.update'), [
-            'token' => $notification->token,
-            'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect(route('login', absolute: false));
-
-        return true;
-    });
+    expect(Password::broker('users')->tokenExists($user->fresh(), $token))->toBeFalse();
 });
