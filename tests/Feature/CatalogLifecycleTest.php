@@ -5,6 +5,7 @@ use App\Events\ProductStatusChanged;
 use App\Exceptions\InvalidProductTransitionException;
 use App\Models\Product;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
 
@@ -73,4 +74,25 @@ it('blocks product deletion after the product is published', function () {
 
     expect(fn () => app(ProductService::class)->delete($product))
         ->toThrow(InvalidProductTransitionException::class);
+});
+
+it('indexes product type in the store-scoped FTS table', function () {
+    $store = shopStore();
+    $product = app(ProductService::class)->create($store, [
+        'title' => 'Lightweight Rain Jacket',
+        'product_type' => 'Outerwear',
+        'description_html' => '<p>Waterproof shell</p>',
+        'vendor' => 'North Wind',
+        'tags' => ['rain', 'jacket'],
+        'variants' => [['price_amount' => 9900]],
+    ]);
+
+    $indexedProduct = DB::table('products_fts')->where('product_id', (string) $product->id)->first();
+    $matchedProductId = DB::selectOne(
+        'SELECT product_id FROM products_fts WHERE products_fts MATCH ? AND store_id = ?',
+        ['Outerwear', (string) $store->id],
+    )?->product_id;
+
+    expect($indexedProduct?->product_type)->toBe('Outerwear')
+        ->and((int) $matchedProductId)->toBe($product->id);
 });

@@ -29,6 +29,14 @@ it('registers a store-scoped customer and starts an authenticated session', func
         ->and(Hash::check('secure-password-123', $customer->password))->toBeTrue();
 });
 
+it('resolves the store on customer login and registration pages', function () {
+    shopStore('shop.test');
+
+    $this->get('http://shop.test/account/login')->assertOk();
+    $this->get('http://shop.test/account/register')->assertOk();
+    $this->get('http://unknown-shop.test/account/login')->assertNotFound();
+});
+
 it('allows the same customer email in separate stores and keeps login tenant scoped', function () {
     $firstStore = shopStore();
     $firstCustomer = Customer::factory()->create([

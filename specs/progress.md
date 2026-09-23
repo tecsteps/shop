@@ -51,6 +51,19 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** 39 focused shop tests passed (156 assertions); `vendor/bin/pint --dirty --format agent` passed; `npm run build` passed; route list confirmed the new shop recovery endpoints and absence of Fortify's generic recovery routes.
 
+### 2026-09-23 — Variant matrix, FTS, analytics ingestion, and maintenance
+
+- Added a reusable option-matrix reconciler that preserves matching variant pricing, SKU, inventory, and order history while creating/removing combinations safely. Added focused coverage for combinations, preservation, archived variants, and invalid matrices.
+- Added a forward migration that rebuilds SQLite FTS5 with the required `product_type` field and reindexes existing products; product saves now keep that field synchronized.
+- Analytics ingestion now writes canonical `properties_json` and `occurred_at` fields as well as compatibility fields, accepts product-view events, and drops duplicate client event IDs per store.
+- Outbound webhook signatures now bind the Unix event timestamp and JSON body as `timestamp.body`, as required by the security spec.
+- Added scheduled jobs for 14-day abandoned cart cleanup, expired checkout inventory release, and configurable overdue bank-transfer cancellation. Scheduled cancellations also fail pending payments and emit `OrderCancelled`.
+- Customer login, registration, and password-reset pages now resolve their storefront tenant from the hostname. Static page rendering now uses the sanitizer output rather than the stored HTML.
+- Updated scaffold auth tests to assert the shop-specific admin/customer auth contract instead of the removed generic Fortify registration/reset routes.
+- Remaining work includes wiring the variant matrix into admin/API product editing, media processing, missing admin CRUD/routes, token and webhook management UI, completing event-driven webhooks and trusted analytics, and running browser acceptance plus the final independent review.
+
+**Checks this iteration:** full Pest suite passed (81 tests, 307 assertions); focused matrix/tenant/analytics/maintenance/auth regressions passed; Pint passed; `npm run build` passed; `php artisan schedule:list` shows all four documented schedules.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -63,3 +76,5 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | Focused tenant, catalog, cart, checkout, account, API, pricing, analytics, and webhook Pest tests | Passed: 39 tests, 156 assertions |
 | 2026-09-23 | `npm run build` after account recovery views | Passed |
 | 2026-09-23 | `php artisan route:list --path=forgot` and `--path=reset` | Passed; both admin and customer shop routes registered, generic Fortify reset routes removed |
+| 2026-09-23 | Full Pest suite after variant, FTS, analytics ingestion, maintenance, and auth updates | Passed: 81 tests, 307 assertions |
+| 2026-09-23 | `php artisan schedule:list --no-interaction` | Passed; analytics, abandoned-cart cleanup, checkout expiration, and bank-transfer cancellation schedules registered |

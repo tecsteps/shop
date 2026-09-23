@@ -46,10 +46,10 @@ Route::middleware('throttle:login')->group(function (): void {
     Route::get('/admin/login', AdminLogin::class)->name('admin.login');
     Route::get('/admin/forgot-password', AdminForgotPassword::class)->name('admin.password.request');
     Route::get('/admin/reset-password/{token}', AdminResetPassword::class)->name('admin.password.reset');
-    Route::get('/account/login', CustomerLogin::class)->name('storefront.login');
-    Route::get('/account/register', CustomerRegister::class)->name('storefront.register');
-    Route::get('/forgot-password', CustomerForgotPassword::class)->name('storefront.password.request');
-    Route::get('/reset-password/{token}', CustomerResetPassword::class)->name('storefront.password.reset');
+    Route::get('/account/login', CustomerLogin::class)->middleware('store.resolve')->name('storefront.login');
+    Route::get('/account/register', CustomerRegister::class)->middleware('store.resolve')->name('storefront.register');
+    Route::get('/forgot-password', CustomerForgotPassword::class)->middleware('store.resolve')->name('storefront.password.request');
+    Route::get('/reset-password/{token}', CustomerResetPassword::class)->middleware('store.resolve')->name('storefront.password.reset');
 });
 
 Route::post('/admin/logout', function (\Illuminate\Http\Request $request) {

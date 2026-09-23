@@ -387,7 +387,7 @@ class StorefrontController extends Controller
     {
         $validated = $request->validate([
             'events' => ['required', 'array', 'min:1', 'max:50'],
-            'events.*.type' => ['required', Rule::in(['page_view', 'add_to_cart', 'remove_from_cart', 'checkout_started', 'checkout_completed', 'search'])],
+            'events.*.type' => ['required', Rule::in(['page_view', 'product_view', 'add_to_cart', 'remove_from_cart', 'checkout_started', 'checkout_completed', 'search'])],
             'events.*.session_id' => ['required', 'string', 'max:100'],
             'events.*.client_event_id' => ['required', 'string', 'max:100'],
             'events.*.properties' => ['sometimes', 'array'],
@@ -402,6 +402,8 @@ class StorefrontController extends Controller
                 'type' => $event['type'],
                 'session_id' => $event['session_id'],
                 'client_event_id' => $event['client_event_id'],
+                'properties_json' => json_encode($event['properties'] ?? [], JSON_THROW_ON_ERROR),
+                'occurred_at' => $event['occurred_at'],
                 'payload' => json_encode($event['properties'] ?? [], JSON_THROW_ON_ERROR),
                 'created_at' => $event['occurred_at'],
             ]);

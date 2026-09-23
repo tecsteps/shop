@@ -38,7 +38,7 @@ it('queues active matching subscriptions and signs the exact JSON payload', func
     Http::assertSent(fn (Request $request): bool => $request->url() === 'https://hooks.example.test/events'
         && $request->header('X-Platform-Event')[0] === 'order.created'
         && $request->header('X-Platform-Timestamp')[0] === '1775988672'
-        && $request->header('X-Platform-Signature')[0] === hash_hmac('sha256', '{"order_id":42}', 'subscription-secret'));
+        && $request->header('X-Platform-Signature')[0] === hash_hmac('sha256', '1775988672.{"order_id":42}', 'subscription-secret'));
     $delivery = WebhookDelivery::query()->where('event_id', 'delivery-event-1')->firstOrFail();
     expect($delivery->status)->toBe('success')
         ->and($delivery->attempt_count)->toBe(1)

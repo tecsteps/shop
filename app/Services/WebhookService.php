@@ -73,7 +73,7 @@ class WebhookService
 
         try {
             $body = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-            $signature = hash_hmac('sha256', $body, $subscription->signing_secret_encrypted);
+            $signature = hash_hmac('sha256', $timestamp.'.'.$body, $subscription->signing_secret_encrypted);
             $response = Http::connectTimeout(3)
                 ->timeout(10)
                 ->withHeaders([

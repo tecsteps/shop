@@ -73,6 +73,7 @@ class Product extends Model
                 'title' => $product->title,
                 'description' => strip_tags((string) $product->description_html),
                 'vendor' => (string) $product->vendor,
+                'product_type' => (string) $product->product_type,
                 'tags' => implode(' ', $product->tags ?? []),
             ]);
         });

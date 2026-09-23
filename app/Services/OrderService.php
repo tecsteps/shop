@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderCancelled;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\Order;
@@ -160,7 +161,9 @@ class OrderService
                 }
             }
 
+            $order->payments()->where('status', 'pending')->update(['status' => 'failed']);
             $order->forceFill(['status' => 'cancelled', 'financial_status' => 'voided'])->save();
+            OrderCancelled::dispatch($order->refresh());
 
             return $order->refresh();
         });
