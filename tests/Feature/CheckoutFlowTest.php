@@ -91,6 +91,86 @@ it('skips shipping for a digital product and automatically fulfills it after pay
         ->and($product['inventory']->refresh()->quantity_on_hand)->toBe(2);
 });
 
+it('calculates weight and price shipping tiers and excludes rates outside their ranges', function () {
+    $store = shopStore();
+    $product = shopProduct($store, price: 2000);
+    $product['variant']->update(['weight_g' => 600]);
+    $cart = Cart::factory()->create(['store_id' => $store->id]);
+    app(CartService::class)->add($cart, $product['variant'], 2);
+    $zone = ShippingZone::factory()->create(['store_id' => $store->id, 'countries' => ['DE']]);
+    $weightRate = ShippingRate::factory()->create([
+        'shipping_zone_id' => $zone->id,
+        'type' => 'weight',
+        'config_json' => ['tiers' => [
+            ['min_weight_g' => 0, 'max_weight_g' => 999, 'price_amount' => 600],
+            ['min_weight_g' => 1000, 'price_amount' => 900],
+        ]],
+    ]);
+    $priceRate = ShippingRate::factory()->create([
+        'shipping_zone_id' => $zone->id,
+        'type' => 'price',
+        'config_json' => ['tiers' => [
+            ['min_order_amount' => 0, 'max_order_amount' => 3999, 'price_amount' => 700],
+            ['min_order_amount' => 4000, 'price_amount' => 0],
+        ]],
+    ]);
+    $unavailableRate = ShippingRate::factory()->create([
+        'shipping_zone_id' => $zone->id,
+        'type' => 'weight',
+        'config_json' => ['tiers' => [['min_weight_g' => 2000, 'price_amount' => 1200]]],
+    ]);
+    $checkouts = app(CheckoutService::class);
+    $checkout = $checkouts->start($cart);
+    $checkout = $checkouts->setAddress($checkout, 'buyer@example.test', [
+        'first_name' => 'Alex', 'last_name' => 'Buyer', 'address1' => '1 Test Street',
+        'city' => 'Berlin', 'country' => 'DE', 'country_code' => 'DE', 'postal_code' => '10115',
+    ]);
+
+    $rates = $checkouts->availableShippingRates($checkout)->keyBy('id');
+    expect($rates->keys()->all())->toContain($weightRate->id, $priceRate->id)
+        ->and($rates->keys()->all())->not->toContain($unavailableRate->id)
+        ->and($rates[$weightRate->id]->price_amount)->toBe(900)
+        ->and($rates[$priceRate->id]->price_amount)->toBe(0);
+
+    $checkout = $checkouts->selectShippingMethod($checkout, $weightRate->id);
+    expect($checkout->shipping_amount)->toBe(900);
+});
+
+it('uses the most specific shipping zone and weighs only physical items', function () {
+    $store = shopStore();
+    $physical = shopProduct($store, price: 1500);
+    $physical['variant']->update(['weight_g' => 750]);
+    $digital = shopProduct($store, price: 500, requiresShipping: false);
+    $digital['variant']->update(['weight_g' => 10000]);
+    $cart = Cart::factory()->create(['store_id' => $store->id]);
+    app(CartService::class)->add($cart, $physical['variant'], 1);
+    app(CartService::class)->add($cart, $digital['variant'], 3);
+    $countryZone = ShippingZone::factory()->create(['store_id' => $store->id, 'countries' => ['DE'], 'regions' => []]);
+    $regionZone = ShippingZone::factory()->create(['store_id' => $store->id, 'countries' => ['DE'], 'regions' => ['DE-BE']]);
+    ShippingRate::factory()->create([
+        'shipping_zone_id' => $countryZone->id,
+        'config_json' => ['price_amount' => 300],
+        'price_amount' => 300,
+    ]);
+    $regionalRate = ShippingRate::factory()->create([
+        'shipping_zone_id' => $regionZone->id,
+        'config_json' => ['price_amount' => 800],
+        'price_amount' => 800,
+    ]);
+    $checkouts = app(CheckoutService::class);
+    $checkout = $checkouts->start($cart);
+    $checkout = $checkouts->setAddress($checkout, 'buyer@example.test', [
+        'first_name' => 'Alex', 'last_name' => 'Buyer', 'address1' => '1 Test Street',
+        'city' => 'Berlin', 'province_code' => 'BE', 'country' => 'DE', 'country_code' => 'DE', 'postal_code' => '10115',
+    ]);
+
+    $rates = $checkouts->availableShippingRates($checkout);
+    expect($rates->modelKeys())->toBe([$regionalRate->id])
+        ->and($rates->first()->price_amount)->toBe(800);
+    $checkout = $checkouts->selectShippingMethod($checkout, $regionalRate->id);
+    expect($checkout->shipping_amount)->toBe(800);
+});
+
 it('expires a checkout and releases its reserved inventory exactly once', function () {
     $store = shopStore();
     $product = shopProduct($store, stock: 3);

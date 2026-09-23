@@ -38,6 +38,14 @@ it('creates and updates a guest cart using its id as the guest access token', fu
     $this->assertDatabaseHas('cart_lines', ['cart_id' => $cartId, 'quantity' => 3]);
 });
 
+it('rejects a currency code that is not assigned in ISO 4217', function () {
+    shopStore();
+
+    $this->postJson('http://shop.test/api/storefront/v1/carts', ['currency' => 'ABC'])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('currency');
+});
+
 it('returns 409 when a cart mutation uses a stale version', function () {
     $store = shopStore();
     $product = shopProduct($store);

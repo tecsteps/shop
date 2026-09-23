@@ -83,7 +83,11 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('login', fn (Request $request): Limit => Limit::perMinute(5)->by($request->ip()));
         RateLimiter::for('api.storefront', fn (Request $request): Limit => Limit::perMinute(120)->by($request->ip()));
-        RateLimiter::for('api.admin', fn (Request $request): Limit => Limit::perMinute(60)->by((string) ($request->user()?->id ?? $request->ip())));
+        RateLimiter::for('api.admin', fn (Request $request): Limit => Limit::perMinute(60)->by((string) (
+            $request->attributes->get('api_token')?->getKey()
+                ?? $request->user()?->id
+                ?? $request->ip()
+        )));
         RateLimiter::for('search', fn (Request $request): Limit => Limit::perMinute(30)->by($request->ip()));
         RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by($request->hasSession() ? $request->session()->getId() : $request->ip()));
         RateLimiter::for('analytics', fn (Request $request): Limit => Limit::perMinute(60)->by($request->ip()));
@@ -94,6 +98,28 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\Product::class, ProductPolicy::class);
         Gate::policy(\App\Models\Order::class, OrderPolicy::class);
         Gate::policy(Customer::class, CustomerPolicy::class);
+
+        Gate::define('view-collections', function (User $user): bool {
+            $store = app()->bound('current_store') ? app('current_store') : null;
+
+            return $store instanceof Store && in_array($user->roleForStore($store), [
+                StoreUserRole::Owner->value,
+                StoreUserRole::Admin->value,
+                StoreUserRole::Staff->value,
+                StoreUserRole::Support->value,
+            ], true);
+        });
+
+        Gate::define('view-discounts', function (User $user): bool {
+            $store = app()->bound('current_store') ? app('current_store') : null;
+
+            return $store instanceof Store && in_array($user->roleForStore($store), [
+                StoreUserRole::Owner->value,
+                StoreUserRole::Admin->value,
+                StoreUserRole::Staff->value,
+                StoreUserRole::Support->value,
+            ], true);
+        });
 
         foreach ([
             'manage-developers' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],

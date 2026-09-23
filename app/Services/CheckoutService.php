@@ -10,8 +10,6 @@ use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Order;
-use App\Models\ShippingRate;
-use App\Models\ShippingZone;
 use App\Models\TaxSetting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +21,7 @@ class CheckoutService
         private readonly PricingEngine $pricing,
         private readonly InventoryService $inventory,
         private readonly PaymentService $payments,
+        private readonly ShippingCalculator $shippingCalculator,
     ) {}
 
     public function start(Cart $cart, ?Customer $customer = null): Checkout
@@ -144,25 +143,7 @@ class CheckoutService
     /** @return \Illuminate\Support\Collection<int, ShippingRate> */
     public function availableShippingRates(Checkout $checkout): \Illuminate\Support\Collection
     {
-        if (! $this->requiresShipping($checkout)) {
-            return collect();
-        }
-
-        $countryCode = strtoupper((string) ($checkout->shipping_address_json['country_code'] ?? $checkout->shipping_address_json['country'] ?? ''));
-        $subtotal = (int) $checkout->cart()->withSum('lines', 'line_subtotal_amount')->value('lines_sum_line_subtotal_amount');
-        $zones = ShippingZone::withoutGlobalScopes()->where('store_id', $checkout->store_id)->where('is_active', true)->with('rates')->get();
-
-        return $zones
-            ->filter(static fn (ShippingZone $zone): bool => in_array($countryCode, array_map('strtoupper', $zone->countries ?? []), true))
-            ->flatMap(static fn (ShippingZone $zone) => $zone->rates->filter(static function (ShippingRate $rate) use ($subtotal): bool {
-                if (! $rate->is_active) {
-                    return false;
-                }
-
-                return ($rate->min_order_amount === null || $subtotal >= $rate->min_order_amount)
-                    && ($rate->max_order_amount === null || $subtotal <= $rate->max_order_amount);
-            }))
-            ->values();
+        return $this->shippingCalculator->ratesForCheckout($checkout);
     }
 
     public function selectShippingMethod(Checkout $checkout, ?int $shippingRateId = null): Checkout
@@ -341,10 +322,10 @@ class CheckoutService
         $discounts = [...($codeDiscount ? [$codeDiscount] : []), ...$automaticDiscounts];
         $taxSettings = TaxSetting::query()->where('store_id', $checkout->store_id)->first();
         $address = $checkout->shipping_address_json ?? [];
-        $rates = $taxSettings?->rates_json ?? [];
+        $rates = $taxSettings?->taxRatesForCalculator() ?? [];
         $country = (string) ($address['country_code'] ?? $address['country'] ?? '');
         $province = $address['province_code'] ?? null;
-        $taxRate = app(TaxCalculator::class)->rateForAddress($rates, $country, $province, (int) ($taxSettings?->default_rate ?? 0));
+        $taxRate = app(TaxCalculator::class)->rateForAddress($rates, $country, $province, $taxSettings?->defaultTaxRateForCalculator() ?? 0);
         $result = $this->pricing->calculate(
             $lines,
             (int) $checkout->shipping_amount,

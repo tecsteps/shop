@@ -81,6 +81,16 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** focused discount, fulfillment, and pricing Pest tests passed (11 tests, 73 assertions); Pint passed on the changed PHP files.
 
+### 2026-09-23 — Admin API contracts, exports, and tiered shipping
+
+- Completed store-scoped product create/read/update/archive API behavior, including option matrices, variant positions, inventory, collections, partial updates, title/vendor/SKU search, and cross-store 404 isolation.
+- Completed order list/detail, fulfillment, refund, tax configuration, search/analytics operations, and asynchronous order CSV exports. Export jobs run on the database queue, filter only the owning store's orders, store CSV files privately, and expose one-hour signed download URLs.
+- Added shipping zone specificity and flat, weight-tier, and price-tier calculations. Physical-item weights exclude digital products, unavailable tiers are hidden, and checkout persists the selected calculated amount.
+- Fixed variant-create position reconciliation so submitted positions map to stable variant IDs as the collection is reordered.
+- Added regression coverage for export authorization/signature/filtering, full product and order API resources, tax provider settings, and shipping tier/zone calculations.
+
+**Checks this iteration:** the combined focused admin API, checkout API, cart API, shipping, and discount run passed (52 tests, 512 assertions); `vendor/bin/pint --dirty --format agent` passed. Full-suite and browser acceptance remain pending.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -98,3 +108,4 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | Signed product-media upload Pest tests | Passed: 3 tests, 16 assertions |
 | 2026-09-23 | Search settings Pest tests | Passed: 4 tests, 19 assertions |
 | 2026-09-23 | Discount, fulfillment lifecycle, and pricing Pest tests | Passed: 11 tests, 73 assertions |
+| 2026-09-23 | Admin API, order export, checkout/cart APIs, shipping, and discount Pest tests | Passed: 52 tests, 512 assertions |

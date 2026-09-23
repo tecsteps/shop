@@ -25,7 +25,21 @@ class StorefrontController extends Controller
 {
     public function createCart(Request $request, CartService $carts): JsonResponse
     {
-        $validated = $request->validate(['currency' => ['nullable', 'string', 'size:3', 'regex:/^[A-Za-z]{3}$/']]);
+        $validated = $request->validate(['currency' => [
+            'nullable',
+            'string',
+            'size:3',
+            'regex:/^[A-Za-z]{3}$/',
+            static function (string $attribute, mixed $value, \Closure $fail): void {
+                $currencies = class_exists(\ResourceBundle::class)
+                    ? \ResourceBundle::create('en', 'ICUDATA-curr')?->get('Currencies')
+                    : null;
+
+                if (! $currencies instanceof \ResourceBundle || $currencies->get(strtoupper((string) $value)) === null) {
+                    $fail('The selected currency is not a valid ISO 4217 currency code.');
+                }
+            },
+        ]]);
         $customer = auth('customer')->user();
         $cart = $customer
             ? $carts->getOrCreateActiveCart($this->store(), $customer)
@@ -129,7 +143,7 @@ class StorefrontController extends Controller
         ]);
         $currentCheckout = $this->checkout($checkoutId);
         $email = (string) ($validated['email'] ?? $currentCheckout->email ?? '');
-        $billingAddress = ($validated['use_shipping_as_billing'] ?? false)
+        $billingAddress = ($validated['use_shipping_as_billing'] ?? true)
             ? null
             : ($validated['billing_address'] ?? null);
         $checkout = $checkouts->setAddress($currentCheckout, $email, $validated['shipping_address'] ?? [], $billingAddress);
@@ -261,8 +275,12 @@ class StorefrontController extends Controller
         ]);
     }
 
-    public function search(Request $request): JsonResponse
+    public function search(Request $request, \App\Services\SearchService $search): JsonResponse
     {
+        if (mb_strlen((string) $request->query('q', '')) > 200) {
+            return response()->json(['message' => 'The query may not be greater than 200 characters.'], 400);
+        }
+
         $validated = $request->validate([
             'q' => ['required', 'string', 'min:1', 'max:200'],
             'sort' => ['sometimes', Rule::in(['relevance', 'price_asc', 'price_desc', 'newest', 'best_selling'])],
@@ -274,21 +292,42 @@ class StorefrontController extends Controller
         $filters = [];
 
         if (isset($validated['filters'])) {
-            $filters = json_decode($validated['filters'], true);
+            try {
+                $decodedFilters = json_decode($validated['filters'], false, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return response()->json(['message' => 'The filters parameter must contain a valid JSON object.'], 400);
+            }
 
-            if (! is_array($filters)) {
+            if (! is_object($decodedFilters)) {
                 return response()->json(['message' => 'The filters parameter must contain a JSON object.'], 400);
+            }
+
+            $filters = \Illuminate\Support\Facades\Validator::make(get_object_vars($decodedFilters), [
+                'collection_id' => ['sometimes', 'integer', 'min:1'],
+                'price_min' => ['sometimes', 'integer', 'min:0'],
+                'price_max' => ['sometimes', 'integer', 'min:0'],
+                'in_stock' => ['sometimes', 'boolean'],
+                'tags' => ['sometimes', 'array', 'max:10'],
+                'tags.*' => ['required', 'string', 'max:255'],
+                'vendor' => ['sometimes', 'string', 'max:255'],
+            ])->validate();
+
+            if (isset($filters['price_min'], $filters['price_max']) && $filters['price_max'] < $filters['price_min']) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'filters.price_max' => 'The maximum price must be at least the minimum price.',
+                ]);
             }
         }
 
         $query = Product::query()->where('status', 'active')->whereNotNull('published_at');
-        $ftsTerms = collect(preg_split('/\s+/u', preg_replace('/[^\pL\pN ]/u', ' ', $queryText) ?? '') ?: [])
-            ->filter()->map(static fn (string $term): string => '"'.str_replace('"', '""', $term).'"')->implode(' OR ');
-        $ids = $ftsTerms === '' ? [] : DB::table('products_fts')->where('products_fts', 'match', $ftsTerms)->where('store_id', $this->store()->id)->pluck('product_id')->all();
+        $ftsTerms = $search->fullTextExpression($this->store()->id, $queryText);
+        $ids = $search->rankedProductIds($this->store()->id, $ftsTerms, 10000);
 
-        $query->where(function ($builder) use ($ids, $queryText): void {
+        $query->where(function ($builder) use ($ids, $ftsTerms, $queryText): void {
             if ($ids !== []) {
                 $builder->whereIn('id', $ids)->orWhere('title', 'like', '%'.addcslashes($queryText, '%_\\').'%');
+            } elseif ($ftsTerms === '') {
+                $builder->whereRaw('1 = 0');
             } else {
                 $builder->where('title', 'like', '%'.addcslashes($queryText, '%_\\').'%')
                     ->orWhere('description_html', 'like', '%'.addcslashes($queryText, '%_\\').'%')
@@ -323,17 +362,60 @@ class StorefrontController extends Controller
             'price_asc' => $query->withMin('variants', 'price_amount')->orderBy('variants_min_price_amount'),
             'price_desc' => $query->withMin('variants', 'price_amount')->orderByDesc('variants_min_price_amount'),
             'newest' => $query->orderByDesc('published_at'),
-            'best_selling' => $query->orderByDesc('id'),
-            default => $query->orderByRaw('CASE WHEN title LIKE ? THEN 0 ELSE 1 END', [$queryText.'%'])->orderBy('title'),
+            'best_selling' => $query->addSelect(['sold_units' => DB::table('order_lines')
+                ->join('orders', 'orders.id', '=', 'order_lines.order_id')
+                ->whereColumn('order_lines.product_id', 'products.id')
+                ->where('orders.store_id', $this->store()->id)
+                ->whereIn('orders.financial_status', ['paid', 'partially_refunded'])
+                ->where('orders.placed_at', '>=', now()->subDays(30))
+                ->selectRaw('COALESCE(SUM(order_lines.quantity), 0)')])->orderByDesc('sold_units')->orderBy('title'),
+            default => $this->orderBySearchRelevance($query, $ids, $queryText),
         };
 
-        $allResults = (clone $query)->withMin('variants', 'price_amount')->get();
-        $vendors = $allResults->pluck('vendor')->filter()->countBy()->map(fn (int $count, string $value): array => ['value' => $value, 'count' => $count])->values();
-        $tags = $allResults->flatMap(fn (Product $product): array => $product->tags ?? [])->countBy()->map(fn (int $count, string $value): array => ['value' => $value, 'count' => $count])->values();
         $page = (int) ($validated['page'] ?? 1);
         $perPage = (int) ($validated['per_page'] ?? 24);
-        $total = $allResults->count();
-        $products = $allResults->forPage($page, $perPage)->values()->load(['variants', 'media']);
+        $matchedProducts = (clone $query)->reorder()->select('products.id')->distinct()->toBase();
+        $vendors = (clone $query)
+            ->reorder()
+            ->select('products.vendor')
+            ->selectRaw('COUNT(DISTINCT products.id) AS aggregate_count')
+            ->whereNotNull('products.vendor')
+            ->groupBy('products.vendor')
+            ->orderBy('products.vendor')
+            ->get()
+            ->map(static fn (object $facet): array => ['value' => $facet->vendor, 'count' => (int) $facet->aggregate_count])
+            ->values();
+        $minimumPrices = DB::table('product_variants')
+            ->joinSub($matchedProducts, 'matched_products', static fn ($join) => $join->on('matched_products.id', '=', 'product_variants.product_id'))
+            ->select('product_variants.product_id')
+            ->selectRaw('MIN(product_variants.price_amount) AS product_minimum_price')
+            ->groupBy('product_variants.product_id');
+        $priceRange = DB::query()
+            ->fromSub($minimumPrices, 'matched_product_prices')
+            ->selectRaw('MIN(product_minimum_price) AS minimum_price, MAX(product_minimum_price) AS maximum_price')
+            ->first();
+        $tagCounts = [];
+        DB::table('products')
+            ->joinSub($matchedProducts, 'matched_products', static fn ($join) => $join->on('matched_products.id', '=', 'products.id'))
+            ->select('products.tags')
+            ->orderBy('products.id')
+            ->chunk(500, static function ($rows) use (&$tagCounts): void {
+                foreach ($rows as $row) {
+                    foreach (json_decode((string) $row->tags, true) ?: [] as $tag) {
+                        if (is_string($tag)) {
+                            $tagCounts[$tag] = ($tagCounts[$tag] ?? 0) + 1;
+                        }
+                    }
+                }
+            });
+        $tags = collect($tagCounts)
+            ->map(static fn (int $count, string $value): array => ['value' => $value, 'count' => $count])
+            ->values();
+        $paginator = (clone $query)
+            ->withMin('variants', 'price_amount')
+            ->paginate($perPage, ['products.*'], 'page', $page);
+        $total = $paginator->total();
+        $products = $paginator->getCollection()->load(['variants.inventoryItem', 'media']);
         SearchQuery::create(['query' => $queryText, 'results_count' => $total, 'session_id' => session()->getId()]);
 
         return response()->json([
@@ -345,17 +427,18 @@ class StorefrontController extends Controller
                 'vendor' => $product->vendor,
                 'product_type' => $product->product_type,
                 'price_amount' => (int) ($product->variants_min_price_amount ?? 0),
+                'compare_at_amount' => $product->variants->sortBy('price_amount')->first()?->compare_at_amount,
                 'currency' => $this->store()->default_currency,
-                'image_url' => $product->media->first()?->storage_key,
+                'image_url' => $product->media->first()?->url,
                 'in_stock' => $product->variants->contains(fn ($variant): bool => ! $variant->inventoryItem || $variant->inventoryItem->policy === 'continue' || $variant->inventoryItem->quantity_on_hand > $variant->inventoryItem->quantity_reserved),
                 'tags' => $product->tags,
             ]),
             'facets' => [
                 'vendors' => $vendors,
                 'tags' => $tags,
-                'price_range' => ['min' => (int) $allResults->min('variants_min_price_amount'), 'max' => (int) $allResults->max('variants_min_price_amount')],
+                'price_range' => ['min' => (int) ($priceRange->minimum_price ?? 0), 'max' => (int) ($priceRange->maximum_price ?? 0)],
             ],
-            'pagination' => ['current_page' => $page, 'per_page' => $perPage, 'total' => $total, 'last_page' => max(1, (int) ceil($total / $perPage))],
+            'pagination' => ['current_page' => $paginator->currentPage(), 'per_page' => $paginator->perPage(), 'total' => $total, 'last_page' => $paginator->lastPage()],
         ]);
     }
 
@@ -370,7 +453,7 @@ class StorefrontController extends Controller
             'type' => 'product',
             'title' => $product->title,
             'handle' => $product->handle,
-            'image_url' => $product->media->first()?->storage_key,
+            'image_url' => $product->media->first()?->url,
             'price_amount' => (int) ($product->variants->min('price_amount') ?? 0),
             'currency' => $this->store()->default_currency,
         ])->concat($collections->map(fn (Collection $collection): array => [
@@ -412,6 +495,26 @@ class StorefrontController extends Controller
         }
 
         return response()->json(['accepted' => $accepted, 'rejected' => count($validated['events']) - $accepted], 202);
+    }
+
+    /** @param list<string> $rankedProductIds */
+    private function orderBySearchRelevance(\Illuminate\Database\Eloquent\Builder $query, array $rankedProductIds, string $queryText): void
+    {
+        $rankedProductIds = array_values(array_unique(array_map('intval', $rankedProductIds)));
+
+        if ($rankedProductIds === []) {
+            $query->orderByRaw('CASE WHEN products.title LIKE ? THEN 0 ELSE 1 END', [$queryText.'%'])
+                ->orderBy('products.title');
+
+            return;
+        }
+
+        $rankCases = collect($rankedProductIds)
+            ->map(static fn (int $productId, int $position): string => "WHEN {$productId} THEN {$position}")
+            ->implode(' ');
+
+        $query->orderByRaw('CASE products.id '.$rankCases.' ELSE '.count($rankedProductIds).' END')
+            ->orderBy('products.title');
     }
 
     private function store(): Store

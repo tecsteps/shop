@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\OrderExportController;
 use App\Http\Controllers\Api\ProductMediaUploadController;
 use App\Http\Controllers\Api\StoreConfigurationController;
 use App\Http\Controllers\Api\StorefrontController;
@@ -62,7 +63,15 @@ Route::prefix('admin/v1')->middleware(['api.token', 'store.resolve', 'throttle:a
     Route::post('/stores/{storeId}/search/reindex', [AdminController::class, 'reindexSearch'])->whereNumber('storeId')->middleware('api.token:write-settings')->name('search.reindex');
     Route::get('/stores/{storeId}/search/status', [AdminController::class, 'searchStatus'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('search.status');
     Route::get('/stores/{storeId}/analytics/summary', [AdminController::class, 'analyticsSummary'])->whereNumber('storeId')->middleware('api.token:read-analytics')->name('analytics.summary');
+    Route::post('/stores/{storeId}/exports/orders', [OrderExportController::class, 'store'])->whereNumber('storeId')->middleware('api.token:read-orders')->name('exports.orders.store');
+    Route::get('/stores/{storeId}/exports/{exportId}', [OrderExportController::class, 'show'])->whereNumber('storeId')->whereNumber('exportId')->middleware('api.token:read-orders')->name('exports.show');
 });
+
+Route::get('/admin/v1/stores/{storeId}/exports/{exportId}/download', [OrderExportController::class, 'download'])
+    ->whereNumber('storeId')
+    ->whereNumber('exportId')
+    ->middleware('signed')
+    ->name('api.admin.exports.download');
 
 Route::put('/uploads/product-media/{mediaId}', [ProductMediaUploadController::class, 'upload'])
     ->whereNumber('mediaId')

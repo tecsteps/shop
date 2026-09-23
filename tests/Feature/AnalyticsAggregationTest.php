@@ -2,6 +2,7 @@
 
 use App\Models\AnalyticsDaily;
 use App\Models\AnalyticsEvent;
+use App\Models\Order;
 use App\Services\AnalyticsService;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +20,7 @@ it('aggregates daily orders, integer revenue, sessions, and funnel metrics per t
         ['type' => 'checkout_started', 'session_id' => 'session-a'],
         ['type' => 'checkout_completed', 'session_id' => 'session-a', 'properties_json' => ['order_total_amount' => 1299]],
         ['type' => 'checkout_completed', 'session_id' => 'session-b', 'properties_json' => ['total_amount' => 2500]],
+        ['type' => 'checkout_completed', 'session_id' => 'attacker', 'properties_json' => ['order_total_amount' => 999999999]],
     ];
 
     foreach ($events as $index => $event) {
@@ -28,6 +30,19 @@ it('aggregates daily orders, integer revenue, sessions, and funnel metrics per t
             'occurred_at' => $date.' 12:00:00',
             'created_at' => $date.' 12:00:00',
             ...$event,
+        ]);
+    }
+
+    foreach ([1299, 2500] as $index => $amount) {
+        Order::withoutGlobalScopes()->create([
+            'store_id' => $firstStore->id,
+            'order_number' => '#AN-'.($index + 1),
+            'payment_method' => 'card',
+            'status' => 'paid',
+            'financial_status' => 'paid',
+            'currency' => 'EUR',
+            'total_amount' => $amount,
+            'placed_at' => $date.' 12:00:00',
         ]);
     }
     AnalyticsEvent::create([

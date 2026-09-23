@@ -35,7 +35,7 @@ it('allows product reads for a matching ability and rejects writes without it', 
 
     $this->withToken($token)->getJson("/api/admin/v1/stores/{$store->id}/products")
         ->assertOk()
-        ->assertJsonPath('total', 1);
+        ->assertJsonPath('meta.total', 1);
 
     $this->withToken($token)->postJson("/api/admin/v1/stores/{$store->id}/products", [
         'title' => 'Not created',

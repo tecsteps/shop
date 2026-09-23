@@ -6,10 +6,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-function productMediaApiToken(User $user, array $abilities): string
+function productMediaApiToken(User $user, int $storeId, array $abilities): string
 {
     $plainTextToken = 'shop_'.Str::random(64);
     $user->tokens()->create([
+        'store_id' => $storeId,
         'name' => 'media-upload-test',
         'token' => hash('sha256', $plainTextToken),
         'abilities' => $abilities,
@@ -30,7 +31,7 @@ it('creates a store-scoped signed upload and stores verified media once', functi
     $product = Product::factory()->create(['store_id' => $store->id]);
     $user = User::factory()->create();
     $user->stores()->attach($store->id, ['role' => 'owner']);
-    $token = productMediaApiToken($user, ['write-products']);
+    $token = productMediaApiToken($user, $store->id, ['write-products']);
 
     $presign = $this->withToken($token)->postJson("/api/admin/v1/stores/{$store->id}/products/{$product->id}/media/presign-upload", [
         'filename' => 'small.png',
@@ -68,7 +69,7 @@ it('rejects invalid media metadata, missing abilities, and tampered upload URLs'
     $product = Product::factory()->create(['store_id' => $store->id]);
     $user = User::factory()->create();
     $user->stores()->attach($store->id, ['role' => 'owner']);
-    $readToken = productMediaApiToken($user, ['read-products']);
+    $readToken = productMediaApiToken($user, $store->id, ['read-products']);
 
     $this->withToken($readToken)->postJson("/api/admin/v1/stores/{$store->id}/products/{$product->id}/media/presign-upload", [
         'filename' => 'small.png',
@@ -76,7 +77,7 @@ it('rejects invalid media metadata, missing abilities, and tampered upload URLs'
         'byte_size' => 67,
     ])->assertForbidden();
 
-    $writeToken = productMediaApiToken($user, ['write-products']);
+    $writeToken = productMediaApiToken($user, $store->id, ['write-products']);
     $this->withToken($writeToken)->postJson("/api/admin/v1/stores/{$store->id}/products/{$product->id}/media/presign-upload", [
         'filename' => 'small.jpg',
         'content_type' => 'image/png',
@@ -105,7 +106,7 @@ it('applies the configured image size limit when issuing signed upload URLs', fu
     $product = Product::factory()->create(['store_id' => $store->id]);
     $user = User::factory()->create();
     $user->stores()->attach($store->id, ['role' => 'owner']);
-    $token = productMediaApiToken($user, ['write-products']);
+    $token = productMediaApiToken($user, $store->id, ['write-products']);
 
     $this->withToken($token)->postJson("/api/admin/v1/stores/{$store->id}/products/{$product->id}/media/presign-upload", [
         'filename' => 'small.png',

@@ -10,7 +10,7 @@ class ProductPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $this->hasRole($user, ['owner', 'admin', 'staff']);
+        return $this->hasRole($user, ['owner', 'admin', 'staff', 'support']);
     }
 
     public function view(User $user, Product $product): bool
