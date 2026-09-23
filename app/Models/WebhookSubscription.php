@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class WebhookSubscription extends Model
 {
@@ -20,5 +21,10 @@ class WebhookSubscription extends Model
     public function deliveries(): HasMany
     {
         return $this->hasMany(WebhookDelivery::class, 'subscription_id');
+    }
+
+    public function latestDelivery(): HasOne
+    {
+        return $this->hasOne(WebhookDelivery::class, 'subscription_id')->latestOfMany();
     }
 }

@@ -32,10 +32,11 @@ function attachStoreRole(User $user, Store $store, string $role = 'owner'): void
     test()->actingAs($user);
 }
 
-function adminApiCrudToken(User $user, array $abilities): string
+function adminApiCrudToken(User $user, Store $store, array $abilities): string
 {
     $plainTextToken = Str::random(48);
     $user->tokens()->create([
+        'store_id' => $store->getKey(),
         'name' => 'collections-discounts-api-test',
         'token' => hash('sha256', $plainTextToken),
         'abilities' => $abilities,
@@ -336,9 +337,9 @@ it('enforces the documented API token abilities on collection and discount route
     $store = shopStore();
     $user = User::factory()->create();
     $user->stores()->attach($store->id, ['role' => 'owner']);
-    $readToken = adminApiCrudToken($user, ['read-collections', 'read-discounts']);
-    $collectionWriteToken = adminApiCrudToken($user, ['write-collections']);
-    $discountWriteToken = adminApiCrudToken($user, ['write-discounts']);
+    $readToken = adminApiCrudToken($user, $store, ['read-collections', 'read-discounts']);
+    $collectionWriteToken = adminApiCrudToken($user, $store, ['write-collections']);
+    $discountWriteToken = adminApiCrudToken($user, $store, ['write-discounts']);
     $basePath = "/api/admin/v1/stores/{$store->id}";
 
     $this->withToken($readToken)->getJson("{$basePath}/collections")

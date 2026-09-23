@@ -22,6 +22,10 @@ class AuthenticateApiToken
         if ($existingToken instanceof PersonalAccessToken) {
             $abilities = $existingToken->abilities ?? [];
 
+            if (! $this->tokenMatchesStore($existingToken, $request, $abilities)) {
+                return response()->json(['message' => 'This token is not authorized for the requested store.'], 403);
+            }
+
             if ($requiredAbility && ! in_array($requiredAbility, $abilities, true) && ! in_array('*', $abilities, true)) {
                 return response()->json(['message' => 'This token is missing the required ability.'], 403);
             }
@@ -48,6 +52,10 @@ class AuthenticateApiToken
 
         $abilities = $token->abilities ?? [];
 
+        if (! $this->tokenMatchesStore($token, $request, $abilities)) {
+            return response()->json(['message' => 'This token is not authorized for the requested store.'], 403);
+        }
+
         if ($requiredAbility && ! in_array($requiredAbility, $abilities, true) && ! in_array('*', $abilities, true)) {
             return response()->json(['message' => 'This token is missing the required ability.'], 403);
         }
@@ -58,5 +66,25 @@ class AuthenticateApiToken
         $request->attributes->set('api_token', $token);
 
         return $next($request);
+    }
+
+    /** @param list<string> $abilities */
+    private function tokenMatchesStore(PersonalAccessToken $token, Request $request, array $abilities): bool
+    {
+        if (! $request->is('api/admin/*')) {
+            return true;
+        }
+
+        $requestedStoreId = $request->route('storeId');
+
+        if ($requestedStoreId === null) {
+            return false;
+        }
+
+        if ($token->store_id === null) {
+            return in_array('manage-platform', $abilities, true);
+        }
+
+        return (int) $token->store_id === (int) $requestedStoreId;
     }
 }

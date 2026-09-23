@@ -96,6 +96,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Customer::class, CustomerPolicy::class);
 
         foreach ([
+            'manage-developers' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
             'manage-store-settings' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
             'manage-staff' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
             'delete-store' => [StoreUserRole::Owner->value],
