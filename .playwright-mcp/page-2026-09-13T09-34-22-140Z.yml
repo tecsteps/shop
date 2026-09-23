@@ -1,0 +1,334 @@
+- generic [active] [ref=f168e1]:
+  - link "Skip to main content" [ref=f168e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f168e3]:
+    - link "Acme Fashion" [ref=f168e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f168e7]:
+      - link "Dashboard" [ref=f168e8] [cursor=pointer]:
+        - /url: http://shop.test/admin
+      - paragraph [ref=f168e12]: Products
+      - generic [ref=f168e13]:
+        - link "Products" [ref=f168e14] [cursor=pointer]:
+          - /url: http://shop.test/admin/products
+        - link "Collections" [ref=f168e18] [cursor=pointer]:
+          - /url: http://shop.test/admin/collections
+        - link "Inventory" [ref=f168e22] [cursor=pointer]:
+          - /url: http://shop.test/admin/inventory
+      - paragraph [ref=f168e26]: Orders
+      - link "Orders" [ref=f168e28] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+      - paragraph [ref=f168e32]: Customers
+      - link "Customers" [ref=f168e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+      - paragraph [ref=f168e38]: Discounts
+      - link "Discounts" [ref=f168e40] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+      - paragraph [ref=f168e45]: Content
+      - generic [ref=f168e46]:
+        - link "Pages" [ref=f168e47] [cursor=pointer]:
+          - /url: http://shop.test/admin/pages
+        - link "Navigation" [ref=f168e51] [cursor=pointer]:
+          - /url: http://shop.test/admin/navigation
+        - link "Themes" [ref=f168e55] [cursor=pointer]:
+          - /url: http://shop.test/admin/themes
+      - generic [ref=f168e59]:
+        - link "Analytics" [ref=f168e60] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+        - link "Settings" [ref=f168e65] [cursor=pointer]:
+          - /url: http://shop.test/admin/settings
+        - link "Apps" [ref=f168e70] [cursor=pointer]:
+          - /url: http://shop.test/admin/apps
+        - link "Developers" [ref=f168e74] [cursor=pointer]:
+          - /url: http://shop.test/admin/developers
+        - link "Search" [ref=f168e78] [cursor=pointer]:
+          - /url: http://shop.test/admin/search/settings
+  - generic [ref=f168e82]:
+    - banner [ref=f168e83]:
+      - button "Acme Fashion" [ref=f168e86]
+      - button "AU Admin User" [ref=f168e92]:
+        - generic [ref=f168e93]: AU
+        - generic [ref=f168e96]: Admin User
+    - main [ref=f168e100]:
+      - generic [ref=f168e101]:
+        - generic [ref=f168e102]:
+          - link "Home" [ref=f168e104] [cursor=pointer]:
+            - /url: http://shop.test/admin
+          - generic [ref=f168e107]: Products
+        - generic [ref=f168e109]:
+          - generic [ref=f168e110]: Products
+          - link "Add product" [ref=f168e111] [cursor=pointer]:
+            - /url: http://shop.test/admin/products/create
+        - generic [ref=f168e112]:
+          - textbox "Search products" [ref=f168e114]:
+            - /placeholder: Search products...
+          - combobox "Filter by status" [ref=f168e116]:
+            - option "All statuses" [selected]
+            - option "Draft"
+            - option "Active"
+            - option "Archived"
+          - combobox "Filter by type" [ref=f168e117]:
+            - option "All types" [selected]
+            - option "Accessories"
+            - option "Gift Cards"
+            - option "Hoodies"
+            - option "Jackets"
+            - option "Pants"
+            - option "Shoes"
+            - option "T-Shirts"
+        - table [ref=f168e119]:
+          - rowgroup [ref=f168e120]:
+            - row [ref=f168e121]:
+              - columnheader [ref=f168e122]:
+                - checkbox "Select all" [ref=f168e123]
+              - columnheader "Image" [ref=f168e125]
+              - columnheader [ref=f168e126]:
+                - button "Title" [ref=f168e127]
+              - columnheader "Status" [ref=f168e128]
+              - columnheader "Inventory" [ref=f168e129]
+              - columnheader "Type" [ref=f168e130]
+              - columnheader "Vendor" [ref=f168e131]
+              - columnheader [ref=f168e132]:
+                - button "Updated" [ref=f168e133]
+          - rowgroup [ref=f168e134]:
+            - row [ref=f168e135]:
+              - cell [ref=f168e136]:
+                - checkbox "Select Classic Cotton T-Shirt" [ref=f168e137]
+              - cell [ref=f168e139]
+              - cell [ref=f168e140]:
+                - link "Classic Cotton T-Shirt" [ref=f168e141] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/1/edit
+              - cell "Active" [ref=f168e142]
+              - cell "180" [ref=f168e144]
+              - cell "T-Shirts" [ref=f168e145]
+              - cell "Acme Basics" [ref=f168e146]
+              - cell "50 seconds ago" [ref=f168e147]
+            - row [ref=f168e148]:
+              - cell [ref=f168e149]:
+                - checkbox "Select Gift Card" [ref=f168e150]
+              - cell [ref=f168e152]
+              - cell [ref=f168e153]:
+                - link "Gift Card" [ref=f168e154] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/19/edit
+              - cell "Active" [ref=f168e155]
+              - cell "29997" [ref=f168e157]
+              - cell "Gift Cards" [ref=f168e158]
+              - cell "Acme Fashion" [ref=f168e159]
+              - cell "2 minutes ago" [ref=f168e160]
+            - row [ref=f168e161]:
+              - cell [ref=f168e162]:
+                - checkbox "Select Unreleased Winter Jacket" [ref=f168e163]
+              - cell [ref=f168e165]
+              - cell [ref=f168e166]:
+                - link "Unreleased Winter Jacket" [ref=f168e167] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/15/edit
+              - cell "Draft" [ref=f168e168]
+              - cell "0" [ref=f168e170]
+              - cell "Jackets" [ref=f168e171]
+              - cell "Acme Outerwear" [ref=f168e172]
+              - cell "2 minutes ago" [ref=f168e173]
+            - row [ref=f168e174]:
+              - cell [ref=f168e175]:
+                - checkbox "Select Discontinued Raincoat" [ref=f168e176]
+              - cell [ref=f168e178]
+              - cell [ref=f168e179]:
+                - link "Discontinued Raincoat" [ref=f168e180] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/16/edit
+              - cell "Archived" [ref=f168e181]
+              - cell "6" [ref=f168e183]
+              - cell "Jackets" [ref=f168e184]
+              - cell "Acme Outerwear" [ref=f168e185]
+              - cell "2 minutes ago" [ref=f168e186]
+            - row [ref=f168e187]:
+              - cell [ref=f168e188]:
+                - checkbox "Select Backorder Denim Jacket" [ref=f168e189]
+              - cell [ref=f168e191]
+              - cell [ref=f168e192]:
+                - link "Backorder Denim Jacket" [ref=f168e193] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/18/edit
+              - cell "Active" [ref=f168e194]
+              - cell "0" [ref=f168e196]
+              - cell "Jackets" [ref=f168e197]
+              - cell "Acme Denim" [ref=f168e198]
+              - cell "2 minutes ago" [ref=f168e199]
+            - row [ref=f168e200]:
+              - cell [ref=f168e201]:
+                - checkbox "Select Cashmere Overcoat" [ref=f168e202]
+              - cell [ref=f168e204]
+              - cell [ref=f168e205]:
+                - link "Cashmere Overcoat" [ref=f168e206] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/20/edit
+              - cell "Active" [ref=f168e207]
+              - cell "18" [ref=f168e209]
+              - cell "Jackets" [ref=f168e210]
+              - cell "Acme Premium" [ref=f168e211]
+              - cell "2 minutes ago" [ref=f168e212]
+            - row [ref=f168e213]:
+              - cell [ref=f168e214]:
+                - checkbox "Select Limited Edition Sneakers" [ref=f168e215]
+              - cell [ref=f168e217]
+              - cell [ref=f168e218]:
+                - link "Limited Edition Sneakers" [ref=f168e219] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/17/edit
+              - cell "Active" [ref=f168e220]
+              - cell "0" [ref=f168e222]
+              - cell "Shoes" [ref=f168e223]
+              - cell "Acme Sport" [ref=f168e224]
+              - cell "2 minutes ago" [ref=f168e225]
+            - row [ref=f168e226]:
+              - cell [ref=f168e227]:
+                - checkbox "Select Leather Belt" [ref=f168e228]
+              - cell [ref=f168e230]
+              - cell [ref=f168e231]:
+                - link "Leather Belt" [ref=f168e232] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/4/edit
+              - cell "Active" [ref=f168e233]
+              - cell "100" [ref=f168e235]
+              - cell "Accessories" [ref=f168e236]
+              - cell "Acme Accessories" [ref=f168e237]
+              - cell "2 minutes ago" [ref=f168e238]
+            - row [ref=f168e239]:
+              - cell [ref=f168e240]:
+                - checkbox "Select Wool Scarf" [ref=f168e241]
+              - cell [ref=f168e243]
+              - cell [ref=f168e244]:
+                - link "Wool Scarf" [ref=f168e245] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/12/edit
+              - cell "Active" [ref=f168e246]
+              - cell "90" [ref=f168e248]
+              - cell "Accessories" [ref=f168e249]
+              - cell "Acme Accessories" [ref=f168e250]
+              - cell "2 minutes ago" [ref=f168e251]
+            - row [ref=f168e252]:
+              - cell [ref=f168e253]:
+                - checkbox "Select Canvas Tote Bag" [ref=f168e254]
+              - cell [ref=f168e256]
+              - cell [ref=f168e257]:
+                - link "Canvas Tote Bag" [ref=f168e258] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/13/edit
+              - cell "Active" [ref=f168e259]
+              - cell "80" [ref=f168e261]
+              - cell "Accessories" [ref=f168e262]
+              - cell "Acme Accessories" [ref=f168e263]
+              - cell "2 minutes ago" [ref=f168e264]
+            - row [ref=f168e265]:
+              - cell [ref=f168e266]:
+                - checkbox "Select Bucket Hat" [ref=f168e267]
+              - cell [ref=f168e269]
+              - cell [ref=f168e270]:
+                - link "Bucket Hat" [ref=f168e271] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/14/edit
+              - cell "Active" [ref=f168e272]
+              - cell "132" [ref=f168e274]
+              - cell "Accessories" [ref=f168e275]
+              - cell "Acme Accessories" [ref=f168e276]
+              - cell "2 minutes ago" [ref=f168e277]
+            - row [ref=f168e278]:
+              - cell [ref=f168e279]:
+                - checkbox "Select Organic Hoodie" [ref=f168e280]
+              - cell [ref=f168e282]
+              - cell [ref=f168e283]:
+                - link "Organic Hoodie" [ref=f168e284] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/3/edit
+              - cell "Active" [ref=f168e285]
+              - cell "80" [ref=f168e287]
+              - cell "Hoodies" [ref=f168e288]
+              - cell "Acme Basics" [ref=f168e289]
+              - cell "2 minutes ago" [ref=f168e290]
+            - row [ref=f168e291]:
+              - cell [ref=f168e292]:
+                - checkbox "Select Premium Slim Fit Jeans" [ref=f168e293]
+              - cell [ref=f168e295]
+              - cell [ref=f168e296]:
+                - link "Premium Slim Fit Jeans" [ref=f168e297] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/2/edit
+              - cell "Active" [ref=f168e298]
+              - cell "80" [ref=f168e300]
+              - cell "Pants" [ref=f168e301]
+              - cell "Acme Denim" [ref=f168e302]
+              - cell "2 minutes ago" [ref=f168e303]
+            - row [ref=f168e304]:
+              - cell [ref=f168e305]:
+                - checkbox "Select Cargo Pants" [ref=f168e306]
+              - cell [ref=f168e308]
+              - cell [ref=f168e309]:
+                - link "Cargo Pants" [ref=f168e310] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/9/edit
+              - cell "Active" [ref=f168e311]
+              - cell "168" [ref=f168e313]
+              - cell "Pants" [ref=f168e314]
+              - cell "Acme Workwear" [ref=f168e315]
+              - cell "2 minutes ago" [ref=f168e316]
+            - row [ref=f168e317]:
+              - cell [ref=f168e318]:
+                - checkbox "Select Chino Shorts" [ref=f168e319]
+              - cell [ref=f168e321]
+              - cell [ref=f168e322]:
+                - link "Chino Shorts" [ref=f168e323] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/10/edit
+              - cell "Active" [ref=f168e324]
+              - cell "128" [ref=f168e326]
+              - cell "Pants" [ref=f168e327]
+              - cell "Acme Basics" [ref=f168e328]
+              - cell "2 minutes ago" [ref=f168e329]
+            - row [ref=f168e330]:
+              - cell [ref=f168e331]:
+                - checkbox "Select Wide Leg Trousers" [ref=f168e332]
+              - cell [ref=f168e334]
+              - cell [ref=f168e335]:
+                - link "Wide Leg Trousers" [ref=f168e336] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/11/edit
+              - cell "Active" [ref=f168e337]
+              - cell "21" [ref=f168e339]
+              - cell "Pants" [ref=f168e340]
+              - cell "Acme Denim" [ref=f168e341]
+              - cell "2 minutes ago" [ref=f168e342]
+            - row [ref=f168e343]:
+              - cell [ref=f168e344]:
+                - checkbox "Select Running Sneakers" [ref=f168e345]
+              - cell [ref=f168e347]
+              - cell [ref=f168e348]:
+                - link "Running Sneakers" [ref=f168e349] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/5/edit
+              - cell "Active" [ref=f168e350]
+              - cell "70" [ref=f168e352]
+              - cell "Shoes" [ref=f168e353]
+              - cell "Acme Sport" [ref=f168e354]
+              - cell "2 minutes ago" [ref=f168e355]
+            - row [ref=f168e356]:
+              - cell [ref=f168e357]:
+                - checkbox "Select Graphic Print Tee" [ref=f168e358]
+              - cell [ref=f168e360]
+              - cell [ref=f168e361]:
+                - link "Graphic Print Tee" [ref=f168e362] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/6/edit
+              - cell "Active" [ref=f168e363]
+              - cell "72" [ref=f168e365]
+              - cell "T-Shirts" [ref=f168e366]
+              - cell "Acme Basics" [ref=f168e367]
+              - cell "2 minutes ago" [ref=f168e368]
+            - row [ref=f168e369]:
+              - cell [ref=f168e370]:
+                - checkbox "Select V-Neck Linen Tee" [ref=f168e371]
+              - cell [ref=f168e373]
+              - cell [ref=f168e374]:
+                - link "V-Neck Linen Tee" [ref=f168e375] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/7/edit
+              - cell "Active" [ref=f168e376]
+              - cell "108" [ref=f168e378]
+              - cell "T-Shirts" [ref=f168e379]
+              - cell "Acme Basics" [ref=f168e380]
+              - cell "2 minutes ago" [ref=f168e381]
+            - row [ref=f168e382]:
+              - cell [ref=f168e383]:
+                - checkbox "Select Striped Polo Shirt" [ref=f168e384]
+              - cell [ref=f168e386]
+              - cell [ref=f168e387]:
+                - link "Striped Polo Shirt" [ref=f168e388] [cursor=pointer]:
+                  - /url: http://shop.test/admin/products/8/edit
+              - cell "Active" [ref=f168e389]
+              - cell "40" [ref=f168e391]
+              - cell "T-Shirts" [ref=f168e392]
+              - cell "Acme Basics" [ref=f168e393]
+              - cell "2 minutes ago" [ref=f168e394]
+  - paragraph [ref=f168e396]: Product archived.

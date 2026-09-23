@@ -1,0 +1,192 @@
+- generic [active] [ref=f171e1]:
+  - link "Skip to main content" [ref=f171e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f171e3]:
+    - generic [ref=f171e4]:
+      - link "Acme Fashion" [ref=f171e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f171e8]:
+        - list [ref=f171e9]:
+          - listitem [ref=f171e10]:
+            - link "Home" [ref=f171e11] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f171e12]:
+            - link "New Arrivals" [ref=f171e13] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=f171e14]:
+            - link "T-Shirts" [ref=f171e15] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=f171e16]:
+            - link "Pants & Jeans" [ref=f171e17] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=f171e18]:
+            - link "Sale" [ref=f171e19] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=f171e20]:
+        - button "Search" [ref=f171e21]
+        - button "Open cart" [ref=f171e24]
+        - link "Account" [ref=f171e27] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f171e30]:
+    - generic [ref=f171e31]:
+      - generic [ref=f171e33]:
+        - heading "Welcome to Acme Fashion" [level=1] [ref=f171e34]
+        - link "Shop now" [ref=f171e35] [cursor=pointer]:
+          - /url: /collections
+      - region "Featured collections" [ref=f171e36]:
+        - heading "Featured Collections" [level=2] [ref=f171e37]
+        - generic [ref=f171e38]:
+          - link [ref=f171e39] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/new-arrivals
+            - generic [ref=f171e41]:
+              - paragraph [ref=f171e42]: New Arrivals
+              - paragraph [ref=f171e43]: Shop now
+          - link [ref=f171e44] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/pants-jeans
+            - generic [ref=f171e46]:
+              - paragraph [ref=f171e47]: Pants & Jeans
+              - paragraph [ref=f171e48]: Shop now
+          - link [ref=f171e49] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/sale
+            - generic [ref=f171e51]:
+              - paragraph [ref=f171e52]: Sale
+              - paragraph [ref=f171e53]: Shop now
+          - link [ref=f171e54] [cursor=pointer]:
+            - /url: http://acme-fashion.test/collections/t-shirts
+            - generic [ref=f171e56]:
+              - paragraph [ref=f171e57]: T-Shirts
+              - paragraph [ref=f171e58]: Shop now
+      - region "Featured products" [ref=f171e59]:
+        - generic [ref=f171e60]:
+          - heading "Featured Products" [level=2] [ref=f171e61]
+          - generic [ref=f171e62]:
+            - generic [ref=f171e63]:
+              - link "Classic Cotton T-Shirt" [ref=f171e64] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+                - img "Classic Cotton T-Shirt" [ref=f171e66]
+              - generic [ref=f171e67]:
+                - heading [level=3] [ref=f171e68]:
+                  - link "Classic Cotton T-Shirt" [ref=f171e69] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+                - generic [ref=f171e70]: 24.99 EUR
+                - link "Choose options" [ref=f171e72] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/classic-cotton-t-shirt
+            - generic [ref=f171e73]:
+              - link "Premium Slim Fit Jeans" [ref=f171e74] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+                - generic [ref=f171e75]:
+                  - img "Premium Slim Fit Jeans" [ref=f171e76]
+                  - generic [ref=f171e77]: Sale
+              - generic [ref=f171e79]:
+                - heading [level=3] [ref=f171e80]:
+                  - link "Premium Slim Fit Jeans" [ref=f171e81] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+                - generic [ref=f171e82]:
+                  - generic [ref=f171e83]: 79.99 EUR
+                  - generic [ref=f171e84]: 99.99 EUR
+                  - generic [ref=f171e85]: Sale
+                - link "Choose options" [ref=f171e86] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/premium-slim-fit-jeans
+            - generic [ref=f171e87]:
+              - link "Organic Hoodie" [ref=f171e88] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/organic-hoodie
+                - img "Organic Hoodie" [ref=f171e90]
+              - generic [ref=f171e91]:
+                - heading [level=3] [ref=f171e92]:
+                  - link "Organic Hoodie" [ref=f171e93] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/organic-hoodie
+                - generic [ref=f171e94]: 59.99 EUR
+                - link "Choose options" [ref=f171e96] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/organic-hoodie
+            - generic [ref=f171e97]:
+              - link "Leather Belt" [ref=f171e98] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/leather-belt
+                - img "Leather Belt" [ref=f171e100]
+              - generic [ref=f171e101]:
+                - heading [level=3] [ref=f171e102]:
+                  - link "Leather Belt" [ref=f171e103] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/leather-belt
+                - generic [ref=f171e104]: 34.99 EUR
+                - link "Choose options" [ref=f171e106] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/leather-belt
+            - generic [ref=f171e107]:
+              - link "Running Sneakers" [ref=f171e108] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/running-sneakers
+                - img "Running Sneakers" [ref=f171e110]
+              - generic [ref=f171e111]:
+                - heading [level=3] [ref=f171e112]:
+                  - link "Running Sneakers" [ref=f171e113] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/running-sneakers
+                - generic [ref=f171e114]: 119.99 EUR
+                - link "Choose options" [ref=f171e116] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/running-sneakers
+            - generic [ref=f171e117]:
+              - link "Graphic Print Tee" [ref=f171e118] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/graphic-print-tee
+                - img "Graphic Print Tee" [ref=f171e120]
+              - generic [ref=f171e121]:
+                - heading [level=3] [ref=f171e122]:
+                  - link "Graphic Print Tee" [ref=f171e123] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/graphic-print-tee
+                - generic [ref=f171e124]: 29.99 EUR
+                - link "Choose options" [ref=f171e126] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/graphic-print-tee
+            - generic [ref=f171e127]:
+              - link "V-Neck Linen Tee" [ref=f171e128] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/v-neck-linen-tee
+                - img "V-Neck Linen Tee" [ref=f171e130]
+              - generic [ref=f171e131]:
+                - heading [level=3] [ref=f171e132]:
+                  - link "V-Neck Linen Tee" [ref=f171e133] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/v-neck-linen-tee
+                - generic [ref=f171e134]: 34.99 EUR
+                - link "Choose options" [ref=f171e136] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/v-neck-linen-tee
+            - generic [ref=f171e137]:
+              - link "Striped Polo Shirt" [ref=f171e138] [cursor=pointer]:
+                - /url: http://acme-fashion.test/products/striped-polo-shirt
+                - generic [ref=f171e139]:
+                  - img "Striped Polo Shirt" [ref=f171e140]
+                  - generic [ref=f171e141]: Sale
+              - generic [ref=f171e143]:
+                - heading [level=3] [ref=f171e144]:
+                  - link "Striped Polo Shirt" [ref=f171e145] [cursor=pointer]:
+                    - /url: http://acme-fashion.test/products/striped-polo-shirt
+                - generic [ref=f171e146]:
+                  - generic [ref=f171e147]: 27.99 EUR
+                  - generic [ref=f171e148]: 39.99 EUR
+                  - generic [ref=f171e149]: Sale
+                - link "Choose options" [ref=f171e150] [cursor=pointer]:
+                  - /url: http://acme-fashion.test/products/striped-polo-shirt
+      - generic [ref=f171e152]:
+        - heading "Stay in the loop" [level=2] [ref=f171e153]
+        - paragraph [ref=f171e154]: Subscribe for exclusive offers and updates.
+        - generic [ref=f171e155]:
+          - textbox "Email address" [ref=f171e157]:
+            - /placeholder: Enter your email
+          - button "Subscribe" [ref=f171e158]
+  - contentinfo [ref=f171e164]:
+    - generic [ref=f171e165]:
+      - generic [ref=f171e166]:
+        - navigation "Footer" [ref=f171e167]:
+          - heading "Links" [level=2] [ref=f171e168]
+          - list [ref=f171e169]:
+            - listitem [ref=f171e170]:
+              - link "About Us" [ref=f171e171] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f171e172]:
+              - link "FAQ" [ref=f171e173] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f171e174]:
+              - link "Shipping & Returns" [ref=f171e175] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f171e176]:
+              - link "Privacy Policy" [ref=f171e177] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f171e178]:
+              - link "Terms of Service" [ref=f171e179] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f171e180]:
+          - heading "Store" [level=2] [ref=f171e181]
+          - paragraph [ref=f171e182]: Acme Fashion
+      - paragraph [ref=f171e183]: © 2026 Acme Fashion. All rights reserved.

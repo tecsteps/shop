@@ -1,0 +1,61 @@
+- generic [active] [ref=f173e1]:
+  - link "Skip to main content" [ref=f173e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f173e3]:
+    - generic [ref=f173e4]:
+      - link "Acme Fashion" [ref=f173e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f173e8]:
+        - list [ref=f173e9]:
+          - listitem [ref=f173e10]:
+            - link "Home" [ref=f173e11] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f173e12]:
+            - link "New Arrivals" [ref=f173e13] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=f173e14]:
+            - link "T-Shirts" [ref=f173e15] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=f173e16]:
+            - link "Pants & Jeans" [ref=f173e17] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=f173e18]:
+            - link "Sale" [ref=f173e19] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=f173e20]:
+        - button "Search" [ref=f173e21]
+        - button "Open cart" [ref=f173e24]
+        - link "Account" [ref=f173e27] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f173e30]:
+    - generic [ref=f173e31]:
+      - heading "Your Cart" [level=1] [ref=f173e32]
+      - generic [ref=f173e33]:
+        - paragraph [ref=f173e36]: Your cart is empty
+        - link "Continue shopping" [ref=f173e37] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+  - contentinfo [ref=f173e38]:
+    - generic [ref=f173e39]:
+      - generic [ref=f173e40]:
+        - navigation "Footer" [ref=f173e41]:
+          - heading "Links" [level=2] [ref=f173e42]
+          - list [ref=f173e43]:
+            - listitem [ref=f173e44]:
+              - link "About Us" [ref=f173e45] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f173e46]:
+              - link "FAQ" [ref=f173e47] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f173e48]:
+              - link "Shipping & Returns" [ref=f173e49] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f173e50]:
+              - link "Privacy Policy" [ref=f173e51] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f173e52]:
+              - link "Terms of Service" [ref=f173e53] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f173e54]:
+          - heading "Store" [level=2] [ref=f173e55]
+          - paragraph [ref=f173e56]: Acme Fashion
+      - paragraph [ref=f173e57]: © 2026 Acme Fashion. All rights reserved.

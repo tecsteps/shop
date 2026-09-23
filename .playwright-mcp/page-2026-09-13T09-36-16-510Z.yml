@@ -1,0 +1,148 @@
+- generic [active] [ref=f177e1]:
+  - link "Skip to main content" [ref=f177e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f177e3]:
+    - generic [ref=f177e4]:
+      - link "Acme Fashion" [ref=f177e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f177e8]:
+        - list [ref=f177e9]:
+          - listitem [ref=f177e10]:
+            - link "Home" [ref=f177e11] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f177e12]:
+            - link "New Arrivals" [ref=f177e13] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=f177e14]:
+            - link "T-Shirts" [ref=f177e15] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=f177e16]:
+            - link "Pants & Jeans" [ref=f177e17] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=f177e18]:
+            - link "Sale" [ref=f177e19] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=f177e20]:
+        - button "Search" [ref=f177e21]
+        - button "Open cart" [ref=f177e24]:
+          - generic: "2"
+        - link "Account" [ref=f177e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f177e31]:
+    - generic [ref=f177e32]:
+      - navigation "Breadcrumb" [ref=f177e33]:
+        - list [ref=f177e34]:
+          - listitem [ref=f177e35]:
+            - link "Home" [ref=f177e36] [cursor=pointer]:
+              - /url: http://acme-fashion.test
+          - listitem [ref=f177e37]:
+            - generic [aria-hidden] [ref=f177e38]: /
+            - link "New Arrivals" [ref=f177e39] [cursor=pointer]:
+              - /url: http://acme-fashion.test/collections/new-arrivals
+          - listitem [ref=f177e40]:
+            - generic [aria-hidden] [ref=f177e41]: /
+            - generic [ref=f177e42]: Running Sneakers
+      - generic [ref=f177e43]:
+        - region "Product images" [ref=f177e44]:
+          - img "Running Sneakers" [ref=f177e46]
+        - region "Product information" [ref=f177e47]:
+          - heading "Running Sneakers" [level=1] [ref=f177e48]
+          - generic [ref=f177e49]: 119.99 EUR
+          - group "Size" [ref=f177e52]:
+            - combobox "Size" [ref=f177e54]:
+              - option "Select Size..."
+              - option "EU 38"
+              - option "EU 39"
+              - option "EU 40"
+              - option "EU 41"
+              - option "EU 42" [selected]
+              - option "EU 43"
+              - option "EU 44"
+          - group "Color" [ref=f177e55]:
+            - generic [ref=f177e57]:
+              - generic "White" [ref=f177e58] [cursor=pointer]:
+                - radio "White" [ref=f177e59]
+                - generic [aria-hidden] [ref=f177e60]: W
+              - generic "Black" [ref=f177e62] [cursor=pointer]:
+                - radio "Black" [checked] [ref=f177e63]
+                - generic [aria-hidden] [ref=f177e64]: B
+          - paragraph [ref=f177e67]: Only 5 left in stock
+          - generic [ref=f177e69]:
+            - button "Decrease quantity" [disabled] [ref=f177e70]:
+              - generic [aria-hidden] [ref=f177e71]: "-"
+            - spinbutton "Quantity" [ref=f177e72]: "1"
+            - button "Increase quantity" [ref=f177e73]:
+              - generic [aria-hidden] [ref=f177e74]: +
+          - button "Add to cart" [ref=f177e75]
+          - status [ref=f177e106]: Added to cart
+          - separator [ref=f177e81]
+          - paragraph [ref=f177e83]: Lightweight running sneakers with responsive cushioning and breathable mesh upper.
+          - generic [ref=f177e84]: trending
+  - contentinfo [ref=f177e86]:
+    - generic [ref=f177e87]:
+      - generic [ref=f177e88]:
+        - navigation "Footer" [ref=f177e89]:
+          - heading "Links" [level=2] [ref=f177e90]
+          - list [ref=f177e91]:
+            - listitem [ref=f177e92]:
+              - link "About Us" [ref=f177e93] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f177e94]:
+              - link "FAQ" [ref=f177e95] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f177e96]:
+              - link "Shipping & Returns" [ref=f177e97] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f177e98]:
+              - link "Privacy Policy" [ref=f177e99] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f177e100]:
+              - link "Terms of Service" [ref=f177e101] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f177e102]:
+          - heading "Store" [level=2] [ref=f177e103]
+          - paragraph [ref=f177e104]: Acme Fashion
+      - paragraph [ref=f177e105]: © 2026 Acme Fashion. All rights reserved.
+  - dialog "Shopping cart" [ref=f177e107]:
+    - button "Close cart" [ref=f177e108]
+    - generic [ref=f177e109]:
+      - generic [ref=f177e110]:
+        - heading "Your Cart (2)" [level=2] [ref=f177e111]
+        - button "Close cart" [ref=f177e112]
+      - list [ref=f177e115]:
+        - listitem [ref=f177e116]:
+          - generic [ref=f177e117]:
+            - paragraph [ref=f177e118]: Classic Cotton T-Shirt
+            - paragraph [ref=f177e119]: S / White
+            - generic [ref=f177e120]:
+              - generic [ref=f177e121]:
+                - button "Decrease quantity" [ref=f177e122]: "-"
+                - generic [ref=f177e123]: "1"
+                - button "Increase quantity" [ref=f177e124]: +
+              - paragraph [ref=f177e125]: 24.99 EUR
+          - button "Remove Classic Cotton T-Shirt from cart" [ref=f177e126]
+        - listitem [ref=f177e129]:
+          - generic [ref=f177e130]:
+            - paragraph [ref=f177e131]: Running Sneakers
+            - paragraph [ref=f177e132]: EU 42 / Black
+            - generic [ref=f177e133]:
+              - generic [ref=f177e134]:
+                - button "Decrease quantity" [ref=f177e135]: "-"
+                - generic [ref=f177e136]: "1"
+                - button "Increase quantity" [ref=f177e137]: +
+              - paragraph [ref=f177e138]: 119.99 EUR
+          - button "Remove Running Sneakers from cart" [ref=f177e139]
+      - generic [ref=f177e142]:
+        - generic [ref=f177e143]:
+          - textbox "Discount code" [ref=f177e145]
+          - button "Apply" [ref=f177e146]
+        - generic [ref=f177e152]:
+          - generic [ref=f177e153]:
+            - term [ref=f177e154]: Subtotal
+            - definition [ref=f177e155]: 144.98 EUR
+          - generic [ref=f177e156]:
+            - term [ref=f177e157]: Estimated total
+            - definition [ref=f177e158]: 144.98 EUR
+        - paragraph [ref=f177e159]: Shipping and taxes calculated at checkout
+        - button "Checkout" [ref=f177e160]
+        - button "Continue shopping" [ref=f177e166]

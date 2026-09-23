@@ -1,0 +1,116 @@
+- generic [active] [ref=f180e1]:
+  - link "Skip to main content" [ref=f180e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f180e3]:
+    - generic [ref=f180e4]:
+      - link "Acme Electronics" [ref=f180e6] [cursor=pointer]:
+        - /url: http://acme-electronics.test
+      - navigation "Main navigation" [ref=f180e8]:
+        - list [ref=f180e9]:
+          - listitem [ref=f180e10]:
+            - link "Home" [ref=f180e11] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f180e12]:
+            - link "Featured" [ref=f180e13] [cursor=pointer]:
+              - /url: /collections/featured
+          - listitem [ref=f180e14]:
+            - link "Accessories" [ref=f180e15] [cursor=pointer]:
+              - /url: /collections/accessories
+      - generic [ref=f180e16]:
+        - button "Search" [ref=f180e17]
+        - button "Open cart" [ref=f180e20]
+        - link "Account" [ref=f180e23] [cursor=pointer]:
+          - /url: http://acme-electronics.test/account/login
+  - main [ref=f180e26]:
+    - generic [ref=f180e27]:
+      - generic [ref=f180e29]:
+        - heading "Welcome to Acme Electronics" [level=1] [ref=f180e30]
+        - link "Shop now" [ref=f180e31] [cursor=pointer]:
+          - /url: /collections
+      - region "Featured collections" [ref=f180e32]:
+        - heading "Featured Collections" [level=2] [ref=f180e33]
+        - generic [ref=f180e34]:
+          - link [ref=f180e35] [cursor=pointer]:
+            - /url: http://acme-electronics.test/collections/accessories
+            - generic [ref=f180e37]:
+              - paragraph [ref=f180e38]: Accessories
+              - paragraph [ref=f180e39]: Shop now
+          - link [ref=f180e40] [cursor=pointer]:
+            - /url: http://acme-electronics.test/collections/featured
+            - generic [ref=f180e42]:
+              - paragraph [ref=f180e43]: Featured
+              - paragraph [ref=f180e44]: Shop now
+      - region "Featured products" [ref=f180e45]:
+        - generic [ref=f180e46]:
+          - heading "Featured Products" [level=2] [ref=f180e47]
+          - generic [ref=f180e48]:
+            - generic [ref=f180e49]:
+              - link "Pro Laptop 15" [ref=f180e50] [cursor=pointer]:
+                - /url: http://acme-electronics.test/products/pro-laptop-15
+                - img "Pro Laptop 15" [ref=f180e52]
+              - generic [ref=f180e53]:
+                - heading [level=3] [ref=f180e54]:
+                  - link "Pro Laptop 15" [ref=f180e55] [cursor=pointer]:
+                    - /url: http://acme-electronics.test/products/pro-laptop-15
+                - generic [ref=f180e56]: 999.99 EUR
+                - link "Choose options" [ref=f180e58] [cursor=pointer]:
+                  - /url: http://acme-electronics.test/products/pro-laptop-15
+            - generic [ref=f180e59]:
+              - link "Wireless Headphones" [ref=f180e60] [cursor=pointer]:
+                - /url: http://acme-electronics.test/products/wireless-headphones
+                - img "Wireless Headphones" [ref=f180e62]
+              - generic [ref=f180e63]:
+                - heading [level=3] [ref=f180e64]:
+                  - link "Wireless Headphones" [ref=f180e65] [cursor=pointer]:
+                    - /url: http://acme-electronics.test/products/wireless-headphones
+                - generic [ref=f180e66]: 149.99 EUR
+                - link "Choose options" [ref=f180e68] [cursor=pointer]:
+                  - /url: http://acme-electronics.test/products/wireless-headphones
+            - generic [ref=f180e69]:
+              - link "USB-C Cable 2m" [ref=f180e70] [cursor=pointer]:
+                - /url: http://acme-electronics.test/products/usb-c-cable-2m
+                - img "USB-C Cable 2m" [ref=f180e72]
+              - generic [ref=f180e73]:
+                - heading [level=3] [ref=f180e74]:
+                  - link "USB-C Cable 2m" [ref=f180e75] [cursor=pointer]:
+                    - /url: http://acme-electronics.test/products/usb-c-cable-2m
+                - generic [ref=f180e76]: 12.99 EUR
+                - button "Add to cart" [ref=f180e79]
+            - generic [ref=f180e85]:
+              - link "Mechanical Keyboard" [ref=f180e86] [cursor=pointer]:
+                - /url: http://acme-electronics.test/products/mechanical-keyboard
+                - img "Mechanical Keyboard" [ref=f180e88]
+              - generic [ref=f180e89]:
+                - heading [level=3] [ref=f180e90]:
+                  - link "Mechanical Keyboard" [ref=f180e91] [cursor=pointer]:
+                    - /url: http://acme-electronics.test/products/mechanical-keyboard
+                - generic [ref=f180e92]: 129.99 EUR
+                - link "Choose options" [ref=f180e94] [cursor=pointer]:
+                  - /url: http://acme-electronics.test/products/mechanical-keyboard
+            - generic [ref=f180e95]:
+              - link "Monitor Stand" [ref=f180e96] [cursor=pointer]:
+                - /url: http://acme-electronics.test/products/monitor-stand
+                - img "Monitor Stand" [ref=f180e98]
+              - generic [ref=f180e99]:
+                - heading [level=3] [ref=f180e100]:
+                  - link "Monitor Stand" [ref=f180e101] [cursor=pointer]:
+                    - /url: http://acme-electronics.test/products/monitor-stand
+                - generic [ref=f180e102]: 49.99 EUR
+                - button "Add to cart" [ref=f180e105]
+      - generic [ref=f180e112]:
+        - heading "Stay in the loop" [level=2] [ref=f180e113]
+        - paragraph [ref=f180e114]: Subscribe for exclusive offers and updates.
+        - generic [ref=f180e115]:
+          - textbox "Email address" [ref=f180e117]:
+            - /placeholder: Enter your email
+          - button "Subscribe" [ref=f180e118]
+  - contentinfo [ref=f180e124]:
+    - generic [ref=f180e125]:
+      - generic [ref=f180e126]:
+        - navigation "Footer" [ref=f180e127]:
+          - heading "Links" [level=2] [ref=f180e128]
+          - list
+        - generic [ref=f180e129]:
+          - heading "Store" [level=2] [ref=f180e130]
+          - paragraph [ref=f180e131]: Acme Electronics
+      - paragraph [ref=f180e132]: © 2026 Acme Electronics. All rights reserved.

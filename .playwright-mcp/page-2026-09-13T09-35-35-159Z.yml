@@ -1,0 +1,94 @@
+- generic [active] [ref=f175e1]:
+  - link "Skip to main content" [ref=f175e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f175e3]:
+    - generic [ref=f175e4]:
+      - link "Acme Fashion" [ref=f175e6] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f175e8]:
+        - list [ref=f175e9]:
+          - listitem [ref=f175e10]:
+            - link "Home" [ref=f175e11] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f175e12]:
+            - link "New Arrivals" [ref=f175e13] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=f175e14]:
+            - link "T-Shirts" [ref=f175e15] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=f175e16]:
+            - link "Pants & Jeans" [ref=f175e17] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=f175e18]:
+            - link "Sale" [ref=f175e19] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=f175e20]:
+        - button "Search" [ref=f175e21]
+        - button "Open cart" [ref=f175e24]:
+          - generic: "2"
+        - link "Account" [ref=f175e28] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f175e31]:
+    - generic [ref=f175e32]:
+      - heading "Your Cart" [level=1] [ref=f175e33]
+      - table [ref=f175e35]:
+        - rowgroup [ref=f175e36]:
+          - row [ref=f175e37]:
+            - columnheader "Product" [ref=f175e38]
+            - columnheader "Price" [ref=f175e39]
+            - columnheader "Quantity" [ref=f175e40]
+            - columnheader "Total" [ref=f175e41]
+            - columnheader "Actions" [ref=f175e42]
+        - rowgroup [ref=f175e44]:
+          - row [ref=f175e101]:
+            - cell [ref=f175e46]:
+              - generic [ref=f175e48]:
+                - paragraph [ref=f175e49]: Classic Cotton T-Shirt
+                - paragraph [ref=f175e50]: S / White
+            - cell "24.99 EUR" [ref=f175e51]
+            - cell "Decrease quantity 2 Increase quantity" [ref=f175e102]:
+              - generic [ref=f175e53]:
+                - button "Decrease quantity" [ref=f175e54]: "-"
+                - generic [ref=f175e55]: "2"
+                - button "Increase quantity" [ref=f175e56]: +
+            - cell "49.98 EUR" [ref=f175e103]
+            - cell [ref=f175e58]:
+              - button "Remove Classic Cotton T-Shirt from cart" [ref=f175e59]: x
+      - generic [ref=f175e60]:
+        - generic [ref=f175e61]:
+          - textbox "Discount code" [ref=f175e63]
+          - button "Apply" [ref=f175e64]
+        - paragraph [ref=f175e70]:
+          - text: "Subtotal:"
+          - generic [ref=f175e71]: 49.98 EUR
+        - paragraph [ref=f175e72]:
+          - text: "Total:"
+          - generic [ref=f175e73]: 49.98 EUR
+        - button "Checkout" [ref=f175e74]
+        - link "Continue shopping" [ref=f175e80] [cursor=pointer]:
+          - /url: http://acme-fashion.test
+  - contentinfo [ref=f175e81]:
+    - generic [ref=f175e82]:
+      - generic [ref=f175e83]:
+        - navigation "Footer" [ref=f175e84]:
+          - heading "Links" [level=2] [ref=f175e85]
+          - list [ref=f175e86]:
+            - listitem [ref=f175e87]:
+              - link "About Us" [ref=f175e88] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f175e89]:
+              - link "FAQ" [ref=f175e90] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f175e91]:
+              - link "Shipping & Returns" [ref=f175e92] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f175e93]:
+              - link "Privacy Policy" [ref=f175e94] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f175e95]:
+              - link "Terms of Service" [ref=f175e96] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f175e97]:
+          - heading "Store" [level=2] [ref=f175e98]
+          - paragraph [ref=f175e99]: Acme Fashion
+      - paragraph [ref=f175e100]: © 2026 Acme Fashion. All rights reserved.

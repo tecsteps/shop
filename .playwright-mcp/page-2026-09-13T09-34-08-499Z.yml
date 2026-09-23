@@ -1,0 +1,148 @@
+- generic [active] [ref=f166e1]:
+  - link "Skip to main content" [ref=f166e2] [cursor=pointer]:
+    - /url: "#admin-content"
+  - complementary "Admin navigation" [ref=f166e3]:
+    - link "Acme Fashion" [ref=f166e5] [cursor=pointer]:
+      - /url: /
+    - navigation "Admin sections" [ref=f166e7]:
+      - link "Dashboard" [ref=f166e8] [cursor=pointer]:
+        - /url: http://shop.test/admin
+      - paragraph [ref=f166e12]: Products
+      - generic [ref=f166e13]:
+        - link "Products" [ref=f166e14] [cursor=pointer]:
+          - /url: http://shop.test/admin/products
+        - link "Collections" [ref=f166e18] [cursor=pointer]:
+          - /url: http://shop.test/admin/collections
+        - link "Inventory" [ref=f166e22] [cursor=pointer]:
+          - /url: http://shop.test/admin/inventory
+      - paragraph [ref=f166e26]: Orders
+      - link "Orders" [ref=f166e28] [cursor=pointer]:
+        - /url: http://shop.test/admin/orders
+      - paragraph [ref=f166e32]: Customers
+      - link "Customers" [ref=f166e34] [cursor=pointer]:
+        - /url: http://shop.test/admin/customers
+      - paragraph [ref=f166e38]: Discounts
+      - link "Discounts" [ref=f166e40] [cursor=pointer]:
+        - /url: http://shop.test/admin/discounts
+      - paragraph [ref=f166e45]: Content
+      - generic [ref=f166e46]:
+        - link "Pages" [ref=f166e47] [cursor=pointer]:
+          - /url: http://shop.test/admin/pages
+        - link "Navigation" [ref=f166e51] [cursor=pointer]:
+          - /url: http://shop.test/admin/navigation
+        - link "Themes" [ref=f166e55] [cursor=pointer]:
+          - /url: http://shop.test/admin/themes
+      - generic [ref=f166e59]:
+        - link "Analytics" [ref=f166e60] [cursor=pointer]:
+          - /url: http://shop.test/admin/analytics
+        - link "Settings" [ref=f166e65] [cursor=pointer]:
+          - /url: http://shop.test/admin/settings
+        - link "Apps" [ref=f166e70] [cursor=pointer]:
+          - /url: http://shop.test/admin/apps
+        - link "Developers" [ref=f166e74] [cursor=pointer]:
+          - /url: http://shop.test/admin/developers
+        - link "Search" [ref=f166e78] [cursor=pointer]:
+          - /url: http://shop.test/admin/search/settings
+  - generic [ref=f166e82]:
+    - banner [ref=f166e83]:
+      - button "Acme Fashion" [ref=f166e86]
+      - button "AU Admin User" [ref=f166e92]:
+        - generic [ref=f166e93]: AU
+        - generic [ref=f166e96]: Admin User
+    - main [ref=f166e100]:
+      - generic [ref=f166e101]:
+        - generic [ref=f166e102]:
+          - link "Home" [ref=f166e104] [cursor=pointer]:
+            - /url: http://shop.test/admin
+          - generic [ref=f166e107]: Discounts
+        - generic [ref=f166e109]:
+          - generic [ref=f166e110]: Discounts
+          - link "Create discount" [ref=f166e111] [cursor=pointer]:
+            - /url: http://shop.test/admin/discounts/create
+        - generic [ref=f166e112]:
+          - textbox "Search discounts" [ref=f166e114]:
+            - /placeholder: Search by code...
+          - combobox "Filter by status" [ref=f166e116]:
+            - option "All statuses" [selected]
+            - option "Active"
+            - option "Scheduled"
+            - option "Expired"
+            - option "Disabled"
+        - table [ref=f166e118]:
+          - rowgroup [ref=f166e119]:
+            - row [ref=f166e120]:
+              - columnheader "Code" [ref=f166e121]
+              - columnheader "Type" [ref=f166e122]
+              - columnheader "Value" [ref=f166e123]
+              - columnheader "Usage" [ref=f166e124]
+              - columnheader "Status" [ref=f166e125]
+              - columnheader "Dates" [ref=f166e126]
+              - columnheader "Actions" [ref=f166e127]
+          - rowgroup [ref=f166e129]:
+            - row [ref=f166e130]:
+              - cell [ref=f166e131]:
+                - link "SIGNOFF10" [ref=f166e132] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/6/edit
+              - cell "Code" [ref=f166e133]
+              - cell "10%" [ref=f166e135]
+              - cell "0 / unlimited" [ref=f166e136]
+              - cell "Active" [ref=f166e137]
+              - cell "Sep 13, 2026 - No end" [ref=f166e139]
+              - cell [ref=f166e140]:
+                - button "Delete discount" [ref=f166e141]
+            - row [ref=f166e149]:
+              - cell [ref=f166e150]:
+                - link "WELCOME10" [ref=f166e151] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/1/edit
+              - cell "Code" [ref=f166e152]
+              - cell "10%" [ref=f166e154]
+              - cell "3 / unlimited" [ref=f166e155]
+              - cell "Active" [ref=f166e156]
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=f166e158]
+              - cell [ref=f166e159]:
+                - button "Delete discount" [ref=f166e160]
+            - row [ref=f166e168]:
+              - cell [ref=f166e169]:
+                - link "FLAT5" [ref=f166e170] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/2/edit
+              - cell "Code" [ref=f166e171]
+              - cell "€5.00" [ref=f166e173]
+              - cell "0 / unlimited" [ref=f166e174]
+              - cell "Active" [ref=f166e175]
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=f166e177]
+              - cell [ref=f166e178]:
+                - button "Delete discount" [ref=f166e179]
+            - row [ref=f166e187]:
+              - cell [ref=f166e188]:
+                - link "FREESHIP" [ref=f166e189] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/3/edit
+              - cell "Code" [ref=f166e190]
+              - cell "Free shipping" [ref=f166e192]
+              - cell "1 / unlimited" [ref=f166e193]
+              - cell "Active" [ref=f166e194]
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=f166e196]
+              - cell [ref=f166e197]:
+                - button "Delete discount" [ref=f166e198]
+            - row [ref=f166e206]:
+              - cell [ref=f166e207]:
+                - link "EXPIRED20" [ref=f166e208] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/4/edit
+              - cell "Code" [ref=f166e209]
+              - cell "20%" [ref=f166e211]
+              - cell "0 / unlimited" [ref=f166e212]
+              - cell "Expired" [ref=f166e213]
+              - cell "Jan 1, 2024 - Dec 31, 2024" [ref=f166e215]
+              - cell [ref=f166e216]:
+                - button "Delete discount" [ref=f166e217]
+            - row [ref=f166e225]:
+              - cell [ref=f166e226]:
+                - link "MAXED" [ref=f166e227] [cursor=pointer]:
+                  - /url: http://shop.test/admin/discounts/5/edit
+              - cell "Code" [ref=f166e228]
+              - cell "10%" [ref=f166e230]
+              - cell "5 / 5" [ref=f166e231]
+              - cell "Exhausted" [ref=f166e232]
+              - cell "Jan 1, 2025 - Dec 31, 2027" [ref=f166e234]
+              - cell [ref=f166e235]:
+                - button "Delete discount" [ref=f166e236]
+  - paragraph [ref=f166e245]: Discount saved.

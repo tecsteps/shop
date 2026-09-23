@@ -1,0 +1,90 @@
+- generic [active] [ref=f178e346]:
+  - link "Skip to main content" [ref=f178e347] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f178e348]:
+    - generic [ref=f178e349]:
+      - link "Acme Fashion" [ref=f178e351] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+      - navigation "Main navigation" [ref=f178e353]:
+        - list [ref=f178e354]:
+          - listitem [ref=f178e355]:
+            - link "Home" [ref=f178e356] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f178e357]:
+            - link "New Arrivals" [ref=f178e358] [cursor=pointer]:
+              - /url: /collections/new-arrivals
+          - listitem [ref=f178e359]:
+            - link "T-Shirts" [ref=f178e360] [cursor=pointer]:
+              - /url: /collections/t-shirts
+          - listitem [ref=f178e361]:
+            - link "Pants & Jeans" [ref=f178e362] [cursor=pointer]:
+              - /url: /collections/pants-jeans
+          - listitem [ref=f178e363]:
+            - link "Sale" [ref=f178e364] [cursor=pointer]:
+              - /url: /collections/sale
+      - generic [ref=f178e365]:
+        - button "Search" [ref=f178e366]
+        - button "Open cart" [ref=f178e369]
+        - link "Account" [ref=f178e372] [cursor=pointer]:
+          - /url: http://acme-fashion.test/account/login
+  - main [ref=f178e375]:
+    - generic [ref=f178e376]:
+      - heading "Thank you for your order!" [level=1] [ref=f178e380]
+      - paragraph [ref=f178e381]: "Order #1016"
+      - paragraph [ref=f178e382]: We've sent a confirmation to signoff-guest@example.com
+      - generic [ref=f178e383]:
+        - heading "Order Summary" [level=2] [ref=f178e384]
+        - list [ref=f178e385]:
+          - listitem [ref=f178e386]:
+            - generic [ref=f178e387]: Classic Cotton T-Shirt (S / White) x1
+            - generic [ref=f178e388]: 24.99 EUR
+          - listitem [ref=f178e389]:
+            - generic [ref=f178e390]: Running Sneakers (EU 42 / Black) x1
+            - generic [ref=f178e391]: 119.99 EUR
+        - generic [ref=f178e392]:
+          - generic [ref=f178e393]:
+            - heading "Shipping Address" [level=3] [ref=f178e394]
+            - paragraph [ref=f178e395]: Signoff Guest Musterstrasse 1 Berlin 10115 Germany
+          - generic [ref=f178e396]:
+            - heading "Payment Method" [level=3] [ref=f178e397]
+            - paragraph [ref=f178e398]: Credit Card ending in 4242
+        - generic [ref=f178e399]:
+          - generic [ref=f178e400]:
+            - term [ref=f178e401]: Subtotal
+            - definition [ref=f178e402]: 144.98 EUR
+          - generic [ref=f178e403]:
+            - term [ref=f178e404]: Shipping
+            - definition [ref=f178e405]: 4.99 EUR
+          - generic [ref=f178e406]:
+            - term [ref=f178e407]: Tax
+            - definition [ref=f178e408]: 23.95 EUR
+          - generic [ref=f178e409]:
+            - term [ref=f178e410]: Total
+            - definition [ref=f178e411]: 149.97 EUR
+      - link "Continue shopping" [ref=f178e413] [cursor=pointer]:
+        - /url: http://acme-fashion.test
+  - contentinfo [ref=f178e414]:
+    - generic [ref=f178e415]:
+      - generic [ref=f178e416]:
+        - navigation "Footer" [ref=f178e417]:
+          - heading "Links" [level=2] [ref=f178e418]
+          - list [ref=f178e419]:
+            - listitem [ref=f178e420]:
+              - link "About Us" [ref=f178e421] [cursor=pointer]:
+                - /url: /pages/about
+            - listitem [ref=f178e422]:
+              - link "FAQ" [ref=f178e423] [cursor=pointer]:
+                - /url: /pages/faq
+            - listitem [ref=f178e424]:
+              - link "Shipping & Returns" [ref=f178e425] [cursor=pointer]:
+                - /url: /pages/shipping-returns
+            - listitem [ref=f178e426]:
+              - link "Privacy Policy" [ref=f178e427] [cursor=pointer]:
+                - /url: /pages/privacy-policy
+            - listitem [ref=f178e428]:
+              - link "Terms of Service" [ref=f178e429] [cursor=pointer]:
+                - /url: /pages/terms
+        - generic [ref=f178e430]:
+          - heading "Store" [level=2] [ref=f178e431]
+          - paragraph [ref=f178e432]: Acme Fashion
+      - paragraph [ref=f178e433]: © 2026 Acme Fashion. All rights reserved.
