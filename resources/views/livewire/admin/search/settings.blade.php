@@ -1,0 +1,4 @@
+<div>
+    @include('livewire.admin.components.page-heading', ['title' => 'Search settings', 'description' => 'Improve how customers find products in your storefront.', 'breadcrumbs' => [['label' => 'Settings', 'href' => '/admin/settings']]])
+    <section class="max-w-4xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"><span class="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"><flux:icon name="magnifying-glass" class="size-5" /></span><h2 class="mt-4 text-lg font-semibold">Search tuning is not available yet</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">Synonyms, stop words, and index management need to be connected to this store's search settings before they can be changed here. Product search remains available in the storefront.</p></section>
+</div>

@@ -29,8 +29,23 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 - Resolved the Herd URL as `http://shop.test`; Playwright MCP is available for the acceptance review.
 - Delegated independent spec acceptance mapping and browser infrastructure inspection.
 
+### 2026-09-23 — Initial shop foundation and storefront slice
+
+- Added the tenant-aware commerce schema, store resolver, store-scoped models, role policies, catalog/cart/checkout/payment/order/refund/fulfillment services, storefront and admin route/component skeletons, API token middleware, and two-store demo seeding.
+- Added the responsive storefront and admin Blade surfaces. The storefront supports the catalog, product detail, cart, checkout, account, search, page, and confirmation views; admin screens are being wired to complete data/actions in the next iteration.
+- Added a newsletter subscription table/action and HTML sanitizer for merchant-authored page/theme content.
+- Enabled `RefreshDatabase` for feature tests, restored the starter settings routes, and fixed full-page Livewire view composition uncovered by the first migrated test run.
+- Chose `payment_selected` as the checkout reservation state, normalized `country_code`/`country` and `zip`/`postal_code` address aliases, used signed timestamp plus body for webhook HMAC, and followed the per-product seed matrix count of 117 variants.
+- Known work remaining: complete missing admin actions/routes and password reset/logout flows, finish API request/response/ability contracts, add webhook delivery and analytics aggregation, add comprehensive shop tests, and run customer/admin Playwright scenarios plus independent acceptance audit.
+
+**Checks this iteration:** fresh SQLite migration + demo seeding succeeded; initial Pest suite passed (33 tests, 75 assertions); Pint passed; admin Blade compilation and `npm run build` passed in the view agent's check.
+
 ## Verification log
 
 | Date | Check | Result |
 |------|-------|--------|
 | 2026-09-23 | Existing Pest suite (`php artisan test --compact`) | Passed: 33 tests, 75 assertions |
+| 2026-09-23 | Fresh migration + demo seed (`php artisan migrate:fresh --seed --force --no-interaction`) | Passed on SQLite; 2 stores, 117 fashion variants, and 18 seeded orders |
+| 2026-09-23 | Pest after tenant test setup and Livewire view fixes | Passed: 33 tests, 75 assertions |
+| 2026-09-23 | `vendor/bin/pint --dirty --format agent` | Passed |
+| 2026-09-23 | Admin Blade compilation and `npm run build` | Passed in the view agent's check |
