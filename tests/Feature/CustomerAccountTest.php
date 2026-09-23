@@ -37,6 +37,31 @@ it('resolves the store on customer login and registration pages', function () {
     $this->get('http://unknown-shop.test/account/login')->assertNotFound();
 });
 
+it('keeps customer authentication across the redirect to the account page', function () {
+    $store = shopStore('shop.test');
+    $customer = Customer::factory()->create([
+        'store_id' => $store->id,
+        'email' => 'browser-login@example.test',
+        'password' => 'shop-password',
+    ]);
+    app()->instance('current_store', $store);
+
+    Livewire::test(Login::class)
+        ->set('email', $customer->email)
+        ->set('password', 'shop-password')
+        ->call('login')
+        ->assertRedirect(route('storefront.account.dashboard'));
+
+    app()->forgetInstance('current_store');
+    \Illuminate\Support\Facades\Auth::forgetGuards();
+
+    $this->get('http://shop.test/account')
+        ->assertOk()
+        ->assertSee('My account');
+
+    $this->assertAuthenticatedAs($customer, 'customer');
+});
+
 it('allows the same customer email in separate stores and keeps login tenant scoped', function () {
     $firstStore = shopStore();
     $firstCustomer = Customer::factory()->create([

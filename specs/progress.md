@@ -4,19 +4,21 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 ## Phases
 
-- [ ] Foundation: tenant schema, store resolution, authentication, authorization
-- [ ] Catalog: products, variants, inventory, collections, media
-- [ ] Themes, pages, navigation, storefront layout
-- [ ] Cart, checkout, discounts, shipping, taxes
-- [ ] Payments, orders, refunds, fulfillment
-- [ ] Customer accounts and addresses
-- [ ] Admin panel and settings
-- [ ] Search
-- [ ] Analytics
-- [ ] Apps, API tokens, and outbound webhooks
-- [ ] Accessibility, security, responsive polish, and error handling
-- [ ] Pest unit and feature coverage
+- [x] Foundation: tenant schema, store resolution, authentication, authorization
+- [x] Catalog: products, variants, inventory, collections, media
+- [x] Themes, pages, navigation, storefront layout
+- [x] Cart, checkout, discounts, shipping, taxes
+- [x] Payments, orders, refunds, fulfillment
+- [x] Customer accounts and addresses
+- [x] Admin panel and settings
+- [x] Search
+- [x] Analytics
+- [x] Apps, API tokens, and outbound webhooks
+- [x] Accessibility, security, responsive polish, and error handling
+- [x] Pest unit and feature coverage
 - [ ] Playwright acceptance review and independent second-agent audit
+
+The implementation phases are complete. Final acceptance review is still open while the second agent checks the integrated tree. Browser testing uses the Playwright MCP; the Pest browser plugin and the 143 browser-test files listed in `08-PLAYWRIGHT-E2E-PLAN.md` are not installed/present.
 
 ## Iterations
 
@@ -129,6 +131,25 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** focused checkout/order/apps Pest tests passed (17 tests, 101 assertions); full Pest passed (215 tests, 1,424 assertions); clean isolated SQLite migration plus demo seed passed; `npm run build` passed; `php artisan route:list --except-vendor` shows 120 routes including app details; `vendor/bin/pint --dirty --format agent` and `git diff --check` passed. Final browser review remains in progress.
 
+### 2026-09-23 — Customer session rehydration across requests
+
+- Independent browser review found customer login redirected to `/account`, but the following request redirected back to `/login`.
+- Route middleware ordering runs authentication before `store.resolve`. The tenant-scoped customer provider now resolves the storefront tenant from the request hostname when the container store has not been bound yet, then applies the same store ID constraint when restoring a session user.
+- Added a regression that logs in through Livewire, clears the current store and resolved auth guards, and requests `/account` in a new HTTP request.
+- Browser review had already verified product add-to-cart, a guest checkout/payment/confirmation path, admin order detail, navigation, themes, tax settings, analytics, and developers. Root's fresh-context Playwright MCP retest confirmed customer login remains authenticated after the redirect and a hard refresh. App detail data is covered by Pest because the demo seed does not include installed apps.
+
+**Checks this iteration:** `CustomerAccountTest` passed (8 tests, 43 assertions); full Pest passed (217 tests, 1,433 assertions); Pint, frontend build, and view cache checks passed.
+
+### 2026-09-23 — Final browser acceptance fixes
+
+- Replaced the static storefront cart badge with a Livewire counter that listens for `cart-updated`, so both its visible number and accessible label track cart mutations and reset after checkout.
+- Added regression coverage for the tenant-host fallback during customer session restoration and for live cart-count updates.
+- Completed a Playwright MCP customer journey: sign in and refresh account page, add two product units, verify drawer and header count, proceed through address/shipping/payment, complete mock card payment, and inspect the resulting order in admin. The confirmed order showed the entered shipping address, masked card, payment timestamp, and correct shipping/tax/total; checkout reset the cart count to zero.
+- The browser agent independently reran the full Pest suite and reviewed the customer-session/cart-count/address fixes. Its Playwright MCP transport remained closed, so its browser verification is the root-run evidence recorded above. Full-page app details remain browser-unexercised because the demo seed has no app installations.
+- OAuth providers and external PSP integrations remain deferred as described in the roadmap; the implemented checkout uses the specified mock PSP.
+
+**Checks this iteration:** full Pest passed (217 tests, 1,433 assertions); `vendor/bin/pint --dirty --format agent`, `npm run build`, `php artisan view:cache`, isolated SQLite migration plus demo seed, and `git diff --check` passed. The integrated-tree second-agent acceptance review is in progress.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -154,3 +175,7 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | `php artisan route:list --except-vendor` after app detail route | Passed: 120 routes listed |
 | 2026-09-23 | `vendor/bin/pint --dirty --format agent` and `git diff --check` | Passed |
 | 2026-09-23 | Fresh isolated SQLite migration + demo seed after seeder schema fix | Passed: all migrations and `DemoShopSeeder` completed |
+| 2026-09-23 | Customer session rehydration regression | Passed: `CustomerAccountTest` (8 tests, 43 assertions); fresh Playwright MCP login/refresh passed |
+| 2026-09-23 | Final full Pest suite and second-agent rerun | Passed: 217 tests, 1,433 assertions |
+| 2026-09-23 | Playwright MCP customer-to-paid-order and admin detail journey | Passed: refreshed customer session, live cart count/drawer, address/shipping/tax/payment, confirmation, and admin payment/address detail verified |
+| 2026-09-23 | Final Pint, frontend build, cached view compilation, isolated migration/seed, and diff check | Passed |

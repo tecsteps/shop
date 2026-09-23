@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Storefront\Cart\Show as CartShow;
+use App\Livewire\Storefront\CartCount;
 use App\Livewire\Storefront\Products\Show as ProductShow;
 use App\Livewire\Storefront\Search\Index as SearchIndex;
 use App\Models\Cart;
@@ -38,4 +39,20 @@ it('dispatches search and cart removal events after customer actions succeed', f
     Livewire::test(CartShow::class)
         ->call('removeItem', $line->id)
         ->assertDispatched('storefront-analytics', type: 'remove_from_cart');
+});
+
+it('refreshes the storefront header cart count after cart updates', function () {
+    $store = shopStore();
+    app()->instance('current_store', $store);
+    $product = shopProduct($store);
+    $cart = Cart::factory()->create(['store_id' => $store->id]);
+    session()->put('cart_id', $cart->id);
+
+    $counter = Livewire::test(CartCount::class)
+        ->assertSee('Open shopping cart, 0 items');
+
+    app(CartService::class)->add($cart, $product['variant'], 2);
+
+    $counter->dispatch('cart-updated')
+        ->assertSee('Open shopping cart, 2 items');
 });

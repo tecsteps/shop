@@ -7,8 +7,6 @@
     $announcementEnabled = (bool) data_get($themeSettings, 'announcement.enabled', false);
     $announcementText = data_get($themeSettings, 'announcement.text', 'Free shipping on orders over 75 EUR');
     $announcementUrl = data_get($themeSettings, 'announcement.url');
-    $cartLines = data_get($cart ?? null, 'lines') ?? data_get($cart ?? null, 'items', []);
-    $cartItemCount = (int) data_get($cart ?? null, 'item_count', data_get($cart ?? null, 'items_count', is_countable($cartLines) ? count($cartLines) : 0));
 @endphp
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => $darkMode === 'dark'])>
@@ -75,10 +73,7 @@
                 <a href="/account" class="hidden size-11 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:text-stone-200 dark:hover:bg-stone-800 sm:inline-flex" aria-label="My account">
                     @include('storefront.components.icon', ['name' => 'user', 'class' => 'size-5'])
                 </a>
-                <button type="button" wire:click="$dispatch('open-cart-drawer')" class="relative inline-flex size-11 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:text-stone-200 dark:hover:bg-stone-800" aria-label="Open shopping cart, {{ $cartItemCount }} items">
-                    @include('storefront.components.icon', ['name' => 'bag', 'class' => 'size-5'])
-                    <span data-cart-count class="{{ $cartItemCount > 0 ? '' : 'hidden' }} absolute right-0.5 top-0.5 inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1 text-[10px] font-semibold leading-5 text-white dark:bg-blue-400 dark:text-stone-950" aria-live="polite">{{ $cartItemCount }}</span>
-                </button>
+                @livewire('storefront.cart-count')
                 <button type="button" x-data x-on:click="const html = document.documentElement; const dark = !html.classList.contains('dark'); html.classList.toggle('dark', dark); localStorage.setItem('storefront-theme', dark ? 'dark' : 'light')" class="hidden size-11 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:inline-flex dark:text-stone-200 dark:hover:bg-stone-800" aria-label="Toggle dark mode">
                     <span class="dark:hidden" aria-hidden="true">☾</span><span class="hidden dark:inline" aria-hidden="true">☀</span>
                 </button>
