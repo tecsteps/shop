@@ -25,7 +25,7 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 - Confirmed the working tree was clean and the app was the Laravel starter kit; no shop implementation is present in this checkout.
 - Read the roadmap and project-local instructions; `.ai/rules` does not exist.
 - Confirmed Laravel 12.51, Livewire 4.1, Flux UI 2.12, Tailwind 4, and Pest 4.3 are installed. The Pest browser plugin and Sanctum are not installed.
-- Started the existing Pest suite; result pending.
+- Existing Pest baseline passed: 33 tests, 75 assertions.
 - Resolved the Herd URL as `http://shop.test`; Playwright MCP is available for the acceptance review.
 - Delegated independent spec acceptance mapping and browser infrastructure inspection.
 
@@ -33,5 +33,4 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 | Date | Check | Result |
 |------|-------|--------|
-| 2026-09-23 | Existing Pest suite (`php artisan test --compact`) | In progress |
-
+| 2026-09-23 | Existing Pest suite (`php artisan test --compact`) | Passed: 33 tests, 75 assertions |
