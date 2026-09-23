@@ -10,7 +10,9 @@ use App\Livewire\Admin\Customers\Index as CustomerIndex;
 use App\Livewire\Admin\Customers\Show as CustomerShow;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\Developers\Index as DevelopersIndex;
+use App\Livewire\Admin\Discounts\Form as DiscountForm;
 use App\Livewire\Admin\Discounts\Index as DiscountIndex;
+use App\Livewire\Admin\Inventory\Index as InventoryIndex;
 use App\Livewire\Admin\Orders\Index as OrderIndex;
 use App\Livewire\Admin\Orders\Show as OrderShow;
 use App\Livewire\Admin\Pages\Form as PageForm;
@@ -68,13 +70,17 @@ Route::post('/account/logout', function (\Illuminate\Http\Request $request) {
     return redirect()->route('storefront.login')->withHeaders(['Cache-Control' => 'no-store']);
 })->middleware('auth:customer')->name('storefront.logout');
 
+Route::get('/oauth/authorize', fn () => response()->json(['message' => 'OAuth is not implemented.'], 501))->name('oauth.authorize');
+Route::post('/oauth/token', fn () => response()->json(['message' => 'OAuth is not implemented.'], 501))->name('oauth.token');
+
 Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'store.resolve', 'can:view-admin'])->prefix('admin')->name('admin.')->group(function (): void {
+Route::middleware(['auth', 'verified', 'store.resolve', 'can:view-admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::get('/', AdminDashboard::class)->name('dashboard');
     Route::get('/products', ProductIndex::class)->name('products');
     Route::get('/products/create', ProductForm::class)->name('products.create');
     Route::get('/products/{product}/edit', ProductForm::class)->whereNumber('product')->name('products.edit');
+    Route::get('/inventory', InventoryIndex::class)->name('inventory.index');
     Route::get('/collections', CollectionIndex::class)->name('collections');
     Route::get('/collections/create', CollectionForm::class)->name('collections.create');
     Route::get('/collections/{collection}/edit', CollectionForm::class)->whereNumber('collection')->name('collections.edit');
@@ -83,6 +89,8 @@ Route::middleware(['auth', 'store.resolve', 'can:view-admin'])->prefix('admin')-
     Route::get('/customers', CustomerIndex::class)->name('customers');
     Route::get('/customers/{customer}', CustomerShow::class)->whereNumber('customer')->name('customers.show');
     Route::get('/discounts', DiscountIndex::class)->name('discounts');
+    Route::get('/discounts/create', DiscountForm::class)->name('discounts.create');
+    Route::get('/discounts/{discount}/edit', DiscountForm::class)->whereNumber('discount')->name('discounts.edit');
     Route::get('/pages', PageIndex::class)->name('pages');
     Route::get('/pages/create', PageForm::class)->name('pages.create');
     Route::get('/pages/{page}/edit', PageForm::class)->whereNumber('page')->name('pages.edit');

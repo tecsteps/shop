@@ -91,6 +91,16 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** the combined focused admin API, checkout API, cart API, shipping, and discount run passed (52 tests, 512 assertions); `vendor/bin/pint --dirty --format agent` passed. Full-suite and browser acceptance remain pending.
 
+### 2026-09-23 — Admin product, discount, inventory, and search screens
+
+- Expanded product editing to manage option matrices, per-variant pricing and stock, collections, safe formatted descriptions, and product status transitions.
+- Added discount create/edit behavior for codes, automatic promotions, value types, schedules, eligibility, usage limits, and one-use-per-customer; the list now searches codes and filters active, scheduled, and expired promotions.
+- Added store-scoped inventory search, stock filters, and permission-gated quantity/policy updates. Search settings now edit synonym groups and stop words and queue reindexing.
+- Kept tax settings synchronized with the canonical tax configuration while preserving the admin form workflow.
+- Added regression cases for XSS sanitization, compare-at pricing, discount search/status filters, inventory permissions, search settings, and variant preservation.
+
+**Checks this iteration:** admin product/discount/inventory/search Pest tests passed (20 tests, 127 assertions); `npm run build`, `php artisan view:cache`, and Pint passed.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -109,3 +119,5 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | Search settings Pest tests | Passed: 4 tests, 19 assertions |
 | 2026-09-23 | Discount, fulfillment lifecycle, and pricing Pest tests | Passed: 11 tests, 73 assertions |
 | 2026-09-23 | Admin API, order export, checkout/cart APIs, shipping, and discount Pest tests | Passed: 52 tests, 512 assertions |
+| 2026-09-23 | Admin product, discount, inventory, and search screen Pest tests | Passed: 20 tests, 127 assertions |
+| 2026-09-23 | `npm run build` and `php artisan view:cache` after admin screen changes | Passed |

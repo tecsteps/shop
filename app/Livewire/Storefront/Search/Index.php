@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SearchQuery;
 use App\Services\CartService;
-use Illuminate\Support\Facades\DB;
+use App\Services\SearchService;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -77,24 +77,28 @@ class Index extends Component
         $this->dispatch('open-cart-drawer');
     }
 
-    public function render(): mixed
+    public function render(SearchService $search): mixed
     {
         $active = Product::query()->where('status', 'active')->whereNotNull('published_at');
         $productTypes = (clone $active)->whereNotNull('product_type')->distinct()->orderBy('product_type')->pluck('product_type')->all();
         $vendors = (clone $active)->whereNotNull('vendor')->distinct()->orderBy('vendor')->pluck('vendor')->all();
         $products = (clone $active)->with(['variants.inventoryItem', 'media']);
 
+        $rankedProductIds = [];
+
         if ($this->query !== '') {
             $escaped = addcslashes($this->query, '%_\\');
-            $terms = collect(preg_split('/\s+/u', preg_replace('/[^\pL\pN ]/u', ' ', $this->query) ?? '') ?: [])
-                ->filter()->map(static fn (string $term): string => '"'.str_replace('"', '""', $term).'"')->implode(' OR ');
-            $ids = $terms === '' ? [] : DB::table('products_fts')->where('products_fts', 'match', $terms)->where('store_id', app('current_store')->id)->pluck('product_id')->all();
-            $products->where(function ($builder) use ($ids, $escaped): void {
-                if ($ids !== []) {
-                    $builder->whereIn('id', $ids)->orWhere('title', 'like', '%'.$escaped.'%')
+            $expression = $search->fullTextExpression((int) app('current_store')->id, $this->query);
+            $rankedProductIds = $search->rankedProductIds((int) app('current_store')->id, $expression, 5000);
+            $products->where(function ($builder) use ($rankedProductIds, $expression, $escaped): void {
+                if ($rankedProductIds !== []) {
+                    $builder->whereIn('id', $rankedProductIds)
+                        ->orWhere('title', 'like', '%'.$escaped.'%')
                         ->orWhere('description_html', 'like', '%'.$escaped.'%')
                         ->orWhere('vendor', 'like', '%'.$escaped.'%')
                         ->orWhere('tags', 'like', '%'.$escaped.'%');
+                } elseif ($expression === '') {
+                    $builder->whereRaw('1 = 0');
                 } else {
                     $builder->where('title', 'like', '%'.$escaped.'%')
                         ->orWhere('description_html', 'like', '%'.$escaped.'%')
@@ -125,7 +129,7 @@ class Index extends Component
             'price_asc' => $products->withMin('variants', 'price_amount')->orderBy('variants_min_price_amount'),
             'price_desc' => $products->withMin('variants', 'price_amount')->orderByDesc('variants_min_price_amount'),
             'newest' => $products->latest('published_at'),
-            default => $products->orderByRaw('CASE WHEN title LIKE ? THEN 0 ELSE 1 END', [$this->query.'%'])->orderBy('title'),
+            default => $this->orderByRelevance($products, $rankedProductIds),
         };
 
         return view('storefront.search', [
@@ -175,5 +179,24 @@ class Index extends Component
     private function minorUnits(string $amount): int
     {
         return (int) round((float) $amount * 100);
+    }
+
+    /** @param list<string> $rankedProductIds */
+    private function orderByRelevance(\Illuminate\Database\Eloquent\Builder $query, array $rankedProductIds): void
+    {
+        $rankedProductIds = array_values(array_unique(array_map('intval', $rankedProductIds)));
+
+        if ($rankedProductIds === []) {
+            $query->orderBy('title');
+
+            return;
+        }
+
+        $rankCases = collect($rankedProductIds)
+            ->map(static fn (int $productId, int $position): string => "WHEN {$productId} THEN {$position}")
+            ->implode(' ');
+
+        $query->orderByRaw('CASE products.id '.$rankCases.' ELSE '.count($rankedProductIds).' END')
+            ->orderBy('title');
     }
 }

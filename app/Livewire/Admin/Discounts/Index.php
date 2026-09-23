@@ -11,39 +11,22 @@ class Index extends Component
 {
     use WithPagination;
 
-    public string $title = '';
+    public string $search = '';
 
-    public string $code = '';
+    public string $statusFilter = 'all';
 
-    public string $type = 'percentage';
-
-    public int $value = 10;
-
-    public ?int $minimumSubtotalAmount = null;
-
-    public function save(): void
+    public function updatedSearch(): void
     {
-        Gate::authorize('manage-discounts');
-        $this->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:64'],
-            'type' => ['required', 'in:percentage,fixed_amount,free_shipping'],
-            'value' => ['required', 'integer', 'min:0', 'max:1000000'],
-            'minimumSubtotalAmount' => ['nullable', 'integer', 'min:0'],
-        ]);
-        Discount::create([
-            'store_id' => app('current_store')->id,
-            'title' => $this->title,
-            'code' => strtoupper($this->code),
-            'type' => $this->type,
-            'value' => $this->type === 'free_shipping' ? 0 : $this->value,
-            'minimum_subtotal_amount' => $this->minimumSubtotalAmount,
-            'starts_at' => now(),
-            'ends_at' => now()->addYear(),
-            'is_active' => true,
-        ]);
-        $this->reset(['title', 'code', 'minimumSubtotalAmount']);
-        session()->flash('status', 'Discount saved.');
+        $this->resetPage();
+    }
+
+    public function updatedStatusFilter(): void
+    {
+        if (! in_array($this->statusFilter, ['all', 'active', 'expired', 'scheduled'], true)) {
+            $this->statusFilter = 'all';
+        }
+
+        $this->resetPage();
     }
 
     public function toggle(int $discountId): void
@@ -61,8 +44,23 @@ class Index extends Component
 
     public function render(): mixed
     {
-        Gate::authorize('manage-discounts');
+        Gate::authorize('view-discounts');
+        $now = now();
+        $search = trim($this->search);
+        $discounts = Discount::query()
+            ->when($search !== '', fn ($query) => $query->where('code', 'like', "%{$search}%"))
+            ->when($this->statusFilter === 'active', fn ($query) => $query
+                ->where('is_active', true)
+                ->where('starts_at', '<=', $now)
+                ->where(fn ($dates) => $dates->whereNull('ends_at')->orWhere('ends_at', '>=', $now)))
+            ->when($this->statusFilter === 'scheduled', fn ($query) => $query->where('is_active', true)->where('starts_at', '>', $now))
+            ->when($this->statusFilter === 'expired', fn ($query) => $query->whereNotNull('ends_at')->where('ends_at', '<', $now))
+            ->latest()
+            ->paginate(15);
 
-        return view('livewire.admin.discounts.index', ['discounts' => Discount::query()->latest()->paginate(15)])->layout('layouts.admin');
+        return view('livewire.admin.discounts.index', [
+            'canManage' => Gate::allows('manage-discounts'),
+            'discounts' => $discounts,
+        ])->layout('layouts.admin');
     }
 }

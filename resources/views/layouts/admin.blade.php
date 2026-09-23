@@ -7,6 +7,7 @@
         ['label' => 'Catalog', 'items' => [
             ['label' => 'Products', 'href' => '/admin/products', 'route' => 'admin.products*', 'icon' => 'cube'],
             ['label' => 'Collections', 'href' => '/admin/collections', 'route' => 'admin.collections*', 'icon' => 'rectangle-stack'],
+            ['label' => 'Inventory', 'href' => '/admin/inventory', 'route' => 'admin.inventory*', 'icon' => 'archive-box'],
         ]],
         ['label' => 'Sales', 'items' => [
             ['label' => 'Orders', 'href' => '/admin/orders', 'route' => 'admin.orders*', 'icon' => 'shopping-bag'],

@@ -31,6 +31,11 @@ class Index extends Component
             ->latest()
             ->paginate(15);
 
-        return view('livewire.admin.products.index', ['products' => $products])->layout('layouts.admin');
+        return view('livewire.admin.products.index', [
+            'products' => $products,
+            'canCreate' => Gate::allows('create', Product::class),
+            'canUpdate' => Gate::allows('manage-products'),
+            'canDelete' => Gate::allows('archive-products'),
+        ])->layout('layouts.admin');
     }
 }
