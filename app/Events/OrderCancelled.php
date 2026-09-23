@@ -12,5 +12,5 @@ class OrderCancelled implements ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Order $order) {}
+    public function __construct(public Order $order, public bool $notifyCustomer = true) {}
 }

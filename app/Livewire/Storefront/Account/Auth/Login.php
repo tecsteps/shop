@@ -20,8 +20,8 @@ class Login extends Component
 
     public function mount(): void
     {
-        $redirect = (string) request()->query('redirect', '');
-        $this->redirectTo = str_starts_with($redirect, '/') && ! str_starts_with($redirect, '//') ? $redirect : '';
+        $redirect = request()->query('redirect');
+        $this->redirectTo = is_string($redirect) ? ($this->safeRedirectPath($redirect) ?? '') : '';
     }
 
     public function login(CartService $carts): mixed
@@ -53,7 +53,24 @@ class Login extends Component
             }
         }
 
-        return $this->redirectTo !== '' ? $this->redirect($this->redirectTo) : $this->redirectRoute('storefront.account.dashboard');
+        $redirectTo = $this->safeRedirectPath($this->redirectTo);
+
+        return $redirectTo !== null ? $this->redirect($redirectTo) : $this->redirectRoute('storefront.account.dashboard');
+    }
+
+    private function safeRedirectPath(string $redirect): ?string
+    {
+        if ($redirect === '' || ! str_starts_with($redirect, '/') || str_starts_with($redirect, '//') || str_contains($redirect, '\\') || preg_match('/[\x00-\x1F\x7F]/', $redirect)) {
+            return null;
+        }
+
+        $parsedRedirect = parse_url($redirect);
+
+        if ($parsedRedirect === false || isset($parsedRedirect['scheme']) || isset($parsedRedirect['host']) || isset($parsedRedirect['user']) || isset($parsedRedirect['pass'])) {
+            return null;
+        }
+
+        return $redirect;
     }
 
     public function render(): mixed

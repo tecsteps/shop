@@ -13,14 +13,15 @@ class Index extends Component
 
     public function delete(int $pageId): void
     {
-        Gate::authorize('manage-store-settings');
-        Page::query()->findOrFail($pageId)->delete();
+        $page = Page::query()->findOrFail($pageId);
+        Gate::authorize('delete', $page);
+        $page->delete();
         session()->flash('status', 'Page deleted.');
     }
 
     public function render(): mixed
     {
-        Gate::authorize('manage-store-settings');
+        Gate::authorize('viewAny', Page::class);
 
         return view('livewire.admin.pages.index', ['pages' => Page::query()->orderBy('title')->paginate(15)])->layout('layouts.admin');
     }

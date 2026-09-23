@@ -15,6 +15,7 @@ use App\Events\ProductDeleted;
 use App\Events\ProductStatusChanged;
 use App\Events\ProductUpdated;
 use App\Listeners\DispatchWebhooks;
+use App\Listeners\SendCustomerOrderNotifications;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,5 +46,10 @@ class WebhookEventServiceProvider extends ServiceProvider
         Event::listen(ProductStatusChanged::class, DispatchWebhooks::class.'@productStatusChanged');
         Event::listen(FulfillmentShipped::class, DispatchWebhooks::class.'@fulfillmentShipped');
         Event::listen(FulfillmentDelivered::class, DispatchWebhooks::class.'@fulfillmentDelivered');
+
+        Event::listen(OrderCreated::class, SendCustomerOrderNotifications::class.'@orderCreated');
+        Event::listen(OrderRefunded::class, SendCustomerOrderNotifications::class.'@orderRefunded');
+        Event::listen(FulfillmentShipped::class, SendCustomerOrderNotifications::class.'@fulfillmentShipped');
+        Event::listen(OrderCancelled::class, SendCustomerOrderNotifications::class.'@orderCancelled');
     }
 }

@@ -12,5 +12,9 @@ class OrderRefunded implements ShouldDispatchAfterCommit
 {
     use Dispatchable, SerializesModels;
 
-    public function __construct(public readonly Order $order, public readonly Refund $refund) {}
+    public function __construct(
+        public readonly Order $order,
+        public readonly Refund $refund,
+        public readonly bool $notifyCustomer = true,
+    ) {}
 }

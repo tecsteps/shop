@@ -110,6 +110,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(\App\Models\Product::class, ProductPolicy::class);
         Gate::policy(\App\Models\Order::class, OrderPolicy::class);
+        Gate::policy(\App\Models\Page::class, \App\Policies\PagePolicy::class);
         Gate::policy(Customer::class, CustomerPolicy::class);
 
         Gate::define('view-collections', function (User $user): bool {

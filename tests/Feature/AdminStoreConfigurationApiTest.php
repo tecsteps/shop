@@ -108,6 +108,51 @@ it('creates filters updates and deletes store pages with tenant-safe handles and
     expect(Page::query()->whereKey($pageId)->exists())->toBeFalse();
 });
 
+it('allows staff to list create and update pages while reserving deletion to owners and admins', function () {
+    $store = shopStore();
+    $staff = User::factory()->create();
+    $staff->stores()->attach($store->id, ['role' => 'staff']);
+    $token = storeConfigurationApiToken($staff, $store, ['read-content', 'write-content']);
+
+    $this->withToken($token)->getJson("/api/admin/v1/stores/{$store->id}/pages")
+        ->assertOk();
+
+    $created = $this->withToken($token)->postJson("/api/admin/v1/stores/{$store->id}/pages", [
+        'title' => 'Staff Page',
+        'status' => 'draft',
+    ])->assertCreated();
+    $pageId = $created->json('data.id');
+
+    $this->withToken($token)->putJson("/api/admin/v1/stores/{$store->id}/pages/{$pageId}", [
+        'title' => 'Updated by Staff',
+    ])->assertOk()->assertJsonPath('data.title', 'Updated by Staff');
+
+    $this->withToken($token)->deleteJson("/api/admin/v1/stores/{$store->id}/pages/{$pageId}")
+        ->assertForbidden();
+
+    expect(Page::query()->whereKey($pageId)->exists())->toBeTrue();
+});
+
+it('sanitizes page html before the API persists create and update payloads', function () {
+    $store = shopStore();
+    $user = User::factory()->create();
+    $user->stores()->attach($store->id, ['role' => 'owner']);
+    $token = storeConfigurationApiToken($user, $store, ['read-content', 'write-content']);
+
+    $created = $this->withToken($token)->postJson("/api/admin/v1/stores/{$store->id}/pages", [
+        'title' => 'Sanitized Page',
+        'body_html' => '<h2 onclick="run()">Safe title</h2><script>run()</script><p>Safe copy</p>',
+    ])->assertCreated();
+    $page = Page::query()->findOrFail($created->json('data.id'));
+    expect($page->body_html)->toBe('<h2>Safe title</h2><p>Safe copy</p>');
+
+    $this->withToken($token)->putJson("/api/admin/v1/stores/{$store->id}/pages/{$page->id}", [
+        'body_html' => '<p style="color:red" onmouseover="run()">Updated</p><iframe src="https://bad.test"></iframe>',
+    ])->assertOk();
+
+    expect($page->fresh()->body_html)->toBe('<p>Updated</p>');
+});
+
 it('writes non-overlapping shipping zones and type-specific rates for the selected store', function () {
     $store = shopStore();
     $otherStore = shopStore('other-shipping.test');
@@ -279,10 +324,10 @@ it('installs validates configures and publishes a store-scoped theme archive', f
     }
 });
 
-it('returns 403 when staff or support users attempt store configuration writes', function (string $role) {
+it('returns 403 when support users attempt page and store configuration writes', function () {
     $store = shopStore();
     $user = User::factory()->create();
-    $user->stores()->attach($store->id, ['role' => $role]);
+    $user->stores()->attach($store->id, ['role' => 'support']);
     $token = storeConfigurationApiToken($user, $store, ['write-content', 'write-settings', 'write-themes']);
 
     $this->withToken($token)->postJson("/api/admin/v1/stores/{$store->id}/pages", ['title' => 'Blocked'])
@@ -297,4 +342,4 @@ it('returns 403 when staff or support users attempt store configuration writes',
     expect(Page::query()->exists())->toBeFalse()
         ->and(ShippingZone::query()->exists())->toBeFalse()
         ->and(Theme::query()->exists())->toBeFalse();
-})->with(['staff' => 'staff', 'support' => 'support']);
+});

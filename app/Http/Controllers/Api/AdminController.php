@@ -274,7 +274,7 @@ class AdminController extends Controller
 
         $lineQuantities = collect($validated['line_items'])->mapWithKeys(static fn (array $line): array => [(int) $line['order_line_id'] => (int) $line['quantity']])->all();
         $fulfillment = $fulfillments->create($order, $lineQuantities, $validated);
-        $fulfillment = $fulfillments->markShipped($fulfillment);
+        $fulfillment = $fulfillments->markShipped($fulfillment, (bool) ($validated['notify_customer'] ?? true));
 
         return response()->json(['data' => [
             'id' => $fulfillment->getKey(),
@@ -313,7 +313,14 @@ class AdminController extends Controller
         }
 
         $lineQuantities = collect($validated['line_items'] ?? [])->mapWithKeys(static fn (array $line): array => [(int) $line['order_line_id'] => (int) $line['quantity']])->all();
-        $refund = $refunds->refund($order, (int) $validated['amount'], $validated['reason'] ?? null, false, $lineQuantities);
+        $refund = $refunds->refund(
+            $order,
+            (int) $validated['amount'],
+            $validated['reason'] ?? null,
+            false,
+            $lineQuantities,
+            (bool) ($validated['notify_customer'] ?? true),
+        );
 
         return response()->json(['data' => [
             'id' => $refund->getKey(),

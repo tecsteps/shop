@@ -37,7 +37,7 @@ class StoreConfigurationController extends Controller
     public function pages(Request $request, int $storeId, AdminStoreConfigurationService $resources): JsonResponse
     {
         $store = $this->store($storeId);
-        Gate::authorize('manage-store-settings');
+        Gate::authorize('viewAny', Page::class);
         $filters = $request->validate([
             'status' => ['sometimes', 'string', Rule::in(['draft', 'published'])],
             'page' => ['sometimes', 'integer', 'min:1'],
@@ -50,7 +50,7 @@ class StoreConfigurationController extends Controller
     public function createPage(Request $request, int $storeId, AdminStoreConfigurationService $resources): JsonResponse
     {
         $store = $this->store($storeId);
-        Gate::authorize('manage-store-settings');
+        Gate::authorize('create', Page::class);
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'handle' => ['sometimes', 'nullable', 'string', 'max:255', Rule::unique('pages', 'handle')->where('store_id', $store->getKey())],
@@ -65,8 +65,8 @@ class StoreConfigurationController extends Controller
     public function updatePage(Request $request, int $storeId, int $pageId, AdminStoreConfigurationService $resources): JsonResponse
     {
         $store = $this->store($storeId);
-        Gate::authorize('manage-store-settings');
         $page = Page::query()->where('store_id', $store->getKey())->findOrFail($pageId);
+        Gate::authorize('update', $page);
         $validated = $request->validate([
             'title' => ['sometimes', 'required', 'string', 'max:255'],
             'handle' => ['sometimes', 'nullable', 'string', 'max:255', Rule::unique('pages', 'handle')->where('store_id', $store->getKey())->ignore($page->getKey())],
@@ -81,8 +81,9 @@ class StoreConfigurationController extends Controller
     public function deletePage(int $storeId, int $pageId): JsonResponse
     {
         $store = $this->store($storeId);
-        Gate::authorize('manage-store-settings');
-        Page::query()->where('store_id', $store->getKey())->findOrFail($pageId)->delete();
+        $page = Page::query()->where('store_id', $store->getKey())->findOrFail($pageId);
+        Gate::authorize('delete', $page);
+        $page->delete();
 
         return response()->json(['message' => 'Page deleted']);
     }

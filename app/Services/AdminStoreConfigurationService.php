@@ -8,6 +8,7 @@ use App\Models\ShippingZone;
 use App\Models\Store;
 use App\Models\Theme;
 use App\Support\HandleGenerator;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -20,7 +21,7 @@ class AdminStoreConfigurationService
 
     private const MAX_THEME_FILES = 500;
 
-    public function __construct(private HandleGenerator $handles) {}
+    public function __construct(private HandleGenerator $handles, private HtmlSanitizer $sanitizer) {}
 
     /** @param array{status?: string, page?: int, per_page?: int} $filters
      * @return array{data: list<array<string, mixed>>, meta: array{current_page: int, per_page: int, total: int, last_page: int}}
@@ -56,7 +57,7 @@ class AdminStoreConfigurationService
             'store_id' => $store->getKey(),
             'title' => $attributes['title'],
             'handle' => $handle,
-            'body_html' => $attributes['body_html'] ?? null,
+            'body_html' => $this->sanitizer->sanitize($attributes['body_html'] ?? null),
             'status' => $status,
             'published_at' => $status === 'published' ? now() : null,
         ]);
@@ -70,7 +71,9 @@ class AdminStoreConfigurationService
 
         foreach (['title', 'body_html'] as $field) {
             if (array_key_exists($field, $attributes)) {
-                $updated[$field] = $attributes[$field];
+                $updated[$field] = $field === 'body_html'
+                    ? $this->sanitizer->sanitize($attributes[$field])
+                    : $attributes[$field];
             }
         }
 

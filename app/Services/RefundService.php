@@ -15,9 +15,15 @@ class RefundService
     public function __construct(private readonly InventoryService $inventory) {}
 
     /** @param array<int|string, int> $lineQuantities */
-    public function refund(Order $order, int $amount = 0, ?string $reason = null, bool $restock = false, array $lineQuantities = []): Refund
-    {
-        return DB::transaction(function () use ($order, $amount, $reason, $restock, $lineQuantities): Refund {
+    public function refund(
+        Order $order,
+        int $amount = 0,
+        ?string $reason = null,
+        bool $restock = false,
+        array $lineQuantities = [],
+        bool $notifyCustomer = true,
+    ): Refund {
+        return DB::transaction(function () use ($order, $amount, $reason, $restock, $lineQuantities, $notifyCustomer): Refund {
             $order = Order::withoutGlobalScopes()->with('payments', 'lines.variant.inventoryItem', 'lines.refundLines')->lockForUpdate()->findOrFail($order->id);
             $payment = $order->payments->first(fn (Payment $candidate): bool => in_array($candidate->status, ['captured', 'partially_refunded'], true));
 
@@ -108,7 +114,7 @@ class RefundService
                 'status' => $fullyRefunded ? 'refunded' : $order->status,
             ])->save();
 
-            OrderRefunded::dispatch($order->refresh(), $refund);
+            OrderRefunded::dispatch($order->refresh(), $refund, $notifyCustomer);
 
             return $refund->load('lines.orderLine');
         });

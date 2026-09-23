@@ -21,21 +21,21 @@ class Form extends Component
 
     public function mount(?int $page = null): void
     {
-        Gate::authorize('manage-store-settings');
-
         if ($page) {
             $saved = Page::query()->findOrFail($page);
+            Gate::authorize('view', $saved);
             $this->pageId = $saved->id;
             $this->title = $saved->title;
             $this->handle = $saved->handle;
             $this->bodyHtml = strip_tags($saved->body_html ?? '');
             $this->status = $saved->status;
+        } else {
+            Gate::authorize('create', Page::class);
         }
     }
 
     public function save(HandleGenerator $handles): mixed
     {
-        Gate::authorize('manage-store-settings');
         $this->validate([
             'title' => ['required', 'string', 'max:255'],
             'handle' => ['nullable', 'string', 'max:255'],
@@ -52,8 +52,11 @@ class Form extends Component
         ];
 
         if ($this->pageId) {
-            Page::query()->findOrFail($this->pageId)->update($attributes);
+            $page = Page::query()->findOrFail($this->pageId);
+            Gate::authorize('update', $page);
+            $page->update($attributes);
         } else {
+            Gate::authorize('create', Page::class);
             Page::create(['store_id' => $storeId, ...$attributes]);
         }
 

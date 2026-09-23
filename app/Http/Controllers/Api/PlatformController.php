@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\Store;
 use App\Models\StoreInvitation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Locale;
 use ResourceBundle;
@@ -50,10 +51,15 @@ class PlatformController extends Controller
             'timezone' => ['required', 'string', 'timezone'],
         ]);
 
-        $store = Store::query()->create([
-            ...$validated,
-            'status' => 'active',
-        ]);
+        $store = DB::transaction(function () use ($request, $validated): Store {
+            $store = Store::query()->create([
+                ...$validated,
+                'status' => 'active',
+            ]);
+            $store->users()->attach($request->user()->getKey(), ['role' => 'owner']);
+
+            return $store;
+        });
 
         return response()->json(['data' => $store->only([
             'id',

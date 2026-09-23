@@ -62,6 +62,62 @@ it('keeps customer authentication across the redirect to the account page', func
     $this->assertAuthenticatedAs($customer, 'customer');
 });
 
+it('rejects slash-backslash customer login redirect paths', function () {
+    $store = shopStore('shop.test');
+    $customer = Customer::factory()->create([
+        'store_id' => $store->id,
+        'email' => 'safe-redirect@example.test',
+        'password' => 'shop-password',
+    ]);
+    app()->instance('current_store', $store);
+
+    Livewire::withQueryParams(['redirect' => '/\\attacker.test/'])
+        ->test(Login::class)
+        ->assertSet('redirectTo', '')
+        ->set('email', $customer->email)
+        ->set('password', 'shop-password')
+        ->call('login')
+        ->assertRedirect(route('storefront.account.dashboard'));
+
+    Livewire::withQueryParams(['redirect' => ['/checkout']])
+        ->test(Login::class)
+        ->assertSet('redirectTo', '');
+});
+
+it('revalidates customer login redirect state before redirecting', function () {
+    $store = shopStore();
+    $customer = Customer::factory()->create([
+        'store_id' => $store->id,
+        'email' => 'tampered-redirect@example.test',
+        'password' => 'shop-password',
+    ]);
+    app()->instance('current_store', $store);
+
+    Livewire::test(Login::class)
+        ->set('redirectTo', 'https://attacker.test/after-login')
+        ->set('email', $customer->email)
+        ->set('password', 'shop-password')
+        ->call('login')
+        ->assertRedirect(route('storefront.account.dashboard'));
+});
+
+it('preserves safe local customer login redirect paths', function () {
+    $store = shopStore();
+    $customer = Customer::factory()->create([
+        'store_id' => $store->id,
+        'email' => 'local-redirect@example.test',
+        'password' => 'shop-password',
+    ]);
+    app()->instance('current_store', $store);
+
+    Livewire::withQueryParams(['redirect' => '/checkout?step=address'])
+        ->test(Login::class)
+        ->set('email', $customer->email)
+        ->set('password', 'shop-password')
+        ->call('login')
+        ->assertRedirect('/checkout?step=address');
+});
+
 it('allows the same customer email in separate stores and keeps login tenant scoped', function () {
     $firstStore = shopStore();
     $firstCustomer = Customer::factory()->create([

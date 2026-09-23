@@ -32,7 +32,7 @@ it('creates organizations and stores through platform-scoped endpoints', functio
         ->assertJsonPath('data.billing_email', 'billing@acme.test');
 
     $organizationId = $organizationResponse->json('data.id');
-    $this->postJson('/api/admin/v1/platform/stores', [
+    $storeResponse = $this->postJson('/api/admin/v1/platform/stores', [
         'organization_id' => $organizationId,
         'name' => 'Acme Store',
         'handle' => 'acme-store',
@@ -45,7 +45,10 @@ it('creates organizations and stores through platform-scoped endpoints', functio
         ->assertJsonPath('data.status', 'active')
         ->assertJsonPath('data.default_currency', 'EUR');
 
+    $storeId = $storeResponse->json('data.id');
     $this->assertDatabaseHas('stores', ['organization_id' => $organizationId, 'handle' => 'acme-store', 'status' => 'active']);
+    $this->assertDatabaseHas('store_users', ['store_id' => $storeId, 'user_id' => $user->id, 'role' => 'owner']);
+    expect(Store::query()->findOrFail($storeId)->users()->wherePivot('role', 'owner')->count())->toBe(1);
     expect(Organization::query()->count())->toBe(1);
 });
 

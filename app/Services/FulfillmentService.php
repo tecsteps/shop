@@ -67,9 +67,9 @@ class FulfillmentService
         });
     }
 
-    public function markShipped(Fulfillment $fulfillment): Fulfillment
+    public function markShipped(Fulfillment $fulfillment, bool $notifyCustomer = true): Fulfillment
     {
-        return DB::transaction(function () use ($fulfillment): Fulfillment {
+        return DB::transaction(function () use ($fulfillment, $notifyCustomer): Fulfillment {
             $order = Order::withoutGlobalScopes()->lockForUpdate()->findOrFail($fulfillment->order_id);
             $fulfillment = Fulfillment::withoutGlobalScopes()
                 ->where('order_id', $order->id)
@@ -84,7 +84,7 @@ class FulfillmentService
             $this->keepOrderInProgress($order);
 
             $fulfillment = $fulfillment->refresh()->load('order');
-            FulfillmentShipped::dispatch($fulfillment);
+            FulfillmentShipped::dispatch($fulfillment, $notifyCustomer);
 
             return $fulfillment;
         });

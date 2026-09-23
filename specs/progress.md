@@ -16,9 +16,9 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 - [x] Apps, API tokens, and outbound webhooks
 - [x] Accessibility, security, responsive polish, and error handling
 - [x] Pest unit and feature coverage
-- [ ] Playwright acceptance review and independent second-agent audit
+- [x] Playwright acceptance review and independent second-agent audit
 
-The implementation phases are complete. Final acceptance review is still open while the second agent checks the integrated tree. Browser testing uses the Playwright MCP; the Pest browser plugin and the 143 browser-test files listed in `08-PLAYWRIGHT-E2E-PLAN.md` are not installed/present.
+The implementation phases and local acceptance review are complete. Root completed representative customer and admin journeys with the Playwright MCP, and a second agent reviewed the integrated changes and reran the full Pest suite. The Pest browser plugin and the 143 browser-test files listed in `08-PLAYWRIGHT-E2E-PLAN.md` are not installed/present, so the browser evidence comes from the MCP journeys recorded below.
 
 ## Iterations
 
@@ -150,6 +150,27 @@ The implementation phases are complete. Final acceptance review is still open wh
 
 **Checks this iteration:** full Pest passed (217 tests, 1,433 assertions); `vendor/bin/pint --dirty --format agent`, `npm run build`, `php artisan view:cache`, isolated SQLite migration plus demo seed, and `git diff --check` passed. The integrated-tree second-agent acceptance review is in progress.
 
+### 2026-09-23 — Spec audit repairs and final customer/admin checkout review
+
+- Closed the independent spec audit findings: staff can manage pages through the same scoped policy as the UI, page API writes pass through the HTML sanitizer, and platform-created stores attach their creator as the initial Owner.
+- Added queued customer email notifications for order confirmation, refund, cancellation, and shipment events. Refund and fulfillment API calls honor `notify_customer`; order confirmation includes the order lines and bank-transfer instructions.
+- Completed General Settings with persisted locale and timezone controls, and added Checkout and Notifications settings tabs. Updated the local dev queue listener to consume the `default` and `search` database queues used by exports and indexing.
+- Ran a full Playwright MCP checkout with two T-shirt units, Berlin shipping address, Standard Shipping, and the mock card. Confirmation showed order #1018, correct tax-inclusive total of 54.97 EUR, address, masked payment, and empty cart; admin order #1018 showed paid/captured state, payment timestamp, items, total, and shipping address. The seed enables tax-inclusive pricing, so the displayed 8.77 EUR tax is included in the subtotal and is not added again.
+- Verified General, Checkout, and Notifications settings pages in Playwright. No browser console errors or warnings were reported during these checks.
+- Root full-suite pass is complete. An integrated-tree second-agent code review and rerun are still in progress. The listed 143 Pest browser test cases are not present and the Pest browser plugin is not installed; Playwright MCP supplies the representative end-to-end browser evidence above.
+
+**Checks this iteration:** full Pest passed (225 tests, 1,492 assertions); `vendor/bin/pint --dirty --format agent`, `composer validate --no-check-publish`, `npm run build`, `php artisan view:cache`, fresh isolated SQLite migration plus demo seed, `php artisan route:list --except-vendor` (120 routes), and `git diff --check` passed. Browser customer checkout, admin order detail, and settings tab review passed; no console errors or warnings.
+
+### 2026-09-23 — Customer login redirect hardening and second-agent sign-off
+
+- The independent integrated-tree review found an open redirect in customer login: a slash/backslash path can be parsed by browsers as an external authority, and Livewire's public `redirectTo` state can be changed before login.
+- Customer login now accepts only a relative path with one leading slash, no backslashes/control characters, and no URL scheme, host, user, or password. The component applies the same validation to the client-controlled property immediately before redirecting. Non-string query values fall back safely to the account dashboard.
+- Added regressions for slash/backslash query input, non-string query values, direct absolute-URL property tampering, and a valid local path with its query string.
+- The second agent reviewed the fix, reran the complete Pest suite (228 tests, 1,499 assertions), and reported no remaining concrete blockers. Root reran the suite after adding the malformed-query regression (228 tests, 1,500 assertions). The Playwright MCP customer/admin acceptance review was completed by root; the reviewer's browser transport was unavailable.
+- Restarted the browser review after the security fix: logged out, visited login with `redirect=%2F%5Cattacker.test%2F`, authenticated with the demo customer, and confirmed the browser landed on `/account`. Browser console remained free of errors and warnings.
+
+**Checks this iteration:** focused customer account tests passed (11 tests, 51 assertions); full Pest passed in the independent review and latest root run (228 tests, 1,499 and 1,500 assertions respectively); Pint passed. The earlier final build, isolated migration/seed, settings pages, paid mock checkout, admin order detail, and console checks also passed.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -179,3 +200,13 @@ The implementation phases are complete. Final acceptance review is still open wh
 | 2026-09-23 | Final full Pest suite and second-agent rerun | Passed: 217 tests, 1,433 assertions |
 | 2026-09-23 | Playwright MCP customer-to-paid-order and admin detail journey | Passed: refreshed customer session, live cart count/drawer, address/shipping/tax/payment, confirmation, and admin payment/address detail verified |
 | 2026-09-23 | Final Pint, frontend build, cached view compilation, isolated migration/seed, and diff check | Passed |
+| 2026-09-23 | Spec-audit regressions for page roles/sanitization, store-owner assignment, notification delivery/API flags, and General Settings | Passed in focused suites; included in the full suite |
+| 2026-09-23 | Final integrated Pest suite after spec-audit repairs | Passed: 225 tests, 1,492 assertions |
+| 2026-09-23 | Fresh isolated SQLite migration and `DemoShopSeeder` | Passed |
+| 2026-09-23 | Playwright MCP final checkout, order confirmation, admin order detail, and settings tabs | Passed: order #1018 paid/captured at 54.97 EUR; address and timestamps visible; cart reset; no browser console errors or warnings |
+| 2026-09-23 | Composer validation, frontend build, view cache compilation, 120-route inventory, Pint, diff check | Passed |
+| 2026-09-23 | Customer open-redirect regressions | Passed: slash-backslash query rejected, tampered absolute URL falls back to account, safe local path preserved |
+| 2026-09-23 | Full Pest suite after login redirect hardening | Passed in independent second-agent review: 228 tests, 1,499 assertions |
+| 2026-09-23 | Latest full Pest suite after malformed-query regression | Passed: 228 tests, 1,500 assertions |
+| 2026-09-23 | Independent second-agent review of integrated changes and final login redirect fix | Passed: no remaining concrete blockers; browser MCP unavailable in agent context |
+| 2026-09-23 | Playwright MCP open-redirect regression journey | Passed: encoded slash/backslash return path stayed on `/account` after sign-in; no console errors or warnings |
