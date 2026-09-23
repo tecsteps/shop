@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\ProductMediaUploadController;
+use App\Http\Controllers\Api\StoreConfigurationController;
 use App\Http\Controllers\Api\StorefrontController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,10 +46,19 @@ Route::prefix('admin/v1')->middleware(['api.token', 'store.resolve', 'throttle:a
     Route::post('/stores/{storeId}/discounts', [AdminController::class, 'createDiscount'])->whereNumber('storeId')->middleware('api.token:write-discounts')->name('discounts.store');
     Route::put('/stores/{storeId}/discounts/{discountId}', [AdminController::class, 'updateDiscount'])->whereNumber('storeId')->whereNumber('discountId')->middleware('api.token:write-discounts')->name('discounts.update');
     Route::delete('/stores/{storeId}/discounts/{discountId}', [AdminController::class, 'deleteDiscount'])->whereNumber('storeId')->whereNumber('discountId')->middleware('api.token:write-discounts')->name('discounts.destroy');
-    Route::get('/stores/{storeId}/shipping/zones', [AdminController::class, 'shippingZones'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('shipping.zones.index');
+    Route::get('/stores/{storeId}/shipping/zones', [StoreConfigurationController::class, 'shippingZones'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('shipping.zones.index');
+    Route::post('/stores/{storeId}/shipping/zones', [StoreConfigurationController::class, 'createShippingZone'])->whereNumber('storeId')->middleware('api.token:write-settings')->name('shipping.zones.store');
+    Route::put('/stores/{storeId}/shipping/zones/{zoneId}', [StoreConfigurationController::class, 'updateShippingZone'])->whereNumber('storeId')->whereNumber('zoneId')->middleware('api.token:write-settings')->name('shipping.zones.update');
+    Route::post('/stores/{storeId}/shipping/zones/{zoneId}/rates', [StoreConfigurationController::class, 'createShippingRate'])->whereNumber('storeId')->whereNumber('zoneId')->middleware('api.token:write-settings')->name('shipping.rates.store');
     Route::get('/stores/{storeId}/tax/settings', [AdminController::class, 'taxSettings'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('tax.settings');
     Route::put('/stores/{storeId}/tax/settings', [AdminController::class, 'updateTaxSettings'])->whereNumber('storeId')->middleware('api.token:write-settings')->name('tax.settings.update');
-    Route::get('/stores/{storeId}/pages', [AdminController::class, 'pages'])->whereNumber('storeId')->middleware('api.token:read-content')->name('pages.index');
+    Route::post('/stores/{storeId}/themes', [StoreConfigurationController::class, 'createTheme'])->whereNumber('storeId')->middleware('api.token:write-themes')->name('themes.store');
+    Route::post('/stores/{storeId}/themes/{themeId}/publish', [StoreConfigurationController::class, 'publishTheme'])->whereNumber('storeId')->whereNumber('themeId')->middleware('api.token:write-themes')->name('themes.publish');
+    Route::put('/stores/{storeId}/themes/{themeId}/settings', [StoreConfigurationController::class, 'updateThemeSettings'])->whereNumber('storeId')->whereNumber('themeId')->middleware('api.token:write-themes')->name('themes.settings.update');
+    Route::get('/stores/{storeId}/pages', [StoreConfigurationController::class, 'pages'])->whereNumber('storeId')->middleware('api.token:read-content')->name('pages.index');
+    Route::post('/stores/{storeId}/pages', [StoreConfigurationController::class, 'createPage'])->whereNumber('storeId')->middleware('api.token:write-content')->name('pages.store');
+    Route::put('/stores/{storeId}/pages/{pageId}', [StoreConfigurationController::class, 'updatePage'])->whereNumber('storeId')->whereNumber('pageId')->middleware('api.token:write-content')->name('pages.update');
+    Route::delete('/stores/{storeId}/pages/{pageId}', [StoreConfigurationController::class, 'deletePage'])->whereNumber('storeId')->whereNumber('pageId')->middleware('api.token:write-content')->name('pages.destroy');
     Route::post('/stores/{storeId}/search/reindex', [AdminController::class, 'reindexSearch'])->whereNumber('storeId')->middleware('api.token:write-settings')->name('search.reindex');
     Route::get('/stores/{storeId}/search/status', [AdminController::class, 'searchStatus'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('search.status');
     Route::get('/stores/{storeId}/analytics/summary', [AdminController::class, 'analyticsSummary'])->whereNumber('storeId')->middleware('api.token:read-analytics')->name('analytics.summary');

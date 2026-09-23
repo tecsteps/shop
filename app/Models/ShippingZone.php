@@ -11,11 +11,11 @@ class ShippingZone extends Model
 {
     use BelongsToStore, HasFactory;
 
-    protected $fillable = ['store_id', 'name', 'countries', 'is_active'];
+    protected $fillable = ['store_id', 'name', 'countries', 'regions', 'is_active'];
 
     protected function casts(): array
     {
-        return ['countries' => 'array', 'is_active' => 'boolean'];
+        return ['countries' => 'array', 'regions' => 'array', 'is_active' => 'boolean'];
     }
 
     public function rates(): HasMany

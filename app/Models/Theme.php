@@ -10,11 +10,11 @@ class Theme extends Model
 {
     use BelongsToStore;
 
-    protected $fillable = ['store_id', 'name', 'status', 'is_active'];
+    protected $fillable = ['store_id', 'name', 'version', 'status', 'is_active', 'published_at'];
 
     protected function casts(): array
     {
-        return ['is_active' => 'boolean'];
+        return ['is_active' => 'boolean', 'published_at' => 'datetime'];
     }
 
     public function settings(): HasOne
