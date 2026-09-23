@@ -13,20 +13,26 @@ class ResolveStore
 {
     public function handle(Request $request, Closure $next): Response
     {
+        $isAdminRequest = $this->isAdminRequest($request);
+        $isAdminApiRequest = $request->is('api/admin/*');
         $store = $request->is('api/admin/*')
             ? $this->resolveAdminApiStore($request)
-            : ($request->is('admin/*') ? $this->resolveAdminStore($request) : $this->resolveStorefrontStore($request));
+            : ($isAdminRequest ? $this->resolveAdminStore($request) : $this->resolveStorefrontStore($request));
 
         if (! $store instanceof Store) {
+            if ($isAdminRequest && $request->user() && $request->user()->stores()->count() > 1) {
+                return redirect()->route('admin.select-store');
+            }
+
             abort(404);
         }
 
-        if ($request->is('api/admin/*') && ! $request->user()->stores()->whereKey($store->id)->exists()) {
+        if ($isAdminApiRequest && ! $request->user()->stores()->whereKey($store->id)->exists()) {
             abort(403);
         }
 
         if ($store->status === 'suspended') {
-            if (! $request->is('admin/*') && ! $request->is('api/admin/*')) {
+            if (! $isAdminRequest && ! $isAdminApiRequest) {
                 abort(503, 'This storefront is temporarily unavailable.');
             }
 
@@ -39,6 +45,21 @@ class ResolveStore
         view()->share('currentStore', $store);
 
         return $next($request);
+    }
+
+    private function isAdminRequest(Request $request): bool
+    {
+        if ($request->is('admin', 'admin/*')) {
+            return true;
+        }
+
+        if (! str_starts_with($request->path(), 'livewire')) {
+            return false;
+        }
+
+        $refererPath = parse_url((string) $request->headers->get('referer'), PHP_URL_PATH);
+
+        return is_string($refererPath) && ($refererPath === '/admin' || str_starts_with($refererPath, '/admin/'));
     }
 
     private function resolveStorefrontStore(Request $request): ?Store
@@ -56,23 +77,31 @@ class ResolveStore
 
     private function resolveAdminStore(Request $request): ?Store
     {
-        $storeId = $request->session()->get('current_store_id');
-
-        if (! $storeId && $request->user()) {
-            $storeId = $request->user()->stores()->value('stores.id');
-        }
-
-        if (! $storeId || ! $request->user()) {
+        $user = $request->user();
+        if (! $user) {
             return null;
         }
 
-        if (! $request->user()->stores()->whereKey($storeId)->exists()) {
-            abort(403);
+        $storeId = $request->session()->get('current_store_id');
+        $membershipStores = $user->stores()->orderBy('stores.id')->get();
+
+        if (! $storeId || ! $membershipStores->contains('id', (int) $storeId)) {
+            $request->session()->forget('current_store_id');
+
+            if ($membershipStores->count() > 1) {
+                return null;
+            }
+
+            $storeId = $membershipStores->first()?->id;
+        }
+
+        if (! $storeId) {
+            return null;
         }
 
         $request->session()->put('current_store_id', $storeId);
 
-        return Store::query()->find($storeId);
+        return $membershipStores->firstWhere('id', (int) $storeId);
     }
 
     private function resolveAdminApiStore(Request $request): ?Store

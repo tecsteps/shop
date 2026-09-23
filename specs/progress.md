@@ -116,6 +116,19 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** discount and checkout flow Pest tests passed (10 tests, 53 assertions).
 
+### 2026-09-23 — Acceptance review fixes and remaining admin detail route
+
+- Made the resolved store persist across Livewire update requests. The browser review had exposed a `current_store` container error on storefront cart actions; the add-to-cart drawer and analytics requests now respond successfully.
+- Applied additive forward migrations for store invitations, nested navigation, tax snapshots, queued analytics exports, theme file metadata, and canonical analytics fields without resetting the local demo database.
+- Fixed a checkout view variable shadowing bug that kept customers on contact after the component advanced, then corrected order and checkout address accessors so saved addresses display in checkout, confirmation, and account order views.
+- Added created-at datetime casts for payments and refunds so SQLite timestamps render in admin order details. Added an installed app detail route and page for scopes, store-scoped webhook subscriptions, install metadata, and usage, linked from the apps list.
+- Fixed the demo seeder to use the renamed `stop_words_json` schema column; a clean migration plus demo seed now succeeds on an isolated SQLite file.
+- Repaired three feature test files that lacked PHP opening tags, fixed the audit formatter logger type, and kept the test assertions aligned with structured audit log output.
+- Added checkout progression/address, timestamp display, and app-detail tenant-isolation regressions.
+- Independent browser review completed a customer add-to-cart and paid mock checkout, and exposed/followed up on checkout address, confirmation address, and admin payment timestamp display issues. Retesting those fixes and the rest of the customer/admin acceptance checklist is in progress.
+
+**Checks this iteration:** focused checkout/order/apps Pest tests passed (17 tests, 101 assertions); full Pest passed (215 tests, 1,424 assertions); clean isolated SQLite migration plus demo seed passed; `npm run build` passed; `php artisan route:list --except-vendor` shows 120 routes including app details; `vendor/bin/pint --dirty --format agent` and `git diff --check` passed. Final browser review remains in progress.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -136,3 +149,8 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | Admin API, order export, checkout/cart APIs, shipping, and discount Pest tests | Passed: 52 tests, 512 assertions |
 | 2026-09-23 | Admin product, discount, inventory, and search screen Pest tests | Passed: 20 tests, 127 assertions |
 | 2026-09-23 | `npm run build` and `php artisan view:cache` after admin screen changes | Passed |
+| 2026-09-23 | Final current Pest suite after browser-discovered fixes | Passed: 215 tests, 1,424 assertions |
+| 2026-09-23 | `npm run build` after final storefront/admin updates | Passed |
+| 2026-09-23 | `php artisan route:list --except-vendor` after app detail route | Passed: 120 routes listed |
+| 2026-09-23 | `vendor/bin/pint --dirty --format agent` and `git diff --check` | Passed |
+| 2026-09-23 | Fresh isolated SQLite migration + demo seed after seeder schema fix | Passed: all migrations and `DemoShopSeeder` completed |

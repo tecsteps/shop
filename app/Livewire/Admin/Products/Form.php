@@ -3,8 +3,12 @@
 namespace App\Livewire\Admin\Products;
 
 use App\Enums\ProductStatus;
+use App\Events\ProductStatusChanged;
+use App\Events\ProductUpdated;
+use App\Jobs\ProcessMediaUpload;
 use App\Models\Collection;
 use App\Models\Product;
+use App\Models\ProductMedia;
 use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Services\ProductService;
@@ -12,11 +16,17 @@ use App\Services\VariantMatrixService;
 use App\Support\HtmlSanitizer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 
 class Form extends Component
 {
+    use WithFileUploads;
+
     public ?int $productId = null;
 
     public string $title = '';
@@ -47,6 +57,9 @@ class Form extends Component
 
     /** @var list<int|string> */
     public array $collectionIds = [];
+
+    /** @var array<int, TemporaryUploadedFile> */
+    public array $uploads = [];
 
     public function mount(?int $product = null): void
     {
@@ -130,6 +143,8 @@ class Form extends Component
             'variants.*.requires_shipping' => ['boolean'],
             'collectionIds' => ['array'],
             'collectionIds.*' => ['integer', 'distinct'],
+            'uploads' => ['array', 'max:20'],
+            'uploads.*' => ['image', 'mimes:jpg,jpeg,png,webp,avif', 'max:'.(int) ceil(config('shop.media.image_max_bytes', 10485760) / 1024)],
         ]);
 
         if ($this->compareAtAmount !== null && $this->compareAtAmount <= $this->priceAmount) {
@@ -145,19 +160,23 @@ class Form extends Component
         }
 
         $optionMatrix = $this->optionMatrix();
+        $initialProductState = null;
+        $initialStatus = null;
 
-        return DB::transaction(function () use ($products, $matrix, $optionMatrix): mixed {
+        $product = DB::transaction(function () use ($products, $matrix, $optionMatrix, &$initialProductState, &$initialStatus): Product {
 
             if ($this->productId) {
                 $product = Product::query()->findOrFail($this->productId);
                 Gate::authorize('update', $product);
+                $initialProductState = $this->productState($product);
+                $initialStatus = $product->status;
                 $product = $products->update($product, [
                     'title' => $this->title,
                     'handle' => $this->handle,
                     'description_html' => app(HtmlSanitizer::class)->sanitize($this->descriptionHtml),
                     'vendor' => $this->vendor,
                     'product_type' => $this->productType,
-                ]);
+                ], false);
             } else {
                 $store = app('current_store');
                 abort_unless($store instanceof Store, 404);
@@ -248,12 +267,83 @@ class Form extends Component
 
             if ($product->status !== $this->status) {
                 Gate::authorize($this->status === 'archived' ? 'archive-products' : 'manage-products');
-                $products->transitionStatus($product, ProductStatus::from($this->status));
+                $products->transitionStatus($product, ProductStatus::from($this->status), false);
             }
 
-            session()->flash('status', 'Product saved.');
+            return $product;
+        });
 
-            return $this->redirectRoute('admin.products.edit', ['product' => $product->id]);
+        if ($initialProductState !== null && $initialStatus !== null) {
+            $product = $product->refresh();
+
+            if ($initialProductState !== $this->productState($product)) {
+                if ($initialStatus !== $product->status) {
+                    ProductStatusChanged::dispatch($product, $initialStatus, $product->status);
+                } else {
+                    ProductUpdated::dispatch($product);
+                }
+            }
+        }
+
+        $this->storeUploads($product);
+        session()->flash('status', 'Product saved.');
+
+        return $this->redirectRoute('admin.products.edit', ['product' => $product->id]);
+    }
+
+    public function uploadMedia(): void
+    {
+        $product = $this->authorizedProduct();
+        $this->validate([
+            'uploads' => ['required', 'array', 'min:1', 'max:20'],
+            'uploads.*' => ['image', 'mimes:jpg,jpeg,png,webp,avif', 'max:'.(int) ceil(config('shop.media.image_max_bytes', 10485760) / 1024)],
+        ]);
+
+        $this->storeUploads($product);
+        session()->flash('status', 'Images uploaded and queued for processing.');
+    }
+
+    public function updateMediaAlt(int $mediaId, string $altText): void
+    {
+        $product = $this->authorizedProduct();
+        validator(['alt_text' => $altText], ['alt_text' => ['nullable', 'string', 'max:255']])->validate();
+        $product->media()->whereKey($mediaId)->firstOrFail()->update(['alt_text' => filled($altText) ? $altText : null]);
+    }
+
+    public function moveMedia(int $mediaId, int $direction): void
+    {
+        abort_unless(in_array($direction, [-1, 1], true), 422);
+        $product = $this->authorizedProduct();
+        $items = $product->media()->orderBy('position')->orderBy('id')->get();
+        $index = $items->search(fn (ProductMedia $media): bool => $media->id === $mediaId);
+
+        if ($index === false) {
+            abort(404);
+        }
+
+        $targetIndex = $index + $direction;
+
+        if (! $items->has($targetIndex)) {
+            return;
+        }
+
+        DB::transaction(function () use ($items, $index, $targetIndex): void {
+            $first = $items[$index];
+            $second = $items[$targetIndex];
+            $firstPosition = $first->position;
+            $first->update(['position' => $second->position]);
+            $second->update(['position' => $firstPosition]);
+        });
+    }
+
+    public function deleteMedia(int $mediaId): void
+    {
+        $product = $this->authorizedProduct();
+        $product->media()->whereKey($mediaId)->firstOrFail()->delete();
+        $product->media()->orderBy('position')->orderBy('id')->get()->each(function (ProductMedia $media, int $position): void {
+            if ($media->position !== $position) {
+                $media->update(['position' => $position]);
+            }
         });
     }
 
@@ -263,7 +353,101 @@ class Form extends Component
             'isEditing' => $this->productId !== null,
             'collections' => Collection::query()->orderBy('title')->get(['id', 'title']),
             'hasOptionMatrix' => $this->options !== [],
+            'mediaItems' => $this->productId ? Product::query()->findOrFail($this->productId)->media : collect(),
         ])->layout('layouts.admin');
+    }
+
+    private function authorizedProduct(): Product
+    {
+        abort_if($this->productId === null, 422, 'Save the product before managing its media.');
+        $product = Product::query()->findOrFail($this->productId);
+        Gate::authorize('update', $product);
+
+        return $product;
+    }
+
+    /** @return array<string, mixed> */
+    private function productState(Product $product): array
+    {
+        $product->refresh();
+
+        return [
+            'product' => $product->only(['title', 'handle', 'description_html', 'vendor', 'product_type', 'tags', 'status', 'published_at']),
+            'variants' => $product->variants()
+                ->with(['inventoryItem', 'optionValues'])
+                ->orderBy('id')
+                ->get()
+                ->map(static fn (ProductVariant $variant): array => [
+                    'id' => (int) $variant->getKey(),
+                    'sku' => $variant->sku,
+                    'barcode' => $variant->barcode,
+                    'price_amount' => (int) $variant->price_amount,
+                    'compare_at_amount' => $variant->compare_at_amount,
+                    'currency' => $variant->currency,
+                    'weight_g' => $variant->weight_g,
+                    'requires_shipping' => (bool) $variant->requires_shipping,
+                    'is_default' => (bool) $variant->is_default,
+                    'position' => (int) $variant->position,
+                    'status' => $variant->status,
+                    'inventory' => $variant->inventoryItem?->only(['quantity_on_hand', 'quantity_reserved', 'policy']),
+                    'option_value_ids' => $variant->optionValues->modelKeys(),
+                ])
+                ->all(),
+            'options' => $product->options()
+                ->with('values')
+                ->orderBy('position')
+                ->get()
+                ->map(static fn ($option): array => [
+                    'name' => $option->name,
+                    'values' => $option->values->sortBy('position')->pluck('value')->values()->all(),
+                ])
+                ->all(),
+            'collection_ids' => $product->collections()->orderBy('collections.id')->pluck('collections.id')->map(static fn ($id): int => (int) $id)->all(),
+        ];
+    }
+
+    private function storeUploads(Product $product): void
+    {
+        foreach ($this->uploads as $upload) {
+            $extensionByMime = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+                'image/avif' => 'avif',
+            ];
+            $mimeType = $upload->getMimeType();
+            $extension = $extensionByMime[$mimeType] ?? null;
+
+            if ($extension === null) {
+                throw ValidationException::withMessages(['uploads' => 'Upload a JPEG, PNG, WebP, or AVIF image.']);
+            }
+
+            $storageKey = "stores/{$product->store_id}/products/{$product->id}/media/".Str::uuid().".{$extension}";
+            $storedKey = $upload->storePubliclyAs(dirname($storageKey), basename($storageKey), 'public');
+
+            if ($storedKey !== $storageKey) {
+                throw new \RuntimeException('The product image could not be stored.');
+            }
+
+            try {
+                $media = $product->media()->create([
+                    'type' => 'image',
+                    'storage_key' => $storageKey,
+                    'mime_type' => $mimeType,
+                    'byte_size' => (int) $upload->getSize(),
+                    'position' => (int) $product->media()->max('position') + 1,
+                    'status' => 'processing',
+                    'created_at' => now(),
+                ]);
+            } catch (\Throwable $exception) {
+                Storage::disk('public')->delete($storageKey);
+                throw $exception;
+            }
+
+            ProcessMediaUpload::dispatch($media->id)->onConnection('database');
+        }
+
+        $this->reset('uploads');
     }
 
     /** @return array<int, array{name: string, values: list<string>}> */

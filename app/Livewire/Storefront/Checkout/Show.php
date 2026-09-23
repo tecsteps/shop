@@ -4,6 +4,7 @@ namespace App\Livewire\Storefront\Checkout;
 
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
+use App\Livewire\Storefront\Concerns\DispatchesStorefrontAnalytics;
 use App\Models\Checkout as CheckoutModel;
 use App\Services\CartService;
 use App\Services\CheckoutService;
@@ -13,6 +14,8 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    use DispatchesStorefrontAnalytics;
+
     public ?int $checkoutId = null;
 
     public ?int $stepOverride = null;
@@ -241,6 +244,11 @@ class Show extends Component
         }
 
         session()->forget(['cart_id', 'checkout_id']);
+        $this->dispatchStorefrontAnalytics('checkout_completed', [
+            'order_id' => $order->getKey(),
+            'total_amount' => (int) $order->total_amount,
+            'currency' => $order->currency,
+        ]);
 
         return $this->redirect(URL::signedRoute('storefront.confirmation', ['checkoutId' => $order->checkout_id]));
     }

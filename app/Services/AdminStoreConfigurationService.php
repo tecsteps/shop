@@ -229,6 +229,9 @@ class AdminStoreConfigurationService
                     'theme_id' => $theme->getKey(),
                     'path' => $path,
                     'content' => $content,
+                    'storage_key' => 'themes/'.$theme->getKey().'/'.$path,
+                    'sha256' => hash('sha256', $content),
+                    'byte_size' => strlen($content),
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];

@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use App\Events\CheckoutCompleted;
 use App\Events\OrderCancelled;
+use App\Events\OrderCreated;
+use App\Events\OrderFulfilled;
+use App\Events\OrderPaid;
 use App\Models\Checkout;
 use App\Models\Discount;
 use App\Models\Order;
@@ -152,7 +156,19 @@ class OrderService
                 $order->forceFill(['status' => 'fulfilled', 'fulfillment_status' => 'fulfilled'])->save();
             }
 
-            return $order->load('lines', 'payments', 'fulfillments');
+            $order = $order->refresh()->load('lines', 'payments', 'fulfillments');
+            OrderCreated::dispatch($order);
+            CheckoutCompleted::dispatch($order);
+
+            if ($isPaid) {
+                OrderPaid::dispatch($order);
+            }
+
+            if ($order->fulfillment_status === 'fulfilled') {
+                OrderFulfilled::dispatch($order);
+            }
+
+            return $order;
         });
     }
 
@@ -186,7 +202,14 @@ class OrderService
                 $order->forceFill(['status' => 'fulfilled', 'fulfillment_status' => 'fulfilled'])->save();
             }
 
-            return $order->refresh();
+            $order = $order->refresh();
+            OrderPaid::dispatch($order);
+
+            if ($order->fulfillment_status === 'fulfilled') {
+                OrderFulfilled::dispatch($order);
+            }
+
+            return $order;
         });
     }
 

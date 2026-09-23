@@ -75,6 +75,10 @@ class AuthenticateApiToken
             return true;
         }
 
+        if ($request->is('api/admin/v1/platform/*')) {
+            return $token->store_id === null && in_array('manage-platform', $abilities, true);
+        }
+
         $requestedStoreId = $request->route('storeId');
 
         if ($requestedStoreId === null) {

@@ -405,12 +405,12 @@ class DemoShopSeeder extends Seeder
         $this->seedTheme($fashion, $electronics);
         DB::table('search_settings')->updateOrInsert(['store_id' => $fashion->id], [
             'synonyms_json' => json_encode([['tee', 't-shirt', 'tshirt'], ['pants', 'trousers', 'jeans'], ['sneakers', 'trainers', 'shoes'], ['hoodie', 'sweatshirt']], JSON_THROW_ON_ERROR),
-            'stopwords_json' => json_encode(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is'], JSON_THROW_ON_ERROR),
+            'stop_words_json' => json_encode(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is'], JSON_THROW_ON_ERROR),
             'updated_at' => now(),
         ]);
         DB::table('search_settings')->updateOrInsert(['store_id' => $electronics->id], [
             'synonyms_json' => json_encode([['laptop', 'notebook', 'computer'], ['headphones', 'earphones', 'earbuds'], ['cable', 'cord', 'wire']], JSON_THROW_ON_ERROR),
-            'stopwords_json' => json_encode(['the', 'a', 'an', 'and', 'or'], JSON_THROW_ON_ERROR),
+            'stop_words_json' => json_encode(['the', 'a', 'an', 'and', 'or'], JSON_THROW_ON_ERROR),
             'updated_at' => now(),
         ]);
     }

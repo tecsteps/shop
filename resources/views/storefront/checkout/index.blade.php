@@ -1,6 +1,5 @@
 
 @php
-    $checkoutStep = (int) data_get($checkout, 'step', 1);
     $checkoutCurrency = data_get($currentStore ?? null, 'currency', 'EUR');
     $checkoutTotal = (int) data_get($checkout, 'total_amount', data_get($checkout, 'subtotal_amount', 0));
     $selectedPaymentMethod = data_get($checkout, 'payment_method', 'credit_card');

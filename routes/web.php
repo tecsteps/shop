@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsExportController;
 use App\Livewire\Admin\Analytics\Index as AnalyticsIndex;
+use App\Livewire\Admin\Apps\Index as AppsIndex;
+use App\Livewire\Admin\Apps\Show as AppShow;
 use App\Livewire\Admin\Auth\ForgotPassword as AdminForgotPassword;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
 use App\Livewire\Admin\Auth\ResetPassword as AdminResetPassword;
@@ -13,6 +16,7 @@ use App\Livewire\Admin\Developers\Index as DevelopersIndex;
 use App\Livewire\Admin\Discounts\Form as DiscountForm;
 use App\Livewire\Admin\Discounts\Index as DiscountIndex;
 use App\Livewire\Admin\Inventory\Index as InventoryIndex;
+use App\Livewire\Admin\Navigation\Index as NavigationIndex;
 use App\Livewire\Admin\Orders\Index as OrderIndex;
 use App\Livewire\Admin\Orders\Show as OrderShow;
 use App\Livewire\Admin\Pages\Form as PageForm;
@@ -20,9 +24,11 @@ use App\Livewire\Admin\Pages\Index as PageIndex;
 use App\Livewire\Admin\Products\Form as ProductForm;
 use App\Livewire\Admin\Products\Index as ProductIndex;
 use App\Livewire\Admin\Search\Settings as SearchSettings;
+use App\Livewire\Admin\SelectStore;
 use App\Livewire\Admin\Settings\General as GeneralSettings;
 use App\Livewire\Admin\Settings\Shipping as ShippingSettings;
 use App\Livewire\Admin\Settings\Taxes as TaxSettings;
+use App\Livewire\Admin\Themes\Editor as ThemeEditor;
 use App\Livewire\Admin\Themes\Index as ThemeIndex;
 use App\Livewire\Storefront\Account\Addresses\Index as AddressIndex;
 use App\Livewire\Storefront\Account\Auth\ForgotPassword as CustomerForgotPassword;
@@ -62,6 +68,10 @@ Route::post('/admin/logout', function (\Illuminate\Http\Request $request) {
     return redirect()->route('admin.login')->withHeaders(['Cache-Control' => 'no-store']);
 })->middleware('auth')->name('admin.logout');
 
+Route::get('/admin/select-store', SelectStore::class)
+    ->middleware(['auth', 'verified', 'can:view-admin'])
+    ->name('admin.select-store');
+
 Route::post('/account/logout', function (\Illuminate\Http\Request $request) {
     Auth::guard('customer')->logout();
     $request->session()->invalidate();
@@ -98,8 +108,16 @@ Route::middleware(['auth', 'verified', 'store.resolve', 'can:view-admin'])->pref
     Route::get('/settings/shipping', ShippingSettings::class)->name('settings.shipping');
     Route::get('/settings/taxes', TaxSettings::class)->name('settings.taxes');
     Route::get('/themes', ThemeIndex::class)->name('themes');
+    Route::get('/themes/{theme}/editor', ThemeEditor::class)->whereNumber('theme')->name('themes.editor');
     Route::get('/analytics', AnalyticsIndex::class)->name('analytics');
+    Route::get('/analytics/exports/{analyticsExport}/download', [AnalyticsExportController::class, 'download'])
+        ->whereNumber('analyticsExport')
+        ->middleware('can:view-analytics')
+        ->name('analytics.exports.download');
     Route::get('/developers', DevelopersIndex::class)->name('developers');
+    Route::get('/navigation', NavigationIndex::class)->name('navigation');
+    Route::get('/apps', AppsIndex::class)->name('apps');
+    Route::get('/apps/{installation}', AppShow::class)->whereNumber('installation')->name('apps.show');
     Route::get('/search/settings', SearchSettings::class)->name('search.settings');
 });
 

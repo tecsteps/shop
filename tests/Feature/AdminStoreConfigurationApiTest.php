@@ -226,9 +226,16 @@ it('installs validates configures and publishes a store-scoped theme archive', f
 
         $themeId = $created->json('data.id');
         $theme = Theme::query()->findOrFail($themeId);
+        $themeFiles = DB::table('theme_files')->where('theme_id', $themeId)->get();
         expect($theme->store_id)->toBe($store->id)
             ->and($theme->version)->toBe('1.2.3')
-            ->and(DB::table('theme_files')->where('theme_id', $themeId)->count())->toBe(4);
+            ->and($themeFiles)->toHaveCount(4);
+
+        foreach ($themeFiles as $themeFile) {
+            expect($themeFile->storage_key)->toBe('themes/'.$themeId.'/'.$themeFile->path)
+                ->and($themeFile->sha256)->toBe(hash('sha256', $themeFile->content))
+                ->and((int) $themeFile->byte_size)->toBe(strlen($themeFile->content));
+        }
 
         $this->withToken($token)->putJson("/api/admin/v1/stores/{$store->id}/themes/{$themeId}/settings", [
             'settings_json' => ['colors' => ['primary' => '#1a73e8']],

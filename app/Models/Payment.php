@@ -11,6 +11,11 @@ class Payment extends Model
 
     protected $fillable = ['order_id', 'provider', 'method', 'provider_payment_id', 'status', 'amount', 'currency', 'raw_json_encrypted', 'created_at'];
 
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime'];
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);

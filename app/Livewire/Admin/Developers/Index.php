@@ -17,15 +17,14 @@ class Index extends Component
 {
     private const WEBHOOK_EVENT_TYPES = [
         'order.created',
-        'order.updated',
         'order.cancelled',
+        'order.paid',
+        'order.fulfilled',
+        'order.refunded',
         'product.created',
         'product.updated',
         'product.deleted',
-        'customer.created',
         'checkout.completed',
-        'fulfillment.created',
-        'refund.created',
     ];
 
     private const WEBHOOK_STATUSES = ['active', 'paused', 'disabled'];

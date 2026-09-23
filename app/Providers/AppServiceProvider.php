@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Auth\StoreScopedCustomerUserProvider;
 use App\Auth\StoreScopedPasswordBrokerManager;
 use App\Enums\StoreUserRole;
+use App\Http\Middleware\ResolveStore;
 use App\Models\Customer;
 use App\Models\Store;
 use App\Models\User;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Livewire::addPersistentMiddleware([ResolveStore::class]);
         Auth::provider('store-customers', fn ($app, array $config): StoreScopedCustomerUserProvider => new StoreScopedCustomerUserProvider($app['hash'], $config['model']));
         ResetPasswordNotification::createUrlUsing(function (mixed $notifiable, string $token): string {
             $route = $notifiable instanceof Customer ? 'storefront.password.reset' : 'admin.password.reset';
@@ -83,11 +86,21 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('login', fn (Request $request): Limit => Limit::perMinute(5)->by($request->ip()));
         RateLimiter::for('api.storefront', fn (Request $request): Limit => Limit::perMinute(120)->by($request->ip()));
-        RateLimiter::for('api.admin', fn (Request $request): Limit => Limit::perMinute(60)->by((string) (
-            $request->attributes->get('api_token')?->getKey()
-                ?? $request->user()?->id
-                ?? $request->ip()
-        )));
+        RateLimiter::for('api.admin', function (Request $request): Limit {
+            $tokenId = $request->attributes->get('api_token')?->getKey();
+
+            if ($tokenId !== null) {
+                return Limit::perMinute(60)->by('token:'.$tokenId);
+            }
+
+            $plainTextToken = $request->bearerToken();
+
+            if ($plainTextToken !== null) {
+                return Limit::perMinute(60)->by('token:'.hash('sha256', $plainTextToken));
+            }
+
+            return Limit::perMinute(60)->by('ip:'.($request->user()?->id ?? $request->ip()));
+        });
         RateLimiter::for('search', fn (Request $request): Limit => Limit::perMinute(30)->by($request->ip()));
         RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by($request->hasSession() ? $request->session()->getId() : $request->ip()));
         RateLimiter::for('analytics', fn (Request $request): Limit => Limit::perMinute(60)->by($request->ip()));
@@ -135,6 +148,7 @@ class AppServiceProvider extends ServiceProvider
             'manage-discounts' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value, StoreUserRole::Staff->value],
             'manage-themes' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
             'manage-apps' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
+            'manage-navigation' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
             'view-analytics' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value, StoreUserRole::Staff->value],
             'manage-shipping' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value],
             'view-customers' => [StoreUserRole::Owner->value, StoreUserRole::Admin->value, StoreUserRole::Staff->value, StoreUserRole::Support->value],

@@ -1,9 +1,14 @@
 <?php
 
+use App\Jobs\ProcessMediaUpload;
 use App\Livewire\Admin\Products\Form;
 use App\Models\Product;
 use App\Models\User;
 use App\Services\ProductService;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 function productFormOwner(\App\Models\Store $store): User
@@ -58,6 +63,27 @@ it('rejects a SKU already used by another product in the current store', functio
     expect($first->variants()->firstOrFail()->sku)->toBe('STORE-SKU-1');
 });
 
+it('dispatches one product updated event when only a variant price and inventory are changed', function () {
+    $store = shopStore();
+    $user = productFormOwner($store);
+    $product = app(ProductService::class)->create($store, [
+        'title' => 'Variant Edit Product',
+        'variants' => [['price_amount' => 2500, 'quantity_on_hand' => 3]],
+    ]);
+    $variant = $product->variants()->firstOrFail();
+    Event::fake([\App\Events\ProductUpdated::class]);
+
+    Livewire::actingAs($user)->test(Form::class, ['product' => $product->id])
+        ->set('variants.0.price_amount', 3100)
+        ->set('variants.0.quantity_on_hand', 8)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    Event::assertDispatchedTimes(\App\Events\ProductUpdated::class, 1);
+    expect($variant->refresh()->price_amount)->toBe(3100)
+        ->and($variant->inventoryItem()->firstOrFail()->quantity_on_hand)->toBe(8);
+});
+
 it('rejects product option values without at least one non-empty value', function () {
     $store = shopStore();
     $user = productFormOwner($store);
@@ -92,4 +118,37 @@ it('preserves allowed product formatting, removes unsafe markup, and validates c
         ->and($product->description_html)->toContain('<strong>cotton</strong>')
         ->and($product->description_html)->not->toContain('<script')
         ->and($product->description_html)->not->toContain('onerror');
+});
+
+it('uploads, labels, reorders, and deletes product media from the product editor', function () {
+    Storage::fake('public');
+    Queue::fake();
+    $store = shopStore();
+    $user = productFormOwner($store);
+    $product = app(ProductService::class)->create($store, ['title' => 'Media Product', 'variants' => [['price_amount' => 1500]]]);
+    $component = Livewire::actingAs($user)->test(Form::class, ['product' => $product->id])
+        ->set('uploads', [
+            UploadedFile::fake()->image('front.png', 300, 300),
+            UploadedFile::fake()->image('back.png', 300, 300),
+        ])
+        ->call('uploadMedia')
+        ->assertHasNoErrors();
+
+    $media = $product->media()->orderBy('position')->get();
+    expect($media)->toHaveCount(2)
+        ->and($media->every(fn ($image): bool => $image->status === 'processing'))->toBeTrue();
+    Queue::assertPushed(ProcessMediaUpload::class, 2);
+
+    $first = $media[0];
+    $second = $media[1];
+    $component->call('updateMediaAlt', $first->id, 'Front view')
+        ->call('moveMedia', $second->id, -1)
+        ->assertHasNoErrors();
+
+    expect($product->media()->orderBy('position')->pluck('id')->all())->toBe([$second->id, $first->id])
+        ->and($first->fresh()->alt_text)->toBe('Front view');
+
+    $component->call('deleteMedia', $second->id)->assertHasNoErrors();
+    expect($product->media()->count())->toBe(1)
+        ->and(Storage::disk('public')->exists($second->storage_key))->toBeFalse();
 });

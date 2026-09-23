@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Search;
 
+use App\Livewire\Storefront\Concerns\DispatchesStorefrontAnalytics;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SearchQuery;
@@ -12,6 +13,7 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use DispatchesStorefrontAnalytics;
     use WithPagination;
 
     public string $query = '';
@@ -73,6 +75,13 @@ class Index extends Component
     {
         $variant = ProductVariant::query()->whereHas('product', fn ($builder) => $builder->where('status', 'active')->whereNotNull('published_at'))->findOrFail($variantId);
         $carts->add($carts->getOrCreateActiveCart(app('current_store'), auth('customer')->user()), $variant, 1);
+        $this->dispatchStorefrontAnalytics('add_to_cart', [
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'quantity' => 1,
+            'price_amount' => (int) $variant->price_amount,
+            'currency' => $variant->currency,
+        ]);
         $this->dispatch('cart-updated');
         $this->dispatch('open-cart-drawer');
     }
@@ -144,7 +153,9 @@ class Index extends Component
     private function recordSearch(): void
     {
         if (trim($this->query) !== '') {
-            SearchQuery::create(['query' => mb_substr(trim($this->query), 0, 255), 'session_id' => session()->getId()]);
+            $query = mb_substr(trim($this->query), 0, 255);
+            SearchQuery::create(['query' => $query, 'session_id' => session()->getId()]);
+            $this->dispatchStorefrontAnalytics('search', ['query' => $query]);
         }
     }
 

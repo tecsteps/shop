@@ -3,10 +3,11 @@
 namespace App\Events;
 
 use App\Models\Fulfillment;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FulfillmentCreated
+class FulfillmentCreated implements ShouldDispatchAfterCommit
 {
     use Dispatchable, SerializesModels;
 

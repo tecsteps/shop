@@ -52,6 +52,64 @@
                     </div>
                 </section>
 
+                <section class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-6 dark:border-zinc-800 dark:bg-zinc-900" aria-labelledby="product-media-heading">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <h2 id="product-media-heading" class="text-base font-semibold">Media</h2>
+                            <p class="mt-1 text-sm text-zinc-500">Upload product images. Responsive sizes and WebP versions are generated in the background.</p>
+                        </div>
+                        @if ($isEditing && count($uploads) > 0)
+                            <button type="button" wire:click="uploadMedia" wire:loading.attr="disabled" class="inline-flex min-h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60">Upload images</button>
+                        @endif
+                    </div>
+
+                    <label for="product-media-upload" class="mt-5 flex min-h-32 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50 px-5 py-6 text-center hover:border-blue-400 hover:bg-blue-50/50 focus-within:ring-2 focus-within:ring-blue-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:hover:bg-zinc-900">
+                        <span class="text-sm font-semibold">Drag and drop images or click to upload</span>
+                        <span class="mt-1 text-xs text-zinc-500">JPEG, PNG, WebP, or AVIF. Up to {{ number_format(config('shop.media.image_max_bytes', 10485760) / 1048576, 0) }} MB per image.</span>
+                        <input id="product-media-upload" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif" wire:model="uploads" class="sr-only">
+                    </label>
+                    @error('uploads')<p class="mt-2 text-sm text-rose-600">{{ $message }}</p>@enderror
+                    @error('uploads.*')<p class="mt-2 text-sm text-rose-600">{{ $message }}</p>@enderror
+                    <div wire:loading wire:target="uploads" class="mt-3 h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800" role="progressbar" aria-label="Uploading images"><div class="h-full w-2/3 animate-pulse rounded-full bg-blue-600"></div></div>
+
+                    @if (count($uploads) > 0)
+                        <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                            @foreach ($uploads as $uploadIndex => $upload)
+                                <div wire:key="pending-product-image-{{ $uploadIndex }}" class="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                    <img src="{{ $upload->temporaryUrl() }}" alt="Preview of {{ $upload->getClientOriginalName() }}" class="aspect-square w-full object-cover">
+                                    <p class="truncate px-2 py-2 text-xs text-zinc-600 dark:text-zinc-300">{{ $upload->getClientOriginalName() }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if (! $isEditing)
+                        <p class="mt-3 text-sm text-zinc-500">Save the product to add the selected images.</p>
+                    @endif
+
+                    @if ($mediaItems->isNotEmpty())
+                        <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                            @foreach ($mediaItems as $mediaIndex => $media)
+                                <article wire:key="product-media-{{ $media->id }}" class="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                    <img src="{{ $media->thumbnail_url }}" alt="{{ $media->alt_text ?: $title.' image '.($mediaIndex + 1) }}" class="aspect-square w-full bg-zinc-100 object-cover dark:bg-zinc-950">
+                                    <div class="space-y-2 p-2.5">
+                                        <label for="media-alt-{{ $media->id }}" class="sr-only">Alt text for image {{ $mediaIndex + 1 }}</label>
+                                        <input id="media-alt-{{ $media->id }}" type="text" maxlength="255" value="{{ $media->alt_text }}" wire:change="updateMediaAlt({{ $media->id }}, $event.target.value)" placeholder="Describe this image" class="w-full rounded-lg border border-zinc-300 bg-white px-2.5 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-950">
+                                        <div class="flex items-center justify-between gap-1">
+                                            <span class="text-xs text-zinc-500">{{ ucfirst($media->status) }}</span>
+                                            <div class="flex items-center gap-1">
+                                                <button type="button" wire:click="moveMedia({{ $media->id }}, -1)" @disabled($mediaIndex === 0) aria-label="Move image up" class="rounded-md px-2 py-1 text-xs font-semibold hover:bg-zinc-100 disabled:opacity-40 dark:hover:bg-zinc-800">↑</button>
+                                                <button type="button" wire:click="moveMedia({{ $media->id }}, 1)" @disabled($mediaIndex === $mediaItems->count() - 1) aria-label="Move image down" class="rounded-md px-2 py-1 text-xs font-semibold hover:bg-zinc-100 disabled:opacity-40 dark:hover:bg-zinc-800">↓</button>
+                                                <button type="button" wire:click="deleteMedia({{ $media->id }})" wire:confirm="Delete this image?" aria-label="Delete image" class="rounded-md px-2 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-950">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
+                    @endif
+                </section>
+
                 <section class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-6 dark:border-zinc-800 dark:bg-zinc-900" aria-labelledby="product-options-heading">
                     <div class="flex flex-wrap items-start justify-between gap-3">
                         <div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\OrderExportController;
+use App\Http\Controllers\Api\PlatformController;
 use App\Http\Controllers\Api\ProductMediaUploadController;
 use App\Http\Controllers\Api\StoreConfigurationController;
 use App\Http\Controllers\Api\StorefrontController;
@@ -72,6 +73,16 @@ Route::get('/admin/v1/stores/{storeId}/exports/{exportId}/download', [OrderExpor
     ->whereNumber('exportId')
     ->middleware('signed')
     ->name('api.admin.exports.download');
+
+Route::prefix('admin/v1/platform')->middleware(['api.token:manage-platform', 'throttle:api.admin'])->name('api.admin.platform.')->group(function (): void {
+    Route::post('/organizations', [PlatformController::class, 'createOrganization'])->name('organizations.store');
+    Route::post('/stores', [PlatformController::class, 'createStore'])->name('stores.store');
+});
+
+Route::post('/admin/v1/stores/{storeId}/invites', [PlatformController::class, 'createInvitation'])
+    ->whereNumber('storeId')
+    ->middleware(['api.token:manage-platform', 'throttle:api.admin'])
+    ->name('api.admin.stores.invites.store');
 
 Route::put('/uploads/product-media/{mediaId}', [ProductMediaUploadController::class, 'upload'])
     ->whereNumber('mediaId')

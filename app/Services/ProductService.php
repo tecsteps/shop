@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Enums\ProductStatus;
+use App\Events\ProductCreated;
+use App\Events\ProductDeleted;
 use App\Events\ProductStatusChanged;
+use App\Events\ProductUpdated;
 use App\Exceptions\InvalidProductTransitionException;
 use App\Models\OrderLine;
 use App\Models\Product;
@@ -85,14 +88,17 @@ class ProductService
                 $this->transitionStatus($product, $requestedStatus);
             }
 
-            return $product->load(['options.values', 'variants.inventoryItem']);
+            $product = $product->load(['options.values', 'variants.inventoryItem']);
+            ProductCreated::dispatch($product);
+
+            return $product;
         });
     }
 
     /**
      * @param  array<string, mixed>  $data
      */
-    public function update(Product $product, array $data): Product
+    public function update(Product $product, array $data, bool $dispatchDomainEvent = true): Product
     {
         $product->fill(collect($data)->only(['title', 'description_html', 'vendor', 'product_type', 'tags'])->all());
 
@@ -100,12 +106,18 @@ class ProductService
             $product->handle = $this->handles->generate($data['handle'], 'products', $product->store_id, $product->id);
         }
 
-        $product->save();
+        if ($product->isDirty()) {
+            $product->save();
+
+            if ($dispatchDomainEvent) {
+                ProductUpdated::dispatch($product->refresh());
+            }
+        }
 
         return $product->refresh();
     }
 
-    public function transitionStatus(Product $product, ProductStatus $newStatus): void
+    public function transitionStatus(Product $product, ProductStatus $newStatus, bool $dispatchDomainEvent = true): void
     {
         $current = ProductStatus::from($product->status);
 
@@ -135,11 +147,14 @@ class ProductService
             $product->published_at ??= now();
         }
 
+        $wasRecentlyCreated = $product->wasRecentlyCreated;
         $oldStatus = $product->status;
         $product->status = $newStatus->value;
         $product->save();
 
-        ProductStatusChanged::dispatch($product, $oldStatus, $newStatus->value);
+        if ($dispatchDomainEvent) {
+            ProductStatusChanged::dispatch($product, $oldStatus, $newStatus->value, $wasRecentlyCreated);
+        }
     }
 
     public function delete(Product $product): void
@@ -148,6 +163,18 @@ class ProductService
             throw new InvalidProductTransitionException('Only draft products without order history can be deleted.');
         }
 
+        $productSnapshot = [
+            'id' => $product->getKey(),
+            'store_id' => $product->store_id,
+            'title' => $product->title,
+            'handle' => $product->handle,
+            'status' => $product->status,
+            'vendor' => $product->vendor,
+            'product_type' => $product->product_type,
+            'tags' => $product->tags,
+        ];
+        $storeId = (int) $product->store_id;
         $product->delete();
+        ProductDeleted::dispatch($storeId, $productSnapshot);
     }
 }

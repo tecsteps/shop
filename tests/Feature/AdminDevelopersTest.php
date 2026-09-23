@@ -123,14 +123,14 @@ it('creates updates and deletes encrypted store-scoped webhook subscriptions', f
         ->and($rawSecret)->not->toBe($originalSecret);
 
     $component->call('openWebhookModal', $webhook->id)
-        ->set('webhookEventType', 'order.updated')
+        ->set('webhookEventType', 'order.paid')
         ->set('webhookUrl', 'https://hooks.example.test/updated-orders')
         ->set('webhookStatus', 'paused')
         ->call('saveWebhook')
         ->assertHasNoErrors();
 
     $webhook->refresh();
-    expect($webhook->event_type)->toBe('order.updated')
+    expect($webhook->event_type)->toBe('order.paid')
         ->and($webhook->target_url)->toBe('https://hooks.example.test/updated-orders')
         ->and($webhook->status)->toBe('paused')
         ->and($webhook->signing_secret_encrypted)->toBe($originalSecret);

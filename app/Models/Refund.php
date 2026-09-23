@@ -12,6 +12,11 @@ class Refund extends Model
 
     protected $fillable = ['order_id', 'payment_id', 'amount', 'reason', 'status', 'provider_refund_id', 'created_at'];
 
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime'];
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);

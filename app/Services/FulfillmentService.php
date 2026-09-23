@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Events\FulfillmentCreated;
+use App\Events\FulfillmentDelivered;
+use App\Events\FulfillmentShipped;
 use App\Models\Fulfillment;
 use App\Models\Order;
 use App\Models\OrderLine;
@@ -81,7 +83,10 @@ class FulfillmentService
             $fulfillment->forceFill(['status' => 'shipped', 'shipped_at' => now()])->save();
             $this->keepOrderInProgress($order);
 
-            return $fulfillment->refresh();
+            $fulfillment = $fulfillment->refresh()->load('order');
+            FulfillmentShipped::dispatch($fulfillment);
+
+            return $fulfillment;
         });
     }
 
@@ -117,7 +122,10 @@ class FulfillmentService
                 'status' => $fullyFulfilled ? 'fulfilled' : ($order->status === 'fulfilled' ? 'paid' : $order->status),
             ])->save();
 
-            return $fulfillment->refresh();
+            $fulfillment = $fulfillment->refresh()->load('order');
+            FulfillmentDelivered::dispatch($fulfillment);
+
+            return $fulfillment;
         });
     }
 

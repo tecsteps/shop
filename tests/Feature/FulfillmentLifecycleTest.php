@@ -135,6 +135,34 @@ it('lets staff select partial quantities and shows shipment transition actions o
         ->and($order->status)->toBe('paid');
 });
 
+it('renders payment and refund timestamps on the admin order page', function () {
+    $store = shopStore();
+    ['order' => $order] = fulfillmentLifecycleOrder($store, [1]);
+    $staff = fulfillmentLifecycleStaff($store);
+    app()->instance('current_store', $store);
+    $payment = $order->payments()->create([
+        'provider' => 'mock',
+        'method' => 'credit_card',
+        'status' => 'succeeded',
+        'amount' => 1200,
+        'currency' => 'EUR',
+        'created_at' => now(),
+    ]);
+    $order->refunds()->create([
+        'payment_id' => $payment->id,
+        'amount' => 300,
+        'reason' => 'Test adjustment',
+        'status' => 'succeeded',
+        'created_at' => now(),
+    ]);
+
+    Livewire::actingAs($staff)
+        ->test(Show::class, ['order' => $order->id])
+        ->assertSee('Payments')
+        ->assertSee('Refunds')
+        ->assertSee('Test adjustment');
+});
+
 it('prevents support users from changing fulfillment status', function () {
     $store = shopStore();
     ['order' => $order, 'lines' => [$line]] = fulfillmentLifecycleOrder($store, [1]);

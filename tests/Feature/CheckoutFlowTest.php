@@ -2,6 +2,7 @@
 
 use App\Enums\PaymentMethod;
 use App\Exceptions\PaymentDeclinedException;
+use App\Livewire\Storefront\Checkout\Show as CheckoutShow;
 use App\Models\Cart;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
@@ -9,6 +10,7 @@ use App\Models\TaxSetting;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\OrderService;
+use Livewire\Livewire;
 
 it('releases reservations after a declined card and can complete a successful retry once', function () {
     $store = shopStore();
@@ -192,4 +194,40 @@ it('expires a checkout and releases its reserved inventory exactly once', functi
 
     expect($checkout->refresh()->status)->toBe('expired')
         ->and($product['inventory']->refresh()->quantity_reserved)->toBe(0);
+});
+
+it('renders each checkout step from the Livewire component state', function () {
+    $store = shopStore();
+    app()->instance('current_store', $store);
+    $product = shopProduct($store);
+    $cart = Cart::factory()->create(['store_id' => $store->id]);
+    app(CartService::class)->add($cart, $product['variant'], 1);
+    session()->put('cart_id', $cart->id);
+    $zone = ShippingZone::factory()->create(['store_id' => $store->id, 'countries' => ['DE']]);
+    $rate = ShippingRate::factory()->create(['shipping_zone_id' => $zone->id]);
+
+    $checkout = Livewire::test(CheckoutShow::class)
+        ->set('email', 'buyer@example.test')
+        ->call('continueToAddress')
+        ->assertSet('stepOverride', 2)
+        ->assertSee('First name');
+
+    $checkout->set('shipping', [
+        'first_name' => 'Alex',
+        'last_name' => 'Buyer',
+        'address_line_1' => '1 Test Street',
+        'address_line_2' => '',
+        'city' => 'Berlin',
+        'state' => '',
+        'country' => 'DE',
+        'postal_code' => '10115',
+        'phone' => '',
+    ])->call('continueToShippingMethod')
+        ->assertSee('Choose a shipping method')
+        ->assertSee('Alex Buyer')
+        ->assertSee('1 Test Street')
+        ->set('shippingRateId', $rate->id)
+        ->call('continueToPayment')
+        ->assertSee('Select a payment method')
+        ->assertSee('Card number');
 });

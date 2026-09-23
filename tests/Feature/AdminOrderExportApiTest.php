@@ -78,6 +78,13 @@ it('queues store-scoped CSV exports and returns signed downloads when complete',
         ->and($csv)->not->toContain('#EXP-PENDING-01')
         ->and($csv)->not->toContain('#EXP-FOREIGN-01');
 
+    $csvLines = explode("\n", $csv);
+    expect(str_getcsv($csvLines[0]))->toBe([
+        'order_number', 'created_at', 'status', 'financial_status', 'fulfillment_status',
+        'customer_email', 'customer_name', 'subtotal_amount', 'discount_amount', 'shipping_amount',
+        'tax_amount', 'total_amount', 'currency', 'shipping_method', 'tracking_number',
+    ]);
+
     $status = $this->withToken($token)->getJson("{$basePath}/{$exportId}")
         ->assertOk()
         ->assertJsonPath('data.status', 'completed')

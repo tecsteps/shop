@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,6 +16,16 @@ class Checkout extends Model
     protected function casts(): array
     {
         return ['shipping_address_json' => 'array', 'billing_address_json' => 'array', 'totals_json' => 'array', 'tax_provider_snapshot_json' => 'array', 'expires_at' => 'datetime', 'completed_at' => 'datetime'];
+    }
+
+    protected function shippingAddress(): Attribute
+    {
+        return Attribute::get(fn (): array => $this->shipping_address_json ?? []);
+    }
+
+    protected function billingAddress(): Attribute
+    {
+        return Attribute::get(fn (): array => $this->billing_address_json ?? []);
     }
 
     public function cart(): BelongsTo

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Storefront\Products;
 
-use App\Models\AnalyticsEvent;
+use App\Livewire\Storefront\Concerns\DispatchesStorefrontAnalytics;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CartService;
@@ -12,6 +12,8 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    use DispatchesStorefrontAnalytics;
+
     public string $handle = '';
 
     /** @var array<string, string> */
@@ -69,11 +71,12 @@ class Show extends Component
         }
 
         $carts->add($carts->getOrCreateActiveCart(app('current_store'), auth('customer')->user()), $variant, $this->quantity);
-        AnalyticsEvent::create([
-            'customer_id' => auth('customer')->id(),
-            'type' => 'add_to_cart',
-            'session_id' => session()->getId(),
-            'payload' => ['product_id' => $variant->product_id, 'variant_id' => $variant->id, 'quantity' => $this->quantity],
+        $this->dispatchStorefrontAnalytics('add_to_cart', [
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'quantity' => $this->quantity,
+            'price_amount' => (int) $variant->price_amount,
+            'currency' => $variant->currency,
         ]);
         $this->dispatch('cart-updated');
         $this->dispatch('open-cart-drawer');
@@ -84,6 +87,13 @@ class Show extends Component
     {
         $variant = ProductVariant::query()->whereHas('product', fn ($query) => $query->where('status', 'active')->whereNotNull('published_at'))->findOrFail($variantId);
         $carts->add($carts->getOrCreateActiveCart(app('current_store'), auth('customer')->user()), $variant, 1);
+        $this->dispatchStorefrontAnalytics('add_to_cart', [
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'quantity' => 1,
+            'price_amount' => (int) $variant->price_amount,
+            'currency' => $variant->currency,
+        ]);
         $this->dispatch('cart-updated');
         $this->dispatch('open-cart-drawer');
     }

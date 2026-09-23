@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Collections;
 
+use App\Livewire\Storefront\Concerns\DispatchesStorefrontAnalytics;
 use App\Models\Collection;
 use App\Models\ProductVariant;
 use App\Services\CartService;
@@ -10,6 +11,7 @@ use Livewire\WithPagination;
 
 class Show extends Component
 {
+    use DispatchesStorefrontAnalytics;
     use WithPagination;
 
     public string $handle = '';
@@ -66,6 +68,13 @@ class Show extends Component
     {
         $variant = ProductVariant::query()->whereHas('product', fn ($query) => $query->where('status', 'active')->whereNotNull('published_at'))->findOrFail($variantId);
         $carts->add($carts->getOrCreateActiveCart(app('current_store'), auth('customer')->user()), $variant, 1);
+        $this->dispatchStorefrontAnalytics('add_to_cart', [
+            'product_id' => $variant->product_id,
+            'variant_id' => $variant->id,
+            'quantity' => 1,
+            'price_amount' => (int) $variant->price_amount,
+            'currency' => $variant->currency,
+        ]);
         $this->dispatch('cart-updated');
         $this->dispatch('open-cart-drawer');
     }

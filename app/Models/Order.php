@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +17,16 @@ class Order extends Model
     protected function casts(): array
     {
         return ['billing_address_json' => 'array', 'shipping_address_json' => 'array', 'placed_at' => 'datetime'];
+    }
+
+    protected function shippingAddress(): Attribute
+    {
+        return Attribute::get(fn (): array => $this->shipping_address_json ?? []);
+    }
+
+    protected function billingAddress(): Attribute
+    {
+        return Attribute::get(fn (): array => $this->billing_address_json ?? []);
     }
 
     public function lines(): HasMany

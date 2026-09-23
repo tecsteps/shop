@@ -13,6 +13,15 @@ class ProductMedia extends Model
 
     protected $fillable = ['product_id', 'type', 'storage_key', 'alt_text', 'width', 'height', 'mime_type', 'byte_size', 'position', 'status'];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (ProductMedia $media): void {
+            $disk = Storage::disk('public');
+            $disk->delete($media->storage_key);
+            $disk->deleteDirectory("media/{$media->product_id}/{$media->id}");
+        });
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
@@ -36,6 +45,23 @@ class ProductMedia extends Model
 
     protected function thumbnailUrl(): Attribute
     {
-        return Attribute::get(fn (): string => $this->url);
+        return Attribute::get(function (): string {
+            if ($this->type !== 'image' || $this->status !== 'ready') {
+                return $this->url;
+            }
+
+            $directory = "media/{$this->product_id}/{$this->id}";
+            $extension = strtolower(pathinfo($this->storage_key, PATHINFO_EXTENSION));
+            $webp = "{$directory}/thumbnail.webp";
+            $originalFormat = "{$directory}/thumbnail.{$extension}";
+
+            if (Storage::disk('public')->exists($webp)) {
+                return Storage::disk('public')->url($webp);
+            }
+
+            return Storage::disk('public')->exists($originalFormat)
+                ? Storage::disk('public')->url($originalFormat)
+                : $this->url;
+        });
     }
 }

@@ -20,17 +20,25 @@ class ShippingCalculator
             return new EloquentCollection;
         }
 
+        $subtotal = (int) $cartLines->sum('line_subtotal_amount');
+        $totalWeight = (int) $physicalLines->sum(static fn ($line): int => (int) ($line->variant?->weight_g ?? 0) * (int) $line->quantity);
         $address = $checkout->shipping_address_json ?? [];
+
+        return $this->ratesForAddress((int) $checkout->store_id, $address, $subtotal, $totalWeight);
+    }
+
+    /** @param array<string, mixed> $address
+     * @return EloquentCollection<int, ShippingRate>
+     */
+    public function ratesForAddress(int $storeId, array $address, int $subtotal = 0, int $totalWeight = 0): EloquentCollection
+    {
         $countryCode = strtoupper((string) ($address['country_code'] ?? $address['country'] ?? ''));
-        $provinceCode = strtoupper((string) ($address['province_code'] ?? ''));
-        $zone = $this->matchingZone((int) $checkout->store_id, $countryCode, $provinceCode);
+        $provinceCode = strtoupper((string) ($address['province_code'] ?? $address['state'] ?? ''));
+        $zone = $countryCode === '' ? null : $this->matchingZone($storeId, $countryCode, $provinceCode);
 
         if ($zone === null) {
             return new EloquentCollection;
         }
-
-        $subtotal = (int) $cartLines->sum('line_subtotal_amount');
-        $totalWeight = (int) $physicalLines->sum(static fn ($line): int => (int) ($line->variant?->weight_g ?? 0) * (int) $line->quantity);
 
         return $zone->rates
             ->filter(function (ShippingRate $rate) use ($subtotal, $totalWeight): bool {
@@ -51,7 +59,7 @@ class ShippingCalculator
             ->values();
     }
 
-    private function matchingZone(int $storeId, string $countryCode, string $provinceCode): ?ShippingZone
+    public function matchingZone(int $storeId, string $countryCode, string $provinceCode): ?ShippingZone
     {
         $zones = ShippingZone::withoutGlobalScopes()
             ->where('store_id', $storeId)

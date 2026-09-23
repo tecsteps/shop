@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessMediaUpload;
 use App\Models\Product;
 use App\Models\ProductMedia;
 use Illuminate\Http\JsonResponse;
@@ -97,7 +98,6 @@ class ProductMediaUploadController extends Controller
         $target = fopen($temporaryPath, 'wb');
         $source = $request->getContent(true);
         $stored = false;
-        $dimensions = false;
         $actualBytes = 0;
 
         try {
@@ -123,7 +123,6 @@ class ProductMediaUploadController extends Controller
                 throw ValidationException::withMessages(['content_type' => 'The uploaded file content does not match its content type.']);
             }
 
-            $dimensions = $media->type === 'image' ? @getimagesize($temporaryPath) : false;
             $stream = fopen($temporaryPath, 'rb');
 
             if (! is_resource($stream)) {
@@ -153,11 +152,11 @@ class ProductMediaUploadController extends Controller
             return response()->json(['message' => 'The media file could not be stored.'], 500);
         }
 
-        $media->forceFill([
-            'status' => 'ready',
-            'width' => $dimensions[0] ?? null,
-            'height' => $dimensions[1] ?? null,
-        ])->save();
+        if ($media->type === 'image') {
+            ProcessMediaUpload::dispatch($media->id)->onConnection('database');
+        } else {
+            $media->forceFill(['status' => 'ready'])->save();
+        }
 
         return response()->json(['media' => $media->refresh()]);
     }

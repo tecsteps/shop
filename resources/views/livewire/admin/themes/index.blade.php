@@ -1,13 +1,87 @@
 <div>
-    @include('livewire.admin.components.page-heading', ['title' => 'Themes', 'description' => 'Shape the look and feel customers see in your storefront.'])
-    <div class="grid items-start gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(19rem,.7fr)]">
-        <section class="grid gap-4" aria-label="Available themes">
-            @forelse ($themes as $theme)
-                <article wire:key="admin-theme-{{ $theme->id }}" class="rounded-2xl border {{ $theme->is_active ? 'border-blue-400 ring-1 ring-blue-400/40 dark:border-blue-700' : 'border-zinc-200 dark:border-zinc-800' }} bg-white p-5 shadow-sm dark:bg-zinc-900"><div class="flex flex-wrap items-start justify-between gap-4"><div><div class="flex flex-wrap items-center gap-2"><h2 class="font-semibold">{{ $theme->name }}</h2>@if($theme->is_active)<span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">Live theme</span>@else@include('livewire.admin.components.status-badge', ['status' => $theme->status])@endif</div><p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{{ data_get($theme->settings?->settings_json ?? [], 'hero_heading', 'A considered storefront theme') }}</p></div>@unless($theme->is_active)<button type="button" wire:click="activate({{ $theme->id }})" wire:confirm="Publish {{ $theme->name }} as the live theme?" class="inline-flex min-h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700">Publish theme</button>@endunless</div><div class="mt-5 flex items-center gap-2"><span class="size-8 rounded-lg border border-zinc-200 dark:border-zinc-700" style="background-color: {{ data_get($theme->settings?->settings_json ?? [], 'primary_color', '#1a1a2e') }}" aria-label="Theme primary color"></span><span class="text-xs text-zinc-500">Primary color</span><a href="/" target="_blank" rel="noopener noreferrer" class="ml-auto inline-flex min-h-10 items-center gap-1 rounded-lg px-3 text-sm font-medium text-blue-700 hover:bg-blue-50 dark:text-blue-300 dark:hover:bg-blue-950/40">Preview store <flux:icon name="arrow-top-right-on-square" class="size-4" /><span class="sr-only"> (opens in a new tab)</span></a></div></article>
-            @empty
-                <div class="rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-14 text-center dark:border-zinc-700 dark:bg-zinc-900"><span class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400 dark:bg-zinc-800"><flux:icon name="paint-brush" class="size-7" /></span><h2 class="mt-4 text-lg font-semibold">No themes yet</h2><p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Create the first theme using the settings on this page.</p></div>
-            @endforelse
+    @include('livewire.admin.components.page-heading', [
+        'title' => 'Themes',
+        'description' => 'Choose and customize the look of your online store.',
+    ])
+
+    @if ($themes->isEmpty())
+        <section class="rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-16 text-center dark:border-zinc-700 dark:bg-zinc-900" aria-labelledby="themes-empty-heading">
+            <span class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400 dark:bg-zinc-800">
+                <flux:icon name="paint-brush" class="size-7" />
+            </span>
+            <h2 id="themes-empty-heading" class="mt-4 text-lg font-semibold">No themes installed</h2>
+            <p class="mx-auto mt-2 max-w-md text-sm text-zinc-500 dark:text-zinc-400">Install a theme to customize your storefront appearance.</p>
         </section>
-        <form wire:submit="save" class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"><h2 class="font-semibold">Theme settings</h2><p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Edit the live storefront's basic theme values.</p><div class="mt-5 grid gap-4"><div><label for="theme-name" class="mb-1.5 block text-sm font-medium">Theme name</label><input id="theme-name" type="text" wire:model="name" required class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950">@error('name')<p class="mt-1 text-sm text-rose-600">{{ $message }}</p>@enderror</div><div><label for="theme-hero-heading" class="mb-1.5 block text-sm font-medium">Hero heading</label><input id="theme-hero-heading" type="text" wire:model="heroHeading" required class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950">@error('heroHeading')<p class="mt-1 text-sm text-rose-600">{{ $message }}</p>@enderror</div><div><label for="theme-hero-subheading" class="mb-1.5 block text-sm font-medium">Hero subheading</label><textarea id="theme-hero-subheading" rows="3" wire:model="heroSubheading" class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"></textarea>@error('heroSubheading')<p class="mt-1 text-sm text-rose-600">{{ $message }}</p>@enderror</div><div><label for="theme-primary-color" class="mb-1.5 block text-sm font-medium">Primary color</label><div class="flex gap-3"><input id="theme-primary-color" type="color" wire:model.live="primaryColor" class="size-12 cursor-pointer rounded-lg border border-zinc-300 bg-white p-1 dark:border-zinc-700 dark:bg-zinc-950"><input aria-label="Primary color hex code" type="text" wire:model.blur="primaryColor" maxlength="7" class="min-h-12 flex-1 rounded-xl border border-zinc-300 bg-white px-3 text-sm font-mono uppercase focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"></div>@error('primaryColor')<p class="mt-1 text-sm text-rose-600">{{ $message }}</p>@enderror</div><button type="submit" wire:loading.attr="disabled" class="inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"><span wire:loading.remove wire:target="save">Save theme</span><span wire:loading wire:target="save">Saving…</span></button></div></form>
-    </div>
+    @else
+        <section class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3" aria-label="Available themes">
+            @foreach ($themes as $theme)
+                <article wire:key="admin-theme-{{ $theme->id }}" @class([
+                    'overflow-hidden rounded-2xl border bg-white shadow-sm transition dark:bg-zinc-900',
+                    'border-blue-400 ring-2 ring-blue-500/30 dark:border-blue-700' => $theme->is_active,
+                    'border-zinc-200 dark:border-zinc-800' => ! $theme->is_active,
+                ])>
+                    <div class="relative flex aspect-video items-center justify-center overflow-hidden bg-gradient-to-br from-zinc-100 via-white to-blue-50 dark:from-zinc-800 dark:via-zinc-900 dark:to-blue-950/50" role="img" aria-label="Preview placeholder for {{ $theme->name }}">
+                        <span class="flex size-16 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-blue-600 shadow-sm dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-blue-300">
+                            <flux:icon name="paint-brush" class="size-8" />
+                        </span>
+                        @if ($theme->is_active)
+                            <span class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
+                                <span class="size-1.5 rounded-full bg-white" aria-hidden="true"></span>
+                                Published theme
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="grid gap-5 p-5">
+                        <div class="flex min-w-0 items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h2 class="truncate text-base font-semibold text-zinc-950 dark:text-white">{{ $theme->name }}</h2>
+                                    <span class="text-xs text-zinc-500 dark:text-zinc-400">{{ $theme->version ? 'v'.$theme->version : 'No version' }}</span>
+                                </div>
+                                <div class="mt-2">
+                                    @include('livewire.admin.components.status-badge', ['status' => $theme->status])
+                                </div>
+                            </div>
+
+                            <details class="relative shrink-0">
+                                <summary class="flex size-10 cursor-pointer list-none items-center justify-center rounded-xl text-zinc-500 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800" aria-label="More actions for {{ $theme->name }}">
+                                    <flux:icon name="ellipsis-horizontal" class="size-5" />
+                                </summary>
+                                <div class="absolute right-0 z-20 mt-2 w-48 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+                                    <a href="{{ route('home') }}" target="_blank" rel="noopener noreferrer" class="flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm text-zinc-700 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 dark:text-zinc-200 dark:hover:bg-zinc-800">
+                                        <flux:icon name="eye" class="size-4" /> Preview store<span class="sr-only"> (opens in a new tab)</span>
+                                    </a>
+                                    @unless ($theme->is_active)
+                                        <button type="button" wire:click="publishTheme({{ $theme->id }})" wire:confirm="Publish {{ $theme->name }} as your live theme?" class="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 text-left text-sm text-zinc-700 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 dark:text-zinc-200 dark:hover:bg-zinc-800">
+                                            <flux:icon name="check-circle" class="size-4" /> Publish
+                                        </button>
+                                    @endunless
+                                    <button type="button" wire:click="duplicateTheme({{ $theme->id }})" class="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 text-left text-sm text-zinc-700 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 dark:text-zinc-200 dark:hover:bg-zinc-800">
+                                        <flux:icon name="document-duplicate" class="size-4" /> Duplicate
+                                    </button>
+                                    <div class="my-1 border-t border-zinc-200 dark:border-zinc-700" role="separator"></div>
+                                    <button type="button" wire:click="deleteTheme({{ $theme->id }})" wire:confirm="Delete {{ $theme->name }}? This cannot be undone." class="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 text-left text-sm text-rose-700 hover:bg-rose-50 focus-visible:outline-2 focus-visible:outline-rose-600 dark:text-rose-300 dark:hover:bg-rose-950/40">
+                                        <flux:icon name="trash" class="size-4" /> Delete
+                                    </button>
+                                </div>
+                            </details>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+                            <a href="{{ route('admin.themes.editor', ['theme' => $theme->id]) }}" wire:navigate class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                <flux:icon name="pencil-square" class="size-4" /> Customize
+                            </a>
+                            @if (data_get($theme->settings?->settings_json ?? [], 'colors.primary'))
+                                <span class="inline-flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                                    <span class="size-5 rounded-md border border-zinc-300 dark:border-zinc-600" style="background-color: {{ data_get($theme->settings?->settings_json ?? [], 'colors.primary') }}" aria-hidden="true"></span>
+                                    Primary color
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </article>
+            @endforeach
+        </section>
+    @endif
 </div>

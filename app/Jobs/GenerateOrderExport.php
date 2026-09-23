@@ -33,32 +33,38 @@ class GenerateOrderExport implements ShouldQueue
 
         try {
             fputcsv($stream, [
-                'order_number', 'status', 'financial_status', 'fulfillment_status', 'customer_email',
-                'currency', 'subtotal_amount', 'discount_amount', 'shipping_amount', 'tax_amount',
-                'total_amount', 'placed_at', 'created_at',
+                'order_number', 'created_at', 'status', 'financial_status', 'fulfillment_status',
+                'customer_email', 'customer_name', 'subtotal_amount', 'discount_amount', 'shipping_amount',
+                'tax_amount', 'total_amount', 'currency', 'shipping_method', 'tracking_number',
             ], ',', '"', '');
             $rowCount = 0;
             $query = Order::withoutGlobalScopes()
                 ->where('store_id', $export->store_id)
-                ->with(['customer' => fn ($customers) => $customers->where('store_id', $export->store_id)]);
+                ->with([
+                    'customer' => fn ($customers) => $customers->where('store_id', $export->store_id),
+                    'checkout' => fn ($checkouts) => $checkouts->where('store_id', $export->store_id)->with('shippingMethod.zone'),
+                    'fulfillments',
+                ]);
             $this->applyFilters($query, $export->filters_json ?? [], (int) $export->store_id);
 
             $query->orderBy('id')->chunkById(500, function ($orders) use ($stream, &$rowCount): void {
                 foreach ($orders as $order) {
                     fputcsv($stream, [
                         $order->order_number,
+                        $order->created_at?->toIso8601String(),
                         $order->status,
                         $order->financial_status,
                         $order->fulfillment_status,
                         $order->customer?->email ?? $order->email,
-                        $order->currency,
+                        $order->customer?->name ?? data_get($order->shipping_address_json, 'name'),
                         $order->subtotal_amount,
                         $order->discount_amount,
                         $order->shipping_amount,
                         $order->tax_amount,
                         $order->total_amount,
-                        $order->placed_at,
-                        $order->created_at,
+                        $order->currency,
+                        $this->storeShippingMethodName($order),
+                        $order->fulfillments->pluck('tracking_number')->filter()->unique()->implode(', '),
                     ], ',', '"', '');
                     $rowCount++;
                 }
@@ -118,5 +124,14 @@ class GenerateOrderExport implements ShouldQueue
                         ->where('email', 'like', "%{$text}%"));
             });
         }
+    }
+
+    private function storeShippingMethodName(Order $order): ?string
+    {
+        $method = $order->checkout?->shippingMethod;
+
+        return $method !== null && (int) $method->zone?->store_id === (int) $order->store_id
+            ? $method->name
+            : null;
     }
 }

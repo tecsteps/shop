@@ -16,6 +16,8 @@
         ]],
         ['label' => 'Store', 'items' => [
             ['label' => 'Pages', 'href' => '/admin/pages', 'route' => 'admin.pages*', 'icon' => 'document-text'],
+            ['label' => 'Navigation', 'href' => '/admin/navigation', 'route' => 'admin.navigation*', 'icon' => 'bars-3'],
+            ['label' => 'Apps', 'href' => '/admin/apps', 'route' => 'admin.apps*', 'icon' => 'squares-2x2'],
             ['label' => 'Themes', 'href' => '/admin/themes', 'route' => 'admin.themes*', 'icon' => 'paint-brush'],
             ['label' => 'Analytics', 'href' => '/admin/analytics', 'route' => 'admin.analytics*', 'icon' => 'chart-pie'],
             ['label' => 'Settings', 'href' => '/admin/settings', 'route' => 'admin.settings*', 'icon' => 'cog-6-tooth'],
@@ -73,20 +75,8 @@
         <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-zinc-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8 dark:border-zinc-800 dark:bg-zinc-950/90">
             <div class="flex min-w-0 items-center gap-3">
                 <button type="button" x-on:click="mobileOpen = true" x-bind:aria-expanded="mobileOpen.toString()" class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-zinc-600 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800" aria-label="Open navigation menu" aria-controls="admin-navigation"><flux:icon name="bars-3" class="size-5" /></button>
-                <div class="min-w-0">
-                    <span class="block truncate text-xs text-zinc-500 dark:text-zinc-400">Current store</span>
-                    <span class="block truncate text-sm font-semibold">{{ data_get($adminStore, 'name', 'Store') }}</span>
-                </div>
             </div>
-
-            <div class="flex shrink-0 items-center gap-2">
-                <button type="button" x-on:click="const dark = !document.documentElement.classList.contains('dark'); document.documentElement.classList.toggle('dark', dark); localStorage.setItem('theme', dark ? 'dark' : 'light')" class="inline-flex size-11 items-center justify-center rounded-xl text-zinc-600 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800" aria-label="Toggle dark mode">
-                    <flux:icon name="sun" class="size-5 dark:hidden" /><flux:icon name="moon" class="hidden size-5 dark:block" />
-                </button>
-                <div class="hidden text-right sm:block"><span class="block max-w-40 truncate text-sm font-medium">{{ $adminUser?->name ?? 'Administrator' }}</span><span class="block max-w-40 truncate text-xs text-zinc-500 dark:text-zinc-400">{{ $adminUser?->email ?? '' }}</span></div>
-                <span class="inline-flex size-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-800 dark:bg-blue-950 dark:text-blue-200" aria-hidden="true">{{ collect(explode(' ', $adminUser?->name ?? 'A'))->filter()->take(2)->map(fn ($part) => mb_substr($part, 0, 1))->join('') }}</span>
-                <form method="POST" action="{{ route('admin.logout') }}" class="hidden md:block">@csrf<button type="submit" class="inline-flex min-h-10 items-center rounded-lg px-3 text-sm font-medium text-zinc-600 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800">Log out</button></form>
-            </div>
+            <livewire:admin.layout.top-bar />
         </header>
 
         <main id="admin-main" class="mx-auto min-h-[calc(100vh-4rem)] max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8" tabindex="-1">

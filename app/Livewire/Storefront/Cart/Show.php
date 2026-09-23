@@ -2,12 +2,16 @@
 
 namespace App\Livewire\Storefront\Cart;
 
+use App\Livewire\Storefront\Concerns\DispatchesStorefrontAnalytics;
 use App\Models\Cart;
+use App\Models\CartLine;
 use App\Services\CartService;
 use Livewire\Component;
 
 class Show extends Component
 {
+    use DispatchesStorefrontAnalytics;
+
     /** @var array<int, int> */
     public array $quantities = [];
 
@@ -39,8 +43,11 @@ class Show extends Component
 
     public function removeItem(int $lineId, CartService $carts): void
     {
-        $carts->remove($this->cart($carts), $lineId);
+        $cart = $this->cart($carts);
+        $line = $cart->lines()->with('variant', 'cart')->findOrFail($lineId);
+        $carts->remove($cart, $lineId);
         unset($this->quantities[$lineId]);
+        $this->dispatchStorefrontAnalytics('remove_from_cart', $this->cartLineProperties($line, (int) $line->quantity));
         $this->dispatch('cart-updated');
     }
 
@@ -79,9 +86,35 @@ class Show extends Component
 
     private function updateLine(int $lineId, int $quantity, CartService $carts): void
     {
-        $carts->updateQuantity($this->cart($carts), $lineId, $quantity);
+        $cart = $this->cart($carts);
+        $line = $cart->lines()->with('variant', 'cart')->findOrFail($lineId);
+        $previousQuantity = (int) $line->quantity;
+        $carts->updateQuantity($cart, $lineId, $quantity);
+        $this->dispatchQuantityChange($line, $previousQuantity, $quantity);
         $this->dispatch('cart-updated');
         $this->syncQuantities($carts);
+    }
+
+    private function dispatchQuantityChange(CartLine $line, int $previousQuantity, int $quantity): void
+    {
+        if ($quantity === $previousQuantity) {
+            return;
+        }
+
+        $eventType = $quantity > $previousQuantity ? 'add_to_cart' : 'remove_from_cart';
+        $this->dispatchStorefrontAnalytics($eventType, $this->cartLineProperties($line, abs($quantity - $previousQuantity)));
+    }
+
+    /** @return array<string, mixed> */
+    private function cartLineProperties(CartLine $line, int $quantity): array
+    {
+        return [
+            'product_id' => $line->variant?->product_id,
+            'variant_id' => $line->variant_id,
+            'quantity' => $quantity,
+            'price_amount' => (int) ($line->variant?->price_amount ?? $line->unit_price_amount),
+            'currency' => $line->cart?->currency,
+        ];
     }
 
     private function cart(CartService $carts): Cart
