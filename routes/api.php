@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\ProductMediaUploadController;
 use App\Http\Controllers\Api\StorefrontController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,13 +11,13 @@ Route::prefix('storefront/v1')->middleware(['store.resolve', 'throttle:api.store
     Route::post('/carts/{cartId}/lines', [StorefrontController::class, 'addCartLine'])->whereNumber('cartId')->name('carts.lines.add');
     Route::put('/carts/{cartId}/lines/{lineId}', [StorefrontController::class, 'updateCartLine'])->whereNumber('cartId')->whereNumber('lineId')->name('carts.lines.update');
     Route::delete('/carts/{cartId}/lines/{lineId}', [StorefrontController::class, 'deleteCartLine'])->whereNumber('cartId')->whereNumber('lineId')->name('carts.lines.delete');
-    Route::post('/checkouts', [StorefrontController::class, 'createCheckout'])->name('checkouts.create');
-    Route::get('/checkouts/{checkoutId}', [StorefrontController::class, 'showCheckout'])->whereNumber('checkoutId')->name('checkouts.show');
-    Route::put('/checkouts/{checkoutId}/address', [StorefrontController::class, 'updateAddress'])->whereNumber('checkoutId')->name('checkouts.address');
-    Route::put('/checkouts/{checkoutId}/shipping-method', [StorefrontController::class, 'updateShipping'])->whereNumber('checkoutId')->name('checkouts.shipping');
-    Route::put('/checkouts/{checkoutId}/payment-method', [StorefrontController::class, 'updatePayment'])->whereNumber('checkoutId')->name('checkouts.payment');
-    Route::post('/checkouts/{checkoutId}/apply-discount', [StorefrontController::class, 'applyDiscount'])->whereNumber('checkoutId')->name('checkouts.discount.apply');
-    Route::delete('/checkouts/{checkoutId}/discount', [StorefrontController::class, 'removeDiscount'])->whereNumber('checkoutId')->name('checkouts.discount.remove');
+    Route::post('/checkouts', [StorefrontController::class, 'createCheckout'])->middleware('throttle:checkout')->name('checkouts.create');
+    Route::get('/checkouts/{checkoutId}', [StorefrontController::class, 'showCheckout'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.show');
+    Route::put('/checkouts/{checkoutId}/address', [StorefrontController::class, 'updateAddress'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.address');
+    Route::put('/checkouts/{checkoutId}/shipping-method', [StorefrontController::class, 'updateShipping'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.shipping');
+    Route::put('/checkouts/{checkoutId}/payment-method', [StorefrontController::class, 'updatePayment'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.payment');
+    Route::post('/checkouts/{checkoutId}/apply-discount', [StorefrontController::class, 'applyDiscount'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.discount.apply');
+    Route::delete('/checkouts/{checkoutId}/discount', [StorefrontController::class, 'removeDiscount'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.discount.remove');
     Route::post('/checkouts/{checkoutId}/pay', [StorefrontController::class, 'pay'])->whereNumber('checkoutId')->middleware('throttle:checkout')->name('checkouts.pay');
     Route::get('/orders/{orderNumber}', [StorefrontController::class, 'showOrder'])->name('orders.show');
     Route::get('/search', [StorefrontController::class, 'search'])->middleware('throttle:search')->name('search');
@@ -31,17 +32,35 @@ Route::prefix('admin/v1')->middleware(['api.token', 'store.resolve', 'throttle:a
     Route::get('/stores/{storeId}/products/{productId}', [AdminController::class, 'product'])->whereNumber('storeId')->whereNumber('productId')->middleware('api.token:read-products')->name('products.show');
     Route::put('/stores/{storeId}/products/{productId}', [AdminController::class, 'updateProduct'])->whereNumber('storeId')->whereNumber('productId')->middleware('api.token:write-products')->name('products.update');
     Route::delete('/stores/{storeId}/products/{productId}', [AdminController::class, 'deleteProduct'])->whereNumber('storeId')->whereNumber('productId')->middleware('api.token:write-products')->name('products.destroy');
-    Route::get('/stores/{storeId}/collections', [AdminController::class, 'collections'])->whereNumber('storeId')->middleware('api.token:read-products')->name('collections.index');
+    Route::post('/stores/{storeId}/products/{productId}/media/presign-upload', [ProductMediaUploadController::class, 'presign'])->whereNumber('storeId')->whereNumber('productId')->middleware('api.token:write-products')->name('products.media.presign');
+    Route::get('/stores/{storeId}/collections', [AdminController::class, 'collections'])->whereNumber('storeId')->middleware('api.token:read-collections')->name('collections.index');
+    Route::post('/stores/{storeId}/collections', [AdminController::class, 'createCollection'])->whereNumber('storeId')->middleware('api.token:write-collections')->name('collections.store');
+    Route::put('/stores/{storeId}/collections/{collectionId}', [AdminController::class, 'updateCollection'])->whereNumber('storeId')->whereNumber('collectionId')->middleware('api.token:write-collections')->name('collections.update');
+    Route::delete('/stores/{storeId}/collections/{collectionId}', [AdminController::class, 'deleteCollection'])->whereNumber('storeId')->whereNumber('collectionId')->middleware('api.token:write-collections')->name('collections.destroy');
     Route::get('/stores/{storeId}/orders', [AdminController::class, 'orders'])->whereNumber('storeId')->middleware('api.token:read-orders')->name('orders.index');
     Route::get('/stores/{storeId}/orders/{orderId}', [AdminController::class, 'order'])->whereNumber('storeId')->whereNumber('orderId')->middleware('api.token:read-orders')->name('orders.show');
     Route::post('/stores/{storeId}/orders/{orderId}/fulfillments', [AdminController::class, 'fulfill'])->whereNumber('storeId')->whereNumber('orderId')->middleware('api.token:write-orders')->name('orders.fulfillments.store');
     Route::post('/stores/{storeId}/orders/{orderId}/refunds', [AdminController::class, 'refund'])->whereNumber('storeId')->whereNumber('orderId')->middleware('api.token:write-orders')->name('orders.refunds.store');
     Route::get('/stores/{storeId}/discounts', [AdminController::class, 'discounts'])->whereNumber('storeId')->middleware('api.token:read-discounts')->name('discounts.index');
+    Route::post('/stores/{storeId}/discounts', [AdminController::class, 'createDiscount'])->whereNumber('storeId')->middleware('api.token:write-discounts')->name('discounts.store');
+    Route::put('/stores/{storeId}/discounts/{discountId}', [AdminController::class, 'updateDiscount'])->whereNumber('storeId')->whereNumber('discountId')->middleware('api.token:write-discounts')->name('discounts.update');
+    Route::delete('/stores/{storeId}/discounts/{discountId}', [AdminController::class, 'deleteDiscount'])->whereNumber('storeId')->whereNumber('discountId')->middleware('api.token:write-discounts')->name('discounts.destroy');
     Route::get('/stores/{storeId}/shipping/zones', [AdminController::class, 'shippingZones'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('shipping.zones.index');
     Route::get('/stores/{storeId}/tax/settings', [AdminController::class, 'taxSettings'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('tax.settings');
     Route::put('/stores/{storeId}/tax/settings', [AdminController::class, 'updateTaxSettings'])->whereNumber('storeId')->middleware('api.token:write-settings')->name('tax.settings.update');
     Route::get('/stores/{storeId}/pages', [AdminController::class, 'pages'])->whereNumber('storeId')->middleware('api.token:read-content')->name('pages.index');
-    Route::post('/stores/{storeId}/search/reindex', [AdminController::class, 'reindexSearch'])->whereNumber('storeId')->middleware('api.token:manage-search')->name('search.reindex');
-    Route::get('/stores/{storeId}/search/status', [AdminController::class, 'searchStatus'])->whereNumber('storeId')->middleware('api.token:manage-search')->name('search.status');
+    Route::post('/stores/{storeId}/search/reindex', [AdminController::class, 'reindexSearch'])->whereNumber('storeId')->middleware('api.token:write-settings')->name('search.reindex');
+    Route::get('/stores/{storeId}/search/status', [AdminController::class, 'searchStatus'])->whereNumber('storeId')->middleware('api.token:read-settings')->name('search.status');
     Route::get('/stores/{storeId}/analytics/summary', [AdminController::class, 'analyticsSummary'])->whereNumber('storeId')->middleware('api.token:read-analytics')->name('analytics.summary');
+});
+
+Route::put('/uploads/product-media/{mediaId}', [ProductMediaUploadController::class, 'upload'])
+    ->whereNumber('mediaId')
+    ->middleware('signed')
+    ->name('api.product-media.upload');
+
+Route::prefix('apps/v1/stores/{storeId}')->whereNumber('storeId')->name('api.apps.')->group(function (): void {
+    Route::get('/products', fn () => response()->json(['message' => 'The app ecosystem is not implemented.'], 501))->name('products.index');
+    Route::get('/orders', fn () => response()->json(['message' => 'The app ecosystem is not implemented.'], 501))->name('orders.index');
+    Route::get('/customers', fn () => response()->json(['message' => 'The app ecosystem is not implemented.'], 501))->name('customers.index');
 });

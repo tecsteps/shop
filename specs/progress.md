@@ -64,6 +64,15 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** full Pest suite passed (81 tests, 307 assertions); focused matrix/tenant/analytics/maintenance/auth regressions passed; Pint passed; `npm run build` passed; `php artisan schedule:list` shows all four documented schedules.
 
+### 2026-09-23 — API route coverage and signed media upload
+
+- Registered the collection and discount API write endpoints, applied checkout throttling to all checkout actions, and aligned API search/settings abilities with the token ability list.
+- Added a signed product-media upload flow with configurable image/video size limits, extension/content-type matching, temporary upload URLs, streaming storage, one-time completion, and tenant/product authorization.
+- Fixed FTS relevance retrieval to use SQLite's native `MATCH` query form; the synonym and stop-word search feature tests now pass.
+- An independent API contract audit identified additional remaining API gaps. They are being addressed before final acceptance; the phase checklist remains open.
+
+**Checks this iteration:** signed media API Pest tests passed (3 tests, 16 assertions); search settings Pest tests passed (4 tests, 19 assertions); focused Pint and `git diff --check` passed.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -78,3 +87,5 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | `php artisan route:list --path=forgot` and `--path=reset` | Passed; both admin and customer shop routes registered, generic Fortify reset routes removed |
 | 2026-09-23 | Full Pest suite after variant, FTS, analytics ingestion, maintenance, and auth updates | Passed: 81 tests, 307 assertions |
 | 2026-09-23 | `php artisan schedule:list --no-interaction` | Passed; analytics, abandoned-cart cleanup, checkout expiration, and bank-transfer cancellation schedules registered |
+| 2026-09-23 | Signed product-media upload Pest tests | Passed: 3 tests, 16 assertions |
+| 2026-09-23 | Search settings Pest tests | Passed: 4 tests, 19 assertions |
