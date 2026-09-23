@@ -66,32 +66,55 @@ class CheckoutService
 
         $shippingAddress = $this->normalizeAddress($shippingAddress);
         $billingAddress = $billingAddress === null ? null : $this->normalizeAddress($billingAddress);
+        $requiresShipping = $this->requiresShipping($checkout);
+        $requiredAddressField = $requiresShipping ? 'required' : 'nullable';
 
-        Validator::make([
+        $validator = Validator::make([
             'email' => $email,
-            ...$shippingAddress,
+            'shipping_address' => $shippingAddress,
+            'billing_address' => $billingAddress,
         ], [
             'email' => ['required', 'email', 'max:255'],
-            'first_name' => ['required', 'string', 'max:100'],
-            'last_name' => ['required', 'string', 'max:100'],
-            'address1' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:100'],
-            'country_code' => ['nullable', 'string', 'size:2'],
-            'country' => ['nullable', 'string', 'size:2'],
-            'zip' => ['nullable', 'string', 'max:24'],
-            'postal_code' => ['nullable', 'string', 'max:24'],
-        ])->after(function ($validator) use ($shippingAddress): void {
-            if (blank($shippingAddress['country_code'] ?? $shippingAddress['country'] ?? null)) {
-                $validator->errors()->add('country_code', 'The country code field is required.');
-            }
+            'shipping_address' => [$requiredAddressField, 'array'],
+            'shipping_address.first_name' => [$requiredAddressField, 'string', 'max:255'],
+            'shipping_address.last_name' => [$requiredAddressField, 'string', 'max:255'],
+            'shipping_address.address1' => [$requiredAddressField, 'string', 'max:500'],
+            'shipping_address.address2' => ['nullable', 'string', 'max:500'],
+            'shipping_address.city' => [$requiredAddressField, 'string', 'max:255'],
+            'shipping_address.province' => ['nullable', 'string', 'max:255'],
+            'shipping_address.province_code' => ['nullable', 'string', 'max:10'],
+            'shipping_address.country' => [$requiredAddressField, 'string', 'max:255'],
+            'shipping_address.country_code' => [$requiredAddressField, 'string', 'size:2'],
+            'shipping_address.zip' => [$requiredAddressField, 'string', 'max:20'],
+            'shipping_address.phone' => ['nullable', 'string', 'max:50'],
+            'billing_address' => ['nullable', 'array'],
+            'billing_address.first_name' => ['required_with:billing_address', 'string', 'max:255'],
+            'billing_address.last_name' => ['required_with:billing_address', 'string', 'max:255'],
+            'billing_address.address1' => ['required_with:billing_address', 'string', 'max:500'],
+            'billing_address.address2' => ['nullable', 'string', 'max:500'],
+            'billing_address.city' => ['required_with:billing_address', 'string', 'max:255'],
+            'billing_address.province' => ['nullable', 'string', 'max:255'],
+            'billing_address.province_code' => ['nullable', 'string', 'max:10'],
+            'billing_address.country' => ['required_with:billing_address', 'string', 'max:255'],
+            'billing_address.country_code' => ['required_with:billing_address', 'string', 'size:2'],
+            'billing_address.zip' => ['required_with:billing_address', 'string', 'max:20'],
+            'billing_address.phone' => ['nullable', 'string', 'max:50'],
+        ]);
 
-            if (blank($shippingAddress['zip'] ?? $shippingAddress['postal_code'] ?? null)) {
-                $validator->errors()->add('postal_code', 'The postal code field is required.');
-            }
-        })->validate();
+        $validator->validate();
 
-        $shippingAddress['country_code'] = strtoupper((string) ($shippingAddress['country_code'] ?? $shippingAddress['country']));
-        $shippingAddress['zip'] = $shippingAddress['zip'] ?? $shippingAddress['postal_code'];
+        if ($requiresShipping) {
+            $shippingAddress['country_code'] = strtoupper((string) $shippingAddress['country_code']);
+            $shippingAddress['zip'] = (string) $shippingAddress['zip'];
+        } else {
+            $shippingAddress = [];
+        }
+
+        if ($billingAddress !== null) {
+            $billingAddress['country_code'] = strtoupper((string) $billingAddress['country_code']);
+            $billingAddress['zip'] = (string) $billingAddress['zip'];
+        }
+
         $billingAddress ??= $shippingAddress;
 
         $checkout->forceFill([
@@ -165,9 +188,28 @@ class CheckoutService
         $discount = Discount::withoutGlobalScopes()
             ->where('store_id', $checkout->store_id)
             ->whereRaw('upper(code) = ?', [strtoupper(trim($code))])
-            ->firstOrFail();
+            ->first();
+
+        if (! $discount) {
+            throw ValidationException::withMessages(['discount_code' => 'This discount code is not valid.']);
+        }
 
         $checkout->forceFill(['discount_code' => $discount->code])->save();
+
+        return $this->recalculate($checkout->refresh());
+    }
+
+    public function removeDiscount(Checkout $checkout): Checkout
+    {
+        if (! in_array($checkout->status, [CheckoutStatus::Started->value, CheckoutStatus::Addressed->value, CheckoutStatus::ShippingSelected->value], true)) {
+            throw new InvalidCheckoutTransitionException('Discount codes cannot be changed at this checkout stage.');
+        }
+
+        if (! $checkout->discount_code) {
+            abort(404, 'No discount is applied to this checkout.');
+        }
+
+        $checkout->forceFill(['discount_code' => null])->save();
 
         return $this->recalculate($checkout->refresh());
     }
@@ -222,6 +264,30 @@ class CheckoutService
                     $this->inventory->release($line->variant->inventoryItem, $line->quantity);
                 }
             }
+        });
+    }
+
+    public function expire(Checkout $checkout): void
+    {
+        if (in_array($checkout->status, [CheckoutStatus::Completed->value, CheckoutStatus::Expired->value], true)) {
+            return;
+        }
+
+        DB::transaction(function () use ($checkout): void {
+            $lockedCheckout = Checkout::withoutGlobalScopes()
+                ->with('cart.lines.variant.inventoryItem')
+                ->lockForUpdate()
+                ->findOrFail($checkout->id);
+
+            if ($lockedCheckout->status === CheckoutStatus::PaymentSelected->value) {
+                foreach ($lockedCheckout->cart->lines as $line) {
+                    if ($line->variant?->inventoryItem) {
+                        $this->inventory->release($line->variant->inventoryItem, $line->quantity);
+                    }
+                }
+            }
+
+            $lockedCheckout->forceFill(['status' => CheckoutStatus::Expired->value])->save();
         });
     }
 

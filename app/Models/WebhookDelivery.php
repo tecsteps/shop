@@ -7,11 +7,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WebhookDelivery extends Model
 {
-    protected $fillable = ['subscription_id', 'event_id', 'status', 'attempts', 'payload', 'response_code', 'delivered_at'];
+    protected $fillable = [
+        'subscription_id',
+        'event_id',
+        'attempt_count',
+        'status',
+        'last_attempt_at',
+        'response_code',
+        'response_body_snippet',
+    ];
 
     protected function casts(): array
     {
-        return ['payload' => 'array', 'delivered_at' => 'datetime'];
+        return ['last_attempt_at' => 'datetime'];
     }
 
     public function subscription(): BelongsTo

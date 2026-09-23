@@ -14,5 +14,20 @@ class AnalyticsDaily extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['store_id', 'date', 'orders_count', 'revenue_amount', 'aov_amount', 'visits_count', 'add_to_cart_count', 'checkout_started_count'];
+    protected $fillable = [
+        'store_id',
+        'date',
+        'orders_count',
+        'revenue_amount',
+        'aov_amount',
+        'visits_count',
+        'add_to_cart_count',
+        'checkout_started_count',
+        'checkout_completed_count',
+    ];
+
+    protected function casts(): array
+    {
+        return ['date' => 'date:Y-m-d'];
+    }
 }

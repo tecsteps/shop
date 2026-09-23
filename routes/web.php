@@ -1,8 +1,9 @@
 <?php
 
 use App\Livewire\Admin\Analytics\Index as AnalyticsIndex;
+use App\Livewire\Admin\Auth\ForgotPassword as AdminForgotPassword;
 use App\Livewire\Admin\Auth\Login as AdminLogin;
-use App\Livewire\Admin\Auth\Logout as AdminLogout;
+use App\Livewire\Admin\Auth\ResetPassword as AdminResetPassword;
 use App\Livewire\Admin\Collections\Form as CollectionForm;
 use App\Livewire\Admin\Collections\Index as CollectionIndex;
 use App\Livewire\Admin\Customers\Index as CustomerIndex;
@@ -22,8 +23,10 @@ use App\Livewire\Admin\Settings\Shipping as ShippingSettings;
 use App\Livewire\Admin\Settings\Taxes as TaxSettings;
 use App\Livewire\Admin\Themes\Index as ThemeIndex;
 use App\Livewire\Storefront\Account\Addresses\Index as AddressIndex;
+use App\Livewire\Storefront\Account\Auth\ForgotPassword as CustomerForgotPassword;
 use App\Livewire\Storefront\Account\Auth\Login as CustomerLogin;
 use App\Livewire\Storefront\Account\Auth\Register as CustomerRegister;
+use App\Livewire\Storefront\Account\Auth\ResetPassword as CustomerResetPassword;
 use App\Livewire\Storefront\Account\Dashboard as CustomerDashboard;
 use App\Livewire\Storefront\Account\Orders\Index as CustomerOrderIndex;
 use App\Livewire\Storefront\Account\Orders\Show as CustomerOrderShow;
@@ -36,17 +39,39 @@ use App\Livewire\Storefront\Home as StorefrontHome;
 use App\Livewire\Storefront\Pages\Show as StorefrontPageShow;
 use App\Livewire\Storefront\Products\Show as StorefrontProductShow;
 use App\Livewire\Storefront\Search\Index as StorefrontSearch;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:login')->group(function (): void {
     Route::get('/admin/login', AdminLogin::class)->name('admin.login');
+    Route::get('/admin/forgot-password', AdminForgotPassword::class)->name('admin.password.request');
+    Route::get('/admin/reset-password/{token}', AdminResetPassword::class)->name('admin.password.reset');
+    Route::get('/account/login', CustomerLogin::class)->name('storefront.login');
+    Route::get('/account/register', CustomerRegister::class)->name('storefront.register');
+    Route::get('/forgot-password', CustomerForgotPassword::class)->name('storefront.password.request');
+    Route::get('/reset-password/{token}', CustomerResetPassword::class)->name('storefront.password.reset');
 });
+
+Route::post('/admin/logout', function (\Illuminate\Http\Request $request) {
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('admin.login')->withHeaders(['Cache-Control' => 'no-store']);
+})->middleware('auth')->name('admin.logout');
+
+Route::post('/account/logout', function (\Illuminate\Http\Request $request) {
+    Auth::guard('customer')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('storefront.login')->withHeaders(['Cache-Control' => 'no-store']);
+})->middleware('auth:customer')->name('storefront.logout');
 
 Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'store.resolve', 'can:view-admin'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::get('/', AdminDashboard::class)->name('dashboard');
-    Route::get('/logout', AdminLogout::class)->name('logout');
     Route::get('/products', ProductIndex::class)->name('products');
     Route::get('/products/create', ProductForm::class)->name('products.create');
     Route::get('/products/{product}/edit', ProductForm::class)->whereNumber('product')->name('products.edit');
@@ -78,8 +103,6 @@ Route::middleware('store.resolve')->group(function (): void {
     Route::get('/cart', CartShow::class)->name('storefront.cart');
     Route::get('/search', StorefrontSearch::class)->middleware('throttle:search')->name('storefront.search');
     Route::get('/pages/{handle}', StorefrontPageShow::class)->name('storefront.page');
-    Route::get('/account/login', CustomerLogin::class)->name('storefront.login');
-    Route::get('/account/register', CustomerRegister::class)->name('storefront.register');
     Route::get('/checkout', CheckoutShow::class)->middleware('throttle:checkout')->name('storefront.checkout');
     Route::get('/checkout/{checkoutId}', CheckoutShow::class)->whereNumber('checkoutId')->middleware('throttle:checkout')->name('storefront.checkout.resume');
     Route::get('/checkout/{checkoutId}/confirmation', CheckoutConfirmation::class)->whereNumber('checkoutId')->middleware('signed')->name('storefront.confirmation');

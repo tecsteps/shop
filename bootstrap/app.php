@@ -21,14 +21,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\App\Exceptions\InsufficientInventoryException $exception, \Illuminate\Http\Request $request) {
             if ($request->expectsJson()) {
-                return response()->json(['message' => $exception->getMessage(), 'code' => 'insufficient_inventory'], 400);
+                return response()->json(['message' => $exception->getMessage(), 'error_code' => 'insufficient_inventory'], 422);
             }
 
             return null;
         });
         $exceptions->render(function (\App\Exceptions\PaymentDeclinedException $exception, \Illuminate\Http\Request $request) {
             if ($request->expectsJson()) {
-                return response()->json(['message' => $exception->getMessage(), 'code' => $exception->codeName], 422);
+                return response()->json(['message' => $exception->getMessage(), 'error_code' => $exception->codeName], 422);
             }
 
             return null;

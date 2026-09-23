@@ -17,6 +17,18 @@ class AuthenticateApiToken
      */
     public function handle(Request $request, Closure $next, ?string $requiredAbility = null): Response
     {
+        $existingToken = $request->attributes->get('api_token');
+
+        if ($existingToken instanceof PersonalAccessToken) {
+            $abilities = $existingToken->abilities ?? [];
+
+            if ($requiredAbility && ! in_array($requiredAbility, $abilities, true) && ! in_array('*', $abilities, true)) {
+                return response()->json(['message' => 'This token is missing the required ability.'], 403);
+            }
+
+            return $next($request);
+        }
+
         $plainTextToken = $request->bearerToken();
 
         if (! $plainTextToken) {

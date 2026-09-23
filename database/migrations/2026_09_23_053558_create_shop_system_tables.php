@@ -424,13 +424,20 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('type');
+            $table->enum('type', ['page_view', 'product_view', 'add_to_cart', 'remove_from_cart', 'checkout_started', 'checkout_completed', 'search']);
             $table->string('session_id')->nullable();
             $table->string('client_event_id')->nullable();
+            $table->json('properties_json')->default('{}');
+            $table->timestamp('occurred_at')->nullable();
+            // Kept while storefront writers move to the canonical analytics fields.
             $table->json('payload')->default('{}');
             $table->timestamp('created_at')->nullable();
-            $table->index(['store_id', 'type', 'created_at']);
-            $table->unique(['store_id', 'client_event_id']);
+            $table->index('store_id', 'idx_analytics_events_store_id');
+            $table->index(['store_id', 'type'], 'idx_analytics_events_store_type');
+            $table->index(['store_id', 'created_at'], 'idx_analytics_events_store_created');
+            $table->index('session_id', 'idx_analytics_events_session');
+            $table->index('customer_id', 'idx_analytics_events_customer');
+            $table->unique(['store_id', 'client_event_id'], 'idx_analytics_events_client_event');
         });
 
         Schema::create('analytics_daily', function (Blueprint $table): void {
@@ -442,7 +449,9 @@ return new class extends Migration
             $table->unsignedInteger('visits_count')->default(0);
             $table->unsignedInteger('add_to_cart_count')->default(0);
             $table->unsignedInteger('checkout_started_count')->default(0);
+            $table->unsignedInteger('checkout_completed_count')->default(0);
             $table->primary(['store_id', 'date']);
+            $table->index(['store_id', 'date'], 'idx_analytics_daily_store_date');
         });
 
         Schema::create('search_queries', function (Blueprint $table): void {
@@ -516,23 +525,32 @@ return new class extends Migration
         Schema::create('webhook_subscriptions', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('app_installation_id')->nullable()->constrained('app_installations')->cascadeOnDelete();
             $table->string('event_type');
             $table->string('target_url');
-            $table->text('secret');
-            $table->boolean('is_active')->default(true);
+            $table->text('signing_secret_encrypted');
+            $table->enum('status', ['active', 'paused', 'disabled'])->default('active');
             $table->timestamps();
+            $table->index('store_id', 'idx_webhook_subscriptions_store_id');
+            $table->index(['store_id', 'event_type'], 'idx_webhook_subscriptions_store_event');
+            $table->index('app_installation_id', 'idx_webhook_subscriptions_installation');
         });
 
         Schema::create('webhook_deliveries', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('subscription_id')->constrained('webhook_subscriptions')->cascadeOnDelete();
             $table->string('event_id');
-            $table->string('status')->default('pending');
-            $table->unsignedInteger('attempts')->default(0);
-            $table->json('payload')->default('{}');
+            $table->unsignedInteger('attempt_count')->default(1);
+            $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
+            $table->timestamp('last_attempt_at')->nullable();
             $table->unsignedSmallInteger('response_code')->nullable();
-            $table->timestamp('delivered_at')->nullable();
+            $table->text('response_body_snippet')->nullable();
             $table->timestamps();
+            $table->index('subscription_id', 'idx_webhook_deliveries_subscription_id');
+            $table->index('event_id', 'idx_webhook_deliveries_event_id');
+            $table->index('status', 'idx_webhook_deliveries_status');
+            $table->index('last_attempt_at', 'idx_webhook_deliveries_last_attempt');
+            $table->unique(['subscription_id', 'event_id'], 'idx_webhook_deliveries_subscription_event');
         });
 
         Schema::create('customer_password_reset_tokens', function (Blueprint $table): void {

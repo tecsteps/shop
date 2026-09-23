@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductVariant extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['product_id', 'sku', 'barcode', 'price_amount', 'compare_at_amount', 'currency', 'weight_g', 'requires_shipping', 'is_default', 'position', 'status'];
 
     protected function casts(): array

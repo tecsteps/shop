@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Auth\StoreScopedCustomerUserProvider;
+use App\Auth\StoreScopedPasswordBrokerManager;
 use App\Enums\StoreUserRole;
 use App\Models\Customer;
 use App\Models\Store;
@@ -10,8 +12,10 @@ use App\Policies\CustomerPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\ProductPolicy;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -26,7 +30,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->extend('auth.password', function ($manager, $app): StoreScopedPasswordBrokerManager {
+            return $manager instanceof StoreScopedPasswordBrokerManager
+                ? $manager
+                : new StoreScopedPasswordBrokerManager($app);
+        });
     }
 
     /**
@@ -34,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Auth::provider('store-customers', fn ($app, array $config): StoreScopedCustomerUserProvider => new StoreScopedCustomerUserProvider($app['hash'], $config['model']));
+        ResetPasswordNotification::createUrlUsing(function (mixed $notifiable, string $token): string {
+            $route = $notifiable instanceof Customer ? 'storefront.password.reset' : 'admin.password.reset';
+
+            return route($route, ['token' => $token, 'email' => $notifiable->getEmailForPasswordReset()]);
+        });
         $this->configureDefaults();
         $this->configureRateLimits();
         $this->configureAuthorization();
@@ -68,10 +82,10 @@ class AppServiceProvider extends ServiceProvider
     private function configureRateLimits(): void
     {
         RateLimiter::for('login', fn (Request $request): Limit => Limit::perMinute(5)->by($request->ip()));
-        RateLimiter::for('storefront-api', fn (Request $request): Limit => Limit::perMinute(120)->by($request->ip()));
-        RateLimiter::for('admin-api', fn (Request $request): Limit => Limit::perMinute(60)->by((string) ($request->user()?->id ?? $request->ip())));
+        RateLimiter::for('api.storefront', fn (Request $request): Limit => Limit::perMinute(120)->by($request->ip()));
+        RateLimiter::for('api.admin', fn (Request $request): Limit => Limit::perMinute(60)->by((string) ($request->user()?->id ?? $request->ip())));
         RateLimiter::for('search', fn (Request $request): Limit => Limit::perMinute(30)->by($request->ip()));
-        RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by($request->session()->getId()));
+        RateLimiter::for('checkout', fn (Request $request): Limit => Limit::perMinute(10)->by($request->hasSession() ? $request->session()->getId() : $request->ip()));
         RateLimiter::for('analytics', fn (Request $request): Limit => Limit::perMinute(60)->by($request->ip()));
     }
 

@@ -15,7 +15,10 @@ use Illuminate\Validation\ValidationException;
 
 class CartService
 {
-    public function __construct(private readonly InventoryService $inventory) {}
+    public function __construct(
+        private readonly InventoryService $inventory,
+        private readonly DiscountCalculator $discountCalculator,
+    ) {}
 
     public function getOrCreateActiveCart(Store $store, ?Customer $customer = null): Cart
     {
@@ -99,6 +102,7 @@ class CartService
                 'line_total_amount' => $subtotal,
             ]);
             $lockedCart->increment('cart_version');
+            $this->refreshDiscountAllocations($lockedCart);
 
             return $lockedCart->refresh()->load('lines.variant.product', 'lines.variant.inventoryItem');
         });
@@ -129,6 +133,7 @@ class CartService
             }
 
             $lockedCart->increment('cart_version');
+            $this->refreshDiscountAllocations($lockedCart);
 
             return $lockedCart->refresh()->load('lines.variant.product', 'lines.variant.inventoryItem');
         });
@@ -169,13 +174,17 @@ class CartService
             $guestCart->status = 'abandoned';
             $guestCart->save();
             $customerCart->increment('cart_version');
+            if (! $customerCart->discount_code && $guestCart->discount_code) {
+                $customerCart->forceFill(['discount_code' => $guestCart->discount_code])->save();
+            }
+            $this->refreshDiscountAllocations($customerCart);
             Session::forget('cart_id');
 
             return $customerCart->refresh()->load('lines.variant.product');
         });
     }
 
-    public function applyDiscount(Cart $cart, string $code, DiscountCalculator $discounts): Cart
+    public function applyDiscount(Cart $cart, string $code): Cart
     {
         $discount = Discount::query()
             ->where('store_id', $cart->store_id)
@@ -196,7 +205,7 @@ class CartService
             'line_subtotal_amount' => $line->line_subtotal_amount,
         ])->all();
         $subtotal = array_sum(array_column($lines, 'line_subtotal_amount'));
-        $result = $discounts->calculate($discount, $lines, $subtotal, $cart->customer_id !== null);
+        $result = $this->discountCalculator->calculate($discount, $lines, $subtotal, $cart->customer_id !== null);
 
         DB::transaction(function () use ($cart, $discount, $result): void {
             foreach ($cart->lines as $line) {
@@ -205,6 +214,7 @@ class CartService
             }
 
             $cart->forceFill(['discount_code' => $discount->code])->save();
+            $cart->increment('cart_version');
         });
 
         return $cart->refresh()->load('lines.variant.product');
@@ -232,6 +242,75 @@ class CartService
     {
         if ($expectedVersion !== null && $expectedVersion !== (int) $cart->cart_version) {
             throw new CartVersionConflictException((int) $cart->cart_version);
+        }
+    }
+
+    private function refreshDiscountAllocations(Cart $cart): void
+    {
+        $cart->load('lines.variant.product.collections');
+
+        if (! $cart->discount_code || $cart->lines->isEmpty()) {
+            $this->clearDiscountAllocations($cart);
+
+            return;
+        }
+
+        $discount = Discount::query()
+            ->where('store_id', $cart->store_id)
+            ->whereRaw('upper(code) = ?', [strtoupper(trim($cart->discount_code))])
+            ->first();
+
+        if (! $discount) {
+            $this->clearDiscountAllocations($cart);
+
+            return;
+        }
+
+        $lines = $cart->lines->map(fn ($line): array => [
+            'id' => $line->id,
+            'variant_id' => $line->variant_id,
+            'product_id' => $line->variant?->product_id,
+            'collection_ids' => $line->variant?->product?->collections?->pluck('id')->all() ?? [],
+            'quantity' => $line->quantity,
+            'unit_price_amount' => $line->unit_price_amount,
+            'line_subtotal_amount' => $line->line_subtotal_amount,
+        ])->all();
+
+        try {
+            $result = $this->discountCalculator->calculate(
+                $discount,
+                $lines,
+                array_sum(array_column($lines, 'line_subtotal_amount')),
+                $cart->customer_id !== null,
+            );
+        } catch (ValidationException) {
+            $this->clearDiscountAllocations($cart);
+
+            return;
+        }
+
+        foreach ($cart->lines as $line) {
+            $amount = (int) ($result['allocations'][$line->variant_id] ?? 0);
+            $line->forceFill([
+                'line_discount_amount' => $amount,
+                'line_total_amount' => max(0, $line->line_subtotal_amount - $amount),
+            ])->save();
+        }
+    }
+
+    private function clearDiscountAllocations(Cart $cart): void
+    {
+        foreach ($cart->lines as $line) {
+            if ($line->line_discount_amount !== 0) {
+                $line->forceFill([
+                    'line_discount_amount' => 0,
+                    'line_total_amount' => $line->line_subtotal_amount,
+                ])->save();
+            }
+        }
+
+        if ($cart->discount_code !== null) {
+            $cart->forceFill(['discount_code' => null])->save();
         }
     }
 }

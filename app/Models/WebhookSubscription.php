@@ -10,11 +10,11 @@ class WebhookSubscription extends Model
 {
     use BelongsToStore;
 
-    protected $fillable = ['store_id', 'event_type', 'target_url', 'secret', 'is_active'];
+    protected $fillable = ['store_id', 'app_installation_id', 'event_type', 'target_url', 'signing_secret_encrypted', 'status'];
 
     protected function casts(): array
     {
-        return ['secret' => 'encrypted', 'is_active' => 'boolean'];
+        return ['signing_secret_encrypted' => 'encrypted'];
     }
 
     public function deliveries(): HasMany

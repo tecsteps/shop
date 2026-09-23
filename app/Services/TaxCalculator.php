@@ -16,12 +16,27 @@ class TaxCalculator
             return [];
         }
 
-        $baseAmount = array_sum($lineAmounts) + ($shippingTaxable ? $shippingAmount : 0);
-        $taxAmount = $pricesIncludeTax
-            ? intdiv(($baseAmount * $rate) + intdiv(10000 + $rate, 2), 10000 + $rate)
-            : intdiv(($baseAmount * $rate) + 5000, 10000);
+        $taxAmount = array_sum(array_map(
+            fn (int $lineAmount): int => $this->taxForAmount($lineAmount, $rate, $pricesIncludeTax),
+            $lineAmounts,
+        ));
+
+        if ($shippingTaxable) {
+            $taxAmount += $this->taxForAmount($shippingAmount, $rate, $pricesIncludeTax);
+        }
 
         return $taxAmount > 0 ? [new TaxLine('Sales tax', $rate, $taxAmount)] : [];
+    }
+
+    private function taxForAmount(int $amount, int $rate, bool $pricesIncludeTax): int
+    {
+        if ($amount <= 0) {
+            return 0;
+        }
+
+        return $pricesIncludeTax
+            ? intdiv($amount * $rate, 10000 + $rate)
+            : intdiv(($amount * $rate) + 5000, 10000);
     }
 
     /** @param array<string, mixed> $rates */

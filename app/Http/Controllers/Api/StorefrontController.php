@@ -27,7 +27,14 @@ class StorefrontController extends Controller
     {
         $validated = $request->validate(['currency' => ['nullable', 'string', 'size:3', 'regex:/^[A-Za-z]{3}$/']]);
         $customer = auth('customer')->user();
-        $cart = $carts->getOrCreateActiveCart($this->store(), $customer);
+        $cart = $customer
+            ? $carts->getOrCreateActiveCart($this->store(), $customer)
+            : Cart::query()->create([
+                'store_id' => $this->store()->id,
+                'currency' => $this->store()->default_currency,
+                'cart_version' => 1,
+                'status' => 'active',
+            ]);
 
         if (isset($validated['currency'])) {
             $cart->update(['currency' => strtoupper($validated['currency'])]);
@@ -45,7 +52,7 @@ class StorefrontController extends Controller
     {
         $validated = $request->validate([
             'variant_id' => ['required', 'integer', Rule::exists('product_variants', 'id')],
-            'quantity' => ['required', 'integer', 'min:1', 'max:100'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:9999'],
             'expected_version' => ['sometimes', 'integer', 'min:1'],
         ]);
 
@@ -56,18 +63,19 @@ class StorefrontController extends Controller
             return response()->json(['message' => $exception->getMessage(), 'current_version' => $exception->currentVersion], 409);
         }
 
-        return response()->json($this->cartPayload($cart));
+        return response()->json($this->cartPayload($cart), 201);
     }
 
     public function updateCartLine(Request $request, int $cartId, int $lineId, CartService $carts): JsonResponse
     {
         $validated = $request->validate([
-            'quantity' => ['required', 'integer', 'min:0', 'max:100'],
-            'expected_version' => ['sometimes', 'integer', 'min:1'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:9999'],
+            'cart_version' => ['required_without:expected_version', 'integer', 'min:1'],
+            'expected_version' => ['required_without:cart_version', 'integer', 'min:1'],
         ]);
 
         try {
-            $cart = $carts->updateQuantity($this->cart($cartId), $lineId, $validated['quantity'], $validated['expected_version'] ?? null);
+            $cart = $carts->updateQuantity($this->cart($cartId), $lineId, $validated['quantity'], $validated['cart_version'] ?? $validated['expected_version']);
         } catch (CartVersionConflictException $exception) {
             return response()->json(['message' => $exception->getMessage(), 'current_version' => $exception->currentVersion], 409);
         }
@@ -75,10 +83,15 @@ class StorefrontController extends Controller
         return response()->json($this->cartPayload($cart));
     }
 
-    public function deleteCartLine(int $cartId, int $lineId, CartService $carts): JsonResponse
+    public function deleteCartLine(Request $request, int $cartId, int $lineId, CartService $carts): JsonResponse
     {
+        $validated = $request->validate([
+            'cart_version' => ['required_without:expected_version', 'integer', 'min:1'],
+            'expected_version' => ['required_without:cart_version', 'integer', 'min:1'],
+        ]);
+
         try {
-            $cart = $carts->remove($this->cart($cartId), $lineId);
+            $cart = $carts->remove($this->cart($cartId), $lineId, $validated['cart_version'] ?? $validated['expected_version']);
         } catch (CartVersionConflictException $exception) {
             return response()->json(['message' => $exception->getMessage(), 'current_version' => $exception->currentVersion], 409);
         }
@@ -88,33 +101,45 @@ class StorefrontController extends Controller
 
     public function createCheckout(Request $request, CheckoutService $checkouts): JsonResponse
     {
-        $validated = $request->validate(['cart_id' => ['required', 'integer']]);
+        $validated = $request->validate([
+            'cart_id' => ['required', 'integer'],
+            'email' => ['required', 'email', 'max:255'],
+        ]);
         $checkout = $checkouts->start($this->cart($validated['cart_id']), auth('customer')->user());
-        session()->put('checkout_id', $checkout->id);
+        $checkout = $checkouts->setContact($checkout, $validated['email']);
+        $checkout = $checkouts->recalculate($checkout->load('cart.lines.variant.product'));
 
         return response()->json($this->checkoutPayload($checkout->load('cart.lines.variant.product')), 201);
     }
 
     public function showCheckout(int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
-        return response()->json($this->checkoutPayload($checkouts->recalculate($this->checkout($checkoutId)->load('cart.lines.variant.product'))));
+        $checkout = $this->checkout($checkoutId);
+
+        return response()->json($this->checkoutPayload($checkouts->recalculate($checkout->load('cart.lines.variant.product'))));
     }
 
     public function updateAddress(Request $request, int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
         $validated = $request->validate([
-            'email' => ['required', 'email', 'max:255'],
-            'shipping_address' => ['required', 'array'],
-            'billing_address' => ['sometimes', 'array'],
+            'email' => ['sometimes', 'email', 'max:255'],
+            'shipping_address' => ['sometimes', 'nullable', 'array'],
+            'billing_address' => ['sometimes', 'nullable', 'array'],
+            'use_shipping_as_billing' => ['sometimes', 'boolean'],
         ]);
-        $checkout = $checkouts->setAddress($this->checkout($checkoutId), $validated['email'], $validated['shipping_address'], $validated['billing_address'] ?? null);
+        $currentCheckout = $this->checkout($checkoutId);
+        $email = (string) ($validated['email'] ?? $currentCheckout->email ?? '');
+        $billingAddress = ($validated['use_shipping_as_billing'] ?? false)
+            ? null
+            : ($validated['billing_address'] ?? null);
+        $checkout = $checkouts->setAddress($currentCheckout, $email, $validated['shipping_address'] ?? [], $billingAddress);
 
         return response()->json($this->checkoutPayload($checkout->load('cart.lines.variant.product')));
     }
 
     public function updateShipping(Request $request, int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
-        $validated = $request->validate(['shipping_method_id' => ['nullable', 'integer']]);
+        $validated = $request->validate(['shipping_method_id' => ['sometimes', 'nullable', 'integer']]);
         $checkout = $checkouts->selectShippingMethod($this->checkout($checkoutId), $validated['shipping_method_id'] ?? null);
 
         return response()->json($this->checkoutPayload($checkout->load('cart.lines.variant.product')));
@@ -123,14 +148,18 @@ class StorefrontController extends Controller
     public function updatePayment(Request $request, int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
         $validated = $request->validate(['payment_method' => ['required', Rule::enum(PaymentMethod::class)]]);
-        $checkout = $checkouts->selectPaymentMethod($this->checkout($checkoutId), PaymentMethod::from($validated['payment_method']));
+        $checkout = $this->checkout($checkoutId);
+        $method = PaymentMethod::from($validated['payment_method']);
+        $checkout = $checkout->status === 'payment_selected'
+            ? $checkouts->changePaymentMethod($checkout, $method)
+            : $checkouts->selectPaymentMethod($checkout, $method);
 
         return response()->json($this->checkoutPayload($checkout->load('cart.lines.variant.product')));
     }
 
     public function applyDiscount(Request $request, int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
-        $validated = $request->validate(['code' => ['required', 'string', 'max:100']]);
+        $validated = $request->validate(['code' => ['required', 'string', 'max:50']]);
         $checkout = $checkouts->applyDiscount($this->checkout($checkoutId), $validated['code']);
 
         return response()->json($this->checkoutPayload($checkout->load('cart.lines.variant.product')));
@@ -138,29 +167,61 @@ class StorefrontController extends Controller
 
     public function removeDiscount(int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
-        $checkout = $this->checkout($checkoutId);
-        $checkout->forceFill(['discount_code' => null])->save();
-        $checkout = $checkouts->recalculate($checkout->refresh()->load('cart.lines.variant.product'));
+        $checkout = $checkouts->removeDiscount($this->checkout($checkoutId));
 
         return response()->json($this->checkoutPayload($checkout));
     }
 
     public function pay(Request $request, int $checkoutId, CheckoutService $checkouts): JsonResponse
     {
-        $validated = $request->validate(['card_number' => ['nullable', 'string', 'max:32']]);
-        $order = $checkouts->pay($this->checkout($checkoutId), $validated);
-        session()->forget(['cart_id', 'checkout_id']);
+        $validated = $request->validate([
+            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
+            'card_number' => ['required_if:payment_method,credit_card', 'nullable', 'string', 'max:32', 'regex:/^[0-9 ]+$/'],
+            'card_expiry' => ['required_if:payment_method,credit_card', 'nullable', 'string', 'regex:/^(0[1-9]|1[0-2])\/[0-9]{2}$/'],
+            'card_cvc' => ['required_if:payment_method,credit_card', 'nullable', 'string', 'regex:/^[0-9]{3,4}$/'],
+            'card_holder' => ['required_if:payment_method,credit_card', 'nullable', 'string', 'max:255'],
+        ]);
+        $checkout = $this->checkout($checkoutId);
+        $method = PaymentMethod::from($validated['payment_method']);
 
-        return response()->json([
-            'order_id' => $order->id,
-            'order_number' => $order->order_number,
-            'status' => $order->status,
-            'financial_status' => $order->financial_status,
-            'total_amount' => $order->total_amount,
-            'currency' => $order->currency,
+        if ($checkout->status === 'shipping_selected') {
+            $checkout = $checkouts->selectPaymentMethod($checkout, $method);
+        } elseif ($checkout->status === 'payment_selected' && $checkout->payment_method !== $method->value) {
+            $checkout = $checkouts->changePaymentMethod($checkout, $method);
+        } elseif ($checkout->status !== 'payment_selected') {
+            abort(409, 'Select an address and shipping method before payment.');
+        }
+
+        $paymentDetails = [...$validated, 'card_number' => isset($validated['card_number']) ? preg_replace('/\s+/', '', $validated['card_number']) : null];
+        $order = $checkouts->pay($checkout, $paymentDetails);
+
+        $response = [
+            'checkout_id' => $checkout->id,
+            'status' => 'completed',
+            'order' => [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'status' => $order->status,
+                'financial_status' => $order->financial_status,
+                'payment_method' => $order->payment_method,
+                'total_amount' => $order->total_amount,
+                'currency' => $order->currency,
+            ],
             'confirmation_url' => URL::signedRoute('storefront.confirmation', ['checkoutId' => $order->checkout_id]),
             'order_access_token' => hash_hmac('sha256', (string) $order->id, (string) config('app.key')),
-        ], 201);
+        ];
+
+        if ($method === PaymentMethod::BankTransfer) {
+            $response['bank_transfer_instructions'] = [
+                'bank_name' => 'Mock Bank AG',
+                'iban' => 'DE89 3704 0044 0532 0130 00',
+                'bic' => 'COBADEFFXXX',
+                'reference' => $order->order_number,
+                'amount_formatted' => number_format($order->total_amount / 100, 2, '.', '').' '.$order->currency,
+            ];
+        }
+
+        return response()->json($response);
     }
 
     public function showOrder(string $orderNumber): JsonResponse
@@ -364,11 +425,7 @@ class StorefrontController extends Controller
         $cart = Cart::query()->with('lines.variant.product', 'lines.variant.inventoryItem')->findOrFail($id);
         $customerId = auth('customer')->id();
 
-        if ($customerId !== null) {
-            abort_unless((int) $cart->customer_id === (int) $customerId, 404);
-        } else {
-            abort_unless($cart->customer_id === null && (int) session('cart_id') === (int) $cart->id, 404);
-        }
+        abort_unless($customerId === null ? $cart->customer_id === null : (int) $cart->customer_id === (int) $customerId, 404);
 
         return $cart;
     }
@@ -378,8 +435,13 @@ class StorefrontController extends Controller
         $checkout = Checkout::query()->where('store_id', $this->store()->id)->findOrFail($id);
         $cart = $checkout->cart;
 
-        if ($cart->customer_id !== auth('customer')->id() || (! auth('customer')->check() && (int) session('cart_id') !== (int) $cart->id)) {
+        if (($customerId = auth('customer')->id()) === null ? $cart->customer_id !== null : (int) $cart->customer_id !== (int) $customerId) {
             abort(404);
+        }
+
+        if ($checkout->status === 'expired' || ($checkout->status !== 'completed' && $checkout->expires_at?->isPast())) {
+            app(CheckoutService::class)->expire($checkout);
+            abort(410, 'This checkout has expired.');
         }
 
         return $checkout;
@@ -388,8 +450,10 @@ class StorefrontController extends Controller
     /** @return array<string, mixed> */
     private function cartPayload(Cart $cart): array
     {
-        $cart->loadMissing('lines.variant.product');
-        $subtotal = (int) $cart->lines->sum(fn ($line): int => $line->unit_price_amount * $line->quantity);
+        $cart->loadMissing('lines.variant.product.media', 'lines.variant.inventoryItem');
+        $subtotal = (int) $cart->lines->sum('line_subtotal_amount');
+        $discount = (int) $cart->lines->sum('line_discount_amount');
+        $itemCount = (int) $cart->lines->sum('quantity');
 
         return [
             'id' => $cart->id,
@@ -402,29 +466,74 @@ class StorefrontController extends Controller
                 'id' => $line->id,
                 'variant_id' => $line->variant_id,
                 'product_id' => $line->variant?->product_id,
-                'title' => $line->variant?->product?->title,
+                'product_title' => $line->variant?->product?->title,
                 'variant_title' => $line->variant?->title,
+                'sku' => $line->variant?->sku,
                 'quantity' => $line->quantity,
                 'unit_price_amount' => $line->unit_price_amount,
-                'line_total_amount' => $line->unit_price_amount * $line->quantity,
+                'line_subtotal_amount' => $line->line_subtotal_amount,
+                'line_discount_amount' => $line->line_discount_amount,
+                'line_total_amount' => $line->line_total_amount,
+                'image_url' => $line->variant?->product?->media?->first()?->url,
+                'requires_shipping' => (bool) $line->variant?->requires_shipping,
+                'available_quantity' => $line->variant?->inventoryItem
+                    ? max(0, $line->variant->inventoryItem->quantity_on_hand - $line->variant->inventoryItem->quantity_reserved)
+                    : null,
             ])->values(),
-            'totals' => ['subtotal' => $subtotal, 'discount' => 0, 'shipping' => 0, 'tax' => 0, 'total' => $subtotal],
+            'totals' => [
+                'subtotal' => $subtotal,
+                'discount' => $discount,
+                'total' => max(0, $subtotal - $discount),
+                'currency' => $cart->currency,
+                'line_count' => $cart->lines->count(),
+                'item_count' => $itemCount,
+            ],
+            'created_at' => $cart->created_at,
+            'updated_at' => $cart->updated_at,
         ];
     }
 
     /** @return array<string, mixed> */
     private function checkoutPayload(Checkout $checkout): array
     {
+        $checkout->loadMissing('cart.lines.variant.product.media', 'cart.lines.variant.inventoryItem');
+        $discountAllocations = $checkout->totals_json['discountAllocations'] ?? [];
+        $shippingMethods = app(CheckoutService::class)->availableShippingRates($checkout)->map(fn ($rate): array => [
+            'id' => $rate->id,
+            'name' => $rate->name,
+            'type' => $rate->type,
+            'price_amount' => $rate->price_amount,
+            'currency' => $checkout->cart?->currency,
+            'estimated_days_min' => data_get($rate->config_json, 'estimated_days_min'),
+            'estimated_days_max' => data_get($rate->config_json, 'estimated_days_max'),
+        ])->values();
+
         return [
             'id' => $checkout->id,
+            'store_id' => $checkout->store_id,
             'cart_id' => $checkout->cart_id,
+            'customer_id' => $checkout->customer_id,
             'status' => $checkout->status,
             'email' => $checkout->email,
             'shipping_address' => $checkout->shipping_address_json,
+            'shipping_address_json' => $checkout->shipping_address_json,
             'billing_address' => $checkout->billing_address_json,
+            'billing_address_json' => $checkout->billing_address_json,
             'shipping_method_id' => $checkout->shipping_method_id,
             'payment_method' => $checkout->payment_method,
             'discount_code' => $checkout->discount_code,
+            'lines' => $checkout->cart?->lines->map(fn ($line): array => [
+                'variant_id' => $line->variant_id,
+                'product_title' => $line->variant?->product?->title,
+                'variant_title' => $line->variant?->title,
+                'sku' => $line->variant?->sku,
+                'quantity' => $line->quantity,
+                'unit_price_amount' => $line->unit_price_amount,
+                'line_total_amount' => max(0, $line->line_subtotal_amount - (int) ($discountAllocations[$line->variant_id] ?? $discountAllocations[(string) $line->variant_id] ?? 0)),
+            ])->values(),
+            'available_shipping_methods' => $shippingMethods,
+            'expires_at' => $checkout->expires_at,
+            'created_at' => $checkout->created_at,
             'totals' => [
                 'subtotal' => $checkout->subtotal_amount,
                 'discount' => $checkout->discount_amount,

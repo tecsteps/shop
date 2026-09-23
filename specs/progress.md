@@ -40,6 +40,17 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** fresh SQLite migration + demo seeding succeeded; initial Pest suite passed (33 tests, 75 assertions); Pint passed; admin Blade compilation and `npm run build` passed in the view agent's check.
 
+### 2026-09-23 — Tenant contracts, checkout/account flows, analytics and webhooks
+
+- Reconciled storefront API guest-cart access, cart-version requirements, discount allocation recalculation, checkout address aliases, digital-only checkout, payment retry, expiration, and API error codes with the route/business specs.
+- Added store-scoped customer password reset through Laravel's password broker, a tenant-bound token repository/provider, generic reset-link acknowledgements, and admin/customer recovery pages. Removed Fortify's public registration and generic reset endpoints so they cannot bypass the shop-specific flows; made logout a CSRF-protected POST.
+- Corrected tax rounding to calculate each item and taxable shipping line independently before summing, as required by the pricing rules.
+- Added daily analytics aggregation and queued outbound webhook delivery with encrypted signing secrets, HMAC-SHA256 signatures, delivery history, retries, response snippets, and pause after five consecutive failures. Analytics schema now contains canonical event fields and completed-checkout counts.
+- Added reusable model factories and focused feature/unit coverage for tenant resolution, catalog lifecycle, guest cart version/stock errors, checkout/payment/inventory transitions, customer registration/login/address ownership/reset isolation, admin API abilities, pricing/discount/tax rounding, HTML sanitization, analytics aggregation, and webhook delivery/signatures/retries.
+- Progress phases remain unchecked until the remaining routes/admin actions, search/settings, media, scheduled cleanup, and browser acceptance work are finished.
+
+**Checks this iteration:** 39 focused shop tests passed (156 assertions); `vendor/bin/pint --dirty --format agent` passed; `npm run build` passed; route list confirmed the new shop recovery endpoints and absence of Fortify's generic recovery routes.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -49,3 +60,6 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | Pest after tenant test setup and Livewire view fixes | Passed: 33 tests, 75 assertions |
 | 2026-09-23 | `vendor/bin/pint --dirty --format agent` | Passed |
 | 2026-09-23 | Admin Blade compilation and `npm run build` | Passed in the view agent's check |
+| 2026-09-23 | Focused tenant, catalog, cart, checkout, account, API, pricing, analytics, and webhook Pest tests | Passed: 39 tests, 156 assertions |
+| 2026-09-23 | `npm run build` after account recovery views | Passed |
+| 2026-09-23 | `php artisan route:list --path=forgot` and `--path=reset` | Passed; both admin and customer shop routes registered, generic Fortify reset routes removed |

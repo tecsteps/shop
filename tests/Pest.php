@@ -45,3 +45,43 @@ function something()
 {
     // ..
 }
+
+function shopStore(string $hostname = 'shop.test', string $currency = 'EUR'): \App\Models\Store
+{
+    $store = \App\Models\Store::factory()->create(['default_currency' => $currency]);
+    $store->domains()->create([
+        'hostname' => $hostname,
+        'type' => 'storefront',
+        'is_primary' => true,
+        'tls_mode' => 'managed',
+    ]);
+    \Illuminate\Support\Facades\Cache::flush();
+
+    return $store;
+}
+
+/** @return array{product: \App\Models\Product, variant: \App\Models\ProductVariant, inventory: \App\Models\InventoryItem} */
+function shopProduct(\App\Models\Store $store, int $price = 2500, int $stock = 10, bool $requiresShipping = true): array
+{
+    $product = \App\Models\Product::factory()->create([
+        'store_id' => $store->id,
+        'title' => 'Test cotton shirt',
+        'handle' => 'test-cotton-shirt-'.fake()->unique()->numberBetween(1, 100000),
+        'status' => 'active',
+        'published_at' => now(),
+    ]);
+    $variant = \App\Models\ProductVariant::factory()->for($product)->create([
+        'currency' => $store->default_currency,
+        'price_amount' => $price,
+        'requires_shipping' => $requiresShipping,
+    ]);
+    $inventory = \App\Models\InventoryItem::factory()->create([
+        'store_id' => $store->id,
+        'variant_id' => $variant->id,
+        'quantity_on_hand' => $stock,
+        'quantity_reserved' => 0,
+        'policy' => 'deny',
+    ]);
+
+    return ['product' => $product, 'variant' => $variant, 'inventory' => $inventory];
+}

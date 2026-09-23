@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TaxSetting extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'store_id';
 
     public $incrementing = false;

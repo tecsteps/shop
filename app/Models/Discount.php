@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToStore;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Discount extends Model
 {
-    use BelongsToStore;
+    use BelongsToStore, HasFactory;
 
     protected $fillable = ['store_id', 'code', 'title', 'type', 'value', 'minimum_subtotal_amount', 'usage_limit', 'usage_count', 'starts_at', 'ends_at', 'is_active', 'rules_json'];
 

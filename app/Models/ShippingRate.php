@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShippingRate extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['shipping_zone_id', 'name', 'type', 'price_amount', 'min_order_amount', 'max_order_amount', 'config_json', 'is_active'];
 
     protected function casts(): array

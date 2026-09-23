@@ -4,7 +4,6 @@ namespace App\Livewire\Storefront\Cart;
 
 use App\Models\Cart;
 use App\Services\CartService;
-use App\Services\DiscountCalculator;
 use Livewire\Component;
 
 class Show extends Component
@@ -45,10 +44,10 @@ class Show extends Component
         $this->dispatch('cart-updated');
     }
 
-    public function applyDiscount(CartService $carts, DiscountCalculator $discounts): void
+    public function applyDiscount(CartService $carts): void
     {
         $this->validate(['discountCode' => ['required', 'string', 'max:64']]);
-        $carts->applyDiscount($this->cart($carts), $this->discountCode, $discounts);
+        $carts->applyDiscount($this->cart($carts), $this->discountCode);
         $this->dispatch('cart-updated');
     }
 

@@ -6,10 +6,11 @@ use App\Models\Concerns\BelongsToStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class Customer extends Authenticatable
 {
-    use BelongsToStore, HasFactory;
+    use BelongsToStore, HasFactory, Notifiable;
 
     protected $fillable = ['store_id', 'email', 'password', 'name', 'marketing_opt_in'];
 

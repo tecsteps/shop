@@ -84,7 +84,7 @@
                 </button>
                 <div class="hidden text-right sm:block"><span class="block max-w-40 truncate text-sm font-medium">{{ $adminUser?->name ?? 'Administrator' }}</span><span class="block max-w-40 truncate text-xs text-zinc-500 dark:text-zinc-400">{{ $adminUser?->email ?? '' }}</span></div>
                 <span class="inline-flex size-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-800 dark:bg-blue-950 dark:text-blue-200" aria-hidden="true">{{ collect(explode(' ', $adminUser?->name ?? 'A'))->filter()->take(2)->map(fn ($part) => mb_substr($part, 0, 1))->join('') }}</span>
-                <a href="/admin/logout" wire:navigate class="hidden min-h-10 items-center rounded-lg px-3 text-sm font-medium text-zinc-600 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 md:inline-flex dark:text-zinc-300 dark:hover:bg-zinc-800">Log out</a>
+                <form method="POST" action="{{ route('admin.logout') }}" class="hidden md:block">@csrf<button type="submit" class="inline-flex min-h-10 items-center rounded-lg px-3 text-sm font-medium text-zinc-600 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800">Log out</button></form>
             </div>
         </header>
 
