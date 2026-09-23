@@ -101,6 +101,14 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** admin product/discount/inventory/search Pest tests passed (20 tests, 127 assertions); `npm run build`, `php artisan view:cache`, and Pint passed.
 
+### 2026-09-23 — Checkout tax provider selection and fallback
+
+- Added the documented tax-provider contract and request/result value objects, with manual regional tax calculation behind the contract.
+- Checkout now selects manual tax, no-tax provider mode, or the Stripe Tax stub from store settings. The stub follows each store's allow/block fallback, logs allow-mode failures, and records a checkout tax-provider snapshot.
+- Added the missing nullable checkout snapshot column with a forward migration.
+
+**Checks this iteration:** provider, manual regional tax, and checkout regression Pest tests passed (12 tests, 47 assertions).
+
 ## Verification log
 
 | Date | Check | Result |

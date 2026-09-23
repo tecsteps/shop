@@ -10,11 +10,11 @@ class Checkout extends Model
 {
     use BelongsToStore;
 
-    protected $fillable = ['store_id', 'cart_id', 'customer_id', 'status', 'payment_method', 'email', 'shipping_address_json', 'billing_address_json', 'shipping_method_id', 'discount_code', 'totals_json', 'subtotal_amount', 'discount_amount', 'shipping_amount', 'tax_amount', 'total_amount', 'expires_at', 'completed_at'];
+    protected $fillable = ['store_id', 'cart_id', 'customer_id', 'status', 'payment_method', 'email', 'shipping_address_json', 'billing_address_json', 'shipping_method_id', 'discount_code', 'totals_json', 'tax_provider_snapshot_json', 'subtotal_amount', 'discount_amount', 'shipping_amount', 'tax_amount', 'total_amount', 'expires_at', 'completed_at'];
 
     protected function casts(): array
     {
-        return ['shipping_address_json' => 'array', 'billing_address_json' => 'array', 'totals_json' => 'array', 'expires_at' => 'datetime', 'completed_at' => 'datetime'];
+        return ['shipping_address_json' => 'array', 'billing_address_json' => 'array', 'totals_json' => 'array', 'tax_provider_snapshot_json' => 'array', 'expires_at' => 'datetime', 'completed_at' => 'datetime'];
     }
 
     public function cart(): BelongsTo
@@ -30,5 +30,10 @@ class Checkout extends Model
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function shippingMethod(): BelongsTo
+    {
+        return $this->belongsTo(ShippingRate::class, 'shipping_method_id');
     }
 }

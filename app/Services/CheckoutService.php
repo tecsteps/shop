@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\CheckoutStatus;
 use App\Enums\PaymentMethod;
+use App\Exceptions\TaxProviderUnavailableException;
 use App\Exceptions\InvalidCheckoutTransitionException;
 use App\Models\Cart;
 use App\Models\Checkout;
@@ -11,6 +12,11 @@ use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Order;
 use App\Models\TaxSetting;
+use App\Services\Tax\ManualTaxProvider;
+use App\Services\Tax\StripeTaxProvider;
+use App\ValueObjects\PricingResult;
+use App\ValueObjects\TaxCalculationRequest;
+use App\ValueObjects\TaxCalculationResult;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -323,20 +329,49 @@ class CheckoutService
         $taxSettings = TaxSetting::query()->where('store_id', $checkout->store_id)->first();
         $address = $checkout->shipping_address_json ?? [];
         $rates = $taxSettings?->taxRatesForCalculator() ?? [];
-        $country = (string) ($address['country_code'] ?? $address['country'] ?? '');
-        $province = $address['province_code'] ?? null;
-        $taxRate = app(TaxCalculator::class)->rateForAddress($rates, $country, $province, $taxSettings?->defaultTaxRateForCalculator() ?? 0);
+        $pricesIncludeTax = (bool) ($taxSettings?->prices_include_tax ?? false);
         $result = $this->pricing->calculate(
             $lines,
             (int) $checkout->shipping_amount,
             $discounts,
-            $taxRate,
-            (bool) ($taxSettings?->prices_include_tax ?? false),
+            0,
+            $pricesIncludeTax,
             true,
             (string) ($checkout->cart->currency ?? 'USD'),
             $checkout->customer_id !== null,
             $checkout->customer_id,
             $checkout->email,
+        );
+
+        $discountedLineAmounts = array_map(function (array $line) use ($result): int {
+            $variantId = (int) ($line['variant_id'] ?? $line['id'] ?? 0);
+            $lineSubtotal = (int) $line['quantity'] * (int) $line['unit_price_amount'];
+
+            return max(0, $lineSubtotal - (int) ($result->discountAllocations[$variantId] ?? 0));
+        }, $lines);
+        $taxRequest = new TaxCalculationRequest(
+            (int) $checkout->store_id,
+            $discountedLineAmounts,
+            $result->shipping,
+            $address,
+            $rates,
+            $taxSettings?->defaultTaxRateForCalculator() ?? 0,
+            $pricesIncludeTax,
+            true,
+            (string) ($checkout->cart->currency ?? 'USD'),
+            $taxSettings?->config_json ?? [],
+        );
+        $taxCalculation = $this->calculateTax($taxSettings, $taxRequest, $checkout);
+        $result = new PricingResult(
+            $result->subtotal,
+            $result->discount,
+            $result->shipping,
+            $taxCalculation->lines,
+            $taxCalculation->total,
+            max(0, $result->subtotal - $result->discount + $result->shipping + ($pricesIncludeTax ? 0 : $taxCalculation->total)),
+            $result->currency,
+            $result->discountAllocations,
+            $result->appliedDiscounts,
         );
 
         $checkout->forceFill([
@@ -346,9 +381,51 @@ class CheckoutService
             'tax_amount' => $result->taxTotal,
             'total_amount' => $result->total,
             'totals_json' => $result->toArray(),
+            'tax_provider_snapshot_json' => $taxCalculation->snapshot,
         ])->save();
 
         return $checkout->refresh();
+    }
+
+    private function calculateTax(?TaxSetting $settings, TaxCalculationRequest $request, Checkout $checkout): TaxCalculationResult
+    {
+        if ($settings?->mode !== 'provider') {
+            return app(ManualTaxProvider::class)->calculate($request);
+        }
+
+        if ($settings->provider === 'none') {
+            return new TaxCalculationResult([], 0, [
+                'provider' => 'none',
+                'status' => 'skipped',
+                'tax_lines' => [],
+                'total_tax_amount' => 0,
+            ]);
+        }
+
+        try {
+            return app(StripeTaxProvider::class)->calculate($request);
+        } catch (TaxProviderUnavailableException $exception) {
+            $snapshot = [
+                'provider' => 'stripe_tax',
+                'status' => 'unavailable',
+                'message' => $exception->getMessage(),
+                'fallback' => $settings->config_json['fallback'] ?? 'allow',
+            ];
+
+            if (($settings->config_json['fallback'] ?? 'allow') === 'block') {
+                $checkout->forceFill(['tax_provider_snapshot_json' => $snapshot])->save();
+
+                throw ValidationException::withMessages(['tax' => 'Tax could not be calculated. Please try again later.']);
+            }
+
+            logger()->warning('Stripe Tax is unavailable; checkout continued without tax.', [
+                'store_id' => $checkout->store_id,
+                'checkout_id' => $checkout->id,
+                'provider_error' => $exception->getMessage(),
+            ]);
+
+            return new TaxCalculationResult([], 0, [...$snapshot, 'status' => 'fallback']);
+        }
     }
 
     /** @return list<Discount> */
