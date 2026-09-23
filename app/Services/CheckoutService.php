@@ -328,11 +328,21 @@ class CheckoutService
         $discounts = [...($codeDiscount ? [$codeDiscount] : []), ...$automaticDiscounts];
         $taxSettings = TaxSetting::query()->where('store_id', $checkout->store_id)->first();
         $address = $checkout->shipping_address_json ?? [];
+        $selectedShippingAmount = (int) $checkout->shipping_amount;
+
+        if ($checkout->shipping_method_id !== null) {
+            $selectedRate = $this->availableShippingRates($checkout)->firstWhere('id', (int) $checkout->shipping_method_id);
+
+            if ($selectedRate !== null) {
+                $selectedShippingAmount = (int) $selectedRate->price_amount;
+            }
+        }
+
         $rates = $taxSettings?->taxRatesForCalculator() ?? [];
         $pricesIncludeTax = (bool) ($taxSettings?->prices_include_tax ?? false);
         $result = $this->pricing->calculate(
             $lines,
-            (int) $checkout->shipping_amount,
+            $selectedShippingAmount,
             $discounts,
             0,
             $pricesIncludeTax,

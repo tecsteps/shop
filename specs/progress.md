@@ -109,6 +109,13 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** provider, manual regional tax, and checkout regression Pest tests passed (12 tests, 47 assertions).
 
+### 2026-09-23 — Free-shipping discount restoration
+
+- Fixed checkout recalculation to resolve the selected shipping rate again, so removing a free-shipping discount restores the cart's selected shipping charge, including recalculated tier rates.
+- Added a regression covering discount application, shipping selection, removal, and restored order total.
+
+**Checks this iteration:** discount and checkout flow Pest tests passed (10 tests, 53 assertions).
+
 ## Verification log
 
 | Date | Check | Result |

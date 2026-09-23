@@ -6,6 +6,8 @@ use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Order;
+use App\Models\ShippingRate;
+use App\Models\ShippingZone;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use Illuminate\Validation\ValidationException;
@@ -140,4 +142,40 @@ it('rejects a repeat code redemption by a registered customer', function () {
 
     expect(fn () => app(CartService::class)->applyDiscount($cart, 'once20'))
         ->toThrow(ValidationException::class, 'This discount can only be used once per customer.');
+});
+
+it('restores the selected shipping price when a free shipping code is removed', function () {
+    $store = shopStore();
+    $product = shopProduct($store, price: 10000);
+    $cart = Cart::factory()->create(['store_id' => $store->id]);
+    $cart = app(CartService::class)->add($cart, $product['variant'], 1);
+    $zone = ShippingZone::factory()->create(['store_id' => $store->id]);
+    $rate = ShippingRate::factory()->create(['shipping_zone_id' => $zone->id, 'price_amount' => 500]);
+    Discount::factory()->create([
+        'store_id' => $store->id,
+        'code' => 'FREESHIP',
+        'type' => 'free_shipping',
+        'value' => 0,
+        'rules_json' => ['activation_method' => 'code'],
+    ]);
+    $checkoutService = app(CheckoutService::class);
+    $checkout = $checkoutService->start($cart);
+    $checkout = $checkoutService->setAddress($checkout, 'buyer@example.test', [
+        'first_name' => 'Alex',
+        'last_name' => 'Buyer',
+        'address1' => '1 Test Street',
+        'city' => 'Berlin',
+        'country' => 'Germany',
+        'country_code' => 'DE',
+        'zip' => '10115',
+    ]);
+    $checkout = $checkoutService->applyDiscount($checkout, 'FREESHIP');
+    $checkout = $checkoutService->selectShippingMethod($checkout, $rate->id);
+
+    expect($checkout->shipping_amount)->toBe(0);
+
+    $checkout = $checkoutService->removeDiscount($checkout);
+
+    expect($checkout->shipping_amount)->toBe(500)
+        ->and($checkout->total_amount)->toBe(10500);
 });
