@@ -39,3 +39,25 @@ it('does not add included tax on top of the customer total', function () {
     expect($result->taxTotal)->toBe(190)
         ->and($result->total)->toBe(1190);
 });
+
+it('applies an automatic free-shipping discount before shipping tax is calculated', function () {
+    $discount = new Discount([
+        'type' => 'free_shipping',
+        'value' => 0,
+        'is_active' => true,
+        'rules_json' => ['activation_method' => 'automatic'],
+    ]);
+
+    $result = app(PricingEngine::class)->calculate(
+        lines: [['variant_id' => 4, 'quantity' => 1, 'unit_price_amount' => 1000]],
+        shippingAmount: 500,
+        discount: $discount,
+        taxRate: 1000,
+        shippingTaxable: true,
+    );
+
+    expect($result->discount)->toBe(0)
+        ->and($result->shipping)->toBe(0)
+        ->and($result->taxTotal)->toBe(100)
+        ->and($result->total)->toBe(1100);
+});

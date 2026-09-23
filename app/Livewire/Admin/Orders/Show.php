@@ -23,9 +23,15 @@ class Show extends Component
 
     public string $trackingNumber = '';
 
+    public string $trackingUrl = '';
+
+    /** @var array<int, int|string> */
+    public array $fulfillmentLines = [];
+
     public function mount(int $order): void
     {
         $this->orderId = $order;
+        $this->setRemainingFulfillmentQuantities($this->order());
     }
 
     public function confirmPayment(OrderService $orders): void
@@ -58,17 +64,58 @@ class Show extends Component
     {
         $order = $this->order();
         Gate::authorize('createFulfillment', $order);
-        $lineQuantities = $order->lines->mapWithKeys(fn ($line): array => [$line->id => $line->quantity - $line->fulfillmentLines()->sum('quantity')])->filter()->all();
+
+        $validated = $this->validate([
+            'fulfillmentLines' => ['required', 'array', 'min:1'],
+            'fulfillmentLines.*' => ['required', 'integer', 'min:0'],
+            'trackingCompany' => ['nullable', 'string', 'max:255'],
+            'trackingNumber' => ['nullable', 'string', 'max:255'],
+            'trackingUrl' => ['nullable', 'url', 'regex:/\Ahttps?:\/\/\S+\z/i', 'max:255'],
+        ]);
+        $lineQuantities = collect($validated['fulfillmentLines'])
+            ->map(fn (int|string $quantity): int => (int) $quantity)
+            ->filter(fn (int $quantity): bool => $quantity > 0)
+            ->all();
+
+        if ($lineQuantities === []) {
+            $this->addError('fulfillmentLines', 'Select at least one item to fulfill.');
+
+            return;
+        }
+
         $fulfillments->create($order, $lineQuantities, [
             'tracking_company' => $this->trackingCompany ?: null,
             'tracking_number' => $this->trackingNumber ?: null,
+            'tracking_url' => $this->trackingUrl ?: null,
         ]);
+        $this->reset(['trackingCompany', 'trackingNumber', 'trackingUrl']);
+        $this->setRemainingFulfillmentQuantities($this->order());
         session()->flash('status', 'Fulfillment created.');
+    }
+
+    public function markAsShipped(int $fulfillmentId, FulfillmentService $fulfillments): void
+    {
+        $order = $this->order();
+        Gate::authorize('update', $order);
+        $fulfillment = $order->fulfillments()->findOrFail($fulfillmentId);
+
+        $fulfillments->markShipped($fulfillment);
+        session()->flash('status', 'Fulfillment marked as shipped.');
+    }
+
+    public function markAsDelivered(int $fulfillmentId, FulfillmentService $fulfillments): void
+    {
+        $order = $this->order();
+        Gate::authorize('update', $order);
+        $fulfillment = $order->fulfillments()->findOrFail($fulfillmentId);
+
+        $fulfillments->markDelivered($fulfillment);
+        session()->flash('status', 'Fulfillment marked as delivered.');
     }
 
     public function render(): mixed
     {
-        $order = $this->order()->load('customer', 'lines.variant', 'payments', 'refunds', 'fulfillments.lines.orderLine');
+        $order = $this->order()->load('customer', 'lines.variant', 'lines.fulfillmentLines', 'payments', 'refunds', 'fulfillments.lines.orderLine');
         Gate::authorize('view', $order);
 
         return view('livewire.admin.orders.show', ['order' => $order])->layout('layouts.admin');
@@ -76,6 +123,13 @@ class Show extends Component
 
     private function order(): Order
     {
-        return Order::query()->with('lines')->findOrFail($this->orderId);
+        return Order::query()->with('lines.fulfillmentLines')->findOrFail($this->orderId);
+    }
+
+    private function setRemainingFulfillmentQuantities(Order $order): void
+    {
+        $this->fulfillmentLines = $order->lines->mapWithKeys(fn ($line): array => [
+            $line->id => max(0, $line->quantity - (int) $line->fulfillmentLines->sum('quantity')),
+        ])->all();
     }
 }

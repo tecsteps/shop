@@ -9,10 +9,14 @@ use App\Models\Order;
 use App\Models\StoreSettings;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OrderService
 {
-    public function __construct(private readonly InventoryService $inventory) {}
+    public function __construct(
+        private readonly InventoryService $inventory,
+        private readonly DiscountCalculator $discountCalculator,
+    ) {}
 
     /** @param array{id: string, status: string, message: string} $providerResult */
     public function createFromCheckout(Checkout $checkout, array $providerResult): Order
@@ -28,12 +32,39 @@ class OrderService
             $cart = $checkout->cart;
             $lines = $cart->lines;
             $store = $checkout->store_id;
+            $totals = $checkout->totals_json ?? [];
+            $appliedDiscountIds = array_values(array_unique(array_map('intval', $totals['applied_discount_ids'] ?? [])));
+
+            if ($appliedDiscountIds === [] && $checkout->discount_code) {
+                $legacyDiscountId = Discount::withoutGlobalScopes()
+                    ->where('store_id', $store)
+                    ->where('code', $checkout->discount_code)
+                    ->value('id');
+
+                if ($legacyDiscountId !== null) {
+                    $appliedDiscountIds[] = (int) $legacyDiscountId;
+                }
+            }
+
+            $appliedDiscounts = Discount::withoutGlobalScopes()
+                ->where('store_id', $store)
+                ->whereIn('id', $appliedDiscountIds)
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('id');
+
+            foreach ($appliedDiscounts as $discount) {
+                if (($discount->rules_json['one_per_customer'] ?? false)
+                    && $this->discountCalculator->hasCustomerRedeemed($discount, $checkout->customer_id, $checkout->email)) {
+                    throw ValidationException::withMessages(['discount_code' => 'This discount can only be used once per customer.']);
+                }
+            }
+
             $settings = StoreSettings::query()->where('store_id', $store)->first()?->settings_json ?? [];
             $startNumber = (int) ($settings['order_number_start'] ?? 1001);
             $prefix = (string) ($settings['order_number_prefix'] ?? '#');
             $orderNumber = $prefix.str_pad((string) ($startNumber + Order::withoutGlobalScopes()->where('store_id', $store)->count()), 4, '0', STR_PAD_LEFT);
             $isPaid = $providerResult['status'] === 'captured';
-            $totals = $checkout->totals_json ?? [];
 
             $order = Order::withoutGlobalScopes()->create([
                 'checkout_id' => $checkout->id,
@@ -62,6 +93,19 @@ class OrderService
                 $key = (string) $line->variant_id;
                 $lineDiscount = (int) ($discountAllocations[$key] ?? $discountAllocations[(int) $line->variant_id] ?? 0);
                 $lineTotal = max(0, $line->line_subtotal_amount - $lineDiscount);
+                $lineDiscountDetails = [];
+
+                foreach ($totals['appliedDiscounts'] ?? [] as $appliedDiscount) {
+                    $amount = (int) ($appliedDiscount['allocations'][$key] ?? $appliedDiscount['allocations'][(int) $line->variant_id] ?? 0);
+
+                    if ($amount > 0 && $appliedDiscount['discount_id'] !== null) {
+                        $lineDiscountDetails[] = ['discount_id' => (int) $appliedDiscount['discount_id'], 'amount' => $amount];
+                    }
+                }
+
+                if ($lineDiscountDetails === [] && $lineDiscount > 0) {
+                    $lineDiscountDetails[] = ['amount' => $lineDiscount];
+                }
 
                 $order->lines()->create([
                     'product_id' => $variant?->product_id,
@@ -72,7 +116,7 @@ class OrderService
                     'quantity' => $line->quantity,
                     'unit_price_amount' => $line->unit_price_amount,
                     'total_amount' => $lineTotal,
-                    'discount_allocations_json' => $lineDiscount > 0 ? [['amount' => $lineDiscount]] : [],
+                    'discount_allocations_json' => $lineDiscountDetails,
                 ]);
 
                 if ($isPaid && $variant?->inventoryItem) {
@@ -94,8 +138,8 @@ class OrderService
             $checkout->forceFill(['status' => 'completed', 'completed_at' => now()])->save();
             $cart->forceFill(['status' => 'converted'])->save();
 
-            if ($checkout->discount_code) {
-                Discount::withoutGlobalScopes()->where('store_id', $store)->where('code', $checkout->discount_code)->increment('usage_count');
+            foreach ($appliedDiscounts as $discount) {
+                $discount->increment('usage_count');
             }
 
             if ($isPaid && $lines->isNotEmpty() && $lines->every(static fn ($line): bool => ! $line->variant?->requires_shipping)) {

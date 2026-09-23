@@ -9,6 +9,7 @@ use App\Models\Cart;
 use App\Models\Checkout;
 use App\Models\Customer;
 use App\Models\Discount;
+use App\Models\Order;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Models\TaxSetting;
@@ -52,7 +53,7 @@ class CheckoutService
 
         $checkout->forceFill(['email' => $email])->save();
 
-        return $checkout->refresh();
+        return $this->recalculate($checkout->refresh());
     }
 
     /** @param array<string, mixed> $shippingAddress
@@ -68,6 +69,19 @@ class CheckoutService
         $billingAddress = $billingAddress === null ? null : $this->normalizeAddress($billingAddress);
         $requiresShipping = $this->requiresShipping($checkout);
         $requiredAddressField = $requiresShipping ? 'required' : 'nullable';
+        $validCountryCode = static function (string $attribute, mixed $value, \Closure $fail): void {
+            $countries = class_exists(\ResourceBundle::class)
+                ? \ResourceBundle::create('en', 'ICUDATA-region')?->get('Countries')
+                : null;
+
+            $countryName = $countries instanceof \ResourceBundle
+                ? $countries->get(strtoupper((string) $value))
+                : null;
+
+            if (! is_string($countryName) || in_array($countryName, ['Unknown Region', 'Pseudo-Accents', 'Pseudo-Bidi'], true)) {
+                $fail('The country code must be a valid ISO 3166-1 alpha-2 code.');
+            }
+        };
 
         $validator = Validator::make([
             'email' => $email,
@@ -84,7 +98,7 @@ class CheckoutService
             'shipping_address.province' => ['nullable', 'string', 'max:255'],
             'shipping_address.province_code' => ['nullable', 'string', 'max:10'],
             'shipping_address.country' => [$requiredAddressField, 'string', 'max:255'],
-            'shipping_address.country_code' => [$requiredAddressField, 'string', 'size:2'],
+            'shipping_address.country_code' => [$requiredAddressField, 'string', 'size:2', $validCountryCode],
             'shipping_address.zip' => [$requiredAddressField, 'string', 'max:20'],
             'shipping_address.phone' => ['nullable', 'string', 'max:50'],
             'billing_address' => ['nullable', 'array'],
@@ -96,7 +110,7 @@ class CheckoutService
             'billing_address.province' => ['nullable', 'string', 'max:255'],
             'billing_address.province_code' => ['nullable', 'string', 'max:10'],
             'billing_address.country' => ['required_with:billing_address', 'string', 'max:255'],
-            'billing_address.country_code' => ['required_with:billing_address', 'string', 'size:2'],
+            'billing_address.country_code' => ['required_with:billing_address', 'string', 'size:2', $validCountryCode],
             'billing_address.zip' => ['required_with:billing_address', 'string', 'max:20'],
             'billing_address.phone' => ['nullable', 'string', 'max:50'],
         ]);
@@ -194,9 +208,11 @@ class CheckoutService
             throw ValidationException::withMessages(['discount_code' => 'This discount code is not valid.']);
         }
 
-        $checkout->forceFill(['discount_code' => $discount->code])->save();
+        return DB::transaction(function () use ($checkout, $discount): Checkout {
+            $checkout->forceFill(['discount_code' => $discount->code])->save();
 
-        return $this->recalculate($checkout->refresh());
+            return $this->recalculate($checkout->refresh());
+        });
     }
 
     public function removeDiscount(Checkout $checkout): Checkout
@@ -294,6 +310,12 @@ class CheckoutService
     /** @param array<string, mixed> $paymentDetails */
     public function pay(Checkout $checkout, array $paymentDetails = []): \App\Models\Order
     {
+        if (Order::withoutGlobalScopes()->where('checkout_id', $checkout->id)->exists()) {
+            return $this->payments->pay($checkout, $paymentDetails);
+        }
+
+        $checkout = $this->recalculate($checkout->refresh());
+
         return $this->payments->pay($checkout, $paymentDetails);
     }
 
@@ -309,9 +331,14 @@ class CheckoutService
             'collection_ids' => $line->variant?->product?->collections?->pluck('id')->all() ?? [],
         ])->all();
         $subtotal = array_sum(array_map(static fn (array $line): int => $line['quantity'] * $line['unit_price_amount'], $lines));
-        $discount = $checkout->discount_code
-            ? Discount::withoutGlobalScopes()->where('store_id', $checkout->store_id)->where('code', $checkout->discount_code)->first()
+        $codeDiscount = $checkout->discount_code
+            ? Discount::withoutGlobalScopes()
+                ->where('store_id', $checkout->store_id)
+                ->whereRaw('upper(code) = ?', [strtoupper(trim($checkout->discount_code))])
+                ->first()
             : null;
+        $automaticDiscounts = $this->automaticDiscounts($checkout->store_id);
+        $discounts = [...($codeDiscount ? [$codeDiscount] : []), ...$automaticDiscounts];
         $taxSettings = TaxSetting::query()->where('store_id', $checkout->store_id)->first();
         $address = $checkout->shipping_address_json ?? [];
         $rates = $taxSettings?->rates_json ?? [];
@@ -321,12 +348,14 @@ class CheckoutService
         $result = $this->pricing->calculate(
             $lines,
             (int) $checkout->shipping_amount,
-            $discount,
+            $discounts,
             $taxRate,
             (bool) ($taxSettings?->prices_include_tax ?? false),
             true,
             (string) ($checkout->cart->currency ?? 'USD'),
             $checkout->customer_id !== null,
+            $checkout->customer_id,
+            $checkout->email,
         );
 
         $checkout->forceFill([
@@ -339,6 +368,20 @@ class CheckoutService
         ])->save();
 
         return $checkout->refresh();
+    }
+
+    /** @return list<Discount> */
+    private function automaticDiscounts(int $storeId): array
+    {
+        return Discount::withoutGlobalScopes()
+            ->where('store_id', $storeId)
+            ->whereNull('code')
+            ->where('is_active', true)
+            ->orderBy('id')
+            ->get()
+            ->filter(static fn (Discount $discount): bool => ($discount->rules_json['activation_method'] ?? null) === 'automatic')
+            ->values()
+            ->all();
     }
 
     private function requiresShipping(Checkout $checkout): bool

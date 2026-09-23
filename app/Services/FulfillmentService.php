@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\FulfillmentCreated;
 use App\Models\Fulfillment;
 use App\Models\Order;
+use App\Models\OrderLine;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -56,15 +57,7 @@ class FulfillmentService
                 $fulfillment->lines()->create(['order_line_id' => $line->id, 'quantity' => $quantity]);
             }
 
-            $fullyFulfilled = $order->lines->every(function ($line) use ($selectedLines): bool {
-                $newQuantity = collect($selectedLines)->first(fn (array $selected): bool => $selected[0]->id === $line->id)[1] ?? 0;
-
-                return $line->fulfillmentLines->sum('quantity') + $newQuantity >= $line->quantity;
-            });
-            $order->forceFill([
-                'fulfillment_status' => $fullyFulfilled ? 'fulfilled' : 'partial',
-                'status' => $fullyFulfilled ? 'fulfilled' : $order->status,
-            ])->save();
+            $this->keepOrderInProgress($order);
 
             FulfillmentCreated::dispatch($fulfillment->load('order', 'lines.orderLine'));
 
@@ -74,23 +67,65 @@ class FulfillmentService
 
     public function markShipped(Fulfillment $fulfillment): Fulfillment
     {
-        if ($fulfillment->status !== 'pending') {
-            throw ValidationException::withMessages(['status' => 'Only pending fulfillments can be marked as shipped.']);
-        }
+        return DB::transaction(function () use ($fulfillment): Fulfillment {
+            $order = Order::withoutGlobalScopes()->lockForUpdate()->findOrFail($fulfillment->order_id);
+            $fulfillment = Fulfillment::withoutGlobalScopes()
+                ->where('order_id', $order->id)
+                ->lockForUpdate()
+                ->findOrFail($fulfillment->id);
 
-        $fulfillment->forceFill(['status' => 'shipped', 'shipped_at' => now()])->save();
+            if ($fulfillment->status !== 'pending') {
+                throw ValidationException::withMessages(['status' => 'Only pending fulfillments can be marked as shipped.']);
+            }
 
-        return $fulfillment->refresh();
+            $fulfillment->forceFill(['status' => 'shipped', 'shipped_at' => now()])->save();
+            $this->keepOrderInProgress($order);
+
+            return $fulfillment->refresh();
+        });
     }
 
     public function markDelivered(Fulfillment $fulfillment): Fulfillment
     {
-        if ($fulfillment->status !== 'shipped') {
-            throw ValidationException::withMessages(['status' => 'Only shipped fulfillments can be marked as delivered.']);
-        }
+        return DB::transaction(function () use ($fulfillment): Fulfillment {
+            $order = Order::withoutGlobalScopes()->lockForUpdate()->findOrFail($fulfillment->order_id);
+            $fulfillment = Fulfillment::withoutGlobalScopes()
+                ->where('order_id', $order->id)
+                ->lockForUpdate()
+                ->findOrFail($fulfillment->id);
 
-        $fulfillment->forceFill(['status' => 'delivered', 'delivered_at' => now()])->save();
+            if ($fulfillment->status !== 'shipped') {
+                throw ValidationException::withMessages(['status' => 'Only shipped fulfillments can be marked as delivered.']);
+            }
 
-        return $fulfillment->refresh();
+            $fulfillment->forceFill(['status' => 'delivered', 'delivered_at' => now()])->save();
+
+            $order->load(['lines', 'fulfillments.lines']);
+            $allFulfillmentsDelivered = $order->fulfillments->isNotEmpty()
+                && $order->fulfillments->every(fn (Fulfillment $candidate): bool => $candidate->status === 'delivered');
+            $deliveredQuantities = $order->fulfillments
+                ->where('status', 'delivered')
+                ->flatMap(fn (Fulfillment $candidate) => $candidate->lines)
+                ->groupBy('order_line_id')
+                ->map(fn ($lines): int => (int) $lines->sum('quantity'));
+            $allOrderLineQuantitiesDelivered = $order->lines->isNotEmpty()
+                && $order->lines->every(fn (OrderLine $line): bool => ($deliveredQuantities[$line->id] ?? 0) >= $line->quantity);
+            $fullyFulfilled = $allFulfillmentsDelivered && $allOrderLineQuantitiesDelivered;
+
+            $order->forceFill([
+                'fulfillment_status' => $fullyFulfilled ? 'fulfilled' : 'partial',
+                'status' => $fullyFulfilled ? 'fulfilled' : ($order->status === 'fulfilled' ? 'paid' : $order->status),
+            ])->save();
+
+            return $fulfillment->refresh();
+        });
+    }
+
+    private function keepOrderInProgress(Order $order): void
+    {
+        $order->forceFill([
+            'fulfillment_status' => 'partial',
+            'status' => $order->status === 'fulfilled' ? 'paid' : $order->status,
+        ])->save();
     }
 }

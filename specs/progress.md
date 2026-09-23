@@ -73,6 +73,14 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 
 **Checks this iteration:** signed media API Pest tests passed (3 tests, 16 assertions); search settings Pest tests passed (4 tests, 19 assertions); focused Pint and `git diff --check` passed.
 
+### 2026-09-23 — Discount application and fulfillment lifecycle
+
+- Checkout recalculates totals before payment, applies eligible automatic promotions alongside one code discount, and records one-per-customer redemptions safely. Refund amounts reduce recognized order revenue.
+- Fulfillment actions now preserve partial quantities and tracking data, keep pending shipments from completing orders, and complete an order only after all required quantities are delivered.
+- Added admin order detail controls for creating partial shipments and marking shipments shipped or delivered.
+
+**Checks this iteration:** focused discount, fulfillment, and pricing Pest tests passed (11 tests, 73 assertions); Pint passed on the changed PHP files.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -89,3 +97,4 @@ The implementation follows the build order in `09-IMPLEMENTATION-ROADMAP.md` and
 | 2026-09-23 | `php artisan schedule:list --no-interaction` | Passed; analytics, abandoned-cart cleanup, checkout expiration, and bank-transfer cancellation schedules registered |
 | 2026-09-23 | Signed product-media upload Pest tests | Passed: 3 tests, 16 assertions |
 | 2026-09-23 | Search settings Pest tests | Passed: 4 tests, 19 assertions |
+| 2026-09-23 | Discount, fulfillment lifecycle, and pricing Pest tests | Passed: 11 tests, 73 assertions |

@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Enums\DiscountType;
 use App\Models\Discount;
+use App\Models\Order;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 
 class DiscountCalculator
@@ -12,8 +14,14 @@ class DiscountCalculator
      * @param  list<array<string, int|array<int, int>>>  $lines
      * @return array{amount: int, allocations: array<int, int>}
      */
-    public function calculate(Discount $discount, array $lines, int $subtotal, bool $hasCustomer = false): array
-    {
+    public function calculate(
+        Discount $discount,
+        array $lines,
+        int $subtotal,
+        bool $hasCustomer = false,
+        ?int $customerId = null,
+        ?string $customerEmail = null,
+    ): array {
         $rules = $discount->rules_json ?? [];
         $minimum = (int) ($discount->minimum_subtotal_amount ?? $rules['min_purchase_amount'] ?? $rules['minimum_purchase_amount'] ?? $rules['minimum_order_amount'] ?? 0);
 
@@ -33,6 +41,10 @@ class DiscountCalculator
             throw ValidationException::withMessages(['discount_code' => 'This discount is available to registered customers.']);
         }
 
+        if (($rules['one_per_customer'] ?? false) && $this->hasCustomerRedeemed($discount, $customerId, $customerEmail)) {
+            throw ValidationException::withMessages(['discount_code' => 'This discount can only be used once per customer.']);
+        }
+
         $eligible = $this->eligibleLines($lines, $rules);
         $eligibleSubtotal = array_sum(array_map(static fn (array $line): int => (int) $line['line_subtotal_amount'], $eligible));
 
@@ -49,6 +61,102 @@ class DiscountCalculator
         $amount = min($amount, $eligibleSubtotal);
 
         return ['amount' => $amount, 'allocations' => $this->allocate($eligible, $amount, $eligibleSubtotal)];
+    }
+
+    /**
+     * @param  list<Discount>  $discounts
+     * @param  list<array<string, mixed>>  $lines
+     * @return array{amount: int, allocations: array<int, int>, applied_discounts: list<array{discount_id: int|null, code: string|null, title: string, type: string, activation_method: string, amount: int, allocations: array<int, int>}>}
+     */
+    public function calculateStacked(
+        array $discounts,
+        array $lines,
+        int $subtotal,
+        ?int $customerId = null,
+        ?string $customerEmail = null,
+        bool $hasCustomer = false,
+    ): array {
+        $remainingLines = $lines;
+        $totalAmount = 0;
+        $allocations = [];
+        $appliedDiscounts = [];
+
+        foreach ($discounts as $discount) {
+            try {
+                $result = $this->calculate($discount, $remainingLines, $subtotal, $hasCustomer, $customerId, $customerEmail);
+            } catch (ValidationException $exception) {
+                if ($discount->code !== null) {
+                    throw $exception;
+                }
+
+                continue;
+            }
+
+            foreach ($remainingLines as $index => $line) {
+                $variantId = (int) ($line['variant_id'] ?? $line['id'] ?? 0);
+                $lineDiscount = (int) ($result['allocations'][$variantId] ?? 0);
+
+                if ($lineDiscount > 0) {
+                    $allocations[$variantId] = (int) ($allocations[$variantId] ?? 0) + $lineDiscount;
+                    $remainingLines[$index]['line_subtotal_amount'] = max(0, (int) $line['line_subtotal_amount'] - $lineDiscount);
+                }
+            }
+
+            $totalAmount += $result['amount'];
+            $appliedDiscounts[] = [
+                'discount_id' => $discount->exists ? (int) $discount->getKey() : null,
+                'code' => $discount->code,
+                'title' => $discount->title ?? '',
+                'type' => $discount->type,
+                'activation_method' => ($discount->rules_json['activation_method'] ?? null) === 'automatic' || $discount->code === null ? 'automatic' : 'code',
+                'amount' => $result['amount'],
+                'allocations' => $result['allocations'],
+            ];
+        }
+
+        return [
+            'amount' => $totalAmount,
+            'allocations' => $allocations,
+            'applied_discounts' => $appliedDiscounts,
+        ];
+    }
+
+    public function hasCustomerRedeemed(Discount $discount, ?int $customerId, ?string $customerEmail): bool
+    {
+        if (! $discount->exists || ($customerId === null && blank($customerEmail))) {
+            return false;
+        }
+
+        $query = Order::withoutGlobalScopes()
+            ->where('store_id', $discount->store_id)
+            ->whereHas('checkout', function (Builder $checkoutQuery) use ($discount): void {
+                $checkoutQuery->withoutGlobalScopes()->where(function (Builder $query) use ($discount): void {
+                    if ($discount->exists) {
+                        $query->whereJsonContains('totals_json->applied_discount_ids', (int) $discount->getKey());
+                    }
+
+                    if ($discount->code !== null) {
+                        $query->orWhere('discount_code', $discount->code);
+                    }
+                });
+            })
+            ->where(function (Builder $query) use ($customerId, $customerEmail): void {
+                if ($customerId !== null) {
+                    $query->where('customer_id', $customerId);
+                }
+
+                if (filled($customerEmail)) {
+                    $normalizedEmail = mb_strtolower(trim((string) $customerEmail));
+
+                    if ($customerId !== null) {
+                        $query->orWhereRaw('LOWER(email) = ?', [$normalizedEmail]);
+                    } else {
+                        $query->whereRaw('LOWER(email) = ?', [$normalizedEmail]);
+                    }
+                }
+            });
+
+        return $query->exists();
     }
 
     /** @param list<array<string, mixed>> $lines */

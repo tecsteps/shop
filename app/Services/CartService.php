@@ -195,26 +195,20 @@ class CartService
             throw ValidationException::withMessages(['discount_code' => 'This discount code is not valid.']);
         }
         $cart->load('lines.variant.product.collections');
-        $lines = $cart->lines->map(fn ($line): array => [
-            'id' => $line->id,
-            'variant_id' => $line->variant_id,
-            'product_id' => $line->variant?->product_id,
-            'collection_ids' => $line->variant?->product?->collections?->pluck('id')->all() ?? [],
-            'quantity' => $line->quantity,
-            'unit_price_amount' => $line->unit_price_amount,
-            'line_subtotal_amount' => $line->line_subtotal_amount,
-        ])->all();
-        $subtotal = array_sum(array_column($lines, 'line_subtotal_amount'));
-        $result = $this->discountCalculator->calculate($discount, $lines, $subtotal, $cart->customer_id !== null);
+        $lines = $this->discountLines($cart);
+        $result = $this->discountCalculator->calculateStacked(
+            [$discount, ...$this->automaticDiscounts($cart->store_id)],
+            $lines,
+            array_sum(array_column($lines, 'line_subtotal_amount')),
+            $cart->customer_id,
+            $this->customerEmail($cart->customer_id),
+            $cart->customer_id !== null,
+        );
 
         DB::transaction(function () use ($cart, $discount, $result): void {
-            foreach ($cart->lines as $line) {
-                $amount = (int) ($result['allocations'][$line->variant_id] ?? 0);
-                $line->forceFill(['line_discount_amount' => $amount, 'line_total_amount' => $line->line_subtotal_amount - $amount])->save();
-            }
-
             $cart->forceFill(['discount_code' => $discount->code])->save();
             $cart->increment('cart_version');
+            $this->storeCartDiscountAllocations($cart, $result['allocations']);
         });
 
         return $cart->refresh()->load('lines.variant.product');
@@ -222,9 +216,11 @@ class CartService
 
     public function removeDiscount(Cart $cart): Cart
     {
-        $cart->lines()->update(['line_discount_amount' => 0, 'line_total_amount' => DB::raw('line_subtotal_amount')]);
-        $cart->forceFill(['discount_code' => null])->save();
-        $cart->increment('cart_version');
+        DB::transaction(function () use ($cart): void {
+            $cart->forceFill(['discount_code' => null])->save();
+            $cart->increment('cart_version');
+            $this->refreshDiscountAllocations($cart);
+        });
 
         return $cart->refresh()->load('lines.variant.product');
     }
@@ -249,24 +245,55 @@ class CartService
     {
         $cart->load('lines.variant.product.collections');
 
-        if (! $cart->discount_code || $cart->lines->isEmpty()) {
+        if ($cart->lines->isEmpty()) {
             $this->clearDiscountAllocations($cart);
 
             return;
         }
 
-        $discount = Discount::query()
-            ->where('store_id', $cart->store_id)
-            ->whereRaw('upper(code) = ?', [strtoupper(trim($cart->discount_code))])
-            ->first();
+        $codeDiscount = $cart->discount_code
+            ? Discount::withoutGlobalScopes()
+                ->where('store_id', $cart->store_id)
+                ->whereRaw('upper(code) = ?', [strtoupper(trim($cart->discount_code))])
+                ->first()
+            : null;
 
-        if (! $discount) {
-            $this->clearDiscountAllocations($cart);
-
-            return;
+        if ($cart->discount_code && ! $codeDiscount) {
+            $cart->forceFill(['discount_code' => null])->save();
         }
 
-        $lines = $cart->lines->map(fn ($line): array => [
+        $lines = $this->discountLines($cart);
+        $automaticDiscounts = $this->automaticDiscounts($cart->store_id);
+        $discounts = [...($codeDiscount ? [$codeDiscount] : []), ...$automaticDiscounts];
+
+        try {
+            $result = $this->discountCalculator->calculateStacked(
+                $discounts,
+                $lines,
+                array_sum(array_column($lines, 'line_subtotal_amount')),
+                $cart->customer_id,
+                $this->customerEmail($cart->customer_id),
+                $cart->customer_id !== null,
+            );
+        } catch (ValidationException) {
+            $cart->forceFill(['discount_code' => null])->save();
+            $result = $this->discountCalculator->calculateStacked(
+                $automaticDiscounts,
+                $lines,
+                array_sum(array_column($lines, 'line_subtotal_amount')),
+                $cart->customer_id,
+                $this->customerEmail($cart->customer_id),
+                $cart->customer_id !== null,
+            );
+        }
+
+        $this->storeCartDiscountAllocations($cart, $result['allocations']);
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function discountLines(Cart $cart): array
+    {
+        return $cart->lines->map(static fn ($line): array => [
             'id' => $line->id,
             'variant_id' => $line->variant_id,
             'product_id' => $line->variant?->product_id,
@@ -275,22 +302,34 @@ class CartService
             'unit_price_amount' => $line->unit_price_amount,
             'line_subtotal_amount' => $line->line_subtotal_amount,
         ])->all();
+    }
 
-        try {
-            $result = $this->discountCalculator->calculate(
-                $discount,
-                $lines,
-                array_sum(array_column($lines, 'line_subtotal_amount')),
-                $cart->customer_id !== null,
-            );
-        } catch (ValidationException) {
-            $this->clearDiscountAllocations($cart);
+    /** @return list<Discount> */
+    private function automaticDiscounts(int $storeId): array
+    {
+        return Discount::withoutGlobalScopes()
+            ->where('store_id', $storeId)
+            ->whereNull('code')
+            ->where('is_active', true)
+            ->orderBy('id')
+            ->get()
+            ->filter(static fn (Discount $discount): bool => ($discount->rules_json['activation_method'] ?? null) === 'automatic')
+            ->values()
+            ->all();
+    }
 
-            return;
-        }
+    private function customerEmail(?int $customerId): ?string
+    {
+        return $customerId === null
+            ? null
+            : Customer::withoutGlobalScopes()->whereKey($customerId)->value('email');
+    }
 
+    /** @param array<int, int> $allocations */
+    private function storeCartDiscountAllocations(Cart $cart, array $allocations): void
+    {
         foreach ($cart->lines as $line) {
-            $amount = (int) ($result['allocations'][$line->variant_id] ?? 0);
+            $amount = (int) ($allocations[$line->variant_id] ?? 0);
             $line->forceFill([
                 'line_discount_amount' => $amount,
                 'line_total_amount' => max(0, $line->line_subtotal_amount - $amount),
